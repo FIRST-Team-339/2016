@@ -53,6 +53,13 @@ public class RelativeSpeedController implements SpeedController
      *          -------------------------------------------------------
      */
     private final double maxSpeed;
+    
+    /**
+     * @description Whether or not this motor controller is inverted.
+     * @author Noah Golmant
+     * @written 10 Jan 2016
+     */
+    private boolean isInverted = false;
 
     // -------------------------------------------------------
     /**
@@ -175,4 +182,24 @@ public class RelativeSpeedController implements SpeedController
         {
         this.speedController.set(speed * this.maxSpeed, syncGroup);
         } // end set
+    
+    /**
+     * @description Gets whether or not this speed controller's motor is inverted.
+     * @author Noah Golmant
+     * @written 10 Jan 2016
+     */
+    public boolean getInverted()
+    	{
+    	return this.isInverted;
+    	}
+    
+    /**
+     * @description Sets whether or not this speed controller's motor is inverted.
+     * @author Noah Golmant
+     * @written 10 Jan 2016
+     */
+    public void setInverted(boolean val)
+    	{
+    	this.isInverted = val;
+    	}
 } // end class

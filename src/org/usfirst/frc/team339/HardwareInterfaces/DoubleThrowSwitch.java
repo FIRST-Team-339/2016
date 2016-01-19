@@ -20,6 +20,8 @@
 
 package org.usfirst.frc.team339.HardwareInterfaces;
 
+import edu.wpi.first.wpilibj.Relay;
+
 // -------------------------------------------------------
 /**
  * This class is used when a double throw switch is created. A double
@@ -84,6 +86,49 @@ public class DoubleThrowSwitch
         this.switch2 = switch2In;
         } // end DoubleThrowSwitch
 
+    /**
+     * Constructor which takes in the two ports the double throw switch is connected to.
+     * @method DoubleThrowSwitch
+     * @param Channel1
+     * 			-The first port the double throw switch is connected to. When this is on
+     * 		     and Channel2 is off, the switch is considered to be in the "kForward."
+     * 		     If the reverse is true, the switch is considered to be in the "kReverse"
+     *           position.
+     * @param Channel2
+     *          -The second port the double throw switch is connected to.  When this is on
+     * 		     and Channel1 is off, the switch is considered to be in the "kReverse."
+     * 		     If the reverse is true, the switch is considered to be in the "kForward"
+     *           position.
+     * @author Alex Kneipp
+     * @written Jan 18, 2016
+     */
+    public DoubleThrowSwitch(int Channel1, int Channel2)
+    {
+    	this.switch1 = new SingleThrowSwitch(Channel1);
+    	this.switch2 = new SingleThrowSwitch(Channel2);
+    }
+
+    /**
+     * This method no matter what state the switch is in, and uses the values found in the
+     * WPI Relay class' enum "Value" for compatibility.  If the state of the first port
+     * the switch is plugged into is "on," and the state of the second port the switch is
+     * plugged into is "off," the method returns the "kForward". If the reverse is true,
+     * the method returns "kReverse".  If both are off (the switch is in its center
+     * position), the method return "kOff".  This does not make use of the Relay.Value.kOn
+     * value.
+     * @return The state of the switch.  Either "kForward", "kReverse", or "kOff".
+     * @author Alex Kneipp
+     * @written Jan 18, 2016
+     */
+    public Relay.Value getPosition()
+    {
+    	if(switch1.isOn())
+    		return Relay.Value.kForward;
+    	else if(switch2.isOn())
+    		return Relay.Value.kReverse;
+    	else
+    		return Relay.Value.kOff;
+    }
     // -------------------------------------------------------
     /**
      * This function returns whether or not the switch is on
