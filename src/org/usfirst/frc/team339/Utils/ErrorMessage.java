@@ -673,13 +673,19 @@ public class ErrorMessage
      *            to be printed */
     public void printError (String errorMessage)
         {
+    	String appendedErrorMessage;
+    	
         this.rioTime = this.getDate();
         this.matchTime = Hardware.driverStation.getMatchTime();
 
         if (this.appendTimeStamp == true)
             {
-            errorMessage = this.appendErrorMessage(errorMessage);
+            appendedErrorMessage = this.appendErrorMessage(errorMessage);
             }
+        else
+        {
+        	appendedErrorMessage = errorMessage;
+        }
 
         // if the error must print to the Drivers' Station
         if ((this.defaultPrintDevice == PrintsTo.driverStation) ||
@@ -692,7 +698,7 @@ public class ErrorMessage
         if ((this.defaultPrintDevice == PrintsTo.roboRIO) ||
             (this.defaultPrintDevice == PrintsTo.driverStationAndRoboRIO))
             {
-            this.PrintsToRIO(errorMessage);
+            this.PrintsToRIO(appendedErrorMessage);
             }
         }
 
@@ -704,13 +710,19 @@ public class ErrorMessage
      *            whether or not to include a time stamp. */
     public void printError (String errorMessage, boolean attatchTimeStamp)
         {
+    	String appendedErrorMessage;
+    	
         this.rioTime = this.getDate();
         this.matchTime = Hardware.driverStation.getMatchTime();
 
         if (attatchTimeStamp == true)
             {
-            errorMessage = this.appendErrorMessage(errorMessage);
+            appendedErrorMessage = this.appendErrorMessage(errorMessage);
             }
+        else
+        {
+        	appendedErrorMessage = errorMessage;
+        }
 
         // if the error must print to the Drivers' Station
         if ((this.defaultPrintDevice == PrintsTo.driverStation) ||
@@ -723,7 +735,7 @@ public class ErrorMessage
         if ((this.defaultPrintDevice == PrintsTo.roboRIO) ||
             (this.defaultPrintDevice == PrintsTo.driverStationAndRoboRIO))
             {
-            this.PrintsToRIO(errorMessage);
+            this.PrintsToRIO(appendedErrorMessage);
             }
         }
 
@@ -762,12 +774,18 @@ public class ErrorMessage
     public void printError (String errorMessage, PrintsTo PrintsTo,
         boolean attatchTimeStamp)
         {
+        String appendedErrorMessage;
+        
         this.rioTime = this.getDate();
         this.matchTime = Hardware.driverStation.getMatchTime();
 
         if (attatchTimeStamp == true)
             {
-            errorMessage = this.appendErrorMessage(errorMessage);
+            appendedErrorMessage = this.appendErrorMessage(errorMessage);
+            }
+            else
+            {
+            appendedErrorMessage = errorMessage;
             }
 
         // if the error must print to the Drivers' Station
@@ -781,7 +799,7 @@ public class ErrorMessage
         if ((PrintsTo == ErrorMessage.PrintsTo.roboRIO) ||
             (PrintsTo == ErrorMessage.PrintsTo.driverStationAndRoboRIO))
             {
-            this.PrintsToRIO(errorMessage);
+            this.PrintsToRIO(appendedErrorMessage);
             }
         }
 
