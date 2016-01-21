@@ -73,6 +73,7 @@ public class ErrorMessage
             final String errorlogDirectory =
                 this.errorlogLocation.substring(0, lastSlash);
 
+
             try
                 {
                 Runtime.getRuntime().exec("/bin/mkdir " + errorlogDirectory);
