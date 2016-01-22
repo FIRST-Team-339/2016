@@ -56,7 +56,6 @@ public class Teleop
  */
 public static void init ()
 {
-
 } // end Init
 
 /**
