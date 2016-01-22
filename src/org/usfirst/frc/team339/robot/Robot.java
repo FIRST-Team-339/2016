@@ -59,245 +59,269 @@
 // ====================================================================
 package org.usfirst.frc.team339.robot;
 
+import org.usfirst.frc.team339.Hardware.Hardware;
 // import com.ni.vision.NIVision.ParticleReport;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.MotorSafetyHelper;
 
-/** The VM is configured to automatically run this class, and to call the
+/**
+ * The VM is configured to automatically run this class, and to call the
  * functions corresponding to each mode, as described in the IterativeRobot
  * documentation. If you change the name of this class or the package after
  * creating this project, you must also update the manifest file in the resource
- * directory. */
+ * directory.
+ */
 // -------------------------------------------------------
-/** declares all the code necessary to extend the IterativeRobot class. These are
+/**
+ * declares all the code necessary to extend the IterativeRobot class. These are
  * all the methods needed to run Kilroy during a match
  *
  * @author Bob Brown
  * @written Jan 2, 2011
- *          ------------------------------------------------------- */
+ *          -------------------------------------------------------
+ */
 public class Robot extends IterativeRobot
 {
 
-    // =================================================
-    // private data for the class
-    // =================================================
-    // ----------------------------------------------------
-    // new watchdog object
-    // ----------------------------------------------------
-    MotorSafetyHelper watchdog;
+// =================================================
+// private data for the class
+// =================================================
+// ----------------------------------------------------
+// new watchdog object
+// ----------------------------------------------------
+MotorSafetyHelper watchdog;
 
-    // -------------------------------------------------------
-    /** Initialization code for autonomous mode should go here. Will be called
-     * once when the robot enters autonomous mode.
-     *
-     * @author Bob Brown
-     * @written Jan 2, 2011
-     *          ------------------------------------------------------- */
-    @Override
-    public void autonomousInit ()
-        {
-        // -------------------------------------
-        // Call the Autonomous class's Init function,
-        // which contains the user code.
-        // -------------------------------------
-        Autonomous.init();
+// -------------------------------------------------------
+/**
+ * Initialization code for autonomous mode should go here. Will be called
+ * once when the robot enters autonomous mode.
+ *
+ * @author Bob Brown
+ * @written Jan 2, 2011
+ *          -------------------------------------------------------
+ */
+@Override
+public void autonomousInit ()
+{
+    // -------------------------------------
+    // Call the Autonomous class's Init function,
+    // which contains the user code.
+    // -------------------------------------
+    Autonomous.init();
 
-        // ---------------------------------------
-        // done setup - tell the user we are complete
-        // setup
-        // ---------------------------------------
-        System.out.println("Completed AutonousInit().");
-        } // end autonomousInit
+    // ---------------------------------------
+    // done setup - tell the user we are complete
+    // setup
+    // ---------------------------------------
+    System.out.println("Completed AutonousInit().");
+} // end autonomousInit
 
-    // -------------------------------------------------------
-    /** Non-User Periodic code for autonomous mode should go here.
-     * Will be called periodically at a regular rate while the robot
-     * is in autonomous mode. This in turn calls the Autonomous class's
-     * Periodic function, which is where the user code should be placed.
-     *
-     * @author Bob Brown
-     * @written Jan 2, 2011
-     *          ------------------------------------------------------- */
-    @Override
-    public void autonomousPeriodic ()
-        {
-        // -------------------------------------
-        // Call the Autonomous class's Periodic function,
-        // which contains the user code.
-        // -------------------------------------\
-        Autonomous.periodic();
+// -------------------------------------------------------
+/**
+ * Non-User Periodic code for autonomous mode should go here.
+ * Will be called periodically at a regular rate while the robot
+ * is in autonomous mode. This in turn calls the Autonomous class's
+ * Periodic function, which is where the user code should be placed.
+ *
+ * @author Bob Brown
+ * @written Jan 2, 2011
+ *          -------------------------------------------------------
+ */
+@Override
+public void autonomousPeriodic ()
+{
+    // -------------------------------------
+    // Call the Autonomous class's Periodic function,
+    // which contains the user code.
+    // -------------------------------------\
+    Autonomous.periodic();
 
-        } // end autonomousPeriodic
+} // end autonomousPeriodic
 
-    // -------------------------------------------------------
-    /** Initialization code for disabled mode should go here. Will be called once
-     * when the robot enters disabled mode.
-     *
-     * @author Bob Brown
-     * @written Jan 2, 2011
-     *          ------------------------------------------------------- */
-    @Override
-    public void disabledInit ()
-        {
-        // =========================================================
-        // User code goes below here
-        // =========================================================
+// -------------------------------------------------------
+/**
+ * Initialization code for disabled mode should go here. Will be called once
+ * when the robot enters disabled mode.
+ *
+ * @author Bob Brown
+ * @written Jan 2, 2011
+ *          -------------------------------------------------------
+ */
+@Override
+public void disabledInit ()
+{
+    // =========================================================
+    // User code goes below here
+    // =========================================================
 
-        // =========================================================
-        // User code goes above here
-        // =========================================================
+    // =========================================================
+    // User code goes above here
+    // =========================================================
 
-        // ---------------------------------------
-        // done setup - tell the user we are complete
-        // setup
-        // ---------------------------------------
-        System.out.println("Completed DisabledInit().");
-        } // end disabledInit
+    // ---------------------------------------
+    // done setup - tell the user we are complete
+    // setup
+    // ---------------------------------------
+    System.out.println("Completed DisabledInit().");
+} // end disabledInit
 
-    // -------------------------------------------------------
-    /** Periodic code for disabled mode should go here. Will be called
-     * periodically at a regular rate while the robot is in disabled mode. Code
-     * that can be "triggered" by a joystick button can go here. This can set up
-     * configuration things at the driver's station for instance before a match.
-     *
-     * @author Bob Brown
-     * @written Jan 2, 2011
-     *          ------------------------------------------------------- */
-    @Override
-    public void disabledPeriodic ()
-        {
-        // -------------------------------------
-        // Watch dog code used to go here.
-        // -------------------------------------
-        // =========================================================
-        // User code goes below here
-        // =========================================================
+// -------------------------------------------------------
+/**
+ * Periodic code for disabled mode should go here. Will be called
+ * periodically at a regular rate while the robot is in disabled mode. Code
+ * that can be "triggered" by a joystick button can go here. This can set up
+ * configuration things at the driver's station for instance before a match.
+ *
+ * @author Bob Brown
+ * @written Jan 2, 2011
+ *          -------------------------------------------------------
+ */
+@Override
+public void disabledPeriodic ()
+{
+    // -------------------------------------
+    // Watch dog code used to go here.
+    // -------------------------------------
+    // =========================================================
+    // User code goes below here
+    // =========================================================
 
-        // =========================================================
-        // User code goes above here
-        // =========================================================
+    // =========================================================
+    // User code goes above here
+    // =========================================================
 
-        } // end disabledPeriodic
+} // end disabledPeriodic
 
-    // -------------------------------------------------------
-    /** This function is run when the robot is first started up and should be
-     * used for any initialization code for the robot.
-     *
-     * @author Bob Brown
-     * @written Jan 2, 2011
-     *          ------------------------------------------------------- */
-    @Override
-    public void robotInit ()
-        {
-        // -------------------------------------
-        // Watch dog code used to go here.
-        // -------------------------------------
-        // =========================================================
-        // User code goes below here
-        // =========================================================
-
-        // =========================================================
-        // User code goes above here
-        // =========================================================
-        // ---------------------------------------
-        // done setup - tell the user we are complete
-        // setup
-        // ---------------------------------------
-        System.out
+// -------------------------------------------------------
+/**
+ * This function is run when the robot is first started up and should be
+ * used for any initialization code for the robot.
+ *
+ * @author Bob Brown
+ * @written Jan 2, 2011
+ *          -------------------------------------------------------
+ */
+@Override
+public void robotInit ()
+{
+    // -------------------------------------
+    // Watch dog code used to go here.
+    // -------------------------------------
+    // =========================================================
+    // User code goes below here
+    // =========================================================
+    Hardware.leftRearMotor.enableBrakeMode(true);
+    Hardware.rightRearMotor.enableBrakeMode(true);
+    // =========================================================
+    // User code goes above here
+    // =========================================================
+    // ---------------------------------------
+    // done setup - tell the user we are complete
+    // setup
+    // ---------------------------------------
+    System.out
             .println("Kilroy XVI is started.  All hardware items created.");
-        System.out.println();
-        System.out.println();
-        } // end robotInit
+    System.out.println();
+    System.out.println();
+} // end robotInit
 
-    // -------------------------------------------------------
-    /** Non-User initialization code for teleop mode should go here. Will be
-     * called once when the robot enters teleop mode, and will call the
-     * Teleop class's Init function, where the User code should be placed.
-     *
-     * @author Bob Brown
-     * @written Jan 2, 2011
-     *          ------------------------------------------------------- */
-    @Override
-    public void teleopInit ()
-        {
-        // -------------------------------------
-        // Call the Teleop class's Init function,
-        // which contains the user code.
-        // -------------------------------------
-        Teleop.init();
+// -------------------------------------------------------
+/**
+ * Non-User initialization code for teleop mode should go here. Will be
+ * called once when the robot enters teleop mode, and will call the
+ * Teleop class's Init function, where the User code should be placed.
+ *
+ * @author Bob Brown
+ * @written Jan 2, 2011
+ *          -------------------------------------------------------
+ */
+@Override
+public void teleopInit ()
+{
+    // -------------------------------------
+    // Call the Teleop class's Init function,
+    // which contains the user code.
+    // -------------------------------------
+    Teleop.init();
 
-        // ---------------------------------------
-        // done setup - tell the user we are complete
-        // setup
-        // ---------------------------------------
-        System.out.println("Completed TeleopInit().");
-        } // end teleopInit
+    // ---------------------------------------
+    // done setup - tell the user we are complete
+    // setup
+    // ---------------------------------------
+    System.out.println("Completed TeleopInit().");
+} // end teleopInit
 
-    // -------------------------------------------------------
-    /** Non-User Periodic code for teleop mode should go here. Will be
-     * called periodically at a regular rate while the robot is in teleop
-     * mode, and will in turn call the Teleop class's Periodic function.
-     *
-     * @author Bob Brown
-     * @written Jan 2, 2011
-     *          ------------------------------------------------------- */
-    @Override
-    public void teleopPeriodic ()
-        {
-        // -------------------------------------
-        // Watch dog code used to go here.
-        // -------------------------------------
+// -------------------------------------------------------
+/**
+ * Non-User Periodic code for teleop mode should go here. Will be
+ * called periodically at a regular rate while the robot is in teleop
+ * mode, and will in turn call the Teleop class's Periodic function.
+ *
+ * @author Bob Brown
+ * @written Jan 2, 2011
+ *          -------------------------------------------------------
+ */
+@Override
+public void teleopPeriodic ()
+{
+    // -------------------------------------
+    // Watch dog code used to go here.
+    // -------------------------------------
 
-        // -------------------------------------
-        // Call the Teleop class's Periodic function,
-        // which contains the user code.
-        // -------------------------------------
-        Teleop.periodic();
+    // -------------------------------------
+    // Call the Teleop class's Periodic function,
+    // which contains the user code.
+    // -------------------------------------
+    Teleop.periodic();
 
-        } // end teleopPeriodic
+} // end teleopPeriodic
 
-    // -------------------------------------------------------
-    /** Initialization code for test mode should go here. Will be called
-     * once when the robot enters test mode.
-     *
-     * @author Bob Brown
-     * @written Jan 2, 2015
-     *          ------------------------------------------------------- */
-    @Override
-    public void testInit ()
-        {
-        // =========================================================
-        // User code goes below here
-        // =========================================================
+// -------------------------------------------------------
+/**
+ * Initialization code for test mode should go here. Will be called
+ * once when the robot enters test mode.
+ *
+ * @author Bob Brown
+ * @written Jan 2, 2015
+ *          -------------------------------------------------------
+ */
+@Override
+public void testInit ()
+{
+    // =========================================================
+    // User code goes below here
+    // =========================================================
 
-        // =========================================================
-        // User code goes above here
-        // =========================================================
+    // =========================================================
+    // User code goes above here
+    // =========================================================
 
-        } // end testInit
+} // end testInit
 
-    // -------------------------------------------------------
-    /** Periodic code for test mode should go here. Will be called
-     * periodically at a regular rate while the robot is in test mode.
-     *
-     * @author Bob Brown
-     * @written Jan 2, 2015
-     *          ------------------------------------------------------- */
-    @Override
-    public void testPeriodic ()
-        {
-        // =========================================================
-        // User code goes below here
-        // =========================================================
+// -------------------------------------------------------
+/**
+ * Periodic code for test mode should go here. Will be called
+ * periodically at a regular rate while the robot is in test mode.
+ *
+ * @author Bob Brown
+ * @written Jan 2, 2015
+ *          -------------------------------------------------------
+ */
+@Override
+public void testPeriodic ()
+{
+    // =========================================================
+    // User code goes below here
+    // =========================================================
 
-        // =========================================================
-        // User code goes above here
-        // =========================================================
+    // =========================================================
+    // User code goes above here
+    // =========================================================
 
-        } // end testPeriodic
+} // end testPeriodic
 
-    // ==========================================
-    // TUNEABLES
-    // ==========================================
+// ==========================================
+// TUNEABLES
+// ==========================================
 
 } // end class

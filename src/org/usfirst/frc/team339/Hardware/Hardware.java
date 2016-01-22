@@ -15,29 +15,41 @@
 
 package org.usfirst.frc.team339.Hardware;
 
+import org.usfirst.frc.team339.HardwareInterfaces.transmission.Transmission;
 import org.usfirst.frc.team339.Utils.ErrorMessage;
+import edu.wpi.first.wpilibj.CANTalon;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.Timer;
 
 // -------------------------------------------------------
-/** puts all of the hardware declarations into one place. In addition, it makes
+/**
+ * puts all of the hardware declarations into one place. In addition, it makes
  * them available to both autonomous and teleop.
  *
  * @class HardwareDeclarations
  * @author Bob Brown
  * @written Jan 2, 2011
- *          ------------------------------------------------------- */
+ *          -------------------------------------------------------
+ */
 public class Hardware
 {
 // ------------------------------------
 // Public Constants
 // ------------------------------------
 
+// -------------------------------------
+// Private Constants
+// -------------------------------------
+private static final int rightRearMotorCANID = 15;
+
+private static final int leftRearMotorCANID = 11;
+
 // ---------------------------------------
 // Hardware Tunables
 // ---------------------------------------
 
-    // **********************************************************
+// **********************************************************
 // DIGITAL I/O CLASSES
 // **********************************************************
 // ====================================
@@ -51,7 +63,9 @@ public class Hardware
 // ------------------------------------
 // Talon classes
 // ------------------------------------
+public static CANTalon rightRearMotor = new CANTalon(rightRearMotorCANID);
 
+public static CANTalon leftRearMotor = new CANTalon(leftRearMotorCANID);
 // ------------------------------------
 // Victor classes
 // ------------------------------------
@@ -75,7 +89,8 @@ public class Hardware
 // Single and double throw switches
 // ------------------------------------
 
-    // ------------------------------------
+
+// ------------------------------------
 // Gear Tooth Sensors
 // ------------------------------------
 
@@ -98,11 +113,11 @@ public class Hardware
 // see http://www.cui.com/product/resource/amt10-v.pdf page 4 for Resolution
 // (DIP Switch) Settings (currently all are off)
 
-    // -------------------------------------
+// -------------------------------------
 // Red Light/IR Sensor class
 // -------------------------------------
 
-    // ====================================
+// ====================================
 // I2C Classes
 // ====================================
 
@@ -139,26 +154,33 @@ public class Hardware
 // -------------------------------------
 
 // **********************************************************
-// roboRIO CONNECTIONS CLASSES
+// roboRIO CONNECTIONS
+// CLASSES
 // **********************************************************
 // -------------------------------------
 // Axis Camera class
 // -------------------------------------
 
-    // **********************************************************
+// **********************************************************
 // DRIVER STATION CLASSES
 // **********************************************************
 // ------------------------------------
 // DriverStations class
 // ------------------------------------
 public static final DriverStation driverStation = DriverStation
-.getInstance();
+        .getInstance();
 
 // ------------------------------------
 // Joystick classes
 // ------------------------------------
+public static Joystick leftDriver = new Joystick(0);
 
-    // ------------------------------------
+public static Joystick rightDriver = new Joystick(1);
+
+public static Joystick leftOperator = new Joystick(2);
+
+public static Joystick rightOperator = new Joystick(3);
+// ------------------------------------
 // Drive system
 // ------------------------------------
 //
@@ -178,16 +200,18 @@ public static final DriverStation driverStation = DriverStation
 // ------------------------------------
 // Transmission class
 // ------------------------------------
-
+public static Transmission transmission = new Transmission(rightRearMotor, leftRearMotor);
 // -------------------
 // Assembly class (e.g. forklift)
 // -------------------
 
-    // ------------------------------------
+// ------------------------------------
 // Utility classes
 // ------------------------------------
 public static final Timer kilroyTimer = new Timer();
+
 public static final Timer autoTimer = new Timer();
+
 public static final ErrorMessage errorMessage = new ErrorMessage(true
-    /* append timelog */);
+/* append timelog */);
 } // end class
