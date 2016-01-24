@@ -84,7 +84,7 @@ public class Transmission extends Subsystem
      *
      * @author Noah Golmant
      * @written 16 July 201 */
-    private final int MAX_PHYSICAL_GEAR = 2;
+    // private final int MAX_PHYSICAL_GEAR = 2;
 
     /** @description the physical solenoids that control the physical gears
      *              of the transmission.

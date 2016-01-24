@@ -82,19 +82,17 @@ public boolean freshImage ()
     {
         if (this.haveCamera)
             return this.camera.isFreshImage();
-        else
-            // returns true so that if we ever try to wait for an image, we will
-            // just continue
-            return true;
+        // returns true so that if we ever try to wait for an image, we will
+        // just continue
+        return true;
     }
 
 public int getBrightness ()
     {
         if (this.haveCamera)
             return this.camera.getBrightness();
-        else
-            // returns a value that it shouldn't be
-            return noCameraIntReturnValue;
+        // returns a value that it shouldn't be
+        return noCameraIntReturnValue;
     }
 
 // -------------------------------------------------------
@@ -116,27 +114,24 @@ public int getColorLevel ()
     {
         if (this.haveCamera)
             return this.camera.getColorLevel();
-        else
-            // returns a value that it shouldn't be
-            return noCameraIntReturnValue;
+        // returns a value that it shouldn't be
+        return noCameraIntReturnValue;
     }
 
 public int getCompression ()
     {
         if (this.haveCamera)
             return this.camera.getCompression();
-        else
-            // returns a value that it shouldn't be
-            return noCameraIntReturnValue;
+        // returns a value that it shouldn't be
+        return noCameraIntReturnValue;
     }
 
 public AxisCamera.ExposureControl getExposureControl ()
     {
         if (this.haveCamera)
             return this.camera.getExposureControl();
-        else
-            // returns automatic
-            return AxisCamera.ExposureControl.kAutomatic;
+        // returns automatic
+        return AxisCamera.ExposureControl.kAutomatic;
     }
 
 // -------------------------------------------------------
@@ -166,18 +161,16 @@ public ColorImage getImage () throws NIVisionException
     {
         if (this.haveCamera)
             return this.camera.getImage();
-        else
-            // returns a 0x0 image
-            return new HSLImage();
+        // returns a 0x0 image
+        return new HSLImage();
     }
 
 public int getMaxFPS ()
     {
         if (this.haveCamera)
             return this.camera.getMaxFPS();
-        else
-            // returns a value that it shouldn't be
-            return noCameraIntReturnValue;
+        // returns a value that it shouldn't be
+        return noCameraIntReturnValue;
     }
 
 // --------------------------------------------------------------
@@ -189,27 +182,24 @@ public AxisCamera.Resolution getResolution ()
     {
         if (this.haveCamera)
             return this.camera.getResolution();
-        else
-            // returns the smallest resolution and our default
-            return AxisCamera.Resolution.k160x120;
+        // returns the smallest resolution and our default
+        return AxisCamera.Resolution.k160x120;
     }
 
 public AxisCamera.Rotation getRotation ()
     {
         if (this.haveCamera)
             return this.camera.getRotation();
-        else
-            // returns 0 rotation
-            return AxisCamera.Rotation.k0;
+        // returns 0 rotation
+        return AxisCamera.Rotation.k0;
     }
 
 public AxisCamera.WhiteBalance getWhiteBalance ()
     {
         if (this.haveCamera)
             return this.camera.getWhiteBalance();
-        else
-            // returns automatic
-            return AxisCamera.WhiteBalance.kAutomatic;
+        // returns automatic
+        return AxisCamera.WhiteBalance.kAutomatic;
     }
 
 /** Takes an image from the camera and stores it in the specified file path.

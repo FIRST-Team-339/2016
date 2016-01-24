@@ -197,11 +197,10 @@ public class RobotPotentiometer extends AnalogInput implements Potentiometer
         {
         if (this.isReversed == false)
             return (int) ((this.getValue() / kTOTAL_RAW_UNITS) * this.maxDegreesForPotentiometer);
-        else
-            // If we are reversed, get it from the opposite direction
-            // e.g. if we're at 200/300 and are reversed we want to really send
-            // (300 - 200) / 300 = 100 / 300
-            return (int) (this.maxDegreesForPotentiometer - ((this.getValue() / kTOTAL_RAW_UNITS) * this.maxDegreesForPotentiometer));
+        // If we are reversed, get it from the opposite direction
+        // e.g. if we're at 200/300 and are reversed we want to really send
+        // (300 - 200) / 300 = 100 / 300
+        return (int) (this.maxDegreesForPotentiometer - ((this.getValue() / kTOTAL_RAW_UNITS) * this.maxDegreesForPotentiometer));
         } // end get
 
     // -------------------------------------------------
@@ -227,8 +226,7 @@ public class RobotPotentiometer extends AnalogInput implements Potentiometer
             return retVal;
         // If the potentiometer is reversed, negate our position
         // within the range.
-        else
-            return (retVal * -1.0);
+        return (retVal * -1.0);
 
         }
 
@@ -251,10 +249,9 @@ public class RobotPotentiometer extends AnalogInput implements Potentiometer
             ((this.getValue() / kTOTAL_RAW_UNITS) * tempRange) + minRange;
         if (this.isReversed == false)
             return retVal;
-        else
-            // If the potentiometer is reversed, negate our position
-            // within the range.
-            return retVal * -1.0;
+        // If the potentiometer is reversed, negate our position
+        // within the range.
+        return retVal * -1.0;
         }
 
     // -------------------------------------------------------
@@ -275,11 +272,10 @@ public class RobotPotentiometer extends AnalogInput implements Potentiometer
         {
         if (this.isReversed == false)
             return (int) ((this.getValue() / kTOTAL_RAW_UNITS) * degrees);
-        else
-            // If we are reversed, get it from the opposite direction
-            // e.g. if we're at 200/300 and are reversed we want to really send
-            // (300 - 200) / 300 = 100 / 300
-            return (int) (this.maxDegreesForPotentiometer - ((this.getValue() / kTOTAL_RAW_UNITS) * degrees));
+        // If we are reversed, get it from the opposite direction
+        // e.g. if we're at 200/300 and are reversed we want to really send
+        // (300 - 200) / 300 = 100 / 300
+        return (int) (this.maxDegreesForPotentiometer - ((this.getValue() / kTOTAL_RAW_UNITS) * degrees));
         }
 
     // -------------------------------------------------
@@ -301,10 +297,9 @@ public class RobotPotentiometer extends AnalogInput implements Potentiometer
                 * (this.getMaxDegrees() / 2);
         if (this.isReversed == false)
             return retVal;
-        else
-            // If the potentiometer is reversed, negate our position
-            // within the range.
-            return retVal * -1.0;
+        // If the potentiometer is reversed, negate our position
+        // within the range.
+        return retVal * -1.0;
         }
 
     // -------------------------------------------------------

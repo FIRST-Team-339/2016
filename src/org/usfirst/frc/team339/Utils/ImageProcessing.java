@@ -289,11 +289,8 @@ Comparable<ParticleReport>
                 }
             return 0;
             }
-        else
             // we have at least 1 image, so set the screen width
-            {
-            screenWidth = this.reports[0].imageWidth;
-            }
+        screenWidth = this.reports[0].imageWidth;
 
         for (int i = this.reports.length - 1; i >= 0; i--)
             {

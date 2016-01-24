@@ -31,6 +31,8 @@ public class Guidance
 			SmartDashboard.putBoolean("Left", false);
 			break;
 			
+			default:
+				// no break required
 		case neutral:
 			SmartDashboard.putBoolean("Right", false);
 			SmartDashboard.putBoolean("Left", false);
