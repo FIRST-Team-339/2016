@@ -222,7 +222,7 @@ public void robotInit ()
     // setup
     // ---------------------------------------
     System.out
-            .println("Kilroy XVI is started.  All hardware items created.");
+            .println("Kilroy XVII is started.  All hardware items created.");
     System.out.println();
     System.out.println();
 } // end robotInit
