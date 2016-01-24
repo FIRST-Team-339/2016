@@ -33,19 +33,25 @@ package org.usfirst.frc.team339.robot;
 
 import org.usfirst.frc.team339.Hardware.Hardware;
 
-/** This class contains all of the user code for the Autonomous part of the
+/**
+ * This class contains all of the user code for the Autonomous part of the
  * match, namely, the Init and Periodic code
  *
  * @author Nathanial Lydick
- * @written Jan 13, 2015 */
+ * @written Jan 13, 2015
+ */
 public class Autonomous
 {
 
 // states we'll be going through in autonomous periodic
 private static enum AutoState
-{
-INITIAL, DONE
-}
+    {
+    INITIAL, DONE
+    }
+
+private static boolean leftSensorIsOnTape;
+
+private static boolean rightSensorIsOnTape;
 
 // distances we'll be driving in autonomous
 private static class DriveDistance
@@ -57,18 +63,20 @@ private static class DriveDistance
 // ==========================================
 private static AutoState autoState = AutoState.INITIAL;
 
-    // ==========================================
+// ==========================================
 // TUNEABLES
 // ==========================================
 
-/* User-Initialization code for autonomous mode should go here. Will be
+/*
+ * User-Initialization code for autonomous mode should go here. Will be
  * called once when the robot enters autonomous mode.
  *
  * @author Nathanial Lydick
  *
- * @written Jan 13, 2015 */
+ * @written Jan 13, 2015
+ */
 public static void init ()
-    {
+{
     // ---------------------------------------
     // turn the timer off and reset the counter
     // so that we can use it in autonmous
@@ -76,16 +84,17 @@ public static void init ()
     Hardware.kilroyTimer.stop();
     Hardware.kilroyTimer.reset();
 
-        } // end Init
+} // end Init
 
-/** User Periodic code for autonomous mode should go here. Will be called
+/**
+ * User Periodic code for autonomous mode should go here. Will be called
  * periodically at a regular rate while the robot is in autonomous mode.
  *
  * @author Nathanial Lydick
- * @written Jan 13, 2015 */
+ * @written Jan 13, 2015
+ */
 public static void periodic ()
-    {
+{
 
-        } // end Periodic
-
+} // end Periodic
 } // end class
