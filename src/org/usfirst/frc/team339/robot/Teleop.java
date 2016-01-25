@@ -32,6 +32,8 @@
 package org.usfirst.frc.team339.robot;
 
 import org.usfirst.frc.team339.Hardware.Hardware;
+import edu.wpi.first.wpilibj.CameraServer;
+import edu.wpi.first.wpilibj.vision.USBCamera;
 
 /**
  * This class contains all of the user code for the Autonomous
@@ -56,6 +58,17 @@ public class Teleop
  */
 public static void init ()
 {
+    // -----------------------------------
+    // stop cam0 in case we have declared them
+    // in Autonomous. Then declare a new cam0
+    // and start it going automatically with the
+    // camera server
+    // -----------------------------------
+    CameraServer.getInstance().setSize(1);
+    Hardware.cam0.stopCapture();
+    Hardware.cam0.closeCamera();
+    Hardware.cam0 = new USBCamera("cam0");
+    CameraServer.getInstance().startAutomaticCapture(Hardware.cam0);
 } // end Init
 
 /**
@@ -67,7 +80,9 @@ public static void init ()
  */
 public static void periodic ()
 {
+
     Hardware.transmission.drive(Hardware.rightDriver.getY(),
             -Hardware.leftDriver.getY());
 } // end Periodic
+
 } // end class

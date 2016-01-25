@@ -18,9 +18,11 @@ package org.usfirst.frc.team339.Hardware;
 import org.usfirst.frc.team339.HardwareInterfaces.transmission.Transmission;
 import org.usfirst.frc.team339.Utils.ErrorMessage;
 import edu.wpi.first.wpilibj.CANTalon;
+import edu.wpi.first.wpilibj.CameraServer;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.vision.USBCamera;
 
 // -------------------------------------------------------
 /**
@@ -42,7 +44,6 @@ public class Hardware
 // Private Constants
 // -------------------------------------
 private static final int rightRearMotorCANID = 15;
-
 private static final int leftRearMotorCANID = 11;
 
 // ---------------------------------------
@@ -63,12 +64,15 @@ private static final int leftRearMotorCANID = 11;
 // ------------------------------------
 // Talon classes
 // ------------------------------------
-public static CANTalon rightRearMotor = new CANTalon(rightRearMotorCANID);
+public static CANTalon rightRearMotor = new CANTalon(
+        rightRearMotorCANID);
+public static CANTalon leftRearMotor = new CANTalon(
+        leftRearMotorCANID);
 
-public static CANTalon leftRearMotor = new CANTalon(leftRearMotorCANID);
 // ------------------------------------
 // Victor classes
 // ------------------------------------
+
 // ------------------------------------
 // CAN classes
 // ------------------------------------
@@ -158,8 +162,16 @@ public static CANTalon leftRearMotor = new CANTalon(leftRearMotorCANID);
 // CLASSES
 // **********************************************************
 // -------------------------------------
-// Axis Camera class
+// Axis/USB Camera class
 // -------------------------------------
+// -------------------------------------
+// declare the camera server and 2 USB
+// cameras
+// -------------------------------------
+public static CameraServer cameraServer;
+
+public static USBCamera cam0;
+public static USBCamera cam1;
 
 // **********************************************************
 // DRIVER STATION CLASSES
@@ -174,12 +186,10 @@ public static final DriverStation driverStation = DriverStation
 // Joystick classes
 // ------------------------------------
 public static Joystick leftDriver = new Joystick(0);
-
 public static Joystick rightDriver = new Joystick(1);
-
 public static Joystick leftOperator = new Joystick(2);
-
 public static Joystick rightOperator = new Joystick(3);
+
 // ------------------------------------
 // Drive system
 // ------------------------------------
@@ -200,18 +210,19 @@ public static Joystick rightOperator = new Joystick(3);
 // ------------------------------------
 // Transmission class
 // ------------------------------------
-public static Transmission transmission = new Transmission(rightRearMotor, leftRearMotor);
+public static Transmission transmission = new Transmission(
+        rightRearMotor, leftRearMotor);
+
 // -------------------
-// Assembly class (e.g. forklift)
+// Assembly classes (e.g. forklift)
 // -------------------
 
 // ------------------------------------
 // Utility classes
 // ------------------------------------
 public static final Timer kilroyTimer = new Timer();
-
 public static final Timer autoTimer = new Timer();
+public static final ErrorMessage errorMessage = new ErrorMessage(
+        true /* append timelog */);
 
-public static final ErrorMessage errorMessage = new ErrorMessage(true
-/* append timelog */);
 } // end class

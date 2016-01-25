@@ -63,6 +63,7 @@ import org.usfirst.frc.team339.Hardware.Hardware;
 // import com.ni.vision.NIVision.ParticleReport;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.MotorSafetyHelper;
+import edu.wpi.first.wpilibj.vision.USBCamera;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -103,6 +104,12 @@ MotorSafetyHelper watchdog;
 @Override
 public void autonomousInit ()
 {
+    // ---------------------------------------
+    // start setup - tell the user we are beginning
+    // setup
+    // ---------------------------------------
+    System.out.println("Started AutonousInit().");
+
     // -------------------------------------
     // Call the Autonomous class's Init function,
     // which contains the user code.
@@ -150,6 +157,12 @@ public void autonomousPeriodic ()
 @Override
 public void disabledInit ()
 {
+    // ---------------------------------------
+    // start setup - tell the user we are beginning
+    // setup
+    // ---------------------------------------
+    System.out.println("Started DisabledInit().");
+
     // =========================================================
     // User code goes below here
     // =========================================================
@@ -210,6 +223,29 @@ public void robotInit ()
     // =========================================================
     // User code goes below here
     // =========================================================
+    // -------------------------------------
+    // USB camera initialization
+    // -------------------------------------
+    Hardware.cam0 = new USBCamera("cam0");
+    Hardware.cam0.setBrightness(50);
+    Hardware.cam0.setExposureAuto();
+    Hardware.cam0.setFPS(20);
+    Hardware.cam0.setWhiteBalanceAuto();
+    Hardware.cam0.setWhiteBalanceHoldCurrent();
+    Hardware.cam0.updateSettings();
+
+    Hardware.cam1 = new USBCamera("cam1");
+    Hardware.cam1.setBrightness(50);
+    Hardware.cam1.setExposureAuto();
+    Hardware.cam1.setExposureHoldCurrent();
+    Hardware.cam1.setFPS(20);
+    Hardware.cam1.setWhiteBalanceAuto();
+    Hardware.cam1.setWhiteBalanceHoldCurrent();
+    Hardware.cam1.updateSettings();
+
+    // -------------------------------------
+    // motor initialization
+    // -------------------------------------
     Hardware.leftRearMotor.enableBrakeMode(true);
     Hardware.rightRearMotor.enableBrakeMode(true);
     Hardware.leftRearMotor.setSafetyEnabled(true);
@@ -221,8 +257,8 @@ public void robotInit ()
     // done setup - tell the user we are complete
     // setup
     // ---------------------------------------
-    System.out
-            .println("Kilroy XVII is started.  All hardware items created.");
+    System.out.println(
+            "Kilroy XVII is started.  All hardware items created.");
     System.out.println();
     System.out.println();
 } // end robotInit
@@ -240,6 +276,12 @@ public void robotInit ()
 @Override
 public void teleopInit ()
 {
+    // ---------------------------------------
+    // start setup - tell the user we are beginning
+    // setup
+    // ---------------------------------------
+    System.out.println("Started teleopInit().");
+
     // -------------------------------------
     // Call the Teleop class's Init function,
     // which contains the user code.
