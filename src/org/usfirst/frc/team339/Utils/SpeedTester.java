@@ -37,108 +37,110 @@ import edu.wpi.first.wpilibj.Timer;
  */
 public class SpeedTester
 {
-    // -------------------------------------------------------
+// -------------------------------------------------------
 
-    /**
-     * -------------------------------------------------------
-     *
-     * @description denotes that we have started this test
-     * @author Bob Brown
-     * @written Jun 18, 2011
-     *          -------------------------------------------------------
-     */
-    private boolean startedDistanceCheck = false;
+/**
+ * -------------------------------------------------------
+ *
+ * @description denotes that we have started this test
+ * @author Bob Brown
+ * @written Jun 18, 2011
+ *          -------------------------------------------------------
+ */
+private boolean startedDistanceCheck = false;
 
-    /**
-     * -------------------------------------------------------
-     *
-     * @description denotes that we have gotten the complete distance
-     *              we needed
-     * @author Bob Brown
-     * @written Jun 18, 2011
-     *          -------------------------------------------------------
-     */
-    private boolean distanceCounting = false;
-    /**
-     * -------------------------------------------------------
-     *
-     * @description encoder to be used to measure distance traveled
-     * @author Bob Brown
-     * @written Jun 18, 2011
-     *          -------------------------------------------------------
-     */
-    private Encoder encoderToMeasure = null;
-    /**
-     * -------------------------------------------------------
-     *
-     * @description encoder to be used to measure distance traveled
-     * @author Bob Brown
-     * @written Jun 18, 2011
-     *          -------------------------------------------------------
-     */
-    private Timer speedTesterTimer = null;
+/**
+ * -------------------------------------------------------
+ *
+ * @description denotes that we have gotten the complete distance
+ *              we needed
+ * @author Bob Brown
+ * @written Jun 18, 2011
+ *          -------------------------------------------------------
+ */
+private boolean distanceCounting = false;
+/**
+ * -------------------------------------------------------
+ *
+ * @description encoder to be used to measure distance traveled
+ * @author Bob Brown
+ * @written Jun 18, 2011
+ *          -------------------------------------------------------
+ */
+private Encoder encoderToMeasure = null;
+/**
+ * -------------------------------------------------------
+ *
+ * @description encoder to be used to measure distance traveled
+ * @author Bob Brown
+ * @written Jun 18, 2011
+ *          -------------------------------------------------------
+ */
+private Timer speedTesterTimer = null;
 
-    /**
-     * constructor
-     *
-     * @method SpeedTester
-     * @param encoderToMeasure
-     *            - Encoder that will be used to measure
-     *            distance
-     * @param speedTesterTimer
-     *            - timer that will be used to measure time
-     * @author Bob Brown
-     * @written Jun 18, 2011
-     *          -------------------------------------------------------
-     */
-    public SpeedTester (final Encoder encoderToMeasure,
+/**
+ * constructor
+ *
+ * @method SpeedTester
+ * @param encoderToMeasure
+ *            - Encoder that will be used to measure
+ *            distance
+ * @param speedTesterTimer
+ *            - timer that will be used to measure time
+ * @author Bob Brown
+ * @written Jun 18, 2011
+ *          -------------------------------------------------------
+ */
+public SpeedTester (final Encoder encoderToMeasure,
         final Timer speedTesterTimer)
-        {
-        this.encoderToMeasure = encoderToMeasure;
-        this.speedTesterTimer = speedTesterTimer;
-        } // end SpeedTester
+{
+    this.encoderToMeasure = encoderToMeasure;
+    this.speedTesterTimer = speedTesterTimer;
+} // end SpeedTester
 
-    // -------------------------------------------------------
-    /**
-     * gets the joystick value that the caller passes in
-     * and determines whether or not we are now watching
-     * the distance we are traveling so that we will
-     * eventually measure our speed (in ft/sec)
-     *
-     * @method get
-     * @param joystickYvalue
-     *            - Y axis value to be used to measure
-     *            whether or not we are measuring speed
-     * @author Bob Brown
-     * @written Jun 18, 2011
-     *          -------------------------------------------------------
-     */
-    public double watchJoystick (double joystickYvalue)
-        {
-        // -------------------------------------
-        // if we haven't started the speed check before
-        // and the joystick is full forward
-        // denote that we have started and start the timer
-        // -------------------------------------
-        if (this.startedDistanceCheck == false)
+// -------------------------------------------------------
+/**
+ * gets the joystick value that the caller passes in
+ * and determines whether or not we are now watching
+ * the distance we are traveling so that we will
+ * eventually measure our speed (in ft/sec)
+ *
+ * @method get
+ * @param joystickYvalue
+ *            - Y axis value to be used to measure
+ *            whether or not we are measuring speed
+ * @return double - speed that the motors traveled at
+ *         feet per sec
+ * @author Bob Brown
+ * @written Jun 18, 2011
+ *          -------------------------------------------------------
+ */
+public double watchJoystick (double joystickYvalue)
+{
+    // -------------------------------------
+    // if we haven't started the speed check before
+    // and the joystick is full forward
+    // denote that we have started and start the timer
+    // -------------------------------------
+    if (this.startedDistanceCheck == false)
         {
         if (joystickYvalue < -0.9)
-        {
-        this.startedDistanceCheck = true;
-        this.speedTesterTimer.reset();
-        this.speedTesterTimer.start();
+            {
+            this.startedDistanceCheck = true;
+            this.speedTesterTimer.reset();
+            this.speedTesterTimer.start();
+            } // if
         } // if
-        } // if
-        else if (this.distanceCounting == false)
+    else if (this.distanceCounting == false)
         {
         if (this.speedTesterTimer.get() > 1.0)
-        {
-        this.speedTesterTimer.reset();
-        this.encoderToMeasure.reset();
-        this.distanceCounting = true;
+            {
+            this.speedTesterTimer.reset();
+            this.encoderToMeasure.reset();
+            this.distanceCounting = true;
+            } // if
         } // if
-        } // if
-        else if (joystickYvalue > -0.9)
+    else if (joystickYvalue > -0.9)
         {
         int ftTraveled;
         double traveled;
@@ -155,14 +157,14 @@ public class SpeedTester
         ftTraveled = (int) (traveledPerSec / 12);
         inchesTraveled = (int) (traveledPerSec - (ftTraveled * 12));
         System.out.println("ft'inches\"/sec = " + ftTraveled + "'"
-            + inchesTraveled + "\"");
+                + inchesTraveled + "\"");
         this.speedTesterTimer.reset();
 
         return traveledPerSec;
         } // if
 
-        return 0; // return 0 if we are not watching or have not completed
-        // watchJoystick
-        } // end watchJoystick
+    return 0; // return 0 if we are not watching or have not completed
+    // watchJoystick
+} // end watchJoystick
 
 } // end class
