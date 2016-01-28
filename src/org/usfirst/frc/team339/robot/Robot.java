@@ -60,9 +60,11 @@
 package org.usfirst.frc.team339.robot;
 
 import org.usfirst.frc.team339.Hardware.Hardware;
+import org.usfirst.frc.team339.HardwareInterfaces.KilroyCamera;
 // import com.ni.vision.NIVision.ParticleReport;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.MotorSafetyHelper;
+import edu.wpi.first.wpilibj.vision.AxisCamera.Resolution;
 import edu.wpi.first.wpilibj.vision.USBCamera;
 
 /**
@@ -242,6 +244,12 @@ public void robotInit ()
     Hardware.cam1.setWhiteBalanceAuto();
     Hardware.cam1.setWhiteBalanceHoldCurrent();
     Hardware.cam1.updateSettings();
+
+    Hardware.axisCamera = new KilroyCamera(true);
+    Hardware.axisCamera.writeMaxFPS(15);
+    Hardware.axisCamera.writeResolution(Resolution.k320x240);
+
+
 
     // -------------------------------------
     // motor initialization

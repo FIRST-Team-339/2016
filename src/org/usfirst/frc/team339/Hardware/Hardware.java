@@ -15,6 +15,7 @@
 
 package org.usfirst.frc.team339.Hardware;
 
+import org.usfirst.frc.team339.HardwareInterfaces.KilroyCamera;
 import org.usfirst.frc.team339.HardwareInterfaces.transmission.Transmission;
 import org.usfirst.frc.team339.Utils.ErrorMessage;
 import edu.wpi.first.wpilibj.CANTalon;
@@ -172,6 +173,9 @@ public static CameraServer cameraServer;
 
 public static USBCamera cam0;
 public static USBCamera cam1;
+
+// Declares the Axis camera
+public static KilroyCamera axisCamera;
 
 // **********************************************************
 // DRIVER STATION CLASSES
