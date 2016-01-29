@@ -31,9 +31,13 @@
 // ====================================================================
 package org.usfirst.frc.team339.robot;
 
+import org.usfirst.frc.team339.Hardware.Hardware;
+import edu.wpi.first.wpilibj.CameraServer;
+import edu.wpi.first.wpilibj.vision.USBCamera;
+
 /**
- * This class contains all of the user code for the Autonomous part of the
- * match, namely, the Init and Periodic code
+ * This class contains all of the user code for the Autonomous
+ * part of the match, namely, the Init and Periodic code
  *
  * @author Nathanial Lydick
  * @written Jan 13, 2015
@@ -41,16 +45,30 @@ package org.usfirst.frc.team339.robot;
 public class Teleop
 {
 
+// ==========================================
+// TUNEABLES
+// ==========================================
+
 /**
- * User Initialization code for teleop mode should go here. Will be called
- * once when the robot enters teleop mode.
+ * User Initialization code for teleop mode should go here. Will be
+ * called once when the robot enters teleop mode.
  *
  * @author Nathanial Lydick
  * @written Jan 13, 2015
  */
 public static void init ()
 {
-
+    // -----------------------------------
+    // stop cam0 in case we have declared them
+    // in Autonomous. Then declare a new cam0
+    // and start it going automatically with the
+    // camera server
+    // -----------------------------------
+    CameraServer.getInstance().setSize(1);
+    Hardware.cam0.stopCapture();
+    Hardware.cam0.closeCamera();
+    Hardware.cam0 = new USBCamera("cam0");
+    CameraServer.getInstance().startAutomaticCapture(Hardware.cam0);
 } // end Init
 
 /**

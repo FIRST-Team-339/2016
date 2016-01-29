@@ -14,12 +14,17 @@
 // ====================================================================
 
 package org.usfirst.frc.team339.Hardware;
-
+import org.usfirst.frc.team339.HardwareInterfaces.IRSensor;
+import org.usfirst.frc.team339.HardwareInterfaces.KilroyCamera;
+import org.usfirst.frc.team339.HardwareInterfaces.transmission.Transmission;
 import org.usfirst.frc.team339.Utils.ErrorMessage;
 import edu.wpi.first.wpilibj.AnalogPotentiometer;
 import edu.wpi.first.wpilibj.CANTalon;
+import edu.wpi.first.wpilibj.CANTalon;
+import edu.wpi.first.wpilibj.CameraServer;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.vision.USBCamera;
 
 // -------------------------------------------------------
 /**
@@ -28,13 +33,20 @@ import edu.wpi.first.wpilibj.Timer;
  *
  * @class HardwareDeclarations
  * @author Bob Brown
- * @written Jan 2, 2011 -------------------------------------------------------
+ * @written Jan 2, 2011
+ *          -------------------------------------------------------
  */
 public class Hardware
 {
 // ------------------------------------
 // Public Constants
 // ------------------------------------
+
+// -------------------------------------
+// Private Constants
+// -------------------------------------
+private static final int rightRearMotorCANID = 15;
+private static final int leftRearMotorCANID = 11;
 
 // ---------------------------------------
 // Hardware Tunables
@@ -54,7 +66,10 @@ public class Hardware
 // ------------------------------------
 // Talon classes
 // ------------------------------------
-public static final CANTalon leftRearMotor = new CANTalon(10);
+public static CANTalon rightRearMotor = new CANTalon(
+        rightRearMotorCANID);
+public static CANTalon leftRearMotor = new CANTalon(
+        leftRearMotorCANID);
 // ------------------------------------
 // Victor classes
 // ------------------------------------
@@ -105,6 +120,9 @@ public static final CANTalon leftRearMotor = new CANTalon(10);
 // Red Light/IR Sensor class
 // -------------------------------------
 
+public static IRSensor rightIR = new IRSensor(0);
+public static IRSensor leftIR = new IRSensor(1);
+
 // ====================================
 // I2C Classes
 // ====================================
@@ -134,9 +152,8 @@ public static final CANTalon leftRearMotor = new CANTalon(10);
 // ------------------------------------
 
 // -------------------------------------
-//
 // Potentiometers
-
+// -------------------------------------
 public static AnalogPotentiometer delayPot =
         new AnalogPotentiometer(3, 270);
 
@@ -150,8 +167,19 @@ public static AnalogPotentiometer delayPot =
 // roboRIO CONNECTIONS CLASSES
 // **********************************************************
 // -------------------------------------
-// Axis Camera class
+// Axis/USB Camera class
 // -------------------------------------
+// -------------------------------------
+// declare the camera server and 2 USB
+// cameras
+// -------------------------------------
+public static CameraServer cameraServer;
+
+public static USBCamera cam0;
+public static USBCamera cam1;
+
+// Declares the Axis camera
+public static KilroyCamera axisCamera;
 
 // **********************************************************
 // DRIVER STATION CLASSES
@@ -165,6 +193,10 @@ public static final DriverStation driverStation =
 // ------------------------------------
 // Joystick classes
 // ------------------------------------
+public static Joystick leftDriver = new Joystick(0);
+public static Joystick rightDriver = new Joystick(1);
+public static Joystick leftOperator = new Joystick(2);
+public static Joystick rightOperator = new Joystick(3);
 
 // ------------------------------------
 // Drive system
@@ -186,9 +218,11 @@ public static final DriverStation driverStation =
 // ------------------------------------
 // Transmission class
 // ------------------------------------
+public static Transmission transmission = new Transmission(
+        rightRearMotor, leftRearMotor);
 
 // -------------------
-// Assembly class (e.g. forklift)
+// Assembly classes (e.g. forklift)
 // -------------------
 
 // ------------------------------------

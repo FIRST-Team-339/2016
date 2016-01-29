@@ -123,6 +123,7 @@ public class RobotPotentiometer extends AnalogInput implements Potentiometer {
 		this.maxDegreesForPotentiometer = maxDegrees;
 	} // end LightSensor
 
+<<<<<<< HEAD
 	// -------------------------------------------------------
 	/**
 	 * Create an instance of a LightSensor class. Creates a digital input given
@@ -159,7 +160,85 @@ public class RobotPotentiometer extends AnalogInput implements Potentiometer {
 	 * @written Feb 8, 2011
 	 *          -------------------------------------------------------
 	 */
+=======
+    // -------------------------------------------------------
+    /**
+     * Create an instance of a LightSensor class.
+     * Creates a digital input given a channel and the module
+     * passed in.
+     *
+     * @method Potentiometer() - constructor
+     * @param channel
+     *            - the port for the digital input
+     * @param slot
+     *            - the slot where the digital board is located
+     * @author Bob Brown
+     * @written Feb 8, 2011
+     *          -------------------------------------------------------
+     */
+    /*
+     * public RobotPotentiometer (
+     * final int slot,
+     * final int channel)
+     * {
+     * super(slot, channel);
+     * this.maxDegreesForPotentiometer = kDEFAULT_MAX_DEGREES;
+     * } // end RobotPotentiometer
+     */
+    // -------------------------------------------------------
+    /**
+     * Create an instance of a LightSensor class.
+     * Creates a digital input given a channel and the module
+     * passed in.
+     *
+     * @method Potentiometer() - constructor
+     * @param channel
+     *            - the port for the digital input
+     * @param slot
+     *            - the slot where the digital board is located
+     * @param maxDegrees
+     *            - maximum number of degrees that this potentiometer
+     *            could travel
+     * @author Bob Brown
+     * @written Feb 8, 2011
+     *          -------------------------------------------------------
+     */
+    /*
+     * public RobotPotentiometer (
+     * final int slot,
+     * final int channel,
+     * final double maxDegrees)
+     * {
+     * super(slot, channel);
+     * this.maxDegreesForPotentiometer = maxDegrees;
+     * } // end RobotPotentiometer
+     */
+    // -------------------------------------------------------
+    /**
+     * This function takes the raw value of the potentiometer (out of the max
+     * raw units, kTOTAL_RAW_UNITS) and converts it to degrees
+     *
+     * @method get
+     * @return int - returns the potentiometer degrees
+     * @author Kevin McVey
+     * @written Feb 19, 2010
+     * @modified by Noah Golmant
+     * @modified date Jan 22 2014
+     *           -------------------------------------------------------
+     */
+    @Override
+    public int get ()
+        {
+        if (this.isReversed == false)
+            return (int) ((this.getValue() / kTOTAL_RAW_UNITS) * this.maxDegreesForPotentiometer);
+        // If we are reversed, get it from the opposite direction
+        // e.g. if we're at 200/300 and are reversed we want to really send
+        // (300 - 200) / 300 = 100 / 300
+        return (int) (this.maxDegreesForPotentiometer - ((this.getValue() / kTOTAL_RAW_UNITS) * this.maxDegreesForPotentiometer));
+        } // end get
+>>>>>>> branch 'master' of https://github.com/FIRST-Team-339/2016
 
+<<<<<<< HEAD
 	/*
 	 * public RobotPotentiometer ( final int slot, final int channel, final
 	 * double maxDegrees) { super(slot, channel);
@@ -190,6 +269,32 @@ public class RobotPotentiometer extends AnalogInput implements Potentiometer {
 			return (int) (this.maxDegreesForPotentiometer
 					- ((this.getValue() / kTOTAL_RAW_UNITS) * this.maxDegreesForPotentiometer));
 	} // end get
+=======
+    // -------------------------------------------------
+    /**
+     * Gets the location within the range
+     *
+     * @param range
+     *            Total range to use
+     *            ex. range of 100 corresponds to -50 to +50
+     * @return location in the range
+     * @author Noah Golmant
+     * @written February 9, 2013
+     *          ------------------------------------------------
+     */
+    @Override
+    public double get (double range)
+        {
+        // (percent off from middle) * (range of values)
+        final double retVal =
+            (((2 * this.get()) - this.maxDegreesForPotentiometer) / this.maxDegreesForPotentiometer)
+                * (range / 2);
+        if (this.isReversed == false)
+            return retVal;
+        // If the potentiometer is reversed, negate our position
+        // within the range.
+        return (retVal * -1.0);
+>>>>>>> branch 'master' of https://github.com/FIRST-Team-339/2016
 
 	// -------------------------------------------------
 	/**
@@ -214,8 +319,35 @@ public class RobotPotentiometer extends AnalogInput implements Potentiometer {
 		else
 			return (retVal * -1.0);
 
+<<<<<<< HEAD
 	}
+=======
+    // ---------------------------------------------
+    /**
+     * Gets the location within the specified ranged
+     *
+     * @param minRange
+     *            minimum value in the range
+     * @param maxRange
+     *            maximum value in the range
+     * @return location in the specified range
+     *         ---------------------------------------------
+     */
+    @Override
+    public double get (double minRange, double maxRange)
+        {
+        final double tempRange = maxRange - minRange;
+        final double retVal =
+            ((this.getValue() / kTOTAL_RAW_UNITS) * tempRange) + minRange;
+        if (this.isReversed == false)
+            return retVal;
+        // If the potentiometer is reversed, negate our position
+        // within the range.
+        return retVal * -1.0;
+        }
+>>>>>>> branch 'master' of https://github.com/FIRST-Team-339/2016
 
+<<<<<<< HEAD
 	// ---------------------------------------------
 	/**
 	 * Gets the location within the specified ranged
@@ -238,7 +370,33 @@ public class RobotPotentiometer extends AnalogInput implements Potentiometer {
 			// within the range.
 			return retVal * -1.0;
 	}
+=======
+    // -------------------------------------------------------
+    /**
+     * This function takes the raw value of the potentiometer (out of the max
+     * raw units, kTOTAL_RAW_UNITS) and converts it to a given degree range
+     *
+     * @method get
+     * @param degrees
+     *            max degree value of the potentiometer
+     * @return int - returns the potentiometer degrees
+     * @author Noah Golmant
+     * @written Jan 22, 2014
+     *          -------------------------------------------------------
+     */
+    @Override
+    public int get (int degrees)
+        {
+        if (this.isReversed == false)
+            return (int) ((this.getValue() / kTOTAL_RAW_UNITS) * degrees);
+        // If we are reversed, get it from the opposite direction
+        // e.g. if we're at 200/300 and are reversed we want to really send
+        // (300 - 200) / 300 = 100 / 300
+        return (int) (this.maxDegreesForPotentiometer - ((this.getValue() / kTOTAL_RAW_UNITS) * degrees));
+        }
+>>>>>>> branch 'master' of https://github.com/FIRST-Team-339/2016
 
+<<<<<<< HEAD
 	// -------------------------------------------------------
 	/**
 	 * This function takes the raw value of the potentiometer (out of the max
@@ -262,6 +420,31 @@ public class RobotPotentiometer extends AnalogInput implements Potentiometer {
 			// (300 - 200) / 300 = 100 / 300
 			return (int) (this.maxDegreesForPotentiometer - ((this.getValue() / kTOTAL_RAW_UNITS) * degrees));
 	}
+=======
+    // -------------------------------------------------
+    /**
+     * Gets the location within the range using
+     * our max degree value as the range.
+     *
+     * @return location in the range
+     * @author Noah Golmant
+     * @written February 9, 2013
+     *          ------------------------------------------------
+     */
+    @Override
+    public double getFromRange ()
+        {
+        // (percent off from middle) * (range of values)
+        final double retVal =
+            (((2 * this.get()) - this.getMaxDegrees()) / this.getMaxDegrees())
+                * (this.getMaxDegrees() / 2);
+        if (this.isReversed == false)
+            return retVal;
+        // If the potentiometer is reversed, negate our position
+        // within the range.
+        return retVal * -1.0;
+        }
+>>>>>>> branch 'master' of https://github.com/FIRST-Team-339/2016
 
 	// -------------------------------------------------
 	/**
