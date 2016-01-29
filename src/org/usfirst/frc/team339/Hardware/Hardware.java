@@ -14,8 +14,9 @@
 // ====================================================================
 
 package org.usfirst.frc.team339.Hardware;
-
+import org.usfirst.frc.team339.HardwareInterfaces.IRSensor;
 import org.usfirst.frc.team339.HardwareInterfaces.transmission.Transmission;
+import edu.wpi.first.wpilibj.util.
 import org.usfirst.frc.team339.Utils.ErrorMessage;
 import edu.wpi.first.wpilibj.CANTalon;
 import edu.wpi.first.wpilibj.CameraServer;
@@ -120,6 +121,9 @@ public static CANTalon leftRearMotor = new CANTalon(
 // -------------------------------------
 // Red Light/IR Sensor class
 // -------------------------------------
+
+public static IRSensor rightIR = new IRSensor(0);
+public static IRSensor leftIR = new IRSensor(1);
 
 // ====================================
 // I2C Classes
