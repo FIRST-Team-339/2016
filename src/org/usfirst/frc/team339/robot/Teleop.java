@@ -31,36 +31,54 @@
 // ====================================================================
 package org.usfirst.frc.team339.robot;
 
-
-/** This class contains all of the user code for the Autonomous
- * part of the match, namely, the Init and Periodic code
+/**
+ * This class contains all of the user code for the Autonomous part of the
+ * match, namely, the Init and Periodic code
  *
  * @author Nathanial Lydick
- * @written Jan 13, 2015 */
+ * @written Jan 13, 2015
+ */
 public class Teleop
 {
 
-    // ==========================================
-    // TUNEABLES
-    // ==========================================
+/**
+ * User Initialization code for teleop mode should go here. Will be called
+ * once when the robot enters teleop mode.
+ *
+ * @author Nathanial Lydick
+ * @written Jan 13, 2015
+ */
+public static void init ()
+{
 
-    /** User Initialization code for teleop mode should go here. Will be
-     * called once when the robot enters teleop mode.
-     *
-     * @author Nathanial Lydick
-     * @written Jan 13, 2015 */
-    public static void init ()
-        {
+} // end Init
 
-        } // end Init
+/**
+ * User Periodic code for teleop mode should go here. Will be called
+ * periodically at a regular rate while the robot is in teleop mode.
+ *
+ * @author Nathanial Lydick
+ * @written Jan 13, 2015
+ */
+public static void periodic ()
+{
 
-    /** User Periodic code for teleop mode should go here. Will be called
-     * periodically at a regular rate while the robot is in teleop mode.
-     *
-     * @author Nathanial Lydick
-     * @written Jan 13, 2015 */
-    public static void periodic ()
-        {
+    printStatements();
 
-        } // end Periodic
+} // end Periodic
+
+/**
+ * stores print statements for future use, statements are commented out when
+ * not in use
+ * 
+ * @author Ashley Espeland
+ * @written 1/28/16
+ * 
+ */
+public static void printStatements ()
+{
+
+    // System.out.println("delay pot = " + (int) Hardware.delayPot.get());
+
+} // end printStatements
 } // end class
