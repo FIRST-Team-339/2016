@@ -66,281 +66,45 @@ private PrintsTo defaultPrintDevice = PrintsTo.driverStationAndRoboRIO;
  * Location defaults to /home/lvuser/errors/errorlog.txt<br>
  * Appends a time stamp by default.
  */
-public ErrorMessage ()
-{
-    errorlogLocation = "/home/lvuser/errors/errorlog.txt";
-
-    appendTimeStamp = true;
-
-    defaultPrintDevice = PrintsTo.driverStationAndRoboRIO;
-
-    /*
-     * if this directory does not exist, this should create it.
-     * 
-     * (This may encounter problems if directory may not be modified)
-     */
-    final File location = new File(errorlogLocation);
-
-    if (location.exists() == false)
-        {
-<<<<<<< HEAD
-        driverStation, roboRIO, driverStationAndRoboRIO
-        }
-
-    /** The time, according to the RIO. <br>
-     * Appended onto the beginning of the error message. <br>
-     * Updated upon printError. */
-    private String rioTime;
-
-    /** The match time, according to the DriverStation.getMatchTime() function. <br>
-     * May not be accurate. <br>
-     * Updated upon printError. */
-    private double matchTime;
-
-    /** The location to which the errors are saved. */
-    private String errorlogLocation = "/home/lvuser/errors/errorlog.txt";
-
-    /** The default choice of whether or not to append a time Stamp to the
-     * message. */
-    private boolean appendTimeStamp = true;
-
-    /** The set of devices to which the message is printed by default. */
-    private PrintsTo defaultPrintDevice = PrintsTo.driverStationAndRoboRIO;
-
-    /** Creates an ErrorMessage object. <br>
-     * Prints to both Drivers' Station and RoboRIO by default. <br>
-     * Alternative constructor allows for choice to send to either device.<br>
-     * Location defaults to /home/lvuser/errors/errorlog.txt<br>
-     * Appends a time stamp by default. */
-    public ErrorMessage ()
-        {
-        this.errorlogLocation = "/home/lvuser/errors/errorlog.txt";
-
-        this.appendTimeStamp = true;
-
-        this.defaultPrintDevice = PrintsTo.driverStationAndRoboRIO;
-
-        /* if this directory does not exist, this should create it.
-         * 
-         * (This may encounter problems if directory may not be modified) */
-        final File location = new File(this.errorlogLocation);
-
-        if (location.exists() == false)
-            {
-            final int lastSlash = this.errorlogLocation.lastIndexOf('/');
-            final String errorlogDirectory =
-                this.errorlogLocation.substring(0, lastSlash);
 
 
-            try
-                {
-                Runtime.getRuntime().exec("/bin/mkdir " + errorlogDirectory);
-                Runtime.getRuntime().exec(
-                    "/bin/touch \"" + this.errorlogLocation + "\"");
-                }
-            catch (final IOException e)
-                {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
-                }
-            try
-                {
-                location.createNewFile();
-                }
-            catch (final IOException e1)
-                {
-                // TODO Auto-generated catch block
-                e1.printStackTrace();
-                }
-            }
-        }
 
-    /** Creates an ErrorMessage object. <br>
-     * Prints to both Drivers' Station and RoboRIO by default. <br>
-     * Alternative constructor allows for choice to send to either device.<br>
-     * Location defaults to /home/lvuser/errors/errorlog.txt
-     *
-     * @param appendTimeStampByDefault
-     *            whether or not to append a time stamp to each message by
-     *            default. */
-    public ErrorMessage (boolean appendTimeStampByDefault)
-        {
-        this.errorlogLocation = "/home/lvuser/errors/errorlog.txt";
-
-        this.appendTimeStamp = appendTimeStampByDefault;
-
-        this.defaultPrintDevice = PrintsTo.driverStationAndRoboRIO;
-
-        /* if this directory does not exist, this should create it.
-         * 
-         * (This may encounter problems if directory may not be modified) */
-        final File location = new File(this.errorlogLocation);
-
-        if (location.exists() == false)
-            {
-            final int lastSlash = this.errorlogLocation.lastIndexOf('/');
-            final String errorlogDirectory =
-                this.errorlogLocation.substring(0, lastSlash);
-
-            try
-                {
-                Runtime.getRuntime().exec("/bin/mkdir " + errorlogDirectory);
-                Runtime.getRuntime().exec(
-                    "/bin/touch \"" + this.errorlogLocation + "\"");
-                }
-            catch (final IOException e)
-                {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
-                }
-            try
-                {
-                location.createNewFile();
-                }
-            catch (final IOException e1)
-                {
-                // TODO Auto-generated catch block
-                e1.printStackTrace();
-                }
-            }
-        }
-
-    /** Creates an ErrorMessage object and sends it to DS or RIO.
-     * * Prints to both Drivers' Station and RoboRIO by default. <br>
-     * Alternative constructor allows for choice to send to either device.<br>
-     * Location defaults to /home/lvuser/errors/errorlog.txt
-     * Appends time stamp by default
-     *
-     * @param PrintsTo
-     *            the default device to which the messages will be printed */
-    public ErrorMessage (PrintsTo PrintsTo)
-        {
-        this.errorlogLocation = "/home/lvuser/errors/errorlog.txt";
-
-        this.appendTimeStamp = true;
-
-        this.defaultPrintDevice = PrintsTo;
-
-        /* if this directory does not exist, this should create it.
-         * 
-         * (This may encounter problems if directory may not be modified) */
-        final File location = new File(this.errorlogLocation);
-
-        if (location.exists() == false)
-            {
-            final int lastSlash = this.errorlogLocation.lastIndexOf('/');
-            final String errorlogDirectory =
-                this.errorlogLocation.substring(0, lastSlash);
-
-            try
-                {
-                Runtime.getRuntime().exec("/bin/mkdir " + errorlogDirectory);
-                Runtime.getRuntime().exec(
-                    "/bin/touch \"" + this.errorlogLocation + "\"");
-                }
-            catch (final IOException e)
-                {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
-                }
-            try
-                {
-                location.createNewFile();
-                }
-            catch (final IOException e1)
-                {
-                // TODO Auto-generated catch block
-                e1.printStackTrace();
-                }
-            }
-        }
-
-    /** Creates an Error and decides to print to Drivers' Station
-     * and/or RoboRIO. <br>
-     * You may set the default print device,<br>
-     * and choose whether or not to append a time stamp by default.
-     *
-     * @param PrintsTo
-     *            is the default print device(s).
-     * @param appendTimeStampByDefault
-     *            is whether or not to append a time stamp to each message by
-     *            default. */
-    public ErrorMessage (PrintsTo PrintsTo, boolean appendTimeStampByDefault)
-        {
-        this.errorlogLocation = "/home/lvuser/errors/errorlog.txt";
-
-        this.defaultPrintDevice = PrintsTo;
-        this.appendTimeStamp = appendTimeStampByDefault;
-
-        /* if this directory does not exist, this should create it. */
-        final File location = new File(this.errorlogLocation);
-=======
-        final int lastSlash = errorlogLocation.lastIndexOf('/');
-        final String errorlogDirectory = errorlogLocation.substring(0,
-                lastSlash);
->>>>>>> branch 'master' of https://github.com/FIRST-Team-339/2016
-
-        try
-            {
-            Runtime.getRuntime()
-                    .exec("/bin/mkdir " + errorlogDirectory);
-            Runtime.getRuntime().exec(
-                    "/bin/touch \"" + errorlogLocation + "\"");
-            }
-        catch (final IOException e)
-            {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-            }
-        try
-            {
-            location.createNewFile();
-            }
-        catch (final IOException e1)
-            {
-            // TODO Auto-generated catch block
-            e1.printStackTrace();
-            }
-        }
-}
 
 /**
  * Creates an ErrorMessage object. <br>
  * Prints to both Drivers' Station and RoboRIO by default. <br>
  * Alternative constructor allows for choice to send to either device.<br>
- * Location defaults to /home/lvuser/errors/errorlog.txt
- *
- * @param appendTimeStampByDefault
- *            whether or not to append a time stamp to each message by
- *            default.
+ * Location defaults to /home/lvuser/errors/errorlog.txt<br>
+ * Appends a time stamp by default.
  */
-public ErrorMessage (boolean appendTimeStampByDefault)
+public ErrorMessage ()
 {
-    errorlogLocation = "/home/lvuser/errors/errorlog.txt";
+    this.errorlogLocation = "/home/lvuser/errors/errorlog.txt";
 
-    appendTimeStamp = appendTimeStampByDefault;
+    this.appendTimeStamp = true;
 
-    defaultPrintDevice = PrintsTo.driverStationAndRoboRIO;
+    this.defaultPrintDevice = PrintsTo.driverStationAndRoboRIO;
 
     /*
      * if this directory does not exist, this should create it.
      * 
      * (This may encounter problems if directory may not be modified)
      */
-    final File location = new File(errorlogLocation);
+    final File location = new File(this.errorlogLocation);
 
     if (location.exists() == false)
         {
-        final int lastSlash = errorlogLocation.lastIndexOf('/');
-        final String errorlogDirectory = errorlogLocation.substring(0,
-                lastSlash);
+        final int lastSlash = this.errorlogLocation.lastIndexOf('/');
+        final String errorlogDirectory =
+                this.errorlogLocation.substring(0, lastSlash);
+
 
         try
             {
             Runtime.getRuntime()
                     .exec("/bin/mkdir " + errorlogDirectory);
             Runtime.getRuntime().exec(
-                    "/bin/touch \"" + errorlogLocation + "\"");
+                    "/bin/touch \"" + this.errorlogLocation + "\"");
             }
         catch (final IOException e)
             {
@@ -371,11 +135,67 @@ public ErrorMessage (boolean appendTimeStampByDefault)
  */
 public ErrorMessage (PrintsTo PrintsTo)
 {
+    this.errorlogLocation = "/home/lvuser/errors/errorlog.txt";
+
+    this.appendTimeStamp = true;
+
+    this.defaultPrintDevice = PrintsTo;
+
+    /*
+     * if this directory does not exist, this should create it.
+     * 
+     * (This may encounter problems if directory may not be modified)
+     */
+    final File location = new File(this.errorlogLocation);
+
+    if (location.exists() == false)
+        {
+        final int lastSlash = this.errorlogLocation.lastIndexOf('/');
+        final String errorlogDirectory =
+                this.errorlogLocation.substring(0, lastSlash);
+
+        try
+            {
+            Runtime.getRuntime()
+                    .exec("/bin/mkdir " + errorlogDirectory);
+            Runtime.getRuntime().exec(
+                    "/bin/touch \"" + this.errorlogLocation + "\"");
+            }
+        catch (final IOException e)
+            {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+            }
+        try
+            {
+            location.createNewFile();
+            }
+        catch (final IOException e1)
+            {
+            // TODO Auto-generated catch block
+            e1.printStackTrace();
+            }
+        }
+}
+
+
+/**
+ * Creates an ErrorMessage object. <br>
+ * Prints to both Drivers' Station and RoboRIO by default. <br>
+ * Alternative constructor allows for choice to send to either device.<br>
+ * Location defaults to /home/lvuser/errors/errorlog.txt
+ *
+ * @param appendTimeStampByDefault
+ *            whether or not to append a time stamp to each message by
+ *            default.
+ */
+public ErrorMessage (boolean appendTimeStampByDefault)
+{
     errorlogLocation = "/home/lvuser/errors/errorlog.txt";
 
-    appendTimeStamp = true;
+    appendTimeStamp = appendTimeStampByDefault;
 
-    defaultPrintDevice = PrintsTo;
+    defaultPrintDevice = PrintsTo.driverStationAndRoboRIO;
 
     /*
      * if this directory does not exist, this should create it.
@@ -874,88 +694,74 @@ public void deleteErrorLog ()
 private String getDate ()
 {
     String retTime = "Unknown Time...";
+    String errorMessage = null;
     try
         {
-<<<<<<< HEAD
-    	String appendedErrorMessage;
-    	
+
         this.rioTime = this.getDate();
         this.matchTime = Hardware.driverStation.getMatchTime();
-=======
         final Process p = Runtime.getRuntime().exec("date");
->>>>>>> branch 'master' of https://github.com/FIRST-Team-339/2016
 
-<<<<<<< HEAD
         if (this.appendTimeStamp == true)
             {
-            appendedErrorMessage = this.appendErrorMessage(errorMessage);
+            errorMessage = this.appendErrorMessage(errorMessage);
             }
-        else
-        {
-        	appendedErrorMessage = errorMessage;
-        }
-=======
         final BufferedReader stdInput = new BufferedReader(
                 new InputStreamReader(p.getInputStream()));
->>>>>>> branch 'master' of https://github.com/FIRST-Team-339/2016
-
-<<<<<<< HEAD
         // if the error must print to the Drivers' Station
         if ((this.defaultPrintDevice == PrintsTo.driverStation) ||
-            (this.defaultPrintDevice == PrintsTo.driverStationAndRoboRIO))
+                (this.defaultPrintDevice == PrintsTo.driverStationAndRoboRIO))
             {
-            final String dsReport = this.appendErrorMessage(errorMessage);
+            final String dsReport =
+                    this.appendErrorMessage(errorMessage);
             DriverStation.reportError(dsReport, false);
             }
         // if the error must print to the errorlog on the rio.
         if ((this.defaultPrintDevice == PrintsTo.roboRIO) ||
-            (this.defaultPrintDevice == PrintsTo.driverStationAndRoboRIO))
+                (this.defaultPrintDevice == PrintsTo.driverStationAndRoboRIO))
             {
-            this.PrintsToRIO(appendedErrorMessage);
+            this.PrintsToRIO(errorMessage);
             }
-=======
         String s = null;
         // read the output from the command
         while ((s = stdInput.readLine()) != null)
             retTime = s;
->>>>>>> branch 'master' of https://github.com/FIRST-Team-339/2016
         }
     catch (final IOException e)
         {
-<<<<<<< HEAD
-    	String appendedErrorMessage;
-    	
+        String appendedErrorMessage;
+
         this.rioTime = this.getDate();
         this.matchTime = Hardware.driverStation.getMatchTime();
 
-        if (attatchTimeStamp == true)
+        if (this.appendTimeStamp == true)
             {
-            appendedErrorMessage = this.appendErrorMessage(errorMessage);
+            appendedErrorMessage =
+                    this.appendErrorMessage(errorMessage);
             }
         else
-        {
-        	appendedErrorMessage = errorMessage;
-        }
+            {
+            appendedErrorMessage = errorMessage;
+            }
 
         // if the error must print to the Drivers' Station
         if ((this.defaultPrintDevice == PrintsTo.driverStation) ||
-            (this.defaultPrintDevice == PrintsTo.driverStationAndRoboRIO))
+                (this.defaultPrintDevice == PrintsTo.driverStationAndRoboRIO))
             {
-            final String dsReport = this.appendErrorMessage(errorMessage);
+            final String dsReport =
+                    this.appendErrorMessage(errorMessage);
             DriverStation.reportError(dsReport, false);
             }
         // if the error must print to the errorlog on the rio.
         if ((this.defaultPrintDevice == PrintsTo.roboRIO) ||
-            (this.defaultPrintDevice == PrintsTo.driverStationAndRoboRIO))
+                (this.defaultPrintDevice == PrintsTo.driverStationAndRoboRIO))
             {
             this.PrintsToRIO(appendedErrorMessage);
             }
-=======
         // TODO Auto-generated catch block
         e.printStackTrace();
         System.out.println(
                 "Something went wrong with fetching the date.");
->>>>>>> branch 'master' of https://github.com/FIRST-Team-339/2016
         }
     return retTime;
 }
@@ -1084,12 +890,9 @@ public void printError (String errorMessage, PrintsTo PrintsTo,
     if (PrintsTo == ErrorMessage.PrintsTo.driverStation ||
             PrintsTo == ErrorMessage.PrintsTo.driverStationAndRoboRIO)
         {
-<<<<<<< HEAD
-        String appendedErrorMessage;
-        
+
         this.rioTime = this.getDate();
         this.matchTime = Hardware.driverStation.getMatchTime();
-=======
         final String dsReport = appendErrorMessage(errorMessage);
         DriverStation.reportError(dsReport, false);
         }
@@ -1097,19 +900,19 @@ public void printError (String errorMessage, PrintsTo PrintsTo,
     if (PrintsTo == ErrorMessage.PrintsTo.roboRIO ||
             PrintsTo == ErrorMessage.PrintsTo.driverStationAndRoboRIO)
         PrintsToRIO(appendedErrorMessage);
-}
->>>>>>> branch 'master' of https://github.com/FIRST-Team-339/2016
 
-<<<<<<< HEAD
-        if (attatchTimeStamp == true)
-            {
-            appendedErrorMessage = this.appendErrorMessage(errorMessage);
-            }
-            else
-            {
-            appendedErrorMessage = errorMessage;
-            }
-=======
+    if (attatchTimeStamp == true)
+
+        {
+        appendedErrorMessage = this.appendErrorMessage(errorMessage);
+        }
+    else
+
+        {
+        appendedErrorMessage = errorMessage;
+        }
+}
+
 /**
  * Prints the error message to the error log on the RoboRIO.
  *
@@ -1117,23 +920,19 @@ public void printError (String errorMessage, PrintsTo PrintsTo,
  */
 private void PrintsToRIO (String errorMessage)
 {
->>>>>>> branch 'master' of https://github.com/FIRST-Team-339/2016
-
-<<<<<<< HEAD
-        // if the error must print to the Drivers' Station
-        if ((PrintsTo == ErrorMessage.PrintsTo.driverStation) ||
-            (PrintsTo == ErrorMessage.PrintsTo.driverStationAndRoboRIO))
-            {
-            final String dsReport = this.appendErrorMessage(errorMessage);
-            DriverStation.reportError(dsReport, false);
-            }
-        // if the error must print to the errorlog on the rio.
-        if ((PrintsTo == ErrorMessage.PrintsTo.roboRIO) ||
-            (PrintsTo == ErrorMessage.PrintsTo.driverStationAndRoboRIO))
-            {
-            this.PrintsToRIO(appendedErrorMessage);
-            }
-=======
+    // if the error must print to the Drivers' Station
+    if ((defaultPrintDevice == ErrorMessage.PrintsTo.driverStation) ||
+            (defaultPrintDevice == ErrorMessage.PrintsTo.driverStationAndRoboRIO))
+        {
+        final String dsReport = this.appendErrorMessage(errorMessage);
+        DriverStation.reportError(dsReport, false);
+        }
+    // if the error must print to the errorlog on the rio.
+    if ((defaultPrintDevice == ErrorMessage.PrintsTo.roboRIO) ||
+            (defaultPrintDevice == ErrorMessage.PrintsTo.driverStationAndRoboRIO))
+        {
+        this.PrintsToRIO(errorMessage);
+        }
     // final String modifiedErrorMessage =
     // appendedErrorMessage.replace('\n', ' '); // removes all
     // newlines.
@@ -1150,7 +949,6 @@ private void PrintsToRIO (String errorMessage)
         // TODO Auto-generated catch block
         e.printStackTrace();
         System.out.println("More errors with your error?");
->>>>>>> branch 'master' of https://github.com/FIRST-Team-339/2016
         }
 
 }
