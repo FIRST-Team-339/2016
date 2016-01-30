@@ -78,8 +78,7 @@ private static final int leftFrontMotorCANID = 12;
 public static CANTalon rightRearMotor = new CANTalon(
         rightRearMotorCANID);
 public static CANTalon leftRearMotor = new CANTalon(
-        leftRearMotorCANID);
-<<<<<<< HEAD
+        leftRearMotorCANID);<<<<<<<HEAD
 public static CANTalon rightFrontMotor =
         new CANTalon(rightFrontMotorCANID);
 public static CANTalon leftFrontMotor =
@@ -93,13 +92,14 @@ public static CANTalon leftFrontMotor =
 // CAN classes
 // ------------------------------------
 =======
-        // ------------------------------------
-        // Victor classes
-        // ------------------------------------
-        // ------------------------------------
-        // CAN classes
-        // ------------------------------------
->>>>>>> branch 'master' of https://github.com/FIRST-Team-339/2016.git
+// ------------------------------------
+// Victor classes
+// ------------------------------------
+// ------------------------------------
+// CAN classes
+// ------------------------------------
+>>>>>>>branch'master'
+of https://github.com/FIRST-Team-339/2016.git
 
 // ====================================
 // Relay classes
@@ -116,16 +116,13 @@ public static CANTalon leftFrontMotor =
 // ------------------------------------
 // Single and double throw switches
 // ------------------------------------
-<<<<<<< HEAD
 
 //Turns autonomous on or off.
 public static SingleThrowSwitch autonomousEnabled =
         new SingleThrowSwitch(19);
 //TODO: plug in switch and set real port numbers.
 public static SixPositionSwitch startingPositionDial =
-        new SixPositionSwitch(-1, -1, -1, -1, -1, -1);
-=======
->>>>>>> branch 'master' of https://github.com/FIRST-Team-339/2016.git
+        new SixPositionSwitch(14, 15, 16, 17, 18, 21);
 
 // ------------------------------------
 // Gear Tooth Sensors
@@ -192,15 +189,15 @@ public static IRSensor leftIR = new IRSensor(1);
 // -------------------------------------
 // Potentiometers
 // -------------------------------------
-<<<<<<< HEAD
+<<<<<<<HEAD
 
-public static Potentiometer delayPot = new Potentiometer(3, 270);
-=======
+public static Potentiometer delayPot = new Potentiometer(3, 270);=======
 public static AnalogPotentiometer delayPot =
         new AnalogPotentiometer(3, 270);
 
 // -------------------------------------
->>>>>>> branch 'master' of https://github.com/FIRST-Team-339/2016.git
+        >>>>>>>branch'master'
+of https://github.com/FIRST-Team-339/2016.git
 
 // -------------------------------------
 // Sonar/Ultrasonic
@@ -279,14 +276,13 @@ public static Drive drive = new Drive(transmission, rightRearEncoder,
 // Utility classes
 // ------------------------------------
 public static final Timer kilroyTimer = new Timer();
-public static final Timer autoTimer = new Timer();
-<<<<<<< HEAD
+public static final Timer autoTimer = new Timer();<<<<<<<HEAD
 public static final Timer delayTimer = new Timer();
 public static final ErrorMessage errorMessage = new ErrorMessage(
         true /* append timelog */);
 
 =======
 public static final ErrorMessage errorMessage = new ErrorMessage(true
-/* append timelog */);
->>>>>>> branch 'master' of https://github.com/FIRST-Team-339/2016.git
+/* append timelog */);>>>>>>>branch'master'
+of https://github.com/FIRST-Team-339/2016.git
 } // end class

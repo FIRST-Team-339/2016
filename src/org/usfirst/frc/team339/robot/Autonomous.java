@@ -410,8 +410,21 @@ private static void forwardsToTape ()
  */
 private static void align ()
 {
-    // TODO: create new sub-state machine based around each sensor's status of
-    // being on the tape.
+    switch (alignmentState)
+        {
+        case NEITHER_ON_TAPE:
+            alignFind();
+            break;
+        case LEFT_ON_TAPE:
+            alignRightSide();
+            break;
+        case RIGHT_ON_TAPE:
+            alignLeftSide();
+            break;
+        case BOTH_ON_TAPE:
+            alignFinish();
+            break;
+        }
 }
 
 /**
@@ -515,6 +528,39 @@ private static void forwardsTwo ()
  * END OF MOVE_TO_SHOOTING_POSITION SUB-STATE METHODS
  * ==============================================
  */
+
+
+/*
+ * ==============================================
+ * ALIGN SUB-STATE METHODS
+ * ==============================================
+ */
+
+private static void alignFind ()
+{
+
+}
+
+private static void alignRightSide ()
+{
+
+}
+
+private static void alignLeftSide ()
+{
+
+}
+
+private static void alignFinish ()
+{
+
+}
+/*
+ * ==============================================
+ * END ALIGN SUB-STATE METHODS
+ * ==============================================
+ */
+
 
 //                      __ _ __
 // .................../         \
