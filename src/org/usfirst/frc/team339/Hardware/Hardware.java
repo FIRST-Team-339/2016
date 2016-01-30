@@ -145,8 +145,8 @@ public static Encoder rightRearEncoder = new Encoder(2, 3);
 // Red Light/IR Sensor class
 // -------------------------------------
 
-public static IRSensor rightIR = new IRSensor(0);
-public static IRSensor leftIR = new IRSensor(1);
+public static IRSensor rightIR = new IRSensor(6);
+public static IRSensor leftIR = new IRSensor(22);
 
 // ====================================
 // I2C Classes
