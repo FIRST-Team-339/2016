@@ -14,15 +14,16 @@
 // ====================================================================
 
 package org.usfirst.frc.team339.Hardware;
+
 import org.usfirst.frc.team339.HardwareInterfaces.IRSensor;
 import org.usfirst.frc.team339.HardwareInterfaces.KilroyCamera;
 import org.usfirst.frc.team339.HardwareInterfaces.transmission.Transmission;
 import org.usfirst.frc.team339.Utils.ErrorMessage;
 import edu.wpi.first.wpilibj.AnalogPotentiometer;
 import edu.wpi.first.wpilibj.CANTalon;
-import edu.wpi.first.wpilibj.CANTalon;
 import edu.wpi.first.wpilibj.CameraServer;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.vision.USBCamera;
 
@@ -70,12 +71,12 @@ public static CANTalon rightRearMotor = new CANTalon(
         rightRearMotorCANID);
 public static CANTalon leftRearMotor = new CANTalon(
         leftRearMotorCANID);
-// ------------------------------------
-// Victor classes
-// ------------------------------------
-// ------------------------------------
-// CAN classes
-// ------------------------------------
+        // ------------------------------------
+        // Victor classes
+        // ------------------------------------
+        // ------------------------------------
+        // CAN classes
+        // ------------------------------------
 
 // ====================================
 // Relay classes
