@@ -48,6 +48,8 @@ public class Teleop
 // TUNEABLES
 // ==========================================
 
+
+
 /**
  * User Initialization code for teleop mode should go here. Will be
  * called once when the robot enters teleop mode.
@@ -57,6 +59,11 @@ public class Teleop
  */
 public static void init ()
 {
+
+    // set max speed. change by gear?
+    Hardware.drive.setMaxSpeed(MAXIMUM_TELEOP_SPEED);
+
+
     // -----------------------------------
     // stop cam0 in case we have declared them
     // in Autonomous. Then declare a new cam0
@@ -115,4 +122,14 @@ public static void printStatements ()
     System.out.println(Hardware.startingPositionDial.getPosition());
 
 } // end printStatements
+
+
+/*
+ * ===============================================
+ * Constants
+ * ===============================================
+ */
+
+private static final double MAXIMUM_TELEOP_SPEED = 1.0;
+
 } // end class

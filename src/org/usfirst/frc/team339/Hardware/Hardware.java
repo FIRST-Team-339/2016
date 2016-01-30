@@ -108,9 +108,16 @@ public static CANTalon leftFrontMotor =
 // ------------------------------------
 
 //Turns autonomous on or off.
+/**
+ * A physical switch that decides whether or not to run autonomous.
+ */
 public static SingleThrowSwitch autonomousEnabled =
         new SingleThrowSwitch(19);
-//TODO: plug in switch and set real port numbers.
+
+/**
+ * Displays the starting position.
+ * Position 0 on the switch corresponds to position 1, 1 to 2, etc.
+ */
 public static SixPositionSwitch startingPositionDial =
         new SixPositionSwitch(14, 15, 16, 17, 18, 21);
 
