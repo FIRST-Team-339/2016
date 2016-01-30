@@ -65,7 +65,8 @@ public class Autonomous
  */
 private static enum MainState
     {
-    INIT, DELAY, // waits, depending on settings.
+    INIT, // beginning, check conditions
+    DELAY, // waits, depending on settings.
     FORWARDS_TO_TAPE, // drives forwards until detection of the gaffers' tape.
     ALIGN, // aligns its self on the gaffers' tape based of IR sensors.
     MOVE_TO_SHOOTING_POSITION,  // moves towards a good shooting angle based on
@@ -76,7 +77,8 @@ private static enum MainState
 
 private static enum MoveToShootingPositionStep
     {
-    INIT, ROTATE_ZERO, // rotates given number before moving forwards.
+    INIT, //beginning
+    ROTATE_ZERO, // rotates given number before moving forwards.
     FORWARDS_ONE, // moves forwards.
     ROTATE_ONE, // pauses to rotate.
     FORWARDS_TWO, // continues to move forwards.
@@ -87,6 +89,11 @@ private static enum StartingPosition
     {
     ONE, TWO, THREE, FOUR, FIVE
 
+    }
+
+private static enum AlignmentState
+    {
+    NEITHER_ON_TAPE, LEFT_ON_TAPE, RIGHT_ON_TAPE, BOTH_ON_TAPE
     }
 
 private static boolean leftSensorIsOnTape;
@@ -104,7 +111,9 @@ private static class DriveDistance
 private static MainState mainState = MainState.INIT;
 private static MoveToShootingPositionStep moveToShootingPositionStep =
         MoveToShootingPositionStep.INIT;
-private static StartingPosition startingPosition;
+private static StartingPosition startingPosition = StartingPosition.ONE;
+private static AlignmentState alignmentState =
+        AlignmentState.NEITHER_ON_TAPE;
 
 // ==================================
 // VARIABLES
@@ -135,8 +144,15 @@ private static double forwards2; // amount to move forwards in FORWARDS_TWO
 public static void init ()
 {
 
+    // set the delay time based on potentiometer.
+    initDelayTime();
+
+    //set Starting Position based on Six-Position Switch.
+    initStartingPosition();
+
     // set the drive values for MOVE_TO_SHOOTING_POSITION
     initGoalPath();
+
 
     // -------------------------------------
     // close both of the cameras in case they
@@ -162,6 +178,7 @@ public static void init ()
     // ---------------------------------------
     Hardware.kilroyTimer.stop();
     Hardware.kilroyTimer.reset();
+    Hardware.delayTimer.start();
 } // end Init
 
 /**
@@ -173,6 +190,18 @@ public static void init ()
  */
 public static void periodic ()
 {
+
+
+    //testing for Drive class.
+    rotateZero();
+    forwardsOne();
+
+
+    //runs the overarching state machine.
+    runMainStateMachine();
+
+
+
     // ------------------------------
     // process images from the USB camera
     // FOr one time only, process an image.
@@ -182,6 +211,9 @@ public static void periodic ()
     // you would normally do normal processing
     // of the image (filtering, etc.)
     // ------------------------------
+
+
+
     if (processImage == true)
         {
         processImage = false;
@@ -203,6 +235,42 @@ static Image capturedFrame;
 static int sessionNumber = 0;
 static NIVision.Rect frameRect;
 
+/**
+ * Sets the delay time in full seconds based on potentiometer.
+ */
+private static void initDelayTime ()
+{
+    delay = (int) MAXIMUM_DELAY * Hardware.delayPot.get()
+            / ONE_THOUSAND;
+}
+
+/**
+ * Sets startingPosition based on six-position switch.
+ */
+private static void initStartingPosition ()
+{
+    switch (Hardware.startingPositionDial.getPosition())
+        {
+        case 0:
+            startingPosition = StartingPosition.ONE;
+            break;
+        case 1:
+            startingPosition = StartingPosition.TWO;
+            break;
+        case 2:
+            startingPosition = StartingPosition.THREE;
+            break;
+        case 3:
+            startingPosition = StartingPosition.FOUR;
+            break;
+        case 4:
+            startingPosition = StartingPosition.FIVE;
+            break;
+        default:
+            //why?
+            break;
+        }
+}
 
 /**
  * Sets distances to be traveled during FORWARDS_TO_SHOOTING_POSITION based on
@@ -253,6 +321,8 @@ private static void runMainStateMachine ()
 {
     switch (mainState)
         {
+        case INIT:
+            mainStateMachineInit();
         case DELAY:
             delay();
             break;
@@ -266,7 +336,7 @@ private static void runMainStateMachine ()
             moveToShootingPosition();
             break;
         case SHOOT:
-            // shoot();
+            shoot();
             break;
         }
 }
@@ -278,6 +348,23 @@ private static void runMainStateMachine ()
  * ======================================
  */
 
+public static void mainStateMachineInit ()
+{
+
+    if (Hardware.autonomousEnabled.isOn() == true)
+        {
+
+        mainState = MainState.DELAY;
+
+        }
+    else
+        {
+        mainState = MainState.DONE;
+        }
+
+}
+
+
 /**
  * Waits.
  * Continues to FORWARDS_TO_TAPE when time is up.
@@ -285,17 +372,33 @@ private static void runMainStateMachine ()
  */
 private static void delay ()
 {
-    // TODO: write code for delay
-    // if(Timer.get() > delay)
+    if (Hardware.delayTimer.get() > delay)
         {
-        // State = FORWARDS_TO_TAPE;
+        mainState = MainState.FORWARDS_TO_TAPE;
+        Hardware.delayTimer.stop();
+        Hardware.delayTimer.reset();
         }
 }
 
 private static void forwardsToTape ()
 {
 
-    // TODO: drive until tape is detected
+    Hardware.drive.driveForwardInches(0.0);
+    if (Hardware.leftIR.isOn() && Hardware.rightIR.isOn())
+        {
+        alignmentState = AlignmentState.BOTH_ON_TAPE;
+        mainState = MainState.ALIGN;
+        }
+    else if (Hardware.leftIR.isOn())
+        {
+        alignmentState = AlignmentState.LEFT_ON_TAPE;
+        mainState = MainState.ALIGN;
+        }
+    else if (Hardware.rightIR.isOn())
+        {
+        alignmentState = AlignmentState.RIGHT_ON_TAPE;
+        mainState = MainState.ALIGN;
+        }
 
 }
 
@@ -322,6 +425,9 @@ private static void moveToShootingPosition ()
 {
     switch (moveToShootingPositionStep)
         {
+        case INIT:
+
+            break;
         case ROTATE_ZERO:
             // if not needed, set rotate0 to 0.
             rotateZero();
@@ -335,6 +441,8 @@ private static void moveToShootingPosition ()
         case FORWARDS_TWO:
             // if not needed, set forwards2 to 0.
             forwardsTwo();
+            break;
+        case DONE:
             break;
         }
 }
@@ -357,24 +465,47 @@ private static void shoot ()
  * ==============================================
  */
 
+private static void moveToShootingPositionInit ()
+{
+    moveToShootingPositionStep =
+            MoveToShootingPositionStep.ROTATE_ZERO;
+}
+
 private static void rotateZero ()
 {
-    // TODO: write turn
+    if (Hardware.drive.turnLeftDegrees(rotate0))
+        {
+        moveToShootingPositionStep =
+                MoveToShootingPositionStep.FORWARDS_ONE;
+        }
 }
 
 private static void forwardsOne ()
 {
-    // TODO: write move
+    if (Hardware.drive.driveForwardInches(forwards1))
+        {
+        moveToShootingPositionStep =
+                MoveToShootingPositionStep.ROTATE_ONE;
+        }
 }
 
 private static void rotateOne ()
 {
-    // TODO: write turn
+    if (Hardware.drive.turnLeftDegrees(rotate1))
+        ;
+        {
+        moveToShootingPositionStep =
+                MoveToShootingPositionStep.FORWARDS_TWO;
+        }
 }
 
 private static void forwardsTwo ()
 {
-    // TODO: write move
+    if (Hardware.drive.driveForwardInches(forwards2))
+        {
+        moveToShootingPositionStep =
+                MoveToShootingPositionStep.DONE;
+        }
 }
 
 
@@ -394,6 +525,11 @@ private static void forwardsTwo ()
 //------ ---------------|     |--------------------*/
 // ----------------------\___/
 // ...............................|<!(r% ~@$ #3r3
+
+
+private static final double MAXIMUM_DELAY = 4.0;
+private static final int ONE_THOUSAND = 1000;
+
 /*------------------------------------------------------------------------------
 Below are the distances traveled by the robot in
 FORWARDS_TO_SHOOTING_POSITION. The order
