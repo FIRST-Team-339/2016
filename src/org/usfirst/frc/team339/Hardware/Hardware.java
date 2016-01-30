@@ -24,6 +24,7 @@ import org.usfirst.frc.team339.HardwareInterfaces.transmission.Transmission;
 import org.usfirst.frc.team339.HardwareInterfaces.transmission.TransmissionFourWheel;
 import org.usfirst.frc.team339.Utils.Drive;
 import org.usfirst.frc.team339.Utils.ErrorMessage;
+import edu.wpi.first.wpilibj.AnalogPotentiometer;
 import edu.wpi.first.wpilibj.CANTalon;
 import edu.wpi.first.wpilibj.CameraServer;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -78,6 +79,7 @@ public static CANTalon rightRearMotor = new CANTalon(
         rightRearMotorCANID);
 public static CANTalon leftRearMotor = new CANTalon(
         leftRearMotorCANID);
+<<<<<<< HEAD
 public static CANTalon rightFrontMotor =
         new CANTalon(rightFrontMotorCANID);
 public static CANTalon leftFrontMotor =
@@ -90,6 +92,14 @@ public static CANTalon leftFrontMotor =
 // ------------------------------------
 // CAN classes
 // ------------------------------------
+=======
+        // ------------------------------------
+        // Victor classes
+        // ------------------------------------
+        // ------------------------------------
+        // CAN classes
+        // ------------------------------------
+>>>>>>> branch 'master' of https://github.com/FIRST-Team-339/2016.git
 
 // ====================================
 // Relay classes
@@ -106,6 +116,7 @@ public static CANTalon leftFrontMotor =
 // ------------------------------------
 // Single and double throw switches
 // ------------------------------------
+<<<<<<< HEAD
 
 //Turns autonomous on or off.
 public static SingleThrowSwitch autonomousEnabled =
@@ -113,6 +124,8 @@ public static SingleThrowSwitch autonomousEnabled =
 //TODO: plug in switch and set real port numbers.
 public static SixPositionSwitch startingPositionDial =
         new SixPositionSwitch(-1, -1, -1, -1, -1, -1);
+=======
+>>>>>>> branch 'master' of https://github.com/FIRST-Team-339/2016.git
 
 // ------------------------------------
 // Gear Tooth Sensors
@@ -179,16 +192,22 @@ public static IRSensor leftIR = new IRSensor(1);
 // -------------------------------------
 // Potentiometers
 // -------------------------------------
+<<<<<<< HEAD
 
 public static Potentiometer delayPot = new Potentiometer(3, 270);
+=======
+public static AnalogPotentiometer delayPot =
+        new AnalogPotentiometer(3, 270);
+
+// -------------------------------------
+>>>>>>> branch 'master' of https://github.com/FIRST-Team-339/2016.git
 
 // -------------------------------------
 // Sonar/Ultrasonic
 // -------------------------------------
 
 // **********************************************************
-// roboRIO CONNECTIONS
-// CLASSES
+// roboRIO CONNECTIONS CLASSES
 // **********************************************************
 // -------------------------------------
 // Axis/USB Camera class
@@ -211,8 +230,8 @@ public static KilroyCamera axisCamera;
 // ------------------------------------
 // DriverStations class
 // ------------------------------------
-public static final DriverStation driverStation = DriverStation
-        .getInstance();
+public static final DriverStation driverStation =
+        DriverStation.getInstance();
 
 // ------------------------------------
 // Joystick classes
@@ -261,8 +280,13 @@ public static Drive drive = new Drive(transmission, rightRearEncoder,
 // ------------------------------------
 public static final Timer kilroyTimer = new Timer();
 public static final Timer autoTimer = new Timer();
+<<<<<<< HEAD
 public static final Timer delayTimer = new Timer();
 public static final ErrorMessage errorMessage = new ErrorMessage(
         true /* append timelog */);
 
+=======
+public static final ErrorMessage errorMessage = new ErrorMessage(true
+/* append timelog */);
+>>>>>>> branch 'master' of https://github.com/FIRST-Team-339/2016.git
 } // end class

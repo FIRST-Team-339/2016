@@ -81,8 +81,22 @@ public static void init ()
 public static void periodic ()
 {
 
-    Hardware.transmission.drive(Hardware.rightDriver.getY(),
-            -Hardware.leftDriver.getY());
+    printStatements();
+
 } // end Periodic
 
+/**
+ * stores print statements for future use, statements are commented out when
+ * not in use
+ * 
+ * @author Ashley Espeland
+ * @written 1/28/16
+ * 
+ */
+public static void printStatements ()
+{
+
+    // System.out.println("delay pot = " + (int) Hardware.delayPot.get());
+
+} // end printStatements
 } // end class
