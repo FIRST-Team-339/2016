@@ -106,7 +106,7 @@ public static void printStatements ()
     // System.out.println("RF Motor V = " + Hardware.rightFrontMotor.get());
     // System.out.println("LF Motor V = " + Hardware.leftFrontMotor.get());
     System.out.println(
-            "RR distance = " + Hardware.rightRearEncode.getDistance());
+            "RR distance = " + Hardware.rightRearEncoder.getDistance());
     System.out.println(
             "LR distance = " + Hardware.leftFrontEncoder.getDistance());
     System.out.println("RF distance = "
