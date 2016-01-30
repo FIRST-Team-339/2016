@@ -95,8 +95,24 @@ public static void periodic ()
  */
 public static void printStatements ()
 {
-
+    // IR sensors
+    System.out.println("left IR = " + Hardware.leftIR.isOn());
+    System.out.println("right IR = " + Hardware.rightIR.isOn());
+    // pots
     // System.out.println("delay pot = " + (int) Hardware.delayPot.get());
+    // Motor controllers
+    System.out.println("RR Motor V = " + Hardware.rightRearMotor.get());
+    System.out.println("LR Motor V = " + Hardware.leftRearMotor.get());
+    // System.out.println("RF Motor V = " + Hardware.rightFrontMotor.get());
+    // System.out.println("LF Motor V = " + Hardware.leftFrontMotor.get());
+    System.out.println(
+            "RR distance = " + Hardware.rightRearEncode.getDistance());
+    System.out.println(
+            "LR distance = " + Hardware.leftFrontEncoder.getDistance());
+    System.out.println("RF distance = "
+            + Hardware.rightFrontEncoder.getDistance());
+    System.out.println(
+            "LF distance = " + Hardware.leftFrontEncoder.getDistance());
 
 } // end printStatements
 } // end class
