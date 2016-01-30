@@ -31,8 +31,6 @@
 // ====================================================================
 package org.usfirst.frc.team339.robot;
 
-import com.ni.vision.NIVision;
-import com.ni.vision.NIVision.Image;
 import org.usfirst.frc.team339.Hardware.Hardware;
 
 /**
@@ -67,14 +65,14 @@ private static enum MainState
     FORWARDS_TO_TAPE, // drives forwards until detection of the gaffers' tape.
     ALIGN, // aligns its self on the gaffers' tape based of IR sensors.
     MOVE_TO_SHOOTING_POSITION,  // moves towards a good shooting angle based on
-                              // settings.
+                                // settings.
     SHOOT, // ajusts its self (?) and fires the cannonball.
     DONE
     }
 
 private static enum MoveToShootingPositionStep
     {
-    INIT, //beginning
+    INIT, // beginning
     ROTATE_ZERO, // rotates given number before moving forwards.
     FORWARDS_ONE, // moves forwards.
     ROTATE_ONE, // pauses to rotate.
@@ -106,11 +104,9 @@ private static class DriveDistance
 // AUTO STATES
 // ==========================================
 private static MainState mainState = MainState.INIT;
-private static MoveToShootingPositionStep moveToShootingPositionStep =
-        MoveToShootingPositionStep.INIT;
+private static MoveToShootingPositionStep moveToShootingPositionStep = MoveToShootingPositionStep.INIT;
 private static StartingPosition startingPosition = StartingPosition.ONE;
-private static AlignmentState alignmentState =
-        AlignmentState.NEITHER_ON_TAPE;
+private static AlignmentState alignmentState = AlignmentState.NEITHER_ON_TAPE;
 
 // ==================================
 // VARIABLES
@@ -120,10 +116,10 @@ private static double delay; // time to delay before begining.
 
 private static double rotate0; // amount to rotate in ROTATE_ZERO sub-state.
 private static double forwards1; // amount to move forwards in FORWARDS_ONE
-                                // sub-state.
+                                 // sub-state.
 private static double rotate1; // amount to rotate in ROTATE_ONE sub-state.
 private static double forwards2; // amount to move forwards in FORWARDS_TWO
-                                // sub-state.
+                                 // sub-state.
 
 
 // ==========================================
@@ -144,7 +140,7 @@ public static void init ()
     // set the delay time based on potentiometer.
     initDelayTime();
 
-    //set Starting Position based on Six-Position Switch.
+    // set Starting Position based on Six-Position Switch.
     initStartingPosition();
 
     // set the drive values for MOVE_TO_SHOOTING_POSITION
@@ -178,40 +174,13 @@ public static void periodic ()
 {
 
 
-    //testing for Drive class.
+    // testing for Drive class.
     rotateZero();
     forwardsOne();
 
 
-    //runs the overarching state machine.
+    // runs the overarching state machine.
     runMainStateMachine();
-
-
-
-
-    // ------------------------------
-    // process images from the USB camera
-    // FOr one time only, process an image.
-    // NOTE: processing an image takes
-    // considerable time, so ONLY do this
-    // when you really need to. At this point
-    // you would normally do normal processing
-    // of the image (filtering, etc.)
-    // ------------------------------
-
-
-
-    if (processImage == true)
-        {
-        processImage = false;
-
-        NIVision.IMAQdxGrab(sessionNumber, capturedFrame, 1);
-        NIVision.imaqDrawShapeOnImage(capturedFrame,
-                capturedFrame, frameRect, DrawMode.DRAW_VALUE,
-                ShapeMode.SHAPE_OVAL, 0.0f);
-        CameraServer.getInstance().setImage(capturedFrame);
-        NIVision.IMAQdxStopAcquisition(sessionNumber);
-        }
 } // end Periodic
 
 
@@ -247,7 +216,7 @@ private static void initStartingPosition ()
             startingPosition = StartingPosition.FIVE;
             break;
         default:
-            //why?
+            // why?
             break;
         }
 }
@@ -460,16 +429,14 @@ private static void shoot ()
 
 private static void moveToShootingPositionInit ()
 {
-    moveToShootingPositionStep =
-            MoveToShootingPositionStep.ROTATE_ZERO;
+    moveToShootingPositionStep = MoveToShootingPositionStep.ROTATE_ZERO;
 }
 
 private static void rotateZero ()
 {
     if (Hardware.drive.turnLeftDegrees(rotate0))
         {
-        moveToShootingPositionStep =
-                MoveToShootingPositionStep.FORWARDS_ONE;
+        moveToShootingPositionStep = MoveToShootingPositionStep.FORWARDS_ONE;
         }
 }
 
@@ -477,8 +444,7 @@ private static void forwardsOne ()
 {
     if (Hardware.drive.driveForwardInches(forwards1))
         {
-        moveToShootingPositionStep =
-                MoveToShootingPositionStep.ROTATE_ONE;
+        moveToShootingPositionStep = MoveToShootingPositionStep.ROTATE_ONE;
         }
 }
 
@@ -487,8 +453,7 @@ private static void rotateOne ()
     if (Hardware.drive.turnLeftDegrees(rotate1))
         ;
         {
-        moveToShootingPositionStep =
-                MoveToShootingPositionStep.FORWARDS_TWO;
+        moveToShootingPositionStep = MoveToShootingPositionStep.FORWARDS_TWO;
         }
 }
 
@@ -496,8 +461,7 @@ private static void forwardsTwo ()
 {
     if (Hardware.drive.driveForwardInches(forwards2))
         {
-        moveToShootingPositionStep =
-                MoveToShootingPositionStep.DONE;
+        moveToShootingPositionStep = MoveToShootingPositionStep.DONE;
         }
 }
 
@@ -542,8 +506,8 @@ private static void alignFinish ()
  */
 
 
-//                      __ _ __
-// .................../         \
+// __ _ __
+// .................../ \
 // ................./ --0 --- 0-- \
 // .........++++.. |- - - | | - - -| ..++++
 /*---------//||\\--|     /   \     |--//||\\-------
