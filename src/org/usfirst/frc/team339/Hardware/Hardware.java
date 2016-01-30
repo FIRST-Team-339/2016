@@ -14,13 +14,20 @@
 // ====================================================================
 
 package org.usfirst.frc.team339.Hardware;
+
 import org.usfirst.frc.team339.HardwareInterfaces.IRSensor;
 import org.usfirst.frc.team339.HardwareInterfaces.KilroyCamera;
+import org.usfirst.frc.team339.HardwareInterfaces.Potentiometer;
+import org.usfirst.frc.team339.HardwareInterfaces.SingleThrowSwitch;
+import org.usfirst.frc.team339.HardwareInterfaces.SixPositionSwitch;
 import org.usfirst.frc.team339.HardwareInterfaces.transmission.Transmission;
+import org.usfirst.frc.team339.HardwareInterfaces.transmission.TransmissionFourWheel;
+import org.usfirst.frc.team339.Utils.Drive;
 import org.usfirst.frc.team339.Utils.ErrorMessage;
 import edu.wpi.first.wpilibj.CANTalon;
 import edu.wpi.first.wpilibj.CameraServer;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.vision.USBCamera;
@@ -46,6 +53,8 @@ public class Hardware
 // -------------------------------------
 private static final int rightRearMotorCANID = 15;
 private static final int leftRearMotorCANID = 11;
+private static final int rightFrontMotorCANID = 17;//
+private static final int leftFrontMotorCANID = 12;
 
 // ---------------------------------------
 // Hardware Tunables
@@ -69,6 +78,10 @@ public static CANTalon rightRearMotor = new CANTalon(
         rightRearMotorCANID);
 public static CANTalon leftRearMotor = new CANTalon(
         leftRearMotorCANID);
+public static CANTalon rightFrontMotor =
+        new CANTalon(rightFrontMotorCANID);
+public static CANTalon leftFrontMotor =
+        new CANTalon(leftFrontMotorCANID);
 
 // ------------------------------------
 // Victor classes
@@ -94,6 +107,12 @@ public static CANTalon leftRearMotor = new CANTalon(
 // Single and double throw switches
 // ------------------------------------
 
+//Turns autonomous on or off.
+public static SingleThrowSwitch autonomousEnabled =
+        new SingleThrowSwitch(19);
+//TODO: plug in switch and set real port numbers.
+public static SixPositionSwitch startingPositionDial =
+        new SixPositionSwitch(-1, -1, -1, -1, -1, -1);
 
 // ------------------------------------
 // Gear Tooth Sensors
@@ -102,6 +121,10 @@ public static CANTalon leftRearMotor = new CANTalon(
 // ------------------------------------
 // Encoders
 // ------------------------------------
+public static Encoder leftFrontEncoder = new Encoder(10, 11);
+public static Encoder rightFrontEncoder = new Encoder(12, 13);
+public static Encoder leftRearEncoder = new Encoder(0, 1);
+public static Encoder rightRearEncoder = new Encoder(2, 3);
 // -----------------------
 // Wiring diagram
 // -----------------------
@@ -156,6 +179,8 @@ public static IRSensor leftIR = new IRSensor(1);
 // -------------------------------------
 // Potentiometers
 // -------------------------------------
+
+public static Potentiometer delayPot = new Potentiometer(3, 270);
 
 // -------------------------------------
 // Sonar/Ultrasonic
@@ -220,6 +245,13 @@ public static Joystick rightOperator = new Joystick(3);
 public static Transmission transmission = new Transmission(
         rightRearMotor, leftRearMotor);
 
+public static TransmissionFourWheel transmissionFourWheel =
+        new TransmissionFourWheel(rightFrontMotor, leftFrontMotor,
+                rightRearMotor, leftRearMotor);
+
+public static Drive drive = new Drive(transmission, rightRearEncoder,
+        rightFrontEncoder, leftRearEncoder, leftFrontEncoder);
+
 // -------------------
 // Assembly classes (e.g. forklift)
 // -------------------
@@ -229,6 +261,7 @@ public static Transmission transmission = new Transmission(
 // ------------------------------------
 public static final Timer kilroyTimer = new Timer();
 public static final Timer autoTimer = new Timer();
+public static final Timer delayTimer = new Timer();
 public static final ErrorMessage errorMessage = new ErrorMessage(
         true /* append timelog */);
 
