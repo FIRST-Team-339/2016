@@ -480,24 +480,70 @@ private static void forwardsTwo ()
  * ==============================================
  */
 
+/**
+ * Used in the unlikely disastrous scenario that the robot is in ALIGN, but does
+ * not see any tape.
+ * In theory, we should never need this.
+ * TODO: Write find method.
+ */
 private static void alignFind ()
 {
 
 }
 
+/**
+ * Moves right side to tape when left side is on.
+ */
 private static void alignRightSide ()
 {
+    double leftAlignmentSpeed = 0.0;
+    double rightAlignmentSpeed = 0.0;
 
+    rightAlignmentSpeed = ALIGNMENT_SPEED;
+
+    if (Hardware.rightIR.isOn() && Hardware.leftIR.isOn())
+        {
+        rightAlignmentSpeed = 0.0;
+        alignmentState = AlignmentState.BOTH_ON_TAPE;
+        }
+    else if (Hardware.leftIR.isOn() == false)
+        {
+        leftAlignmentSpeed = -ALIGNMENT_SPEED;
+        }
+
+    Hardware.transmissionFourWheel.drive(rightAlignmentSpeed,
+            leftAlignmentSpeed);
 }
 
+/**
+ * Moves left side to tape when right side is on.
+ * Moves right side back if right side turns off.
+ */
 private static void alignLeftSide ()
 {
 
+    double leftAlignmentSpeed = 0.0;
+    double rightAlignmentSpeed = 0.0;
+
+    leftAlignmentSpeed = ALIGNMENT_SPEED;
+
+    if (Hardware.rightIR.isOn() && Hardware.leftIR.isOn())
+        {
+        leftAlignmentSpeed = 0.0;
+        alignmentState = AlignmentState.BOTH_ON_TAPE;
+        }
+    else if (Hardware.rightIR.isOn() == false)
+        {
+        rightAlignmentSpeed = -ALIGNMENT_SPEED;
+        }
+
+    Hardware.transmissionFourWheel.drive(rightAlignmentSpeed,
+            leftAlignmentSpeed);
 }
 
 private static void alignFinish ()
 {
-
+    mainState = MainState.MOVE_TO_SHOOTING_POSITION;
 }
 /*
  * ==============================================
@@ -519,6 +565,8 @@ private static void alignFinish ()
 
 private static final double MAXIMUM_DELAY = 4.0;
 private static final int ONE_THOUSAND = 1000;
+
+private static final double ALIGNMENT_SPEED = 0.1;
 
 /*------------------------------------------------------------------------------
 Below are the distances traveled by the robot in
