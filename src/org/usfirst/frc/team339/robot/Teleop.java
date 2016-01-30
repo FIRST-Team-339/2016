@@ -87,6 +87,8 @@ public static void periodic ()
  * @author Ashley Espeland
  * @written 1/28/16
  * 
+ *          1/30/16: added 6 position switch -McGee
+ * 
  */
 public static void printStatements ()
 {
@@ -108,6 +110,9 @@ public static void printStatements ()
             + Hardware.rightFrontEncoder.getDistance());
     System.out.println(
             "LF distance = " + Hardware.leftFrontEncoder.getDistance());
+
+    //print the position the 6 position switch
+    System.out.println(Hardware.startingPositionDial.getPosition());
 
 } // end printStatements
 } // end class
