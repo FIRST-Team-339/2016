@@ -33,7 +33,6 @@ package org.usfirst.frc.team339.robot;
 
 import org.usfirst.frc.team339.Hardware.Hardware;
 import edu.wpi.first.wpilibj.CameraServer;
-import edu.wpi.first.wpilibj.vision.USBCamera;
 
 /**
  * This class contains all of the user code for the Autonomous
@@ -65,10 +64,6 @@ public static void init ()
     // camera server
     // -----------------------------------
     CameraServer.getInstance().setSize(1);
-    Hardware.cam0.stopCapture();
-    Hardware.cam0.closeCamera();
-    Hardware.cam0 = new USBCamera("cam0");
-    CameraServer.getInstance().startAutomaticCapture(Hardware.cam0);
 } // end Init
 
 /**

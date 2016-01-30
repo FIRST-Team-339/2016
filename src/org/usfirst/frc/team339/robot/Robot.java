@@ -60,12 +60,9 @@
 package org.usfirst.frc.team339.robot;
 
 import org.usfirst.frc.team339.Hardware.Hardware;
-import org.usfirst.frc.team339.HardwareInterfaces.KilroyCamera;
-// import com.ni.vision.NIVision.ParticleReport;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.MotorSafetyHelper;
 import edu.wpi.first.wpilibj.vision.AxisCamera.Resolution;
-import edu.wpi.first.wpilibj.vision.USBCamera;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -112,6 +109,7 @@ public void autonomousInit ()
     // ---------------------------------------
     System.out.println("Started AutonousInit().");
 
+    Hardware.axisCamera.writeBrightness(5);
     // -------------------------------------
     // Call the Autonomous class's Init function,
     // which contains the user code.
@@ -228,28 +226,20 @@ public void robotInit ()
     // -------------------------------------
     // USB camera initialization
     // -------------------------------------
-    Hardware.cam0 = new USBCamera("cam0");
     Hardware.cam0.setBrightness(50);
     Hardware.cam0.setExposureAuto();
+    Hardware.cam0.setSize(160, 120);
     Hardware.cam0.setFPS(20);
     Hardware.cam0.setWhiteBalanceAuto();
     Hardware.cam0.setWhiteBalanceHoldCurrent();
     Hardware.cam0.updateSettings();
 
-    Hardware.cam1 = new USBCamera("cam1");
-    Hardware.cam1.setBrightness(50);
-    Hardware.cam1.setExposureAuto();
-    Hardware.cam1.setExposureHoldCurrent();
-    Hardware.cam1.setFPS(20);
-    Hardware.cam1.setWhiteBalanceAuto();
-    Hardware.cam1.setWhiteBalanceHoldCurrent();
-    Hardware.cam1.updateSettings();
+    // Hardware.cameraServer.setQuality(0);
+    // Hardware.cameraServer.setSize(0);
+    Hardware.cameraServer.startAutomaticCapture(Hardware.cam0);
 
-    Hardware.axisCamera = new KilroyCamera(true);
     Hardware.axisCamera.writeMaxFPS(15);
     Hardware.axisCamera.writeResolution(Resolution.k320x240);
-
-
 
     // -------------------------------------
     // motor initialization
@@ -290,6 +280,7 @@ public void teleopInit ()
     // ---------------------------------------
     System.out.println("Started teleopInit().");
 
+    Hardware.axisCamera.writeBrightness(50);
     // -------------------------------------
     // Call the Teleop class's Init function,
     // which contains the user code.

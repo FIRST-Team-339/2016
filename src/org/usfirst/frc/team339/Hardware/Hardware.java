@@ -166,16 +166,14 @@ public static CANTalon leftRearMotor = new CANTalon(
 // Axis/USB Camera class
 // -------------------------------------
 // -------------------------------------
-// declare the camera server and 2 USB
-// cameras
+// declare the USB camera server and the
+// USB camera it serves
 // -------------------------------------
-public static CameraServer cameraServer;
-
-public static USBCamera cam0;
-public static USBCamera cam1;
+public static CameraServer cameraServer = CameraServer.getInstance();
+public static USBCamera cam0 = new USBCamera("cam0");
 
 // Declares the Axis camera
-public static KilroyCamera axisCamera;
+public static KilroyCamera axisCamera = new KilroyCamera(true);
 
 // **********************************************************
 // DRIVER STATION CLASSES

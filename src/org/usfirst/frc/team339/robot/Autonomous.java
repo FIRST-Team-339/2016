@@ -32,11 +32,8 @@
 package org.usfirst.frc.team339.robot;
 
 import com.ni.vision.NIVision;
-import com.ni.vision.NIVision.DrawMode;
 import com.ni.vision.NIVision.Image;
-import com.ni.vision.NIVision.ShapeMode;
 import org.usfirst.frc.team339.Hardware.Hardware;
-import edu.wpi.first.wpilibj.CameraServer;
 
 /**
  * This class contains all of the user code for the Autonomous part of the
@@ -88,17 +85,6 @@ public static void init ()
     // run. Then, change the camera to one that
     // will eventually process images.
     // ------------------------------------
-    Hardware.cam0.stopCapture();
-    Hardware.cam0.closeCamera();
-    Hardware.cam1.stopCapture();
-    Hardware.cam1.closeCamera();
-    capturedFrame = NIVision
-            .imaqCreateImage(NIVision.ImageType.IMAGE_RGB, 0);
-
-    sessionNumber = NIVision.IMAQdxOpenCamera("cam1",
-            NIVision.IMAQdxCameraControlMode.CameraControlModeController);
-    NIVision.IMAQdxConfigureGrab(sessionNumber);
-    frameRect = new NIVision.Rect(10, 10, 100, 100);
 
     // ---------------------------------------
     // turn the timer off and reset the counter
@@ -117,26 +103,6 @@ public static void init ()
  */
 public static void periodic ()
 {
-    // ------------------------------
-    // process images from the USB camera
-    // FOr one time only, process an image.
-    // NOTE: processing an image takes
-    // considerable time, so ONLY do this
-    // when you really need to. At this point
-    // you would normally do normal processing
-    // of the image (filtering, etc.)
-    // ------------------------------
-    if (processImage == true)
-        {
-        processImage = false;
-
-        NIVision.IMAQdxGrab(sessionNumber, capturedFrame, 1);
-        NIVision.imaqDrawShapeOnImage(capturedFrame,
-                capturedFrame, frameRect, DrawMode.DRAW_VALUE,
-                ShapeMode.SHAPE_OVAL, 0.0f);
-        CameraServer.getInstance().setImage(capturedFrame);
-        NIVision.IMAQdxStopAcquisition(sessionNumber);
-        }
 } // end Periodic
 
 // ---------------------------------
