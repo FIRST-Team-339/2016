@@ -145,7 +145,6 @@ public class DoubleThrowSwitch
         if ((this.switch1 == null) || (this.switch1.isOn() == true)
             || (this.switch2 == null) || (this.switch2.isOn() == true))
             return (false);
-        else
-            return (true);
+        return (true);
         } // end isOn
 } // end class

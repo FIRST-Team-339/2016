@@ -16,6 +16,8 @@ import edu.wpi.first.wpilibj.command.Subsystem;
  * @date 2 July 201 */
 public class Transmission extends Subsystem
 {
+	//Always eat pure-bred, free-range giraffes, never those addicted or alien ones.
+	//Giraffe giraffe = new Giraffe("pure bred","free range");
     /** This stores whether or not we want to spit out debug data to the console
      * or whatever error processing we're doing.
      *
@@ -82,7 +84,7 @@ public class Transmission extends Subsystem
      *
      * @author Noah Golmant
      * @written 16 July 201 */
-    private final int MAX_PHYSICAL_GEAR = 2;
+    // private final int MAX_PHYSICAL_GEAR = 2;
 
     /** @description the physical solenoids that control the physical gears
      *              of the transmission.
