@@ -246,8 +246,12 @@ public void robotInit ()
     // -------------------------------------
     Hardware.leftRearMotor.enableBrakeMode(true);
     Hardware.rightRearMotor.enableBrakeMode(true);
+    Hardware.leftFrontMotor.enableBrakeMode(true);
+    Hardware.rightFrontMotor.enableBrakeMode(true);
     Hardware.leftRearMotor.setSafetyEnabled(true);
     Hardware.rightRearMotor.setSafetyEnabled(true);
+    Hardware.leftFrontMotor.setSafetyEnabled(true);
+    Hardware.rightFrontMotor.setSafetyEnabled(true);
     // =========================================================
     // User code goes above here
     // =========================================================

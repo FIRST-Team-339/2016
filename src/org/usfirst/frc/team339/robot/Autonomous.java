@@ -273,6 +273,7 @@ private static void runMainStateMachine ()
         {
         case INIT:
             mainStateMachineInit();
+            break;
         case DELAY:
             delay();
             break;
@@ -300,7 +301,7 @@ private static void runMainStateMachine ()
  * ======================================
  */
 
-public static void mainStateMachineInit ()
+private static void mainStateMachineInit ()
 {
 
     if (Hardware.autonomousEnabled.isOn() == true)
@@ -337,7 +338,7 @@ private static void delay ()
 private static void forwardsToTape ()
 {
 
-    Hardware.drive.driveForwardInches(0.0);
+    Hardware.drive.driveForwardInches(999.9);
     if (Hardware.leftIR.isOn() && Hardware.rightIR.isOn())
         {
         alignmentState = AlignmentState.BOTH_ON_TAPE;
@@ -413,6 +414,7 @@ private static void moveToShootingPosition ()
             forwardsTwo();
             break;
         case DONE:
+            moveToShootingPositionDone();
             break;
         }
 }
@@ -476,7 +478,10 @@ private static void forwardsTwo ()
         }
 }
 
-
+private static void moveToShootingPositionDone ()
+{
+    mainState = MainState.SHOOT;
+}
 
 /*
  * ==============================================
