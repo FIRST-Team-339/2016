@@ -17,10 +17,9 @@ package org.usfirst.frc.team339.Hardware;
 
 import org.usfirst.frc.team339.HardwareInterfaces.IRSensor;
 import org.usfirst.frc.team339.HardwareInterfaces.KilroyCamera;
-import org.usfirst.frc.team339.HardwareInterfaces.Potentiometer;
+import org.usfirst.frc.team339.HardwareInterfaces.RobotPotentiometer;
 import org.usfirst.frc.team339.HardwareInterfaces.SingleThrowSwitch;
 import org.usfirst.frc.team339.HardwareInterfaces.SixPositionSwitch;
-import org.usfirst.frc.team339.HardwareInterfaces.transmission.Transmission;
 import org.usfirst.frc.team339.HardwareInterfaces.transmission.TransmissionFourWheel;
 import org.usfirst.frc.team339.Utils.Drive;
 import org.usfirst.frc.team339.Utils.ErrorMessage;
@@ -30,6 +29,8 @@ import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.MotorSafetyHelper;
+import edu.wpi.first.wpilibj.Relay;
 import edu.wpi.first.wpilibj.PowerDistributionPanel;
 import edu.wpi.first.wpilibj.SolenoidBase;
 import edu.wpi.first.wpilibj.Timer;
@@ -79,10 +80,10 @@ private static final int pcmCANID = 20;
 // ------------------------------------
 // Talon classes
 // ------------------------------------
-public static CANTalon rightRearMotor = new CANTalon(
-        rightRearMotorCANID);
-public static CANTalon leftRearMotor = new CANTalon(
-        leftRearMotorCANID);
+public static CANTalon rightRearMotor =
+        new CANTalon(rightRearMotorCANID);
+public static CANTalon leftRearMotor =
+        new CANTalon(leftRearMotorCANID);
 public static CANTalon rightFrontMotor =
         new CANTalon(rightFrontMotorCANID);
 public static CANTalon leftFrontMotor =
@@ -102,6 +103,9 @@ public static PowerDistributionPanel pdp =
 // Relay classes
 // ====================================
 
+//Relay that controls the RingLight
+public static Relay ringLightRelay = new Relay(0);
+
 // ------------------------------------
 // Compressor class - runs the compressor
 // with a single relay
@@ -115,9 +119,16 @@ public static PowerDistributionPanel pdp =
 // ------------------------------------
 
 //Turns autonomous on or off.
+/**
+ * A physical switch that decides whether or not to run autonomous.
+ */
 public static SingleThrowSwitch autonomousEnabled =
         new SingleThrowSwitch(19);
-//TODO: plug in switch and set real port numbers.
+
+/**
+ * Displays the starting position.
+ * Position 0 on the switch corresponds to position 1, 1 to 2, etc.
+ */
 public static SixPositionSwitch startingPositionDial =
         new SixPositionSwitch(14, 15, 16, 17, 18, 21);
 
@@ -192,7 +203,8 @@ public static DoubleSolenoid solenoid = new DoubleSolenoid(pcmCANID, 0, 1);
 // Potentiometers
 // -------------------------------------
 // -------------------------------------
-public static Potentiometer delayPot = new Potentiometer(3, 270);
+public static RobotPotentiometer delayPot =
+        new RobotPotentiometer(3, 270);
 
 // -------------------------------------
 // Sonar/Ultrasonic
@@ -251,15 +263,14 @@ public static Joystick rightOperator = new Joystick(3);
 // ------------------------------------
 // Transmission class
 // ------------------------------------
-public static Transmission transmission = new Transmission(
-        rightRearMotor, leftRearMotor);
 
 public static TransmissionFourWheel transmissionFourWheel =
         new TransmissionFourWheel(rightFrontMotor, leftFrontMotor,
                 rightRearMotor, leftRearMotor);
 
-public static Drive drive = new Drive(transmission, rightRearEncoder,
-        rightFrontEncoder, leftRearEncoder, leftFrontEncoder);
+public static Drive drive =
+        new Drive(transmissionFourWheel, rightRearEncoder,
+                rightFrontEncoder, leftRearEncoder, leftFrontEncoder);
 
 // -------------------
 // Assembly classes (e.g. forklift)
@@ -273,6 +284,17 @@ public static final Timer autoTimer = new Timer();
 public static final Timer delayTimer = new Timer();
 public static final ErrorMessage errorMessage = new ErrorMessage(
         true /* append timelog */);
+
+
+public static final MotorSafetyHelper leftRearMotorSafety =
+        new MotorSafetyHelper(leftRearMotor);
+public static final MotorSafetyHelper rightRearMotorSafety =
+        new MotorSafetyHelper(rightRearMotor);
+public static final MotorSafetyHelper leftFrontMotorSafety =
+        new MotorSafetyHelper(leftFrontMotor);
+public static final MotorSafetyHelper rightFrontMotorSafety =
+        new MotorSafetyHelper(rightFrontMotor);
+
 
 
 } // end class

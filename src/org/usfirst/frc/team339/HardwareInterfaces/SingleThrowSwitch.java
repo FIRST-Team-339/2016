@@ -22,18 +22,21 @@ package org.usfirst.frc.team339.HardwareInterfaces;
 import edu.wpi.first.wpilibj.DigitalInput;
 
 // -------------------------------------------------------
-/** This class Enhances the Digital Input class. It adds a member
+/**
+ * This class Enhances the Digital Input class. It adds a member
  * function isOn() which will return a true if the switch is on.
  * All other member functions from the base class are unchanged.
  *
  * @class SingleThrowSwitch
  * @author Bob Brown
  * @written Sep 19, 2009
- *          ------------------------------------------------------- */
+ *          -------------------------------------------------------
+ */
 public class SingleThrowSwitch extends DigitalInput
 {
 // -------------------------------------------------------
-/** Create an instance of a Singe Throw Switch class.
+/**
+ * Create an instance of a Single Throw Switch class.
  * Creates a digital input given a channel and uses the default module.
  *
  * @method SingleThrowSwitch()
@@ -41,14 +44,16 @@ public class SingleThrowSwitch extends DigitalInput
  *            the port for the digital input
  * @author Bob Brown
  * @written Sep 18 2009
- *          ------------------------------------------------------- */
+ *          -------------------------------------------------------
+ */
 public SingleThrowSwitch (final int channel)
-    {
+{
     super(channel);
-    } // end constructor
+} // end constructor
 
 // ------------------------------------------------------
-/** This function overrides the parent function get() but
+/**
+ * This function overrides the parent function get() but
  * is marked as deprecated so users will not call get()
  * in place of isOn()
  *
@@ -57,16 +62,18 @@ public SingleThrowSwitch (final int channel)
  * @see isOn()
  * @return false
  * @deprecated
- *             ------------------------------------------------------- */
+ *             -------------------------------------------------------
+ */
 @Deprecated
 @Override
 public boolean get ()
-    {
+{
     return false;
-    }
+}
 
 // -------------------------------------------------------
-/** Create an instance of a Single Throw Switch class.
+/**
+ * Create an instance of a Single Throw Switch class.
  * Creates a digital input given an channel and module.
  *
  * @method SingleThrowSwitch()
@@ -76,27 +83,33 @@ public boolean get ()
  *            the port for the digital input
  * @author Bob Brown
  * @written Sep 18 2009
- *          ------------------------------------------------------- */
-/* public
-     * SingleThrowSwitch (final int slot,
-     * final int channel)
-     * {
-     * super(slot, channel);
-     * } // end constructor */
+ *          -------------------------------------------------------
+ */
+
+/*
+ * public
+ * SingleThrowSwitch (final int slot,
+ * final int channel)
+ * {
+ * super(slot, channel);
+ * } // end constructor
+ */
 // -------------------------------------------------------
-/** This function returns whether or not the switch is on
+/**
+ * This function returns whether or not the switch is on
  * or not.
  *
  * @method isOn
  * @return is on or not. Works even if not plugged in
  * @author Bob Brown
  * @written Sep 19, 2009
- *          ------------------------------------------------------- */
+ *          -------------------------------------------------------
+ */
 public boolean isOn ()
-    {
+{
     return (!super.get());
-    } // end isOn
+} // end isOn
 
-    // TODO: add a setReversed(boolean) method to software-reverse the switch
+// TODO: add a setReversed(boolean) method to software-reverse the switch
 
 } // end class

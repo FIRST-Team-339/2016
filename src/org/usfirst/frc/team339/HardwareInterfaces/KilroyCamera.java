@@ -49,6 +49,8 @@ public static final int noCameraIntReturnValue = -1;
 
 private static String KILROY_CAMERA_IP = "10.3.39.11";
 
+private static int imageNumber = 0;
+
 // --------------------------------------------------------------
 // All methods below this point simply call the methods for the
 // Axis camera, if we have one, else it does nothing or it returns
@@ -226,30 +228,41 @@ public AxisCamera.WhiteBalance getWhiteBalance ()
 public void saveImage (String fileName)
 {
 
-    final String in =
-    // "/bin/rm -rf /home/lvuser/images/" + fileName
-    // + ".jpg;"
-    // + // removes old files of the same name
-    " /usr/bin/wget http://10.3.39.11/jpg/image.jpg -O /home/lvuser/images/"
-            +
-            fileName + ".jpg > /home/lvuser/images/log.txt";
 
-    System.out.println("\n\n\nthe command is : " + in);
+    // System.out.println("\n\n\nthe command is : " );
 
+    // Pre-creates the directory for images in all cases
     try
         {
-        Runtime.getRuntime().exec(
-                "/bin/rm -rf /home/lvuser/images/" + fileName + ".jpg");
+        Runtime.getRuntime().exec("/bin/mkdir -p /home/lvuser/images");
+        // saves new file
         }
     catch (final IOException e)
         {
+        // TODO Auto-generated catch block
         e.printStackTrace();
-        System.out.println("saveImage threw something");
         }
-
+    // Erases any pre-existing files that have previously been created
     try
         {
-        Runtime.getRuntime().exec(in);
+        Runtime.getRuntime()
+                .exec("/bin/rm -rf /home/lvuser/images/" + fileName
+                        + ".jpg");
+        // saves new file
+        }
+    catch (final IOException e)
+        {
+        // TODO Auto-generated catch block
+        e.printStackTrace();
+        }
+    // Creates new image, keep a log of the creation of the file
+    try
+        {
+        Runtime.getRuntime()
+                .exec("/usr/bin/wget http://" + KILROY_CAMERA_IP
+                        + "/jpg/image.jpg "
+                        + "-O /home/lvuser/images/" + fileName
+                        + ".jpg >> /home/lvuser/images/log.txt");
         // saves new file
         }
     catch (final IOException e)
@@ -258,6 +271,25 @@ public void saveImage (String fileName)
         e.printStackTrace();
         }
 }
+
+/**
+ * calls up saveImage method and labels pictures Image0 through Image9
+ * when more than 10 pictures are taken, the label "loops" back to 0
+ * this is done through the modulus function, which divides the imageNumber
+ * by ten and uses the remainder as the image number
+ * 
+ * author@ Ashley Espeland
+ * date@ 1/31016
+ */
+public void saveImagesSafely ()
+{
+    // calls saveImage and assigns image number
+    this.saveImage("Image" + (imageNumber % 10));
+    // increments imageNumber
+    imageNumber++;
+
+}
+
 
 // -------------------------------------------------------
 /**

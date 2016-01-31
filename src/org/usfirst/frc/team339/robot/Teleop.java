@@ -58,6 +58,8 @@ public class Teleop
  */
 public static void init ()
 {
+	// set max speed. change by gear?
+    Hardware.drive.setMaxSpeed(MAXIMUM_TELEOP_SPEED);
     //checks for faults
     //does not return what has a fault yet
     CANUtils.testForFaults();
@@ -79,8 +81,14 @@ public static void init ()
  */
 public static void periodic ()
 {
-
+    //Print statements to test Hardware on the Robot
     printStatements();
+
+
+    //Driving the Robot
+    Hardware.transmissionFourWheel.drive(Hardware.rightDriver.getY(),
+            Hardware.leftDriver.getY());
+
 
 } // end Periodic
 
@@ -91,32 +99,59 @@ public static void periodic ()
  * @author Ashley Espeland
  * @written 1/28/16
  * 
- *          1/30/16: added 6 position switch -McGee
+ *          Edited by Ryan McGee
  * 
  */
 public static void printStatements ()
 {
-    // IR sensors
-    System.out.println("left IR = " + Hardware.leftIR.isOn());
-    System.out.println("right IR = " + Hardware.rightIR.isOn());
-    // pots
-    // System.out.println("delay pot = " + (int) Hardware.delayPot.get());
-    // Motor controllers
-    System.out.println("RR Motor V = " + Hardware.rightRearMotor.get());
-    System.out.println("LR Motor V = " + Hardware.leftRearMotor.get());
-    // System.out.println("RF Motor V = " + Hardware.rightFrontMotor.get());
-    // System.out.println("LF Motor V = " + Hardware.leftFrontMotor.get());
-    System.out.println(
-            "RR distance = " + Hardware.rightRearEncoder.getDistance());
-    System.out.println(
-            "LR distance = " + Hardware.leftFrontEncoder.getDistance());
-    System.out.println("RF distance = "
-            + Hardware.rightFrontEncoder.getDistance());
-    System.out.println(
-            "LF distance = " + Hardware.leftFrontEncoder.getDistance());
+    // Joysticks------------
+    //    System.out.println("Left Joystick: " + Hardware.leftDriver.getY());
+    //    System.out
+    //            .println("Right Joystick: " + Hardware.rightDriver.getY());
+    //      System.out.println("Left Operator: " + Hardware.leftOperator.getY());
+    //      System.out.println("Right Operator: " + Hardware.rightOperator.getY());
 
-    //print the position the 6 position switch
-    System.out.println(Hardware.startingPositionDial.getPosition());
+    // IR sensors-----------
+    // System.out.println("left IR = " + Hardware.leftIR.isOn());
+    // System.out.println("right IR = " + Hardware.rightIR.isOn());
 
-} // end printStatements
+    // pots-----------------
+    //    System.out.println("delay pot = " + (int) Hardware.delayPot.get());
+
+    //Motor controllers-----
+    //    System.out.println("RR Motor V = " + Hardware.rightRearMotor.get());
+    //    System.out.println("LR Motor V = " + Hardware.leftRearMotor.get());
+    //    System.out
+    //            .println("RF Motor V = " + Hardware.rightFrontMotor.get());
+    //    System.out.println("LF Motor V = " + Hardware.leftFrontMotor.get());
+
+    // Encoders-------------
+    //    System.out.println(
+    //            "RR distance = " + Hardware.rightRearEncoder.getDistance());
+    //    System.out.println(
+    //            "LR distance = " + Hardware.leftRearEncoder.getDistance());
+    //    System.out.println("RF distance = "
+    //            + Hardware.rightFrontEncoder.getDistance());
+    //    System.out.println(
+    //            "LF distance = " + Hardware.leftFrontEncoder.getDistance());
+
+    //Switches--------------
+    //    System.out.println("Autonomous Enabled Switch: " + Hardware.autonomousEnabled.isOn());
+
+    //print the position the 6 position switch------------
+    //    System.out.println("Position: " + Hardware.startingPositionDial.getPosition());
+
+    //Relay-----------------
+    //    System.out.println(Hardware.ringLightRelay.get());
+ } // end printStatements
+
+/*
+ * ===============================================
+ * Constants
+ * ===============================================
+ */
+
+
+private static final double MAXIMUM_TELEOP_SPEED = 1.0;
+
 } // end class
