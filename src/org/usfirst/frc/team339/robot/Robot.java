@@ -224,6 +224,24 @@ public void robotInit ()
     // =========================================================
     // User code goes below here
     // =========================================================
+    //--------------------------------------
+    // Encoder Initialization
+    //--------------------------------------
+    Hardware.leftRearEncoder.reset();
+    Hardware.leftRearEncoder.setDistancePerPulse(0.019706);
+
+    Hardware.leftFrontEncoder.reset();
+    Hardware.leftFrontEncoder.setDistancePerPulse(0.019706);
+
+    Hardware.rightRearEncoder.reset();
+    Hardware.rightRearEncoder.setDistancePerPulse(0.019706);
+
+    Hardware.rightFrontEncoder.reset();
+    Hardware.rightFrontEncoder.setDistancePerPulse(0.019706);
+
+
+
+
     // -------------------------------------
     // USB camera initialization
     // -------------------------------------
@@ -249,8 +267,12 @@ public void robotInit ()
     // -------------------------------------
     Hardware.leftRearMotor.enableBrakeMode(true);
     Hardware.rightRearMotor.enableBrakeMode(true);
+    Hardware.leftFrontMotor.enableBrakeMode(true);
+    Hardware.rightFrontMotor.enableBrakeMode(true);
     Hardware.leftRearMotor.setSafetyEnabled(true);
     Hardware.rightRearMotor.setSafetyEnabled(true);
+    Hardware.leftFrontMotor.setSafetyEnabled(true);
+    Hardware.rightFrontMotor.setSafetyEnabled(true);
     // =========================================================
     // User code goes above here
     // =========================================================

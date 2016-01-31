@@ -1,12 +1,19 @@
 package org.usfirst.frc.team339.Utils;
 
-import org.usfirst.frc.team339.HardwareInterfaces.transmission.Transmission;
+import org.usfirst.frc.team339.HardwareInterfaces.transmission.TransmissionFourWheel;
 import edu.wpi.first.wpilibj.Encoder;
 
+// TODO: COMMENT YOUR CODE!!!!!!!!!!!
 public class Drive
 {
 
-public Drive (Transmission transmission, Encoder rightRearEncoder,
+/**
+ * The scaling factor upon which all speeds will be scaled.
+ */
+private double maxSpeedScalingFactor = 1.0;
+
+public Drive (TransmissionFourWheel transmission,
+        Encoder rightRearEncoder,
         Encoder rightFrontEncoder, Encoder leftRearEncoder,
         Encoder leftFrontEncoder)
 {
@@ -18,12 +25,25 @@ public Drive (Transmission transmission, Encoder rightRearEncoder,
     this.isFourWheel = true;
 }
 
-public Drive (Transmission transmission, Encoder rightEncoder,
+public Drive (TransmissionFourWheel transmission, Encoder rightEncoder,
         Encoder leftEncoder)
 {
     this.rightRearEncoder = rightEncoder;
     this.leftRearEncoder = leftEncoder;
     this.isFourWheel = false;
+}
+
+/**
+ * Sets maximum speed.
+ * Used in Autonomous/Teleop Init.
+ * 
+ * @author Michael Andrzej Klaczynski
+ * @param max
+ *            is a double between 0.0 and 1.0
+ */
+public void setMaxSpeed (double max)
+{
+    maxSpeedScalingFactor = max;
 }
 
 public boolean turnLeftDegrees (double degrees)
@@ -50,9 +70,13 @@ public boolean turnLeftDegrees (double degrees)
     else
         {
         if (!turningRight)
-            transmission.drive(AUTO_DRIVE_SPEED, -AUTO_DRIVE_SPEED);
+            transmission.drive(
+                    (maxSpeedScalingFactor * DEFAULT_MAX_SPEED),
+                    -(maxSpeedScalingFactor * DEFAULT_MAX_SPEED));
         else
-            transmission.drive(-AUTO_DRIVE_SPEED, AUTO_DRIVE_SPEED);
+            transmission.drive(
+                    -(maxSpeedScalingFactor * DEFAULT_MAX_SPEED),
+                    (maxSpeedScalingFactor * DEFAULT_MAX_SPEED));
         }
     return false;
 }
@@ -83,7 +107,8 @@ public boolean driveForwardInches (double distance)
                         / 2 > (leftRearEncoder.get()
                                 + leftFrontEncoder.get()) / 2)
             {
-            transmission.drive(AUTO_CORRECTION_SPEED, AUTO_DRIVE_SPEED);
+            transmission.drive(AUTO_CORRECTION_SPEED,
+                    (maxSpeedScalingFactor * DEFAULT_MAX_SPEED));
             }
         // if the left drive train is ahead of the right drive train (one a
         // four wheel drive)
@@ -92,24 +117,31 @@ public boolean driveForwardInches (double distance)
                         / 2 < (leftRearEncoder.get()
                                 + leftFrontEncoder.get()) / 2)
             {
-            transmission.drive(AUTO_DRIVE_SPEED, AUTO_CORRECTION_SPEED);
+            transmission.drive(
+                    (maxSpeedScalingFactor * DEFAULT_MAX_SPEED),
+                    AUTO_CORRECTION_SPEED);
             }
         // if the right Drive train is ahead of the left drive train (2
         // motor)
         else if (rightRearEncoder.get() > leftRearEncoder.get())
             {
-            transmission.drive(AUTO_CORRECTION_SPEED, AUTO_DRIVE_SPEED);
+            transmission.drive(AUTO_CORRECTION_SPEED,
+                    (maxSpeedScalingFactor * DEFAULT_MAX_SPEED));
             }
         // if the left Drive train is ahead of the right drive train (2
         // motor)
         else if (rightRearEncoder.get() < leftRearEncoder.get())
             {
-            transmission.drive(AUTO_DRIVE_SPEED, AUTO_CORRECTION_SPEED);
+            transmission.drive(
+                    (maxSpeedScalingFactor * DEFAULT_MAX_SPEED),
+                    AUTO_CORRECTION_SPEED);
             }
         // if they're both equal
         else
             {
-            transmission.drive(AUTO_DRIVE_SPEED, AUTO_DRIVE_SPEED);
+            transmission.drive(
+                    (maxSpeedScalingFactor * DEFAULT_MAX_SPEED),
+                    (maxSpeedScalingFactor * DEFAULT_MAX_SPEED));
             }
         }
     return false;
@@ -199,8 +231,6 @@ public boolean driveForwardInches (double distance)
  * } // end brake
  */
 
-private static final double AUTO_DRIVE_SPEED = 1.0;
-
 private static final double AUTO_CORRECTION_SPEED = 0.95;
 
 private static final double ROBOT_SEMI_MAJOR_RADIUS_INCHES = 12.0;
@@ -215,5 +245,12 @@ private Encoder leftRearEncoder;
 
 private Encoder leftFrontEncoder;
 
-private Transmission transmission;
+private TransmissionFourWheel transmission;
+
+/*
+ * Constants
+ */
+
+private final double DEFAULT_MAX_SPEED = 1.0;
+
 }

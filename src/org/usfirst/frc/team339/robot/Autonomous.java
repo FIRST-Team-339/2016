@@ -65,7 +65,7 @@ private static enum MainState
     FORWARDS_TO_TAPE, // drives forwards until detection of the gaffers' tape.
     ALIGN, // aligns its self on the gaffers' tape based of IR sensors.
     MOVE_TO_SHOOTING_POSITION,  // moves towards a good shooting angle based on
-                                // settings.
+                              // settings.
     SHOOT, // ajusts its self (?) and fires the cannonball.
     DONE
     }
@@ -90,6 +90,7 @@ private static enum AlignmentState
     {
     NEITHER_ON_TAPE, LEFT_ON_TAPE, RIGHT_ON_TAPE, BOTH_ON_TAPE
     }
+
 
 private static boolean leftSensorIsOnTape;
 
@@ -116,10 +117,10 @@ private static double delay; // time to delay before begining.
 
 private static double rotate0; // amount to rotate in ROTATE_ZERO sub-state.
 private static double forwards1; // amount to move forwards in FORWARDS_ONE
-                                 // sub-state.
+                                // sub-state.
 private static double rotate1; // amount to rotate in ROTATE_ONE sub-state.
 private static double forwards2; // amount to move forwards in FORWARDS_TWO
-                                 // sub-state.
+                                // sub-state.
 
 
 // ==========================================
@@ -145,6 +146,8 @@ public static void init ()
 
     // set the drive values for MOVE_TO_SHOOTING_POSITION
     initGoalPath();
+
+    Hardware.drive.setMaxSpeed(MAXIMUM_AUTONOMOUS_SPEED);
 
 
     // -------------------------------------
@@ -172,15 +175,9 @@ public static void init ()
  */
 public static void periodic ()
 {
-
-
-    // testing for Drive class.
-    rotateZero();
-    forwardsOne();
-
-
     // runs the overarching state machine.
     runMainStateMachine();
+
 } // end Periodic
 
 
@@ -268,10 +265,13 @@ private static void initGoalPath ()
  */
 private static void runMainStateMachine ()
 {
+
+    System.out.println("Main State: " + mainState);
     switch (mainState)
         {
         case INIT:
             mainStateMachineInit();
+            break;
         case DELAY:
             delay();
             break;
@@ -287,6 +287,8 @@ private static void runMainStateMachine ()
         case SHOOT:
             shoot();
             break;
+        case DONE:
+            break;
         }
 }
 
@@ -297,7 +299,7 @@ private static void runMainStateMachine ()
  * ======================================
  */
 
-public static void mainStateMachineInit ()
+private static void mainStateMachineInit ()
 {
 
     if (Hardware.autonomousEnabled.isOn() == true)
@@ -310,7 +312,9 @@ public static void mainStateMachineInit ()
         {
         mainState = MainState.DONE;
         }
-
+    //testing
+    //TODO: remove
+    mainState = MainState.MOVE_TO_SHOOTING_POSITION;
 }
 
 
@@ -332,7 +336,7 @@ private static void delay ()
 private static void forwardsToTape ()
 {
 
-    Hardware.drive.driveForwardInches(0.0);
+    Hardware.drive.driveForwardInches(999.9);
     if (Hardware.leftIR.isOn() && Hardware.rightIR.isOn())
         {
         alignmentState = AlignmentState.BOTH_ON_TAPE;
@@ -359,6 +363,7 @@ private static void forwardsToTape ()
  */
 private static void align ()
 {
+    System.out.println("Alignment State: " + alignmentState);
     switch (alignmentState)
         {
         case NEITHER_ON_TAPE:
@@ -385,10 +390,12 @@ private static void align ()
  */
 private static void moveToShootingPosition ()
 {
+    System.out.println(
+            "MoveToShoot State: " + moveToShootingPositionStep);
     switch (moveToShootingPositionStep)
         {
         case INIT:
-
+            moveToShootingPositionInit();
             break;
         case ROTATE_ZERO:
             // if not needed, set rotate0 to 0.
@@ -405,6 +412,7 @@ private static void moveToShootingPosition ()
             forwardsTwo();
             break;
         case DONE:
+            moveToShootingPositionDone();
             break;
         }
 }
@@ -436,7 +444,8 @@ private static void rotateZero ()
 {
     if (Hardware.drive.turnLeftDegrees(rotate0))
         {
-        moveToShootingPositionStep = MoveToShootingPositionStep.FORWARDS_ONE;
+        moveToShootingPositionStep =
+                MoveToShootingPositionStep.FORWARDS_ONE;
         }
 }
 
@@ -444,7 +453,8 @@ private static void forwardsOne ()
 {
     if (Hardware.drive.driveForwardInches(forwards1))
         {
-        moveToShootingPositionStep = MoveToShootingPositionStep.ROTATE_ONE;
+        moveToShootingPositionStep =
+                MoveToShootingPositionStep.ROTATE_ONE;
         }
 }
 
@@ -453,7 +463,8 @@ private static void rotateOne ()
     if (Hardware.drive.turnLeftDegrees(rotate1))
         ;
         {
-        moveToShootingPositionStep = MoveToShootingPositionStep.FORWARDS_TWO;
+        moveToShootingPositionStep =
+                MoveToShootingPositionStep.FORWARDS_TWO;
         }
 }
 
@@ -465,7 +476,10 @@ private static void forwardsTwo ()
         }
 }
 
-
+private static void moveToShootingPositionDone ()
+{
+    mainState = MainState.SHOOT;
+}
 
 /*
  * ==============================================
@@ -552,8 +566,8 @@ private static void alignFinish ()
  */
 
 
-// __ _ __
-// .................../ \
+// .....................__ _ __
+// .................../ .  . .  \
 // ................./ --0 --- 0-- \
 // .........++++.. |- - - | | - - -| ..++++
 /*---------//||\\--|     /   \     |--//||\\-------
@@ -562,6 +576,8 @@ private static void alignFinish ()
 // ----------------------\___/
 // ...............................|<!(r% ~@$ #3r3
 
+
+private static final double MAXIMUM_AUTONOMOUS_SPEED = 1.0;
 
 private static final double MAXIMUM_DELAY = 4.0;
 private static final int ONE_THOUSAND = 1000;

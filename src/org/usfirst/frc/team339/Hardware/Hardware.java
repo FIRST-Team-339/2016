@@ -17,7 +17,7 @@ package org.usfirst.frc.team339.Hardware;
 
 import org.usfirst.frc.team339.HardwareInterfaces.IRSensor;
 import org.usfirst.frc.team339.HardwareInterfaces.KilroyCamera;
-import org.usfirst.frc.team339.HardwareInterfaces.Potentiometer;
+import org.usfirst.frc.team339.HardwareInterfaces.RobotPotentiometer;
 import org.usfirst.frc.team339.HardwareInterfaces.SingleThrowSwitch;
 import org.usfirst.frc.team339.HardwareInterfaces.SixPositionSwitch;
 import org.usfirst.frc.team339.HardwareInterfaces.transmission.Transmission;
@@ -53,7 +53,7 @@ public class Hardware
 // -------------------------------------
 private static final int rightRearMotorCANID = 15;
 private static final int leftRearMotorCANID = 11;
-private static final int rightFrontMotorCANID = 17;//
+private static final int rightFrontMotorCANID = 17;
 private static final int leftFrontMotorCANID = 12;
 
 // ---------------------------------------
@@ -74,10 +74,10 @@ private static final int leftFrontMotorCANID = 12;
 // ------------------------------------
 // Talon classes
 // ------------------------------------
-public static CANTalon rightRearMotor = new CANTalon(
-        rightRearMotorCANID);
-public static CANTalon leftRearMotor = new CANTalon(
-        leftRearMotorCANID);
+public static CANTalon rightRearMotor =
+        new CANTalon(rightRearMotorCANID);
+public static CANTalon leftRearMotor =
+        new CANTalon(leftRearMotorCANID);
 public static CANTalon rightFrontMotor =
         new CANTalon(rightFrontMotorCANID);
 public static CANTalon leftFrontMotor =
@@ -108,9 +108,16 @@ public static CANTalon leftFrontMotor =
 // ------------------------------------
 
 //Turns autonomous on or off.
+/**
+ * A physical switch that decides whether or not to run autonomous.
+ */
 public static SingleThrowSwitch autonomousEnabled =
         new SingleThrowSwitch(19);
-//TODO: plug in switch and set real port numbers.
+
+/**
+ * Displays the starting position.
+ * Position 0 on the switch corresponds to position 1, 1 to 2, etc.
+ */
 public static SixPositionSwitch startingPositionDial =
         new SixPositionSwitch(14, 15, 16, 17, 18, 21);
 
@@ -180,7 +187,8 @@ public static IRSensor leftIR = new IRSensor(22);
 // Potentiometers
 // -------------------------------------
 // -------------------------------------
-public static Potentiometer delayPot = new Potentiometer(3, 270);
+public static RobotPotentiometer delayPot =
+        new RobotPotentiometer(3, 270);
 
 // -------------------------------------
 // Sonar/Ultrasonic
@@ -243,11 +251,12 @@ public static Transmission transmission = new Transmission(
         rightRearMotor, leftRearMotor);
 
 public static TransmissionFourWheel transmissionFourWheel =
-        new TransmissionFourWheel(rightFrontMotor, leftFrontMotor,
-                rightRearMotor, leftRearMotor);
+        new TransmissionFourWheel(rightFrontMotor, rightRearMotor,
+                leftFrontMotor, leftRearMotor);
 
-public static Drive drive = new Drive(transmission, rightRearEncoder,
-        rightFrontEncoder, leftRearEncoder, leftFrontEncoder);
+public static Drive drive =
+        new Drive(transmissionFourWheel, rightRearEncoder,
+                rightFrontEncoder, leftRearEncoder, leftFrontEncoder);
 
 // -------------------
 // Assembly classes (e.g. forklift)
