@@ -1,6 +1,6 @@
 package org.usfirst.frc.team339.Utils;
 
-import org.usfirst.frc.team339.HardwareInterfaces.transmission.Transmission;
+import org.usfirst.frc.team339.HardwareInterfaces.transmission.TransmissionFourWheel;
 import edu.wpi.first.wpilibj.Encoder;
 
 // TODO: COMMENT YOUR CODE!!!!!!!!!!!
@@ -12,7 +12,8 @@ public class Drive
  */
 private double maxSpeedScalingFactor = 1.0;
 
-public Drive (Transmission transmission, Encoder rightRearEncoder,
+public Drive (TransmissionFourWheel transmission,
+        Encoder rightRearEncoder,
         Encoder rightFrontEncoder, Encoder leftRearEncoder,
         Encoder leftFrontEncoder)
 {
@@ -24,7 +25,7 @@ public Drive (Transmission transmission, Encoder rightRearEncoder,
     this.isFourWheel = true;
 }
 
-public Drive (Transmission transmission, Encoder rightEncoder,
+public Drive (TransmissionFourWheel transmission, Encoder rightEncoder,
         Encoder leftEncoder)
 {
     this.rightRearEncoder = rightEncoder;
@@ -244,7 +245,7 @@ private Encoder leftRearEncoder;
 
 private Encoder leftFrontEncoder;
 
-private Transmission transmission;
+private TransmissionFourWheel transmission;
 
 /*
  * Constants

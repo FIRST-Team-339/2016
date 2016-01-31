@@ -254,8 +254,9 @@ public static TransmissionFourWheel transmissionFourWheel =
         new TransmissionFourWheel(rightFrontMotor, rightRearMotor,
                 leftFrontMotor, leftRearMotor);
 
-public static Drive drive = new Drive(transmission, rightRearEncoder,
-        rightFrontEncoder, leftRearEncoder, leftFrontEncoder);
+public static Drive drive =
+        new Drive(transmissionFourWheel, rightRearEncoder,
+                rightFrontEncoder, leftRearEncoder, leftFrontEncoder);
 
 // -------------------
 // Assembly classes (e.g. forklift)
