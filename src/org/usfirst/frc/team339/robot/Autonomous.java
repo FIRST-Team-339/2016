@@ -32,6 +32,7 @@
 package org.usfirst.frc.team339.robot;
 
 import org.usfirst.frc.team339.Hardware.Hardware;
+import org.usfirst.frc.team339.HardwareInterfaces.transmission.Transmission;
 
 /**
  * This class contains all of the user code for the Autonomous part of the
@@ -92,13 +93,44 @@ private static enum AlignmentState
     }
 
 
-private static boolean leftSensorIsOnTape;
 
-private static boolean rightSensorIsOnTape;
-
-// distances we'll be driving in autonomous
-private static class DriveDistance
+/**
+ * A collection of distances we'll be driving in autonomous.
+ */
+private static class DriveDistances
 {
+
+
+/*
+ * Below are the distances traveled by the robot in
+ * FORWARDS_TO_SHOOTING_POSITION. The order
+ * of execution is stated by the first number. The
+ * starting position is denoted by the second.
+ */
+public static final double ROTATE_ZERO_ONE = 0.0;
+public static final double FORWARDS_ONE_ONE = 74.7;
+public static final double ROTATE_ONE_ONE = -60.0;
+public static final double FORWARDS_TWO_ONE = 62.7;
+
+public static final double ROTATE_ZERO_TWO = 0.0;
+public static final double FORWARDS_ONE_TWO = 82.0;
+public static final double ROTATE_ONE_TWO = -60.0;
+public static final double FORWARDS_TWO_TWO = 52.92;
+
+public static final double ROTATE_ZERO_THREE = -20.0;
+public static final double FORWARDS_ONE_THREE = 64.0;
+public static final double ROTATE_ONE_THREE = 20.0;
+public static final double FORWARDS_TWO_THREE = 0.0;
+
+public static final double ROTATE_ZERO_FOUR = 24.8;
+public static final double FORWARDS_ONE_FOUR = 66.1;
+public static final double ROTATE_ONE_FOUR = -24.8;
+public static final double FORWARDS_TWO_FOUR = 0.0;
+
+public static final double ROTATE_ZERO_FIVE = 0.0;
+public static final double FORWARDS_ONE_FIVE = 86.5;
+public static final double ROTATE_ONE_FIVE = 60.0;
+public static final double FORWARDS_TWO_FIVE = 12.0;
 }
 
 // ==========================================
@@ -127,7 +159,7 @@ private static double forwards2; // amount to move forwards in FORWARDS_TWO
 // TUNEABLES
 // ==========================================
 
-/*
+/**
  * User-Initialization code for autonomous mode should go here. Will be
  * called once when the robot enters autonomous mode.
  *
@@ -148,6 +180,36 @@ public static void init ()
     initGoalPath();
 
     Hardware.drive.setMaxSpeed(MAXIMUM_AUTONOMOUS_SPEED);
+
+
+    // -------------------------------------
+    // motor initialization
+    // -------------------------------------
+    Hardware.leftRearMotor.enableBrakeMode(true);
+    Hardware.rightRearMotor.enableBrakeMode(true);
+    Hardware.leftFrontMotor.enableBrakeMode(true);
+    Hardware.rightFrontMotor.enableBrakeMode(true);
+    Hardware.leftRearMotorSafety.setSafetyEnabled(true);
+    Hardware.rightRearMotorSafety.setSafetyEnabled(true);
+    Hardware.leftFrontMotorSafety.setSafetyEnabled(true);
+    Hardware.rightFrontMotorSafety.setSafetyEnabled(true);
+    Hardware.transmissionFourWheel.setLeftMotorDirection(
+            Transmission.MotorDirection.REVERSED);
+
+    //--------------------------------------
+    // Encoder Initialization
+    //--------------------------------------
+    Hardware.leftRearEncoder.reset();
+    Hardware.leftRearEncoder.setDistancePerPulse(0.019706);
+
+    Hardware.leftFrontEncoder.reset();
+    Hardware.leftFrontEncoder.setDistancePerPulse(0.019706);
+
+    Hardware.rightRearEncoder.reset();
+    Hardware.rightRearEncoder.setDistancePerPulse(0.019706);
+
+    Hardware.rightFrontEncoder.reset();
+    Hardware.rightFrontEncoder.setDistancePerPulse(0.019706);
 
 
     // -------------------------------------
@@ -175,9 +237,20 @@ public static void init ()
  */
 public static void periodic ()
 {
-    // runs the overarching state machine.
-    runMainStateMachine();
 
+    //test
+    Hardware.transmissionFourWheel.drive(.5, .5);
+
+
+    // runs the overarching state machine.
+    //runMainStateMachine();
+
+
+
+    Hardware.leftRearMotorSafety.feed();
+    Hardware.rightRearMotorSafety.feed();
+    Hardware.leftFrontMotorSafety.feed();
+    Hardware.rightFrontMotorSafety.feed();
 } // end Periodic
 
 
@@ -228,34 +301,34 @@ private static void initGoalPath ()
     switch (startingPosition)
         {
         case ONE:
-            rotate0 = ROTATE_ZERO_ONE;
-            forwards1 = FORWARDS_ONE_ONE;
-            rotate1 = ROTATE_ONE_ONE;
-            forwards2 = FORWARDS_TWO_ONE;
+            rotate0 = DriveDistances.ROTATE_ZERO_ONE;
+            forwards1 = DriveDistances.FORWARDS_ONE_ONE;
+            rotate1 = DriveDistances.ROTATE_ONE_ONE;
+            forwards2 = DriveDistances.FORWARDS_TWO_ONE;
             break;
         case TWO:
-            rotate0 = ROTATE_ZERO_TWO;
-            forwards1 = FORWARDS_ONE_TWO;
-            rotate1 = ROTATE_ONE_TWO;
-            forwards2 = FORWARDS_TWO_TWO;
+            rotate0 = DriveDistances.ROTATE_ZERO_TWO;
+            forwards1 = DriveDistances.FORWARDS_ONE_TWO;
+            rotate1 = DriveDistances.ROTATE_ONE_TWO;
+            forwards2 = DriveDistances.FORWARDS_TWO_TWO;
             break;
         case THREE:
-            rotate0 = ROTATE_ZERO_THREE;
-            forwards1 = FORWARDS_ONE_THREE;
-            rotate1 = ROTATE_ONE_THREE;
-            forwards2 = FORWARDS_TWO_THREE;
+            rotate0 = DriveDistances.ROTATE_ZERO_THREE;
+            forwards1 = DriveDistances.FORWARDS_ONE_THREE;
+            rotate1 = DriveDistances.ROTATE_ONE_THREE;
+            forwards2 = DriveDistances.FORWARDS_TWO_THREE;
             break;
         case FOUR:
-            rotate0 = ROTATE_ZERO_FOUR;
-            forwards1 = FORWARDS_ONE_FOUR;
-            rotate1 = ROTATE_ONE_FOUR;
-            forwards2 = FORWARDS_TWO_FOUR;
+            rotate0 = DriveDistances.ROTATE_ZERO_FOUR;
+            forwards1 = DriveDistances.FORWARDS_ONE_FOUR;
+            rotate1 = DriveDistances.ROTATE_ONE_FOUR;
+            forwards2 = DriveDistances.FORWARDS_TWO_FOUR;
             break;
         case FIVE:
-            rotate0 = ROTATE_ZERO_FIVE;
-            forwards1 = FORWARDS_ONE_FIVE;
-            rotate1 = ROTATE_ONE_FIVE;
-            forwards2 = FORWARDS_TWO_FIVE;
+            rotate0 = DriveDistances.ROTATE_ZERO_FIVE;
+            forwards1 = DriveDistances.FORWARDS_ONE_FIVE;
+            rotate1 = DriveDistances.ROTATE_ONE_FIVE;
+            forwards2 = DriveDistances.FORWARDS_TWO_FIVE;
             break;
         }
 }
@@ -385,7 +458,6 @@ private static void align ()
  * Moves the robot from the gaffers' tape to a position in front of a goal.
  * Movements are based on the robot's initial position.
  * Guided by the Drive utility class.
- * TODO: write Drive utility class.
  * One of the overarching states.
  */
 private static void moveToShootingPosition ()
@@ -414,6 +486,9 @@ private static void moveToShootingPosition ()
         case DONE:
             moveToShootingPositionDone();
             break;
+        default:
+            //this should not happen.
+            break;
         }
 }
 
@@ -435,11 +510,20 @@ private static void shoot ()
  * ==============================================
  */
 
+/**
+ * Called at the beginning of MOVE_TO_SHOOTING_POSITION.
+ * Begins movement sequence.
+ */
 private static void moveToShootingPositionInit ()
 {
     moveToShootingPositionStep = MoveToShootingPositionStep.ROTATE_ZERO;
 }
 
+/**
+ * The first rotation along the Alignment tape.
+ * From StartingPositions 1, 2, and 5, rotate0 will be set to 0, and this will
+ * do nothing.
+ */
 private static void rotateZero ()
 {
     if (Hardware.drive.turnLeftDegrees(rotate0))
@@ -449,6 +533,9 @@ private static void rotateZero ()
         }
 }
 
+/**
+ * First movement after first turn on Alignment tape.
+ */
 private static void forwardsOne ()
 {
     if (Hardware.drive.driveForwardInches(forwards1))
@@ -458,6 +545,9 @@ private static void forwardsOne ()
         }
 }
 
+/**
+ * Second rotation; turns to face goal.
+ */
 private static void rotateOne ()
 {
     if (Hardware.drive.turnLeftDegrees(rotate1))
@@ -468,6 +558,9 @@ private static void rotateOne ()
         }
 }
 
+/**
+ * Final movement forwards to goal, used for positions 1, 2, and 5.
+ */
 private static void forwardsTwo ()
 {
     if (Hardware.drive.driveForwardInches(forwards2))
@@ -476,6 +569,9 @@ private static void forwardsTwo ()
         }
 }
 
+/**
+ * Sets main state to SHOOT upon completion.
+ */
 private static void moveToShootingPositionDone ()
 {
     mainState = MainState.SHOOT;
@@ -570,50 +666,20 @@ private static void alignFinish ()
 // .................../ .  . .  \
 // ................./ --0 --- 0-- \
 // .........++++.. |- - - | | - - -| ..++++
-/*---------//||\\--|     /   \     |--//||\\-------
-//Constants\\||//       |     |       \\||//
-//------ ---------------|     |--------------------*/
+/*
+ * =========//||\\==| / \ |==//||\\======
+ * //Constants\\||// | | \\||//
+ * //======================| |==================
+ */
 // ----------------------\___/
 // ...............................|<!(r% ~@$ #3r3
 
 
-private static final double MAXIMUM_AUTONOMOUS_SPEED = 1.0;
+private static final double MAXIMUM_AUTONOMOUS_SPEED = 0.2;
 
 private static final double MAXIMUM_DELAY = 4.0;
 private static final int ONE_THOUSAND = 1000;
 
 private static final double ALIGNMENT_SPEED = 0.1;
-
-/*------------------------------------------------------------------------------
-Below are the distances traveled by the robot in
-FORWARDS_TO_SHOOTING_POSITION. The order
-of execution is stated by the first number. The
-starting position is denoted by the second.
-------------------------------------------------------------------------------*/
-
-private static final double ROTATE_ZERO_ONE = 0.0;
-private static final double FORWARDS_ONE_ONE = 74.7;
-private static final double ROTATE_ONE_ONE = -60;
-private static final double FORWARDS_TWO_ONE = 62.7;
-
-private static final double ROTATE_ZERO_TWO = 0.0;
-private static final double FORWARDS_ONE_TWO = 82.0;
-private static final double ROTATE_ONE_TWO = -60;
-private static final double FORWARDS_TWO_TWO = 52.92;
-
-private static final double ROTATE_ZERO_THREE = -20.0;
-private static final double FORWARDS_ONE_THREE = 64.0;
-private static final double ROTATE_ONE_THREE = 20.0;
-private static final double FORWARDS_TWO_THREE = 0.0;
-
-private static final double ROTATE_ZERO_FOUR = 24.8;
-private static final double FORWARDS_ONE_FOUR = 66.1;
-private static final double ROTATE_ONE_FOUR = -24.8;
-private static final double FORWARDS_TWO_FOUR = 0.0;
-
-private static final double ROTATE_ZERO_FIVE = 0.0;
-private static final double FORWARDS_ONE_FIVE = 86.5;
-private static final double ROTATE_ONE_FIVE = 60.0;
-private static final double FORWARDS_TWO_FIVE = 12.0;
 
 } // end class

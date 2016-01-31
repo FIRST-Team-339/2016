@@ -20,7 +20,6 @@ import org.usfirst.frc.team339.HardwareInterfaces.KilroyCamera;
 import org.usfirst.frc.team339.HardwareInterfaces.RobotPotentiometer;
 import org.usfirst.frc.team339.HardwareInterfaces.SingleThrowSwitch;
 import org.usfirst.frc.team339.HardwareInterfaces.SixPositionSwitch;
-import org.usfirst.frc.team339.HardwareInterfaces.transmission.Transmission;
 import org.usfirst.frc.team339.HardwareInterfaces.transmission.TransmissionFourWheel;
 import org.usfirst.frc.team339.Utils.Drive;
 import org.usfirst.frc.team339.Utils.ErrorMessage;
@@ -29,6 +28,7 @@ import edu.wpi.first.wpilibj.CameraServer;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.MotorSafetyHelper;
 import edu.wpi.first.wpilibj.Relay;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.vision.USBCamera;
@@ -251,12 +251,10 @@ public static Joystick rightOperator = new Joystick(3);
 // ------------------------------------
 // Transmission class
 // ------------------------------------
-public static Transmission transmission = new Transmission(
-        rightRearMotor, leftRearMotor);
 
 public static TransmissionFourWheel transmissionFourWheel =
-        new TransmissionFourWheel(rightFrontMotor, rightRearMotor,
-                leftFrontMotor, leftRearMotor);
+        new TransmissionFourWheel(rightFrontMotor, leftFrontMotor,
+                rightRearMotor, leftRearMotor);
 
 public static Drive drive =
         new Drive(transmissionFourWheel, rightRearEncoder,
@@ -274,5 +272,16 @@ public static final Timer autoTimer = new Timer();
 public static final Timer delayTimer = new Timer();
 public static final ErrorMessage errorMessage = new ErrorMessage(
         true /* append timelog */);
+
+public static final MotorSafetyHelper leftRearMotorSafety =
+        new MotorSafetyHelper(leftRearMotor);
+public static final MotorSafetyHelper rightRearMotorSafety =
+        new MotorSafetyHelper(rightRearMotor);
+public static final MotorSafetyHelper leftFrontMotorSafety =
+        new MotorSafetyHelper(leftFrontMotor);
+public static final MotorSafetyHelper rightFrontMotorSafety =
+        new MotorSafetyHelper(rightFrontMotor);
+
+
 
 } // end class
