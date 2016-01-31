@@ -29,6 +29,7 @@ import edu.wpi.first.wpilibj.CameraServer;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.Relay;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.vision.USBCamera;
 
@@ -94,6 +95,8 @@ public static CANTalon leftFrontMotor =
 // ====================================
 // Relay classes
 // ====================================
+
+public static Relay ringLightRelay = new Relay(0);
 
 // ------------------------------------
 // Compressor class - runs the compressor
