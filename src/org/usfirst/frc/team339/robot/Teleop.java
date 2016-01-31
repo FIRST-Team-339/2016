@@ -90,7 +90,7 @@ public static void periodic ()
 
     Hardware.transmissionFourWheel.drive(Hardware.rightDriver.getY(),
             Hardware.leftDriver.getY());
-    printStatements();
+    //printStatements();
 
 } // end Periodic
 
@@ -107,9 +107,9 @@ public static void periodic ()
 public static void printStatements ()
 {
 
-    System.out.println("Left Joystick: " + Hardware.leftDriver.getY());
-    System.out
-            .println("Right Joystick: " + Hardware.rightDriver.getY());
+    //    System.out.println("Left Joystick: " + Hardware.leftDriver.getY());
+    //    System.out
+    //            .println("Right Joystick: " + Hardware.rightDriver.getY());
     // IR sensors
     // System.out.println("left IR = " + Hardware.leftIR.isOn());
     //    System.out.println("right IR = " + Hardware.rightIR.isOn());//Not Working :(
@@ -125,10 +125,10 @@ public static void printStatements ()
     //            "RR distance = " + Hardware.rightRearEncoder.getDistance());
     System.out.println(
             "LR distance = " + Hardware.leftRearEncoder.getDistance());
-            //    System.out.println("RF distance = "
-            //            + Hardware.rightFrontEncoder.getDistance());
-            //    System.out.println(
-            //            "LF distance = " + Hardware.leftFrontEncoder.getDistance());
+    System.out.println("RF distance = "
+            + Hardware.rightFrontEncoder.getDistance());
+    System.out.println(
+            "LF distance = " + Hardware.leftFrontEncoder.getDistance());
 
     //print the position the 6 position switch
     //    System.out.println("Position: " + Hardware.startingPositionDial.getPosition());
