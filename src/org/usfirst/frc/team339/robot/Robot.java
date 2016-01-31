@@ -224,9 +224,9 @@ public void robotInit ()
     // =========================================================
     // User code goes below here
     // =========================================================
-    //--------------------------------------
+    // --------------------------------------
     // Encoder Initialization
-    //--------------------------------------
+    // --------------------------------------
     Hardware.leftRearEncoder.reset();
     Hardware.leftRearEncoder.setDistancePerPulse(0.019706);
 
@@ -305,7 +305,6 @@ public void teleopInit ()
     // ---------------------------------------
     System.out.println("Started teleopInit().");
 
-    Hardware.axisCamera.writeBrightness(50);
     // -------------------------------------
     // Call the Teleop class's Init function,
     // which contains the user code.
