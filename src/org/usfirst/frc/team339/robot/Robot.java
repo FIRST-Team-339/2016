@@ -63,6 +63,7 @@ import org.usfirst.frc.team339.Hardware.Hardware;
 import org.usfirst.frc.team339.HardwareInterfaces.transmission.Transmission;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.MotorSafetyHelper;
+import edu.wpi.first.wpilibj.Relay.Direction;
 import edu.wpi.first.wpilibj.vision.AxisCamera.Resolution;
 
 /**
@@ -227,6 +228,24 @@ public void robotInit ()
     // =========================================================
     // User code goes below here
     // =========================================================
+    //--------------------------------------
+    // Encoder Initialization
+    //--------------------------------------
+    Hardware.leftRearEncoder.reset();
+    Hardware.leftRearEncoder.setDistancePerPulse(0.019706);
+
+    Hardware.leftFrontEncoder.reset();
+    Hardware.leftFrontEncoder.setDistancePerPulse(0.019706);
+
+    Hardware.rightRearEncoder.reset();
+    Hardware.rightRearEncoder.setDistancePerPulse(0.019706);
+
+    Hardware.rightFrontEncoder.reset();
+    Hardware.rightFrontEncoder.setDistancePerPulse(0.019706);
+
+
+
+
     // -------------------------------------
     // USB camera initialization
     // -------------------------------------
@@ -244,6 +263,8 @@ public void robotInit ()
 
     Hardware.axisCamera.writeMaxFPS(15);
     Hardware.axisCamera.writeResolution(Resolution.k320x240);
+
+    Hardware.ringLightRelay.setDirection(Direction.kForward);
 
     // -------------------------------------
     // motor initialization
@@ -337,6 +358,8 @@ public void teleopPeriodic ()
     // -------------------------------------
     // Watch dog code used to go here.
     // -------------------------------------
+
+
 
     // -------------------------------------
     // Call the Teleop class's Periodic function,

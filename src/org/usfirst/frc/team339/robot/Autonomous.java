@@ -137,11 +137,9 @@ public static final double FORWARDS_TWO_FIVE = 12.0;
 // AUTO STATES
 // ==========================================
 private static MainState mainState = MainState.INIT;
-private static MoveToShootingPositionStep moveToShootingPositionStep =
-        MoveToShootingPositionStep.INIT;
+private static MoveToShootingPositionStep moveToShootingPositionStep = MoveToShootingPositionStep.INIT;
 private static StartingPosition startingPosition = StartingPosition.ONE;
-private static AlignmentState alignmentState =
-        AlignmentState.NEITHER_ON_TAPE;
+private static AlignmentState alignmentState = AlignmentState.NEITHER_ON_TAPE;
 
 // ==================================
 // VARIABLES

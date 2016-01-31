@@ -17,7 +17,7 @@ package org.usfirst.frc.team339.Hardware;
 
 import org.usfirst.frc.team339.HardwareInterfaces.IRSensor;
 import org.usfirst.frc.team339.HardwareInterfaces.KilroyCamera;
-import org.usfirst.frc.team339.HardwareInterfaces.Potentiometer;
+import org.usfirst.frc.team339.HardwareInterfaces.RobotPotentiometer;
 import org.usfirst.frc.team339.HardwareInterfaces.SingleThrowSwitch;
 import org.usfirst.frc.team339.HardwareInterfaces.SixPositionSwitch;
 import org.usfirst.frc.team339.HardwareInterfaces.transmission.TransmissionFourWheel;
@@ -29,6 +29,7 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.MotorSafetyHelper;
+import edu.wpi.first.wpilibj.Relay;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.vision.USBCamera;
 
@@ -53,7 +54,7 @@ public class Hardware
 // -------------------------------------
 private static final int rightRearMotorCANID = 15;
 private static final int leftRearMotorCANID = 11;
-private static final int rightFrontMotorCANID = 17;//
+private static final int rightFrontMotorCANID = 17;
 private static final int leftFrontMotorCANID = 12;
 
 // ---------------------------------------
@@ -74,10 +75,10 @@ private static final int leftFrontMotorCANID = 12;
 // ------------------------------------
 // Talon classes
 // ------------------------------------
-public static CANTalon rightRearMotor = new CANTalon(
-        rightRearMotorCANID);
-public static CANTalon leftRearMotor = new CANTalon(
-        leftRearMotorCANID);
+public static CANTalon rightRearMotor =
+        new CANTalon(rightRearMotorCANID);
+public static CANTalon leftRearMotor =
+        new CANTalon(leftRearMotorCANID);
 public static CANTalon rightFrontMotor =
         new CANTalon(rightFrontMotorCANID);
 public static CANTalon leftFrontMotor =
@@ -94,6 +95,8 @@ public static CANTalon leftFrontMotor =
 // ====================================
 // Relay classes
 // ====================================
+
+public static Relay ringLightRelay = new Relay(0);
 
 // ------------------------------------
 // Compressor class - runs the compressor
@@ -187,7 +190,8 @@ public static IRSensor leftIR = new IRSensor(22);
 // Potentiometers
 // -------------------------------------
 // -------------------------------------
-public static Potentiometer delayPot = new Potentiometer(3, 270);
+public static RobotPotentiometer delayPot =
+        new RobotPotentiometer(3, 270);
 
 // -------------------------------------
 // Sonar/Ultrasonic
