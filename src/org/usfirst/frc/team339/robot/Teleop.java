@@ -140,10 +140,13 @@ public static void printStatements ()
     //            "LF distance = " + Hardware.leftFrontEncoder.getDistance());
 
     //Switches--------------
-    //      System.out.println("Autonomous Enabled Switch: " + Hardware.autonomousEnabled.isOn());
+    //    System.out.println("Autonomous Enabled Switch: " + Hardware.autonomousEnabled.isOn());
 
     //print the position the 6 position switch------------
     //    System.out.println("Position: " + Hardware.startingPositionDial.getPosition());
+
+    //Relay-----------------
+    //    System.out.println(Hardware.ringLightRelay.get());
 
     //<<<<<<< HEAD
 } // end printStatements 

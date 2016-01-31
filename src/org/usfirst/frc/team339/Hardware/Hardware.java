@@ -96,6 +96,7 @@ public static CANTalon leftFrontMotor =
 // Relay classes
 // ====================================
 
+//Relay that controls the RingLight
 public static Relay ringLightRelay = new Relay(0);
 
 // ------------------------------------
