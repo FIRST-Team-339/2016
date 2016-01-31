@@ -32,7 +32,6 @@
 package org.usfirst.frc.team339.robot;
 
 import org.usfirst.frc.team339.Hardware.Hardware;
-import org.usfirst.frc.team339.HardwareInterfaces.transmission.TransmissionFourWheel;
 import edu.wpi.first.wpilibj.CameraServer;
 
 /**
@@ -86,11 +85,14 @@ public static void init ()
  */
 public static void periodic ()
 {
-    TransmissionFourWheel testTrans = Hardware.transmissionFourWheel;
+    //Print statements to test Hardware on the Robot
+    printStatements();
 
+
+    //Driving the Robot
     Hardware.transmissionFourWheel.drive(Hardware.rightDriver.getY(),
             Hardware.leftDriver.getY());
-    //printStatements();
+
 
 } // end Periodic
 
@@ -101,36 +103,46 @@ public static void periodic ()
  * @author Ashley Espeland
  * @written 1/28/16
  * 
- *          1/30/16: added 6 position switch -McGee
+ *          Edited by Ryan McGee
  * 
  */
 public static void printStatements ()
 {
-
+    // Joysticks------------
     //    System.out.println("Left Joystick: " + Hardware.leftDriver.getY());
     //    System.out
     //            .println("Right Joystick: " + Hardware.rightDriver.getY());
-    // IR sensors
+    //      System.out.println("Left Operator: " + Hardware.leftOperator.getY());
+    //      System.out.println("Right Operator: " + Hardware.rightOperator.getY());
+
+    // IR sensors-----------
     // System.out.println("left IR = " + Hardware.leftIR.isOn());
-    //    System.out.println("right IR = " + Hardware.rightIR.isOn());//Not Working :(
-    // pots
+    // System.out.println("right IR = " + Hardware.rightIR.isOn());
+
+    // pots-----------------
     //    System.out.println("delay pot = " + (int) Hardware.delayPot.get());
-    //Motor controllers
+
+    //Motor controllers-----
     //    System.out.println("RR Motor V = " + Hardware.rightRearMotor.get());
     //    System.out.println("LR Motor V = " + Hardware.leftRearMotor.get());
     //    System.out
     //            .println("RF Motor V = " + Hardware.rightFrontMotor.get());
     //    System.out.println("LF Motor V = " + Hardware.leftFrontMotor.get());
+
+    // Encoders-------------
     //    System.out.println(
     //            "RR distance = " + Hardware.rightRearEncoder.getDistance());
-    System.out.println(
-            "LR distance = " + Hardware.leftRearEncoder.getDistance());
-    System.out.println("RF distance = "
-            + Hardware.rightFrontEncoder.getDistance());
-    System.out.println(
-            "LF distance = " + Hardware.leftFrontEncoder.getDistance());
+    //    System.out.println(
+    //            "LR distance = " + Hardware.leftRearEncoder.getDistance());
+    //    System.out.println("RF distance = "
+    //            + Hardware.rightFrontEncoder.getDistance());
+    //    System.out.println(
+    //            "LF distance = " + Hardware.leftFrontEncoder.getDistance());
 
-    //print the position the 6 position switch
+    //Switches--------------
+    //      System.out.println("Autonomous Enabled Switch: " + Hardware.autonomousEnabled.isOn());
+
+    //print the position the 6 position switch------------
     //    System.out.println("Position: " + Hardware.startingPositionDial.getPosition());
 
     //<<<<<<< HEAD
