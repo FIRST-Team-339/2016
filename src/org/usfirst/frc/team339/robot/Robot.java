@@ -270,7 +270,6 @@ public void robotInit ()
     Hardware.rightRearMotor.setSafetyEnabled(true);
     Hardware.leftFrontMotor.setSafetyEnabled(true);
     Hardware.rightFrontMotor.setSafetyEnabled(true);
-
     // =========================================================
     // User code goes above here
     // =========================================================
