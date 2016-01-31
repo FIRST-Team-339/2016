@@ -1,10 +1,11 @@
 package org.usfirst.frc.team339.Utils;
 
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import org.usfirst.frc.team339.Hardware.Hardware;
+import org.usfirst.frc.team339.HardwareInterfaces.CANNetwork;
 import org.usfirst.frc.team339.HardwareInterfaces.CANObject;
-import edu.wpi.first.wpilibj.CANTalon;
 
-// import org.usfirst.frc.team339.Hardware.Hardware.getStickyFaultForLim;
 /**
  * Contains the method for detecting sticky faults
  */
@@ -16,18 +17,21 @@ public class CANUtils
  */
 public static void testForFaults ()
 {
-    if (org.usfirst.frc.team339.HardwareInterfaces.CANObject
-            .getFault() == false)
+    for (int i = 0; i < CANNetwork.canObjects.size(); i++)
     {
-        DriverStation.reportError("No sticky faults have been detected",
-                false);
+        //creates a new temporary CANObject to search for faults
+        CANObject tempCANObject =
+                CANNetwork.canObjects.get(i);
+        
+        
+        if (tempCANObject.getFault() == true)
+        {
+            //there is a sticky fault
+            SmartDashboard.putBoolean("Sticky Fault", true);
+        }
+    }
+    //there is not a sticky fault
+    SmartDashboard.putBoolean("Sticky Fault", false);
+}
+}
 
-    }
-    else
-    {
-        DriverStation.reportError("A sticky fault has been detected",
-                false);
-    }
- 
-}
-}

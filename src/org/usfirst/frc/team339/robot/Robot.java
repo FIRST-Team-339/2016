@@ -60,6 +60,8 @@
 package org.usfirst.frc.team339.robot;
 
 import org.usfirst.frc.team339.Hardware.Hardware;
+import org.usfirst.frc.team339.HardwareInterfaces.CANNetwork;
+import org.usfirst.frc.team339.HardwareInterfaces.CANObject;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.MotorSafetyHelper;
 import edu.wpi.first.wpilibj.vision.AxisCamera.Resolution;
@@ -248,6 +250,23 @@ public void robotInit ()
     Hardware.rightRearMotor.enableBrakeMode(true);
     Hardware.leftRearMotor.setSafetyEnabled(true);
     Hardware.rightRearMotor.setSafetyEnabled(true);
+   
+    // --------------------------------------------------------
+    // CAN Network Initialization goes here
+    // --------------------------------------------------------
+    CANObject pdp = new CANObject(Hardware.pdp, 1);
+    CANNetwork.canObjects.add(pdp);
+    CANObject rightRearMotor = new CANObject(Hardware.rightRearMotor, 15);
+    CANNetwork.canObjects.add(rightRearMotor);
+    CANObject leftRearMotor = new CANObject(Hardware.leftRearMotor, 11);
+    CANNetwork.canObjects.add(leftRearMotor);
+    CANObject rightFrontMotor = new CANObject(Hardware.rightFrontMotor, 17);
+    CANNetwork.canObjects.add(rightFrontMotor);
+    CANObject leftFrontMotor = new CANObject(Hardware.leftFrontMotor, 12);
+    CANNetwork.canObjects.add(leftFrontMotor);
+    CANObject solenoid1 = new CANObject(Hardware.solenoid, 20);
+    CANNetwork.canObjects.add(solenoid1);
+    
     // =========================================================
     // User code goes above here
     // =========================================================
