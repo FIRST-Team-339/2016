@@ -74,10 +74,10 @@ private static final int leftFrontMotorCANID = 12;
 // ------------------------------------
 // Talon classes
 // ------------------------------------
-public static CANTalon rightRearMotor = new CANTalon(
-        rightRearMotorCANID);
-public static CANTalon leftRearMotor = new CANTalon(
-        leftRearMotorCANID);
+public static CANTalon rightRearMotor =
+        new CANTalon(rightRearMotorCANID);
+public static CANTalon leftRearMotor =
+        new CANTalon(leftRearMotorCANID);
 public static CANTalon rightFrontMotor =
         new CANTalon(rightFrontMotorCANID);
 public static CANTalon leftFrontMotor =
