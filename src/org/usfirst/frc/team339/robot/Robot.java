@@ -60,6 +60,7 @@
 package org.usfirst.frc.team339.robot;
 
 import org.usfirst.frc.team339.Hardware.Hardware;
+import org.usfirst.frc.team339.HardwareInterfaces.transmission.Transmission;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.MotorSafetyHelper;
 import edu.wpi.first.wpilibj.vision.AxisCamera.Resolution;
@@ -166,7 +167,10 @@ public void disabledInit ()
     // =========================================================
     // User code goes below here
     // =========================================================
-
+    Hardware.leftRearMotorSafety.setSafetyEnabled(false);
+    Hardware.rightRearMotorSafety.setSafetyEnabled(false);
+    Hardware.leftFrontMotorSafety.setSafetyEnabled(false);
+    Hardware.rightFrontMotorSafety.setSafetyEnabled(false);
     // =========================================================
     // User code goes above here
     // =========================================================
@@ -248,10 +252,29 @@ public void robotInit ()
     Hardware.rightRearMotor.enableBrakeMode(true);
     Hardware.leftFrontMotor.enableBrakeMode(true);
     Hardware.rightFrontMotor.enableBrakeMode(true);
-    Hardware.leftRearMotor.setSafetyEnabled(true);
-    Hardware.rightRearMotor.setSafetyEnabled(true);
-    Hardware.leftFrontMotor.setSafetyEnabled(true);
-    Hardware.rightFrontMotor.setSafetyEnabled(true);
+    Hardware.leftRearMotorSafety.setSafetyEnabled(true);
+    Hardware.rightRearMotorSafety.setSafetyEnabled(true);
+    Hardware.leftFrontMotorSafety.setSafetyEnabled(true);
+    Hardware.rightFrontMotorSafety.setSafetyEnabled(true);
+    Hardware.transmissionFourWheel.setLeftMotorDirection(
+            Transmission.MotorDirection.REVERSED);
+
+    //--------------------------------------
+    // Encoder Initialization
+    //--------------------------------------
+    Hardware.leftRearEncoder.reset();
+    Hardware.leftRearEncoder.setDistancePerPulse(0.019706);
+
+    Hardware.leftFrontEncoder.reset();
+    Hardware.leftFrontEncoder.setDistancePerPulse(0.019706);
+
+    Hardware.rightRearEncoder.reset();
+    Hardware.rightRearEncoder.setDistancePerPulse(0.019706);
+
+    Hardware.rightFrontEncoder.reset();
+    Hardware.rightFrontEncoder.setDistancePerPulse(0.019706);
+
+
     // =========================================================
     // User code goes above here
     // =========================================================
