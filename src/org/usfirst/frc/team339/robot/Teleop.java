@@ -32,6 +32,7 @@
 package org.usfirst.frc.team339.robot;
 
 import org.usfirst.frc.team339.Hardware.Hardware;
+import org.usfirst.frc.team339.Utils.CANUtils;
 import edu.wpi.first.wpilibj.CameraServer;
 
 /**
@@ -57,6 +58,9 @@ public class Teleop
  */
 public static void init ()
 {
+    //checks for faults
+    //does not return what has a fault yet
+    CANUtils.testForFaults();
     // -----------------------------------
     // stop cam0 in case we have declared them
     // in Autonomous. Then declare a new cam0
