@@ -49,6 +49,8 @@ public class Teleop
 // TUNEABLES
 // ==========================================
 
+
+
 /**
  * User Initialization code for teleop mode should go here. Will be
  * called once when the robot enters teleop mode.
@@ -59,6 +61,12 @@ public class Teleop
 public static void init ()
 {
 
+    // <<<<<<< HEAD
+    // =======
+    // set max speed. change by gear?
+    Hardware.drive.setMaxSpeed(MAXIMUM_TELEOP_SPEED);
+
+    //>>>>>>> branch 'master' of https://github.com/FIRST-Team-339/2016
 
     // -----------------------------------
     // stop cam0 in case we have declared them
@@ -98,28 +106,46 @@ public static void periodic ()
  */
 public static void printStatements ()
 {
+
+    System.out.println("Left Joystick: " + Hardware.leftDriver.getY());
+    System.out
+            .println("Right Joystick: " + Hardware.rightDriver.getY());
     // IR sensors
     // System.out.println("left IR = " + Hardware.leftIR.isOn());
     //    System.out.println("right IR = " + Hardware.rightIR.isOn());//Not Working :(
     // pots
     //    System.out.println("delay pot = " + (int) Hardware.delayPot.get());
     //Motor controllers
-    System.out.println("RR Motor V = " + Hardware.rightRearMotor.get());
-    System.out.println("LR Motor V = " + Hardware.leftRearMotor.get());
-    System.out
-            .println("RF Motor V = " + Hardware.rightFrontMotor.get());
-    System.out.println("LF Motor V = " + Hardware.leftFrontMotor.get());
+    //    System.out.println("RR Motor V = " + Hardware.rightRearMotor.get());
+    //    System.out.println("LR Motor V = " + Hardware.leftRearMotor.get());
+    //    System.out
+    //            .println("RF Motor V = " + Hardware.rightFrontMotor.get());
+    //    System.out.println("LF Motor V = " + Hardware.leftFrontMotor.get());
     //    System.out.println(
     //            "RR distance = " + Hardware.rightRearEncoder.getDistance());
-    //    System.out.println(
-    //            "LR distance = " + Hardware.leftFrontEncoder.getDistance());
-    //    System.out.println("RF distance = "
-    //            + Hardware.rightFrontEncoder.getDistance());
-    //    System.out.println(
-    //            "LF distance = " + Hardware.leftFrontEncoder.getDistance());
+    System.out.println(
+            "LR distance = " + Hardware.leftRearEncoder.getDistance());
+            //    System.out.println("RF distance = "
+            //            + Hardware.rightFrontEncoder.getDistance());
+            //    System.out.println(
+            //            "LF distance = " + Hardware.leftFrontEncoder.getDistance());
 
     //print the position the 6 position switch
     //    System.out.println("Position: " + Hardware.startingPositionDial.getPosition());
 
+    //<<<<<<< HEAD
 } // end printStatements 
+ //=======
+ // end printStatements
+
+
+/*
+ * ===============================================
+ * Constants
+ * ===============================================
+ */
+
+private static final double MAXIMUM_TELEOP_SPEED = 1.0;
+
+//>>>>>>> branch 'master' of https://github.com/FIRST-Team-339/2016
 } // end class

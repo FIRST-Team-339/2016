@@ -91,6 +91,7 @@ private static enum AlignmentState
     NEITHER_ON_TAPE, LEFT_ON_TAPE, RIGHT_ON_TAPE, BOTH_ON_TAPE
     }
 
+
 private static boolean leftSensorIsOnTape;
 
 private static boolean rightSensorIsOnTape;
@@ -146,7 +147,7 @@ public static void init ()
     // set the drive values for MOVE_TO_SHOOTING_POSITION
     initGoalPath();
 
-
+    Hardware.drive.setMaxSpeed(MAXIMUM_AUTONOMOUS_SPEED);
 
 
     // -------------------------------------
@@ -176,6 +177,7 @@ public static void periodic ()
 {
     // runs the overarching state machine.
     runMainStateMachine();
+
 } // end Periodic
 
 
@@ -559,8 +561,8 @@ private static void alignFinish ()
  */
 
 
-// __ _ __
-// .................../ \
+// .....................__ _ __
+// .................../ .  . .  \
 // ................./ --0 --- 0-- \
 // .........++++.. |- - - | | - - -| ..++++
 /*---------//||\\--|     /   \     |--//||\\-------
@@ -569,6 +571,8 @@ private static void alignFinish ()
 // ----------------------\___/
 // ...............................|<!(r% ~@$ #3r3
 
+
+private static final double MAXIMUM_AUTONOMOUS_SPEED = 1.0;
 
 private static final double MAXIMUM_DELAY = 4.0;
 private static final int ONE_THOUSAND = 1000;
