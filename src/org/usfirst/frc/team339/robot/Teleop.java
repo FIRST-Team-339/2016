@@ -88,6 +88,19 @@ public static void periodic ()
     //Print statements to test Hardware on the Robot
     printStatements();
 
+    if (Hardware.leftOperator.getTrigger() == true)
+        {
+        Hardware.catapultSolenoid0.set(true);
+        Hardware.catapultSolenoid1.set(true);
+        Hardware.catapultSolenoid2.set(true);
+
+        }
+    else
+        {
+        Hardware.catapultSolenoid0.set(false);
+        Hardware.catapultSolenoid1.set(false);
+        Hardware.catapultSolenoid2.set(false);
+        }
 
     //Driving the Robot
     Hardware.transmissionFourWheel.drive(Hardware.rightDriver.getY(),
@@ -121,6 +134,8 @@ public static void printStatements ()
 
     // pots-----------------
     //    System.out.println("delay pot = " + (int) Hardware.delayPot.get());
+    //prints the value of the transducer- (range 130)
+    // NOT TESTED!!!System.out.println("transducer = " + Hardware.transducer.get());
 
     //Motor controllers-----
     //    System.out.println("RR Motor V = " + Hardware.rightRearMotor.get());
@@ -128,6 +143,13 @@ public static void printStatements ()
     //    System.out
     //            .println("RF Motor V = " + Hardware.rightFrontMotor.get());
     //    System.out.println("LF Motor V = " + Hardware.leftFrontMotor.get());
+
+    //Solenoids-------------
+    //prints the state of the solenoids 
+    //    System.out.println("cameraSolenoid = " + Hardware.cameraSolenoid.get());
+    //    System.out.println("catapultSolenoid0 = " + Hardware.catapultSolenoid0.get());
+    //    System.out.println("catapultSolenoid1 = " + Hardware.catapultSolenoid1.get());
+    //    System.out.println("catapultSolenoid2 = " + Hardware.catapultSolenoid2.get());
 
     // Encoders-------------
     //    System.out.println(

@@ -25,11 +25,14 @@ import org.usfirst.frc.team339.Utils.Drive;
 import org.usfirst.frc.team339.Utils.ErrorMessage;
 import edu.wpi.first.wpilibj.CANTalon;
 import edu.wpi.first.wpilibj.CameraServer;
+import edu.wpi.first.wpilibj.Compressor;
+import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.MotorSafetyHelper;
 import edu.wpi.first.wpilibj.Relay;
+import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.vision.USBCamera;
 
@@ -103,6 +106,8 @@ public static Relay ringLightRelay = new Relay(0);
 // Compressor class - runs the compressor
 // with a single relay
 // ------------------------------------
+//relay that controls compressor
+public static Compressor compressor = new Compressor();
 
 // ====================================
 // Digital Inputs
@@ -117,6 +122,9 @@ public static Relay ringLightRelay = new Relay(0);
  */
 public static SingleThrowSwitch autonomousEnabled =
         new SingleThrowSwitch(19);
+
+
+
 
 /**
  * Displays the starting position.
@@ -172,10 +180,15 @@ public static IRSensor leftIR = new IRSensor(22);
 // ------------------------------------
 // Double Solenoids
 // ------------------------------------
-
+//double solenoid that moves the camera
+public static DoubleSolenoid cameraSolenoid = new DoubleSolenoid(3, 4);
 // ------------------------------------
 // Single Solenoids
 // ------------------------------------
+// single solenoids that control the catapult
+public static Solenoid catapultSolenoid0 = new Solenoid(0);
+public static Solenoid catapultSolenoid1 = new Solenoid(1);
+public static Solenoid catapultSolenoid2 = new Solenoid(2);
 
 // **********************************************************
 // ANALOG I/O CLASSES
@@ -193,6 +206,9 @@ public static IRSensor leftIR = new IRSensor(22);
 // -------------------------------------
 public static RobotPotentiometer delayPot =
         new RobotPotentiometer(3, 270);
+//transducer (written as a potentiometer)
+public static RobotPotentiometer transducer =
+        new RobotPotentiometer(2, 130);
 
 // -------------------------------------
 // Sonar/Ultrasonic

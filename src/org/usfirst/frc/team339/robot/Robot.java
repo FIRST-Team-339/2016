@@ -61,6 +61,7 @@ package org.usfirst.frc.team339.robot;
 
 import org.usfirst.frc.team339.Hardware.Hardware;
 import org.usfirst.frc.team339.HardwareInterfaces.transmission.Transmission;
+import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.MotorSafetyHelper;
 import edu.wpi.first.wpilibj.Relay.Direction;
@@ -243,9 +244,6 @@ public void robotInit ()
     Hardware.rightFrontEncoder.reset();
     Hardware.rightFrontEncoder.setDistancePerPulse(0.019706);
 
-
-
-
     // -------------------------------------
     // USB camera initialization
     // -------------------------------------
@@ -281,6 +279,11 @@ public void robotInit ()
             Transmission.MotorDirection.REVERSED);
 
     //--------------------------------------
+    // Compressor Initialization
+    //--------------------------------------
+    Hardware.compressor.setClosedLoopControl(true);
+
+    //--------------------------------------
     // Encoder Initialization
     //--------------------------------------
     Hardware.leftRearEncoder.reset();
@@ -295,7 +298,14 @@ public void robotInit ()
     Hardware.rightFrontEncoder.reset();
     Hardware.rightFrontEncoder.setDistancePerPulse(0.019706);
 
-
+    // ---------------------------------------
+    // Solenoid Initialization
+    // ---------------------------------------
+    //initializes the solenoids...duh duh duh...
+    Hardware.cameraSolenoid.set(DoubleSolenoid.Value.kForward);
+    Hardware.catapultSolenoid0.set(false);
+    Hardware.catapultSolenoid1.set(false);
+    Hardware.catapultSolenoid2.set(false);
     // =========================================================
     // User code goes above here
     // =========================================================
