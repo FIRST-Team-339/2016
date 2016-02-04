@@ -24,6 +24,22 @@ import edu.wpi.first.wpilibj.PowerDistributionPanel;
  */
 public class CANObject
 {
+
+//If true, activates debug print statements throughout the class
+private static boolean useDebug = true;
+
+/**
+ * Prints values of the significant variables/methods in CANObject if useDebug is true
+ */
+private void DebugCANUtils()
+{ 
+    if(useDebug == true)
+    {
+        System.out.println("The type Id is " + typeId);
+        System.out.println("The value of the getFault method is " + getFault());
+    }
+}
+
 //add object info 
 private int canId;
 //id for the CAN type
@@ -58,6 +74,14 @@ public CANObject (CANTalon newTalon, int newCanId)
     talon = newTalon;
     canId = newCanId;
     typeId = 1;
+    
+    //TODO undo comments if the following code is necessary
+    if(useDebug == true)
+    {
+        System.out.println("The talon is " + talon);
+        System.out.println("The canId of the CANTalon is " + canId);
+        System.out.println("The type Id of the CANTalon is " + typeId);
+    }
 }
 
 /**
@@ -73,6 +97,14 @@ public CANObject (CANJaguar newJaguar, int newCanId)
     jaguar = newJaguar;
     canId = newCanId;
     typeId = 2;
+    
+    //TODO undo comments if the following code is necessary
+//    if(useDebug == true)
+//    {
+//        System.out.println("The jaguar is " + jaguar);
+//        System.out.println("The canId of the CANJaguar is " + canId);
+//        System.out.println("The type Id of the CANJaguar is " + typeId);
+//    }
 }
 
 
@@ -89,6 +121,14 @@ public CANObject (PowerDistributionPanel newPdp, int newCanId)
     pdp = newPdp;
     canId = newCanId;
     typeId = 4;
+    
+    //TODO undo comments if the following code is necessary
+//    if(useDebug == true)
+//    {
+//        System.out.println("The pdp is " + talon);
+//        System.out.println("The canId of the CANJaguar is " + canId);
+//        System.out.println("The type Id of the CANJaguar is " + typeId);
+//    }
 }
 
 
@@ -105,6 +145,14 @@ public CANObject (DoubleSolenoid newdoubleSolenoid, int newCanId)
     doubleSolenoid = newdoubleSolenoid;
     canId = newCanId;
     typeId = 3;
+    
+    //TODO undo comments if the following code is necessary
+//    if(useDebug == true)
+//    {
+//        System.out.println("The Double Solenoid is " + doubleSolenoid);
+//        System.out.println("The canId of the DoubleSolenoid is " + canId);
+//        System.out.println("The type Id of the DoubleSolenoid is " + typeId);
+//    }
 }
 
 /**
@@ -252,7 +300,6 @@ public PowerDistributionPanel getPDP ()
  */
 public boolean getFault ()
 {
-
     switch (typeId)
     {
         case 1:
@@ -274,9 +321,10 @@ public boolean getFault ()
             }
             return false;
         case 3:
+            //TODO the exit line is a problem
             return doubleSolenoid.getPCMSolenoidVoltageStickyFault();
         case 4:
-            //pdp can hold sticky faults but cannot be accesed with code
+            //pdp can hold sticky faults but cannot be accessed with code
             return false;
     }
     //object does not exist

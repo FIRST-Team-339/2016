@@ -59,8 +59,8 @@ private static final int rightRearMotorCANID = 15;
 private static final int leftRearMotorCANID = 11;
 private static final int rightFrontMotorCANID = 17;
 private static final int leftFrontMotorCANID = 12;
-private static final int pdpCANID = 1;
-private static final int pcmCANID = 20;
+private static final int pdpCANID = 0;
+private static final int pcmCANID = 0;
 
 // ---------------------------------------
 // Hardware Tunables
