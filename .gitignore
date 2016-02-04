@@ -18,4 +18,4 @@ hs_err_pid*
 /bin/
 
 doc/
-/sysProps.xml
+sysProps.xml
