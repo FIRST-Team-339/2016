@@ -2,7 +2,9 @@ package org.usfirst.frc.team339.Utils;
 
 import org.usfirst.frc.team339.Hardware.Hardware;
 import org.usfirst.frc.team339.HardwareInterfaces.transmission.TransmissionFourWheel;
+import org.usfirst.frc.team339.HardwareInterfaces.transmission.Transmission_old;
 import edu.wpi.first.wpilibj.Encoder;
+import edu.wpi.first.wpilibj.SpeedController;
 
 // TODO: COMMENT YOUR CODE!!!!!!!!!!!
 public class Drive
@@ -31,6 +33,13 @@ public Drive (TransmissionFourWheel transmission, Encoder rightEncoder,
     this.rightRearEncoder = rightEncoder;
     this.leftRearEncoder = leftEncoder;
     this.isFourWheel = false;
+}
+
+public Drive(Transmission_old transmission, SpeedController rightRearEncoder, 
+        SpeedController rightFrontEncoder,SpeedController leftRearEncoder, 
+        SpeedController leftFrontEncoder)
+{
+    this
 }
 
 /**
