@@ -2,7 +2,6 @@ package org.usfirst.frc.team339.Utils;
 
 import org.usfirst.frc.team339.Hardware.Hardware;
 import org.usfirst.frc.team339.HardwareInterfaces.transmission.Transmission_old;
-import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.SpeedController;
 
 // TODO: COMMENT YOUR CODE!!!!!!!!!!!
@@ -316,10 +315,12 @@ public double getRotationalVelocity ()
 {
     double rotationalVelocity =
             ((Math.abs(transmission.getLeftRearEncoderDistance())
-                    + Math.abs(transmission.getRightRearEncoderDistance()) / 2
+                    + Math.abs(
+                            transmission.getRightRearEncoderDistance())
+                            / 2
                     - ((Math.abs(prevLeftDistance)
                             + Math.abs(prevRightDistance)) / 2)
-                            / (Hardware.kilroyTimer.get() - prevTime);
+                            / (Hardware.kilroyTimer.get() - prevTime)));
 
     prevLeftDistance = transmission.getLeftRearEncoderDistance();
     prevRightDistance = transmission.getRightRearEncoderDistance();
