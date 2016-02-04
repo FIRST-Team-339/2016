@@ -90,7 +90,10 @@ public static void periodic ()
 
     if (Hardware.leftOperator.getTrigger() == true)
         {
+        boolean temp;
+        temp = Hardware.catapultSolenoid0.get();
         Hardware.catapultSolenoid0.set(true);
+        temp = Hardware.catapultSolenoid0.get();
         Hardware.catapultSolenoid1.set(true);
         Hardware.catapultSolenoid2.set(true);
 
