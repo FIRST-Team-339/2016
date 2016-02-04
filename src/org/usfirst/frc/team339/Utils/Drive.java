@@ -1,5 +1,6 @@
 package org.usfirst.frc.team339.Utils;
 
+import org.usfirst.frc.team339.Hardware.Hardware;
 import org.usfirst.frc.team339.HardwareInterfaces.transmission.TransmissionFourWheel;
 import edu.wpi.first.wpilibj.Encoder;
 
@@ -7,11 +8,10 @@ import edu.wpi.first.wpilibj.Encoder;
 public class Drive
 {
 
-/**
- * The scaling factor upon which all speeds will be scaled.
- */
-private double maxSpeedScalingFactor = 1.0;
-
+//Moved maxSpeedScaling factor to bottom with the rest of the variables
+//if there's a reason for moving it back, do so, and leave justification
+//so it doesn't get moved back down again
+//-Alex Kneipp
 public Drive (TransmissionFourWheel transmission,
         Encoder rightRearEncoder,
         Encoder rightFrontEncoder, Encoder leftRearEncoder,
@@ -31,6 +31,34 @@ public Drive (TransmissionFourWheel transmission, Encoder rightEncoder,
     this.rightRearEncoder = rightEncoder;
     this.leftRearEncoder = leftEncoder;
     this.isFourWheel = false;
+}
+
+/**
+ * Stops the robot actively.
+ * 
+ * @param brakeSpeed
+ *            The speed with which to brake, recommended to be rather low.
+ * @return true if we're done braking, false otherwise.
+ */
+public boolean brake (double brakeSpeed)
+{
+    //if both forward velocity and rotational velocity are outside a .1
+    //threshold of 0, we're not done yet, keep driving reversal
+    if (Math.abs(getForwardVelocity()) + .1 >= 0 &&
+            Math.abs(getRotationalVelocity()) + .1 >= 0)
+        {
+        transmission.drive(-brakeSpeed * getRightMotorVelocity() /
+                (Math.abs(getRightMotorVelocity())),
+                -brakeSpeed * getLeftMotorVelocity() /
+                        (Math.abs(getLeftMotorVelocity())));
+        return false;
+        }
+    //we're done braking
+    else
+        {
+        transmission.drive(0.0, 0.0);
+        return true;
+        }
 }
 
 /**
@@ -55,8 +83,11 @@ public boolean turnLeftDegrees (double degrees)
             || leftRearEncoder.getDistance() <= -Math.abs(
                     turnInRadians * ROBOT_SEMI_MAJOR_RADIUS_INCHES))
         {
-        transmission.drive(0.0, 0.0);
-        return true;
+        if (brake(BRAKE_SPEED))
+            {
+            return true;
+            }
+        return false;
         }
     else if (rightRearEncoder.getDistance() >= -Math
             .abs(turnInRadians * ROBOT_SEMI_MAJOR_RADIUS_INCHES)
@@ -64,8 +95,11 @@ public boolean turnLeftDegrees (double degrees)
             leftRearEncoder.getDistance() <= Math.abs(
                     turnInRadians * ROBOT_SEMI_MAJOR_RADIUS_INCHES))
         {
-        transmission.drive(0.0, 0.0);
-        return true;
+        if (brake(BRAKE_SPEED))
+            {
+            return true;
+            }
+        return false;
         }
     else
         {
@@ -83,20 +117,30 @@ public boolean turnLeftDegrees (double degrees)
 
 public boolean driveForwardInches (double distance)
 {
+    //stop if the average value of either drive train is greater than
+    //the desired distance traveled.
     if (isFourWheel && (rightRearEncoder.getDistance()
             + rightFrontEncoder.getDistance())
             / 2 >= distance ||
             leftRearEncoder.getDistance()
                     + leftFrontEncoder.getDistance() / 2 >= distance)
         {
-        transmission.drive(0.0, 0.0);
-        return true;
+        //stop
+        if (brake(BRAKE_SPEED))
+            {
+            return true;
+            }
+        return false;
         }
-    else if (rightRearEncoder.getDistance() >= distance
+    else if (!isFourWheel && rightRearEncoder.getDistance() >= distance
             || leftRearEncoder.getDistance() >= distance)
         {
-        transmission.drive(0.0, 0.0);
-        return true;
+        //Stop
+        if (brake(BRAKE_SPEED))
+            {
+            return true;
+            }
+        return false;
         }
     else
         {
@@ -110,7 +154,7 @@ public boolean driveForwardInches (double distance)
             transmission.drive(AUTO_CORRECTION_SPEED,
                     (maxSpeedScalingFactor * DEFAULT_MAX_SPEED));
             }
-        // if the left drive train is ahead of the right drive train (one a
+        // if the left drive train is ahead of the right drive train (on a
         // four wheel drive)
         else if (isFourWheel
                 && (rightRearEncoder.get() + rightFrontEncoder.get())
@@ -231,6 +275,96 @@ public boolean driveForwardInches (double distance)
  * } // end brake
  */
 
+/**
+ * Gets forward velocity based on the difference in distance over the difference
+ * in time from the last time the method was called.
+ * 
+ * @return
+ */
+public double getForwardVelocity ()
+{
+    double speed = (((leftRearEncoder.getDistance()
+            + rightRearEncoder.getDistance()) / 2
+            - (prevLeftDistance + prevRightDistance) / 2))
+            / (Hardware.kilroyTimer.get() - prevTime);
+
+    prevLeftDistance = leftRearEncoder.getDistance();
+    prevRightDistance = leftRearEncoder.getDistance();
+    prevTime = Hardware.kilroyTimer.get();
+
+    return speed;
+}
+
+/**
+ * Gets the velocity of the right rear motor in a two motor drive train
+ * 
+ * @return
+ */
+public double getRightMotorVelocity ()
+{
+    //based on the "getForwardVelocity()" method
+    double speed = ((rightRearEncoder.getDistance() -
+            prevRightDistance) / 2) / (Hardware.kilroyTimer.get() -
+                    prevTime);
+
+    prevLeftDistance = leftRearEncoder.getDistance();
+    prevRightDistance = leftRearEncoder.getDistance();
+    prevTime = Hardware.kilroyTimer.get();
+
+    return speed;
+}
+
+/**
+ * Gets the velocity of the left rear motor in a two motor drive train
+ * 
+ * @return
+ */
+public double getLeftMotorVelocity ()
+{
+    //based on the "getForwardVelocity()" method
+    double speed = ((leftRearEncoder.getDistance() -
+            prevLeftDistance) / 2) / (Hardware.kilroyTimer.get() -
+                    prevTime);
+
+    prevLeftDistance = leftRearEncoder.getDistance();
+    prevRightDistance = leftRearEncoder.getDistance();
+    prevTime = Hardware.kilroyTimer.get();
+
+    return speed;
+}
+
+/**
+ * Sets a desired speed at which to drive forwards, for which we will correct.
+ * 
+ * @param desiredVelocity
+ */
+public void setForwardVelocity (double desiredVelocity)
+{
+    this.desiredForwardVelocity = desiredVelocity;
+}
+
+/**
+ * Gets rotational velocity based on the difference in distances over the
+ * difference in time from the last time the method was called.
+ * 
+ * @return
+ */
+public double getRotationalVelocity ()
+{
+    double rotationalVelocity =
+            ((Math.abs(leftRearEncoder.getDistance())
+                    + Math.abs(rightRearEncoder.getDistance())) / 2
+                    - ((Math.abs(prevLeftDistance)
+                            + Math.abs(prevRightDistance)) / 2)
+                            / (Hardware.kilroyTimer.get() - prevTime));
+
+    prevLeftDistance = leftRearEncoder.getDistance();
+    prevRightDistance = leftRearEncoder.getDistance();
+    prevTime = Hardware.kilroyTimer.get();
+
+    return rotationalVelocity;
+}
+
 private static final double AUTO_CORRECTION_SPEED = 0.95;
 
 private static final double ROBOT_SEMI_MAJOR_RADIUS_INCHES = 12.0;
@@ -247,10 +381,24 @@ private Encoder leftFrontEncoder;
 
 private TransmissionFourWheel transmission;
 
+private double prevTime = 0.0;
+private double prevLeftDistance = 0.0;
+private double prevRightDistance = 0.0;
+
+private double desiredForwardVelocity = 0.0;
+
+/**
+ * The scaling factor upon which all speeds will be scaled.
+ */
+private double maxSpeedScalingFactor = 1.0;
+
 /*
  * Constants
  */
 
 private final double DEFAULT_MAX_SPEED = 1.0;
+
+//TODO tweak for the most effective brake method
+private final double BRAKE_SPEED = .1;
 
 }

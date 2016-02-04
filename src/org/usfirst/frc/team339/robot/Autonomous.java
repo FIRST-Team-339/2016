@@ -133,13 +133,49 @@ public static final double ROTATE_ONE_FIVE = 60.0;
 public static final double FORWARDS_TWO_FIVE = 12.0;
 }
 
+private static class States
+{
+
+private class StateInformation
+{
+double forwardDistance;
+double velocity;
+
+double rotationalDistance;
+
+public StateInformation (double forwardDistance, double velocity)
+{
+    this.forwardDistance = forwardDistance;
+}
+}
+
+public StateInformation[][] states =
+        {
+                {
+                        new StateInformation(0, 0)
+                }
+        };//TODO: set up
+
+public double[][] distances =
+        {
+                {0.0, 74.7, -60, 62.7},
+                {0.0, 82.0, -60.0, 52.92},
+                {-20.0, 64.0, 20.0, 0.0},
+                {24.8, 66.1, -24.8, 0.0},
+                {0.0, 86.5, 60.0, 12.0}
+        };
+}
+
+
 // ==========================================
 // AUTO STATES
 // ==========================================
 private static MainState mainState = MainState.INIT;
-private static MoveToShootingPositionStep moveToShootingPositionStep = MoveToShootingPositionStep.INIT;
+private static MoveToShootingPositionStep moveToShootingPositionStep =
+        MoveToShootingPositionStep.INIT;
 private static StartingPosition startingPosition = StartingPosition.ONE;
-private static AlignmentState alignmentState = AlignmentState.NEITHER_ON_TAPE;
+private static AlignmentState alignmentState =
+        AlignmentState.NEITHER_ON_TAPE;
 
 // ==================================
 // VARIABLES
@@ -239,14 +275,15 @@ public static void periodic ()
 {
 
     //test
+    //TransmissionFourWheel debugTrans = Hardware.transmissionFourWheel;
+    //moveToShootingPositionStep = MoveToShootingPositionStep.FORWARDS_ONE;
     Hardware.transmissionFourWheel.drive(.5, .5);
-
 
     // runs the overarching state machine.
     //runMainStateMachine();
 
 
-
+    //feed all motor safties
     Hardware.leftRearMotorSafety.feed();
     Hardware.rightRearMotorSafety.feed();
     Hardware.leftFrontMotorSafety.feed();
@@ -343,22 +380,22 @@ private static void runMainStateMachine ()
     switch (mainState)
         {
         case INIT:
-            mainStateMachineInit();
+            mainState = mainStateMachineInit();
             break;
         case DELAY:
-            delay();
+            mainState = delay();
             break;
         case FORWARDS_TO_TAPE:
-            forwardsToTape();
+            mainState = forwardsToTape();
             break;
         case ALIGN:
-            align();
+            mainState = align();
             break;
         case MOVE_TO_SHOOTING_POSITION:
-            moveToShootingPosition();
+            mainState = moveToShootingPosition();
             break;
         case SHOOT:
-            shoot();
+            mainState = shoot();
             break;
         case DONE:
             break;
@@ -372,22 +409,24 @@ private static void runMainStateMachine ()
  * ======================================
  */
 
-private static void mainStateMachineInit ()
+private static MainState mainStateMachineInit ()
 {
+    MainState returnState;
 
     if (Hardware.autonomousEnabled.isOn() == true)
         {
 
-        mainState = MainState.DELAY;
+        returnState = MainState.DELAY;
 
         }
     else
         {
-        mainState = MainState.DONE;
+        returnState = MainState.DONE;
         }
     //testing
     //TODO: remove
     mainState = MainState.MOVE_TO_SHOOTING_POSITION;
+    return returnState;
 }
 
 
@@ -396,35 +435,42 @@ private static void mainStateMachineInit ()
  * Continues to FORWARDS_TO_TAPE when time is up.
  * One of the overarching states.
  */
-private static void delay ()
+private static MainState delay ()
 {
+    MainState returnState = MainState.DELAY;
     if (Hardware.delayTimer.get() > delay)
         {
-        mainState = MainState.FORWARDS_TO_TAPE;
+        returnState = MainState.FORWARDS_TO_TAPE;
         Hardware.delayTimer.stop();
         Hardware.delayTimer.reset();
         }
+    return returnState;
+
 }
 
-private static void forwardsToTape ()
+private static MainState forwardsToTape ()
 {
+
+    MainState returnState = MainState.FORWARDS_TO_TAPE;
 
     Hardware.drive.driveForwardInches(999.9);
     if (Hardware.leftIR.isOn() && Hardware.rightIR.isOn())
         {
         alignmentState = AlignmentState.BOTH_ON_TAPE;
-        mainState = MainState.ALIGN;
+        returnState = MainState.ALIGN;
         }
     else if (Hardware.leftIR.isOn())
         {
         alignmentState = AlignmentState.LEFT_ON_TAPE;
-        mainState = MainState.ALIGN;
+        returnState = MainState.ALIGN;
         }
     else if (Hardware.rightIR.isOn())
         {
         alignmentState = AlignmentState.RIGHT_ON_TAPE;
-        mainState = MainState.ALIGN;
+        returnState = MainState.ALIGN;
         }
+
+    return returnState;
 
 }
 
@@ -434,8 +480,10 @@ private static void forwardsToTape ()
  * Aligns robot on gaffers' tape based on IR sensors.
  * One of the overarching states.
  */
-private static void align ()
+private static MainState align ()
 {
+    MainState returnState = MainState.ALIGN;
+
     System.out.println("Alignment State: " + alignmentState);
     switch (alignmentState)
         {
@@ -443,15 +491,17 @@ private static void align ()
             alignFind();
             break;
         case LEFT_ON_TAPE:
-            alignRightSide();
+            alignmentState = alignRightSide();
             break;
         case RIGHT_ON_TAPE:
-            alignLeftSide();
+            alignmentState = alignLeftSide();
             break;
         case BOTH_ON_TAPE:
-            alignFinish();
+            returnState = alignFinish();
             break;
         }
+
+    return returnState;
 }
 
 /**
@@ -460,41 +510,47 @@ private static void align ()
  * Guided by the Drive utility class.
  * One of the overarching states.
  */
-private static void moveToShootingPosition ()
+private static MainState moveToShootingPosition ()
 {
+    MainState returnState = MainState.MOVE_TO_SHOOTING_POSITION;
+
     System.out.println(
             "MoveToShoot State: " + moveToShootingPositionStep);
     switch (moveToShootingPositionStep)
         {
         case INIT:
-            moveToShootingPositionInit();
+            moveToShootingPositionStep = moveToShootingPositionInit();
             break;
         case ROTATE_ZERO:
             // if not needed, set rotate0 to 0.
-            rotateZero();
+            moveToShootingPositionStep = rotateZero();
             break;
         case FORWARDS_ONE:
-            forwardsOne();
+            moveToShootingPositionStep = forwardsOne();
             break;
         case ROTATE_ONE:
-            rotateOne();
+            moveToShootingPositionStep = rotateOne();
             break;
         case FORWARDS_TWO:
             // if not needed, set forwards2 to 0.
-            forwardsTwo();
+            moveToShootingPositionStep = forwardsTwo();
             break;
         case DONE:
-            moveToShootingPositionDone();
+            returnState = moveToShootingPositionDone();
             break;
         default:
             //this should not happen.
             break;
         }
+
+    return returnState;
 }
 
-private static void shoot ()
+private static MainState shoot ()
 {
     // TODO: write method to shoot cannonball.
+
+    return MainState.DONE;
 }
 
 /*
@@ -514,9 +570,9 @@ private static void shoot ()
  * Called at the beginning of MOVE_TO_SHOOTING_POSITION.
  * Begins movement sequence.
  */
-private static void moveToShootingPositionInit ()
+private static MoveToShootingPositionStep moveToShootingPositionInit ()
 {
-    moveToShootingPositionStep = MoveToShootingPositionStep.ROTATE_ZERO;
+    return MoveToShootingPositionStep.ROTATE_ZERO;
 }
 
 /**
@@ -524,57 +580,71 @@ private static void moveToShootingPositionInit ()
  * From StartingPositions 1, 2, and 5, rotate0 will be set to 0, and this will
  * do nothing.
  */
-private static void rotateZero ()
+private static MoveToShootingPositionStep rotateZero ()
 {
+    MoveToShootingPositionStep returnState =
+            MoveToShootingPositionStep.ROTATE_ZERO;
     if (Hardware.drive.turnLeftDegrees(rotate0))
         {
-        moveToShootingPositionStep =
+        returnState =
                 MoveToShootingPositionStep.FORWARDS_ONE;
         }
+    return returnState;
 }
 
 /**
  * First movement after first turn on Alignment tape.
  */
-private static void forwardsOne ()
+private static MoveToShootingPositionStep forwardsOne ()
 {
+    MoveToShootingPositionStep returnState =
+            MoveToShootingPositionStep.FORWARDS_ONE;
+
     if (Hardware.drive.driveForwardInches(forwards1))
         {
-        moveToShootingPositionStep =
+        returnState =
                 MoveToShootingPositionStep.ROTATE_ONE;
         }
+    return returnState;
 }
 
 /**
  * Second rotation; turns to face goal.
  */
-private static void rotateOne ()
+private static MoveToShootingPositionStep rotateOne ()
 {
+    MoveToShootingPositionStep returnState =
+            MoveToShootingPositionStep.ROTATE_ONE;
+
     if (Hardware.drive.turnLeftDegrees(rotate1))
         ;
         {
-        moveToShootingPositionStep =
+        returnState =
                 MoveToShootingPositionStep.FORWARDS_TWO;
         }
+    return returnState;
 }
 
 /**
  * Final movement forwards to goal, used for positions 1, 2, and 5.
  */
-private static void forwardsTwo ()
+private static MoveToShootingPositionStep forwardsTwo ()
 {
+    MoveToShootingPositionStep returnState =
+            MoveToShootingPositionStep.FORWARDS_TWO;
     if (Hardware.drive.driveForwardInches(forwards2))
         {
-        moveToShootingPositionStep = MoveToShootingPositionStep.DONE;
+        returnState = MoveToShootingPositionStep.DONE;
         }
+    return returnState;
 }
 
 /**
  * Sets main state to SHOOT upon completion.
  */
-private static void moveToShootingPositionDone ()
+private static MainState moveToShootingPositionDone ()
 {
-    mainState = MainState.SHOOT;
+    return MainState.SHOOT;
 }
 
 /*
@@ -603,9 +673,14 @@ private static void alignFind ()
 
 /**
  * Moves right side to tape when left side is on.
+ * 
+ * @return
  */
-private static void alignRightSide ()
+private static AlignmentState alignRightSide ()
 {
+
+    AlignmentState returnState = AlignmentState.LEFT_ON_TAPE;
+
     double leftAlignmentSpeed = 0.0;
     double rightAlignmentSpeed = 0.0;
 
@@ -614,7 +689,7 @@ private static void alignRightSide ()
     if (Hardware.rightIR.isOn() && Hardware.leftIR.isOn())
         {
         rightAlignmentSpeed = 0.0;
-        alignmentState = AlignmentState.BOTH_ON_TAPE;
+        returnState = AlignmentState.BOTH_ON_TAPE;
         }
     else if (Hardware.leftIR.isOn() == false)
         {
@@ -623,14 +698,19 @@ private static void alignRightSide ()
 
     Hardware.transmissionFourWheel.drive(rightAlignmentSpeed,
             leftAlignmentSpeed);
+    return returnState;
 }
 
 /**
  * Moves left side to tape when right side is on.
  * Moves right side back if right side turns off.
+ * 
+ * @return
  */
-private static void alignLeftSide ()
+private static AlignmentState alignLeftSide ()
 {
+
+    AlignmentState returnState = AlignmentState.RIGHT_ON_TAPE;
 
     double leftAlignmentSpeed = 0.0;
     double rightAlignmentSpeed = 0.0;
@@ -640,7 +720,7 @@ private static void alignLeftSide ()
     if (Hardware.rightIR.isOn() && Hardware.leftIR.isOn())
         {
         leftAlignmentSpeed = 0.0;
-        alignmentState = AlignmentState.BOTH_ON_TAPE;
+        returnState = AlignmentState.BOTH_ON_TAPE;
         }
     else if (Hardware.rightIR.isOn() == false)
         {
@@ -649,11 +729,14 @@ private static void alignLeftSide ()
 
     Hardware.transmissionFourWheel.drive(rightAlignmentSpeed,
             leftAlignmentSpeed);
+
+    return returnState;
 }
 
-private static void alignFinish ()
+
+private static MainState alignFinish ()
 {
-    mainState = MainState.MOVE_TO_SHOOTING_POSITION;
+    return MainState.MOVE_TO_SHOOTING_POSITION;
 }
 /*
  * ==============================================

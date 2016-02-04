@@ -244,6 +244,9 @@ public void robotInit ()
     Hardware.rightFrontEncoder.reset();
     Hardware.rightFrontEncoder.setDistancePerPulse(0.019706);
 
+
+
+
     // -------------------------------------
     // USB camera initialization
     // -------------------------------------
@@ -275,8 +278,8 @@ public void robotInit ()
     Hardware.rightRearMotorSafety.setSafetyEnabled(true);
     Hardware.leftFrontMotorSafety.setSafetyEnabled(true);
     Hardware.rightFrontMotorSafety.setSafetyEnabled(true);
-    Hardware.transmissionFourWheel.setLeftMotorDirection(
-            Transmission.MotorDirection.REVERSED);
+    //Hardware.transmissionFourWheel
+    //        .setRightMotorDirection(MotorDirection.REVERSED);
 
     //--------------------------------------
     // Compressor Initialization
