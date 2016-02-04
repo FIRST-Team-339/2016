@@ -88,27 +88,9 @@ public static void periodic ()
     //Print statements to test Hardware on the Robot
     printStatements();
 
-    if (Hardware.leftOperator.getTrigger() == true)
-        {
-        boolean temp;
-        temp = Hardware.catapultSolenoid0.get();
-        Hardware.catapultSolenoid0.set(true);
-        temp = Hardware.catapultSolenoid0.get();
-        Hardware.catapultSolenoid1.set(true);
-        Hardware.catapultSolenoid2.set(true);
-
-        }
-    else
-        {
-        Hardware.catapultSolenoid0.set(false);
-        Hardware.catapultSolenoid1.set(false);
-        Hardware.catapultSolenoid2.set(false);
-        }
-
     //Driving the Robot
     Hardware.transmissionFourWheel.drive(Hardware.rightDriver.getY(),
             Hardware.leftDriver.getY());
-
 
 } // end Periodic
 
