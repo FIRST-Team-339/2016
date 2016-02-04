@@ -89,7 +89,7 @@ public static void periodic ()
     printStatements();
 
     //Driving the Robot
-    Hardware.transmissionFourWheel.drive(Hardware.rightDriver.getY(),
+    Hardware.transmission.controls(Hardware.rightDriver.getY(),
             Hardware.leftDriver.getY());
 
 } // end Periodic

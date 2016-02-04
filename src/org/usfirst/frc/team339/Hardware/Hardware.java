@@ -21,7 +21,7 @@ import org.usfirst.frc.team339.HardwareInterfaces.KilroyCamera;
 import org.usfirst.frc.team339.HardwareInterfaces.RobotPotentiometer;
 import org.usfirst.frc.team339.HardwareInterfaces.SingleThrowSwitch;
 import org.usfirst.frc.team339.HardwareInterfaces.SixPositionSwitch;
-import org.usfirst.frc.team339.HardwareInterfaces.transmission.TransmissionFourWheel;
+import org.usfirst.frc.team339.HardwareInterfaces.transmission.Transmission_old;
 import org.usfirst.frc.team339.Utils.Drive;
 import org.usfirst.frc.team339.Utils.ErrorMessage;
 import edu.wpi.first.wpilibj.CANTalon;
@@ -278,13 +278,20 @@ public static Joystick rightOperator = new Joystick(3);
 // Transmission class
 // ------------------------------------
 
-public static TransmissionFourWheel transmissionFourWheel =
-        new TransmissionFourWheel(rightFrontMotor, leftFrontMotor,
-                rightRearMotor, leftRearMotor);
+/*
+ * public static TransmissionFourWheel transmissionFourWheel =
+ * new TransmissionFourWheel(rightFrontMotor, leftFrontMotor,
+ * rightRearMotor, leftRearMotor);
+ */
+
+public static Transmission_old transmission = new Transmission_old(
+        rightFrontMotor, rightRearMotor, leftFrontMotor,
+        leftRearMotor, rightFrontEncoder, rightRearEncoder,
+        leftFrontEncoder, leftRearEncoder);
 
 public static Drive drive =
-        new Drive(transmissionFourWheel, rightRearEncoder,
-                rightFrontEncoder, leftRearEncoder, leftFrontEncoder);
+        new Drive(transmission, rightRearMotor, rightFrontMotor,
+                leftRearMotor, leftFrontMotor);
 
 // -------------------
 // Assembly classes (e.g. forklift)
