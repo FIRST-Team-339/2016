@@ -60,7 +60,6 @@
 package org.usfirst.frc.team339.robot;
 
 import org.usfirst.frc.team339.Hardware.Hardware;
-import org.usfirst.frc.team339.HardwareInterfaces.transmission.Transmission;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.MotorSafetyHelper;
 import edu.wpi.first.wpilibj.Relay.Direction;
@@ -277,8 +276,8 @@ public void robotInit ()
     Hardware.rightRearMotorSafety.setSafetyEnabled(true);
     Hardware.leftFrontMotorSafety.setSafetyEnabled(true);
     Hardware.rightFrontMotorSafety.setSafetyEnabled(true);
-    Hardware.transmissionFourWheel.setLeftMotorDirection(
-            Transmission.MotorDirection.REVERSED);
+    //Hardware.transmissionFourWheel
+    //        .setRightMotorDirection(MotorDirection.REVERSED);
 
     //--------------------------------------
     // Encoder Initialization
