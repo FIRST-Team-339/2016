@@ -33,6 +33,7 @@ package org.usfirst.frc.team339.robot;
 
 import org.usfirst.frc.team339.Hardware.Hardware;
 import edu.wpi.first.wpilibj.CameraServer;
+import edu.wpi.first.wpilibj.Relay.Value;
 
 /**
  * This class contains all of the user code for the Autonomous
@@ -48,6 +49,22 @@ public class Teleop
 // TUNEABLES
 // ==========================================
 
+// Boolean to check if we're taking a lit picture
+private static boolean takingLitImage = false;
+
+// Boolean to check if we're taking an unlit picture
+private static boolean takingUnlitImage = false;
+
+// this is for preparing to take a picture with the timer; changes
+// brightness, turns on ringlight, starts timer
+private static boolean prepPic = false;
+
+// Makes the brightness to a visible level so our drivers can see.
+private static final int normalAxisCameraBrightness = 50;
+
+// Crazy dark brightness for retroreflective pictures
+private static final int minimumAxisCameraBrightness = 5;
+
 
 
 /**
@@ -60,13 +77,10 @@ public class Teleop
 public static void init ()
 {
 
-    // <<<<<<< HEAD
-    // =======
     // set max speed. change by gear?
     Hardware.drive.setMaxSpeed(MAXIMUM_TELEOP_SPEED);
 
-    // >>>>>>> branch 'master' of https://github.com/FIRST-Team-339/2016
-
+    Hardware.delayTimer.reset();
     // -----------------------------------
     // stop cam0 in case we have declared them
     // in Autonomous. Then declare a new cam0
@@ -87,16 +101,56 @@ public static void periodic ()
 {
     // Print statements to test Hardware on the Robot
     printStatements();
+
+    // If we click buttons 6+7 on the left operator joystick, we dim the
+    // brightness a lot, turn the ringlight on, and then if we haven't
+    // already taken an image then we do and set the boolean to true to
+    // prevent us taking more images. Otherwise we don't turn on the
+    // ringlight and we don't take a picture. We added a timer to delay
+    // taking the picture for the brightness to dim and for the ring
+    // light to turn on.
     if (Hardware.leftOperator.getRawButton(6) == true &&
             Hardware.leftOperator.getRawButton(7) == true)
+        {
+        if (prepPic == false)
+            {
+            Hardware.axisCamera
+                    .writeBrightness(minimumAxisCameraBrightness);
+            Hardware.ringLightRelay.set(Value.kOn);
+            Hardware.delayTimer.start();
+            prepPic = true;
+            }
+        }
+
+    // Once the brightness is down and the ring light is on then the
+    // picture is taken, the brightness returns to normal, the ringlight
+    // is turned off, and the timer is stopped and reset.
+    if (Hardware.delayTimer.get() >= .25 && prepPic == true)
+        {
         Hardware.axisCamera.saveImagesSafely();
+        Hardware.axisCamera.writeBrightness(normalAxisCameraBrightness);
+        Hardware.ringLightRelay.set(Value.kOff);
+        Hardware.delayTimer.stop();
+        Hardware.delayTimer.reset();
+        prepPic = false;
+        }
 
-
-
-
-
-
-    Hardware.axisCamera.writeBrightness(50);
+    // If we click buttons 10+11, we take a picture without the
+    // ringlight and set the boolean to true so we don't take a bunch of
+    // other pictures.
+    if (Hardware.leftOperator.getRawButton(10) == true &&
+            Hardware.leftOperator.getRawButton(11) == true)
+        {
+        if (takingUnlitImage == false)
+            {
+            takingUnlitImage = true;
+            Hardware.axisCamera.saveImagesSafely();
+            }
+        }
+    else
+        {
+        takingUnlitImage = false;
+        }
 
     // Driving the Robot
     Hardware.transmissionFourWheel.drive(Hardware.rightDriver.getY(),
