@@ -248,20 +248,14 @@ public void robotInit ()
     //--------------------------------------
     // Encoder Initialization
     //--------------------------------------
-    Hardware.leftRearEncoder.reset();
-    Hardware.leftRearEncoder.setDistancePerPulse(0.019706);
-
-    Hardware.leftFrontEncoder.reset();
-    Hardware.leftFrontEncoder.setDistancePerPulse(0.019706);
-
-    Hardware.rightRearEncoder.reset();
-    Hardware.rightRearEncoder.setDistancePerPulse(0.019706);
-
-    Hardware.rightFrontEncoder.reset();
-    Hardware.rightFrontEncoder.setDistancePerPulse(0.019706);
-
-    Hardware.transmission.initEncoders(Hardware.rightRearEncoder,
-            Hardware.leftRearEncoder);
+        Hardware.leftRearEncoder.setDistancePerPulse(0.019706);
+        Hardware.leftRearEncoder.reset();
+    
+        Hardware.rightRearEncoder.setDistancePerPulse(0.019706);
+        Hardware.rightRearEncoder.reset();
+    
+        Hardware.transmission.initEncoders(Hardware.rightRearEncoder,
+                Hardware.leftRearEncoder);
 
     // -------------------------------------
     // USB camera initialization
@@ -308,14 +302,8 @@ public void robotInit ()
     Hardware.leftRearEncoder.reset();
     Hardware.leftRearEncoder.setDistancePerPulse(0.019706);
 
-    Hardware.leftFrontEncoder.reset();
-    Hardware.leftFrontEncoder.setDistancePerPulse(0.019706);
-
     Hardware.rightRearEncoder.reset();
     Hardware.rightRearEncoder.setDistancePerPulse(0.019706);
-
-    Hardware.rightFrontEncoder.reset();
-    Hardware.rightFrontEncoder.setDistancePerPulse(0.019706);
 
     // ---------------------------------------
     // Solenoid Initialization

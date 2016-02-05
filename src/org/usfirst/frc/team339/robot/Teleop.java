@@ -90,9 +90,6 @@ public static void periodic ()
     //Driving the Robot
     Hardware.transmission.controls(Hardware.rightDriver.getY(),
             Hardware.leftDriver.getY());
-
-
-
 } // end Periodic
 
 /**
