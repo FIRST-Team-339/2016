@@ -298,7 +298,7 @@ public PowerDistributionPanel getPDP ()
  * @return true if there is a fault is present;
  *         false if a fault is not present or the given device is not recognized
  */
-public boolean getFault ()
+public static boolean getFault ()
 {
     switch (typeId)
     {

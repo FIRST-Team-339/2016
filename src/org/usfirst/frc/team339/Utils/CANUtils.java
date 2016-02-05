@@ -1,11 +1,12 @@
 package org.usfirst.frc.team339.Utils;
 
-import edu.wpi.first.wpilibj.DriverStation;
+
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import org.usfirst.frc.team339.Hardware.Hardware;
 import org.usfirst.frc.team339.HardwareInterfaces.CANNetwork;
 import org.usfirst.frc.team339.HardwareInterfaces.CANObject;
 
+
+// import org.usfirst.frc.team339.Hardware.Hardware.getStickyFaultForLim;
 /**
  * Contains the method for detecting sticky faults
  */
@@ -16,14 +17,15 @@ public class CANUtils
 private static boolean useDebug = true;
 
 /**
- * Prints values of the significant variables/methods in CANUtils if useDebug is true; currently is empty;other debuggers for variables
- * that are declared in specific methods in those methods  
+ * Prints values of the significant variables/methods in CANUtils if useDebug is
+ * true; currently is empty;other debuggers for variables
+ * that are declared in specific methods in those methods
  */
-private void DebugCANUtils()
+private void DebugCANUtils ()
 {
     //If true, runs DebugCANUtils
-    
-    if(useDebug == true)
+
+    if (useDebug == true)
     {
         //TODO print variables
         //System.out.println("The value of the testForFaults method is " 
@@ -37,29 +39,36 @@ private void DebugCANUtils()
  */
 public static void testForFaults ()
 {
-  
+
     for (int i = 0; i < CANNetwork.canObjects.size(); i++)
-    {
-        
-        //creates a new temporary CANObject to search for faults
-        CANObject tempCANObject =
-                CANNetwork.canObjects.get(i);
 
-        //Debug stuff in for loop
-        if(useDebug == true)
+        if (org.usfirst.frc.team339.HardwareInterfaces.CANObject
+                .getFault() == false)
         {
-            System.out.println("The value of tempCANObject.getfault is " + tempCANObject.getFault());
-        }
-        
 
-        if (tempCANObject.getFault() == true)
-        {
-            //there is a sticky fault
-            SmartDashboard.putBoolean("Sticky Fault", true);
+
+            //creates a new temporary CANObject to search for faults
+            CANObject tempCANObject =
+                    CANNetwork.canObjects.get(i);
+
+            //Debug stuff in for loop
+            if (useDebug == true)
+            {
+                System.out.println(
+                        "The value of tempCANObject.getfault is "
+                                + CANObject.getFault());
+            }
+
+
+            if (CANObject.getFault() == true)
+            {
+                //there is a sticky fault
+                SmartDashboard.putBoolean("Sticky Fault", true);
+            }
         }
-    }
     //there is not a sticky fault
     SmartDashboard.putBoolean("Sticky Fault", false);
-}
-}
 
+
+}
+}

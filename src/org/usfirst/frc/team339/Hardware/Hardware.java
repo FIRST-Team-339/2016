@@ -21,10 +21,12 @@ import org.usfirst.frc.team339.HardwareInterfaces.RobotPotentiometer;
 import org.usfirst.frc.team339.HardwareInterfaces.SingleThrowSwitch;
 import org.usfirst.frc.team339.HardwareInterfaces.SixPositionSwitch;
 import org.usfirst.frc.team339.HardwareInterfaces.transmission.TransmissionFourWheel;
+import org.usfirst.frc.team339.HardwareInterfaces.transmission.Transmission_old;
 import org.usfirst.frc.team339.Utils.Drive;
 import org.usfirst.frc.team339.Utils.ErrorMessage;
 import edu.wpi.first.wpilibj.CANTalon;
 import edu.wpi.first.wpilibj.CameraServer;
+import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Encoder;
@@ -33,6 +35,9 @@ import edu.wpi.first.wpilibj.MotorSafetyHelper;
 import edu.wpi.first.wpilibj.Relay;
 import edu.wpi.first.wpilibj.PowerDistributionPanel;
 import edu.wpi.first.wpilibj.SolenoidBase;
+import edu.wpi.first.wpilibj.SpeedController;
+import edu.wpi.first.wpilibj.Talon;
+import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.vision.USBCamera;
 
@@ -110,6 +115,8 @@ public static Relay ringLightRelay = new Relay(0);
 // Compressor class - runs the compressor
 // with a single relay
 // ------------------------------------
+//relay that controls compressor
+public static Compressor compressor = new Compressor();
 
 // ====================================
 // Digital Inputs
@@ -185,9 +192,15 @@ public static IRSensor leftIR = new IRSensor(22);
 // ------------------------------------
 //imported from the API because CAN system is needed
 public static DoubleSolenoid solenoid = new DoubleSolenoid(pcmCANID, 0, 1);
+//double solenoid that moves the camera
+public static DoubleSolenoid cameraSolenoid = new DoubleSolenoid(3, 4);
 // ------------------------------------
 // Single Solenoids
 // ------------------------------------
+// single solenoids that control the catapult
+public static Solenoid catapultSolenoid0 = new Solenoid(0);
+public static Solenoid catapultSolenoid1 = new Solenoid(1);
+public static Solenoid catapultSolenoid2 = new Solenoid(2);
 
 // **********************************************************
 // ANALOG I/O CLASSES
@@ -205,6 +218,9 @@ public static DoubleSolenoid solenoid = new DoubleSolenoid(pcmCANID, 0, 1);
 // -------------------------------------
 public static RobotPotentiometer delayPot =
         new RobotPotentiometer(3, 270);
+//transducer (written as a potentiometer)
+public static RobotPotentiometer transducer =
+        new RobotPotentiometer(2, 130);
 
 // -------------------------------------
 // Sonar/Ultrasonic
@@ -269,8 +285,8 @@ public static TransmissionFourWheel transmissionFourWheel =
                 rightRearMotor, leftRearMotor);
 
 public static Drive drive =
-        new Drive(transmissionFourWheel, rightRearEncoder,
-                rightFrontEncoder, leftRearEncoder, leftFrontEncoder);
+        new Drive(new Transmission_old(), new Talon(0),
+                new Talon(0), new Talon(0), new Talon(0));
 
 // -------------------
 // Assembly classes (e.g. forklift)
@@ -284,7 +300,6 @@ public static final Timer autoTimer = new Timer();
 public static final Timer delayTimer = new Timer();
 public static final ErrorMessage errorMessage = new ErrorMessage(
         true /* append timelog */);
-
 
 public static final MotorSafetyHelper leftRearMotorSafety =
         new MotorSafetyHelper(leftRearMotor);

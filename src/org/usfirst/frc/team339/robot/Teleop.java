@@ -32,7 +32,6 @@
 package org.usfirst.frc.team339.robot;
 
 import org.usfirst.frc.team339.Hardware.Hardware;
-import org.usfirst.frc.team339.Utils.CANUtils;
 import edu.wpi.first.wpilibj.CameraServer;
 
 /**
@@ -49,6 +48,8 @@ public class Teleop
 // TUNEABLES
 // ==========================================
 
+
+
 /**
  * User Initialization code for teleop mode should go here. Will be
  * called once when the robot enters teleop mode.
@@ -58,11 +59,14 @@ public class Teleop
  */
 public static void init ()
 {
-	// set max speed. change by gear?
+
+    // <<<<<<< HEAD
+    // =======
+    // set max speed. change by gear?
     Hardware.drive.setMaxSpeed(MAXIMUM_TELEOP_SPEED);
-    //checks for faults
-    //does not return what has a fault yet
-    CANUtils.testForFaults();
+
+    //>>>>>>> branch 'master' of https://github.com/FIRST-Team-339/2016
+
     // -----------------------------------
     // stop cam0 in case we have declared them
     // in Autonomous. Then declare a new cam0
@@ -84,11 +88,9 @@ public static void periodic ()
     //Print statements to test Hardware on the Robot
     printStatements();
 
-
     //Driving the Robot
     Hardware.transmissionFourWheel.drive(Hardware.rightDriver.getY(),
             Hardware.leftDriver.getY());
-
 
 } // end Periodic
 
@@ -117,6 +119,8 @@ public static void printStatements ()
 
     // pots-----------------
     //    System.out.println("delay pot = " + (int) Hardware.delayPot.get());
+    //prints the value of the transducer- (range 130)
+    // NOT TESTED!!!System.out.println("transducer = " + Hardware.transducer.get());
 
     //Motor controllers-----
     //    System.out.println("RR Motor V = " + Hardware.rightRearMotor.get());
@@ -124,6 +128,13 @@ public static void printStatements ()
     //    System.out
     //            .println("RF Motor V = " + Hardware.rightFrontMotor.get());
     //    System.out.println("LF Motor V = " + Hardware.leftFrontMotor.get());
+
+    //Solenoids-------------
+    //prints the state of the solenoids 
+    //    System.out.println("cameraSolenoid = " + Hardware.cameraSolenoid.get());
+    //    System.out.println("catapultSolenoid0 = " + Hardware.catapultSolenoid0.get());
+    //    System.out.println("catapultSolenoid1 = " + Hardware.catapultSolenoid1.get());
+    //    System.out.println("catapultSolenoid2 = " + Hardware.catapultSolenoid2.get());
 
     // Encoders-------------
     //    System.out.println(
@@ -143,7 +154,12 @@ public static void printStatements ()
 
     //Relay-----------------
     //    System.out.println(Hardware.ringLightRelay.get());
- } // end printStatements
+
+    //<<<<<<< HEAD
+} // end printStatements 
+ //=======
+ // end printStatements
+
 
 /*
  * ===============================================
@@ -151,7 +167,7 @@ public static void printStatements ()
  * ===============================================
  */
 
-
 private static final double MAXIMUM_TELEOP_SPEED = 1.0;
 
+//>>>>>>> branch 'master' of https://github.com/FIRST-Team-339/2016
 } // end class

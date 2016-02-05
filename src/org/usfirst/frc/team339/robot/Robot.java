@@ -60,10 +60,8 @@
 package org.usfirst.frc.team339.robot;
 
 import org.usfirst.frc.team339.Hardware.Hardware;
-
 import org.usfirst.frc.team339.HardwareInterfaces.transmission.Transmission;
-import org.usfirst.frc.team339.HardwareInterfaces.CANNetwork;
-import org.usfirst.frc.team339.HardwareInterfaces.CANObject;
+import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.MotorSafetyHelper;
 import edu.wpi.first.wpilibj.Relay.Direction;
@@ -280,8 +278,13 @@ public void robotInit ()
     Hardware.rightRearMotorSafety.setSafetyEnabled(true);
     Hardware.leftFrontMotorSafety.setSafetyEnabled(true);
     Hardware.rightFrontMotorSafety.setSafetyEnabled(true);
-    Hardware.transmissionFourWheel.setLeftMotorDirection(
-            Transmission.MotorDirection.REVERSED);
+    //Hardware.transmissionFourWheel
+    //        .setRightMotorDirection(MotorDirection.REVERSED);
+
+    //--------------------------------------
+    // Compressor Initialization
+    //--------------------------------------
+    Hardware.compressor.setClosedLoopControl(true);
 
     //--------------------------------------
     // Encoder Initialization
@@ -298,24 +301,14 @@ public void robotInit ()
     Hardware.rightFrontEncoder.reset();
     Hardware.rightFrontEncoder.setDistancePerPulse(0.019706);
 
-
-   
-    // --------------------------------------------------------
-    // CAN Network Initialization goes here
-    // --------------------------------------------------------
-    CANObject pdp = new CANObject(Hardware.pdp, 1);
-    CANNetwork.canObjects.add(pdp);
-    CANObject rightRearMotor = new CANObject(Hardware.rightRearMotor, 15);
-    CANNetwork.canObjects.add(rightRearMotor);
-    CANObject leftRearMotor = new CANObject(Hardware.leftRearMotor, 11);
-    CANNetwork.canObjects.add(leftRearMotor);
-    CANObject rightFrontMotor = new CANObject(Hardware.rightFrontMotor, 17);
-    CANNetwork.canObjects.add(rightFrontMotor);
-    CANObject leftFrontMotor = new CANObject(Hardware.leftFrontMotor, 12);
-    CANNetwork.canObjects.add(leftFrontMotor);
-    CANObject solenoid1 = new CANObject(Hardware.solenoid, 20);
-    CANNetwork.canObjects.add(solenoid1);
-    
+    // ---------------------------------------
+    // Solenoid Initialization
+    // ---------------------------------------
+    //initializes the solenoids...duh duh duh...
+    Hardware.cameraSolenoid.set(DoubleSolenoid.Value.kForward);
+    Hardware.catapultSolenoid0.set(false);
+    Hardware.catapultSolenoid1.set(false);
+    Hardware.catapultSolenoid2.set(false);
     // =========================================================
     // User code goes above here
     // =========================================================
@@ -378,6 +371,8 @@ public void teleopPeriodic ()
     // -------------------------------------
     // Watch dog code used to go here.
     // -------------------------------------
+
+
 
     // -------------------------------------
     // Call the Teleop class's Periodic function,
