@@ -117,24 +117,20 @@ public static Compressor compressor = new Compressor();
 // Single and double throw switches
 // ------------------------------------
 
-// Shoot high/low switch
-public static DoubleThrowSwitch doubleThrowSwitch =
-        new DoubleThrowSwitch(4, 5);
-
 //Turns autonomous on or off.
 /**
  * A physical switch that decides whether or not to run autonomous.
  */
 public static SingleThrowSwitch autonomousEnabled =
         new SingleThrowSwitch(19);
-//rename
-public static SingleThrowSwitch autonomousDisabled =
-        new SingleThrowSwitch(6);
+public static SingleThrowSwitch shootHigh =
+        new SingleThrowSwitch(4);
+public static SingleThrowSwitch shootLow =
+        new SingleThrowSwitch(5);
 
-
-
-
-
+//Shoot high/low switch
+public static DoubleThrowSwitch noShoot =
+        new DoubleThrowSwitch(shootHigh, shootLow);
 
 /**
  * Displays the starting position.
@@ -150,8 +146,6 @@ public static SixPositionSwitch startingPositionDial =
 // ------------------------------------
 // Encoders
 // ------------------------------------
-public static Encoder leftFrontEncoder = new Encoder(10, 11);
-public static Encoder rightFrontEncoder = new Encoder(12, 13);
 public static Encoder leftRearEncoder = new Encoder(0, 1);
 public static Encoder rightRearEncoder = new Encoder(2, 3);
 // -----------------------
@@ -312,7 +306,5 @@ public static final MotorSafetyHelper leftFrontMotorSafety =
         new MotorSafetyHelper(leftFrontMotor);
 public static final MotorSafetyHelper rightFrontMotorSafety =
         new MotorSafetyHelper(rightFrontMotor);
-
-
 
 } // end class

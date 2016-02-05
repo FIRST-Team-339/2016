@@ -237,15 +237,8 @@ public static void init ()
     Hardware.leftRearEncoder.reset();
     Hardware.leftRearEncoder.setDistancePerPulse(0.019706);
 
-    Hardware.leftFrontEncoder.reset();
-    Hardware.leftFrontEncoder.setDistancePerPulse(0.019706);
-
     Hardware.rightRearEncoder.reset();
     Hardware.rightRearEncoder.setDistancePerPulse(0.019706);
-
-    Hardware.rightFrontEncoder.reset();
-    Hardware.rightFrontEncoder.setDistancePerPulse(0.019706);
-
 
     // -------------------------------------
     // close both of the cameras in case they
