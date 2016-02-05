@@ -60,13 +60,12 @@ public class Teleop
 public static void init ()
 {
 
-    // <<<<<<< HEAD
-    // =======
     // set max speed. change by gear?
     Hardware.drive.setMaxSpeed(MAXIMUM_TELEOP_SPEED);
-
-    //>>>>>>> branch 'master' of https://github.com/FIRST-Team-339/2016
-
+    Hardware.transmission.setFirstGearPercentage(FIRST_GEAR_PERCENTAGE);
+    Hardware.transmission
+            .setSecondGearPercentage(SECOND_GEAR_PERCENTAGE);
+    Hardware.transmission.setGear(1);
     // -----------------------------------
     // stop cam0 in case we have declared them
     // in Autonomous. Then declare a new cam0
@@ -91,6 +90,8 @@ public static void periodic ()
     //Driving the Robot
     Hardware.transmission.controls(Hardware.rightDriver.getY(),
             Hardware.leftDriver.getY());
+
+
 
 } // end Periodic
 
@@ -168,6 +169,11 @@ public static void printStatements ()
  */
 
 private static final double MAXIMUM_TELEOP_SPEED = 1.0;
+
+private static final double FIRST_GEAR_PERCENTAGE = 0.5;
+
+private static final double SECOND_GEAR_PERCENTAGE =
+        MAXIMUM_TELEOP_SPEED;
 
 //>>>>>>> branch 'master' of https://github.com/FIRST-Team-339/2016
 } // end class

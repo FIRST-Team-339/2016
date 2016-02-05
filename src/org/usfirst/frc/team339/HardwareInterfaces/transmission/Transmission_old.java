@@ -3055,11 +3055,12 @@ public void setFourthGearPercentage (final double leftGearPercentage,
 /**
  * This function sets a new gear number. It also controls
  * the hardware piston when moving between the desired
- * hardware change gears.
+ * hardware change gears. Goes from one to maxGears.
  *
  * @method setGear
  * @param gear
  *            - gear number you would like to set the transmission to
+ *            - Starts at one, not zero.
  * @return newly adjusted gear number
  * @author Bob Brown
  * @written 15 February 2013

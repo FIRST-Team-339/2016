@@ -290,8 +290,7 @@ public static Transmission_old transmission = new Transmission_old(
         leftFrontEncoder, leftRearEncoder);
 
 public static Drive drive =
-        new Drive(transmission, rightRearMotor, rightFrontMotor,
-                leftRearMotor, leftFrontMotor);
+        new Drive(transmission);
 
 // -------------------
 // Assembly classes (e.g. forklift)

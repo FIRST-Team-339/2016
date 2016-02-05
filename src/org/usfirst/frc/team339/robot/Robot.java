@@ -60,7 +60,6 @@
 package org.usfirst.frc.team339.robot;
 
 import org.usfirst.frc.team339.Hardware.Hardware;
-import org.usfirst.frc.team339.HardwareInterfaces.transmission.Transmission;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.MotorSafetyHelper;
@@ -243,9 +242,6 @@ public void robotInit ()
 
     Hardware.rightFrontEncoder.reset();
     Hardware.rightFrontEncoder.setDistancePerPulse(0.019706);
-
-
-
 
     // -------------------------------------
     // USB camera initialization

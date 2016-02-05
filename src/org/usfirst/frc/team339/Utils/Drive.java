@@ -2,7 +2,6 @@ package org.usfirst.frc.team339.Utils;
 
 import org.usfirst.frc.team339.Hardware.Hardware;
 import org.usfirst.frc.team339.HardwareInterfaces.transmission.Transmission_old;
-import edu.wpi.first.wpilibj.SpeedController;
 
 // TODO: COMMENT YOUR CODE!!!!!!!!!!!
 // It was mostly commented, just missing javadoc. Learn to read green!
@@ -28,16 +27,9 @@ public class Drive
  *            Motor controller used to drive.
  * @author Alex Kneipp
  */
-public Drive (Transmission_old transmission,
-        SpeedController rightRearMotor,
-        SpeedController rightFrontMotor, SpeedController leftRearMotor,
-        SpeedController leftFrontMotor)
+public Drive (Transmission_old transmission)
 {
     this.transmission = transmission;
-    this.rightRearMotor = rightRearMotor;
-    this.rightFrontMotor = rightFrontMotor;
-    this.leftRearMotor = leftRearMotor;
-    this.leftFrontMotor = leftFrontMotor;
 }
 
 /**
@@ -114,15 +106,11 @@ public boolean turnLeftDegrees (double degrees)
         if (!turningRight)
             transmission.controls(
                     (maxSpeedScalingFactor * DEFAULT_MAX_SPEED),
-                    -(maxSpeedScalingFactor * DEFAULT_MAX_SPEED),
-                    this.leftFrontMotor, this.leftRearMotor,
-                    this.rightFrontMotor, this.rightRearMotor);
+                    -(maxSpeedScalingFactor * DEFAULT_MAX_SPEED));
         else
             transmission.controls(
                     -(maxSpeedScalingFactor * DEFAULT_MAX_SPEED),
-                    (maxSpeedScalingFactor * DEFAULT_MAX_SPEED),
-                    this.leftFrontMotor, this.leftRearMotor,
-                    this.rightFrontMotor, this.rightRearMotor);
+                    (maxSpeedScalingFactor * DEFAULT_MAX_SPEED));
         }
     return false;
 }
@@ -177,9 +165,7 @@ public boolean driveForwardInches (double distance)
                                 / 2)
             {
             transmission.controls(AUTO_CORRECTION_SPEED,
-                    (maxSpeedScalingFactor * DEFAULT_MAX_SPEED),
-                    this.leftFrontMotor, this.leftRearMotor,
-                    this.rightFrontMotor, this.rightRearMotor);
+                    (maxSpeedScalingFactor * DEFAULT_MAX_SPEED));
             }
         // if the left drive train is ahead of the right drive train (on a
         // four wheel drive)
@@ -194,9 +180,7 @@ public boolean driveForwardInches (double distance)
             {
             transmission.controls(
                     (maxSpeedScalingFactor * DEFAULT_MAX_SPEED),
-                    AUTO_CORRECTION_SPEED,
-                    this.leftFrontMotor, this.leftRearMotor,
-                    this.rightFrontMotor, this.rightRearMotor);
+                    AUTO_CORRECTION_SPEED);
             }
         // if the right Drive train is ahead of the left drive train (2
         // motor)
@@ -205,9 +189,7 @@ public boolean driveForwardInches (double distance)
                         .getLeftRearEncoderDistance())
             {
             transmission.controls(AUTO_CORRECTION_SPEED,
-                    (maxSpeedScalingFactor * DEFAULT_MAX_SPEED),
-                    this.leftFrontMotor, this.leftRearMotor,
-                    this.rightFrontMotor, this.rightRearMotor);
+                    (maxSpeedScalingFactor * DEFAULT_MAX_SPEED));
             }
         // if the left Drive train is ahead of the right drive train (2
         // motor)
@@ -217,18 +199,14 @@ public boolean driveForwardInches (double distance)
             {
             transmission.controls(
                     (maxSpeedScalingFactor * DEFAULT_MAX_SPEED),
-                    AUTO_CORRECTION_SPEED,
-                    this.leftFrontMotor, this.leftRearMotor,
-                    this.rightFrontMotor, this.rightRearMotor);
+                    AUTO_CORRECTION_SPEED);
             }
         // if they're both equal
         else
             {
             transmission.controls(
                     (maxSpeedScalingFactor * DEFAULT_MAX_SPEED),
-                    (maxSpeedScalingFactor * DEFAULT_MAX_SPEED),
-                    this.leftFrontMotor, this.leftRearMotor,
-                    this.rightFrontMotor, this.rightRearMotor);
+                    (maxSpeedScalingFactor * DEFAULT_MAX_SPEED));
             }
         }
     return false;
@@ -346,11 +324,6 @@ private boolean isFourWheel = true;
 //private Encoder leftFrontEncoder;
 //
 private Transmission_old transmission;
-
-private SpeedController rightRearMotor;
-private SpeedController rightFrontMotor;
-private SpeedController leftRearMotor;
-private SpeedController leftFrontMotor;
 
 private double prevTime = 0.0;
 private double prevLeftDistance = 0.0;
