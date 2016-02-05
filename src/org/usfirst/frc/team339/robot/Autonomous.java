@@ -32,7 +32,6 @@
 package org.usfirst.frc.team339.robot;
 
 import org.usfirst.frc.team339.Hardware.Hardware;
-import org.usfirst.frc.team339.HardwareInterfaces.transmission.Transmission;
 
 /**
  * This class contains all of the user code for the Autonomous part of the
@@ -229,8 +228,8 @@ public static void init ()
     Hardware.rightRearMotorSafety.setSafetyEnabled(true);
     Hardware.leftFrontMotorSafety.setSafetyEnabled(true);
     Hardware.rightFrontMotorSafety.setSafetyEnabled(true);
-    Hardware.transmissionFourWheel.setLeftMotorDirection(
-            Transmission.MotorDirection.REVERSED);
+    //    Hardware.transmissionFourWheel.setLeftMotorDirection(
+    //            Transmission.MotorDirection.REVERSED);
 
     //--------------------------------------
     // Encoder Initialization
@@ -277,7 +276,8 @@ public static void periodic ()
     //test
     //TransmissionFourWheel debugTrans = Hardware.transmissionFourWheel;
     //moveToShootingPositionStep = MoveToShootingPositionStep.FORWARDS_ONE;
-    Hardware.transmissionFourWheel.drive(.5, .5);
+    Hardware.transmission.controls(Hardware.leftDriver.getY(),
+            Hardware.rightDriver.getY());
 
     // runs the overarching state machine.
     //runMainStateMachine();
@@ -696,7 +696,7 @@ private static AlignmentState alignRightSide ()
         leftAlignmentSpeed = -ALIGNMENT_SPEED;
         }
 
-    Hardware.transmissionFourWheel.drive(rightAlignmentSpeed,
+    Hardware.transmission.controls(rightAlignmentSpeed,
             leftAlignmentSpeed);
     return returnState;
 }
@@ -727,7 +727,7 @@ private static AlignmentState alignLeftSide ()
         rightAlignmentSpeed = -ALIGNMENT_SPEED;
         }
 
-    Hardware.transmissionFourWheel.drive(rightAlignmentSpeed,
+    Hardware.transmission.controls(rightAlignmentSpeed,
             leftAlignmentSpeed);
 
     return returnState;

@@ -1,3 +1,4 @@
+
 // ====================================================================
 // FILE NAME: PIDVelocityController.java (Team 339 - Kilroy)
 //
@@ -18,12 +19,32 @@
 // Team 339.
 // ====================================================================
 
+// ====================================================================
+// FILE NAME: PIDVelocityController.java (Team 339 - Kilroy)
+//
+// CREATED ON: Feb. 11, 2014
+// CREATED BY: Noah Golmant
+// MODIFIED ON:
+// MODIFIED BY:
+// ABSTRACT:
+// This class acts as a PID controller when regulating a motor's
+// speed based on the *rate* of the encoder instead of the
+// distance. This is required because the implementation of
+// a PID loop with velocity is different than a position loop.
+// Instead, we *add* the calculated velocity to our current motor
+// value.
+// (the time derivative of the initial equation)
+//
+// NOTE: Please do not release this code without permission from
+// Team 339.
+// ====================================================================
 package org.usfirst.frc.team339.HardwareInterfaces;
 
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.PIDController;
 import edu.wpi.first.wpilibj.SpeedController;
 import edu.wpi.first.wpilibj.command.PIDSubsystem;
+
 /**
  * This class acts as a PID controller when regulating a motor's
  * speed based on the *rate* of the encoder instead of the
@@ -275,4 +296,3 @@ protected void usePIDOutput (double output)
 }
 
 }
-

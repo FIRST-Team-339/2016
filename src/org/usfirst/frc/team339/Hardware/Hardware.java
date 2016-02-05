@@ -15,6 +15,7 @@
 
 package org.usfirst.frc.team339.Hardware;
 
+import org.usfirst.frc.team339.HardwareInterfaces.DoubleThrowSwitch;
 import org.usfirst.frc.team339.HardwareInterfaces.IRSensor;
 import org.usfirst.frc.team339.HardwareInterfaces.KilroyCamera;
 import org.usfirst.frc.team339.HardwareInterfaces.RobotPotentiometer;
@@ -125,12 +126,19 @@ public static Compressor compressor = new Compressor();
 // Single and double throw switches
 // ------------------------------------
 
+// Shoot high/low switch
+public static DoubleThrowSwitch doubleThrowSwitch =
+        new DoubleThrowSwitch(4, 5);
+
 //Turns autonomous on or off.
 /**
  * A physical switch that decides whether or not to run autonomous.
  */
 public static SingleThrowSwitch autonomousEnabled =
         new SingleThrowSwitch(19);
+//rename
+public static SingleThrowSwitch autonomousDisabled =
+        new SingleThrowSwitch(6);
 
 /**
  * Displays the starting position.
@@ -280,13 +288,19 @@ public static Joystick rightOperator = new Joystick(3);
 // Transmission class
 // ------------------------------------
 
-public static TransmissionFourWheel transmissionFourWheel =
-        new TransmissionFourWheel(rightFrontMotor, leftFrontMotor,
-                rightRearMotor, leftRearMotor);
+/*
+ * public static TransmissionFourWheel transmissionFourWheel =
+ * new TransmissionFourWheel(rightFrontMotor, leftFrontMotor,
+ * rightRearMotor, leftRearMotor);
+ */
+
+public static Transmission_old transmission = new Transmission_old(
+        rightFrontMotor, rightRearMotor, leftFrontMotor,
+        leftRearMotor, rightFrontEncoder, rightRearEncoder,
+        leftFrontEncoder, leftRearEncoder);
 
 public static Drive drive =
-        new Drive(new Transmission_old(), new Talon(0),
-                new Talon(0), new Talon(0), new Talon(0));
+        new Drive(transmission);
 
 // -------------------
 // Assembly classes (e.g. forklift)

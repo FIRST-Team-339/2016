@@ -1,22 +1,3 @@
-// ====================================================================
-// FILE NAME: Transmission.java (Team 339 - Kilroy)
-//
-// CREATED ON: Sep 19, 2009
-// CREATED BY: Bob Brown
-// Converted from C++ code written by Josh Shields - 2009 season
-// MODIFIED ON:
-// MODIFIED BY:
-// ABSTRACT:
-// This class represents a transmission object. A transmission
-// object keeps track of a software gear number and can alter the
-// speed of a motor based on the current gear number. A hardware
-// piston is also supported and will change state between gears
-// one and two.
-//
-// NOTE: Please do not release this code without permission from
-// Team 339.
-// ====================================================================
-
 package org.usfirst.frc.team339.HardwareInterfaces.transmission;
 
 import java.util.Vector;
@@ -3074,11 +3055,12 @@ public void setFourthGearPercentage (final double leftGearPercentage,
 /**
  * This function sets a new gear number. It also controls
  * the hardware piston when moving between the desired
- * hardware change gears.
+ * hardware change gears. Goes from one to maxGears.
  *
  * @method setGear
  * @param gear
  *            - gear number you would like to set the transmission to
+ *            - Starts at one, not zero.
  * @return newly adjusted gear number
  * @author Bob Brown
  * @written 15 February 2013
@@ -4191,3 +4173,4 @@ public boolean usePID ()
 }
 
 } // end class
+
