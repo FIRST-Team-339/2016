@@ -15,21 +15,30 @@
 
 package org.usfirst.frc.team339.Hardware;
 
+import org.usfirst.frc.team339.HardwareInterfaces.DoubleThrowSwitch;
 import org.usfirst.frc.team339.HardwareInterfaces.IRSensor;
 import org.usfirst.frc.team339.HardwareInterfaces.KilroyCamera;
 import org.usfirst.frc.team339.HardwareInterfaces.RobotPotentiometer;
 import org.usfirst.frc.team339.HardwareInterfaces.SingleThrowSwitch;
 import org.usfirst.frc.team339.HardwareInterfaces.SixPositionSwitch;
-import org.usfirst.frc.team339.HardwareInterfaces.transmission.Transmission;
 import org.usfirst.frc.team339.HardwareInterfaces.transmission.TransmissionFourWheel;
+import org.usfirst.frc.team339.HardwareInterfaces.transmission.Transmission_old;
 import org.usfirst.frc.team339.Utils.Drive;
 import org.usfirst.frc.team339.Utils.ErrorMessage;
 import edu.wpi.first.wpilibj.CANTalon;
 import edu.wpi.first.wpilibj.CameraServer;
+import edu.wpi.first.wpilibj.Compressor;
+import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.MotorSafetyHelper;
 import edu.wpi.first.wpilibj.Relay;
+import edu.wpi.first.wpilibj.PowerDistributionPanel;
+import edu.wpi.first.wpilibj.SolenoidBase;
+import edu.wpi.first.wpilibj.SpeedController;
+import edu.wpi.first.wpilibj.Talon;
+import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.vision.USBCamera;
 
@@ -56,6 +65,8 @@ private static final int rightRearMotorCANID = 15;
 private static final int leftRearMotorCANID = 11;
 private static final int rightFrontMotorCANID = 17;
 private static final int leftFrontMotorCANID = 12;
+private static final int pdpCANID = 0;
+private static final int pcmCANID = 0;
 
 // ---------------------------------------
 // Hardware Tunables
@@ -91,17 +102,22 @@ public static CANTalon leftFrontMotor =
 // ------------------------------------
 // CAN classes
 // ------------------------------------
+public static PowerDistributionPanel pdp =
+        new PowerDistributionPanel(pdpCANID);
 
 // ====================================
 // Relay classes
 // ====================================
 
+//Relay that controls the RingLight
 public static Relay ringLightRelay = new Relay(0);
 
 // ------------------------------------
 // Compressor class - runs the compressor
 // with a single relay
 // ------------------------------------
+//relay that controls compressor
+public static Compressor compressor = new Compressor();
 
 // ====================================
 // Digital Inputs
@@ -116,6 +132,14 @@ public static Relay ringLightRelay = new Relay(0);
  */
 public static SingleThrowSwitch autonomousEnabled =
         new SingleThrowSwitch(19);
+public static SingleThrowSwitch shootHigh =
+        new SingleThrowSwitch(4);
+public static SingleThrowSwitch shootLow =
+        new SingleThrowSwitch(5);
+
+//Shoot high/low switch
+public static DoubleThrowSwitch noShoot =
+        new DoubleThrowSwitch(shootHigh, shootLow);
 
 /**
  * Displays the starting position.
@@ -131,8 +155,6 @@ public static SixPositionSwitch startingPositionDial =
 // ------------------------------------
 // Encoders
 // ------------------------------------
-public static Encoder leftFrontEncoder = new Encoder(10, 11);
-public static Encoder rightFrontEncoder = new Encoder(12, 13);
 public static Encoder leftRearEncoder = new Encoder(0, 1);
 public static Encoder rightRearEncoder = new Encoder(2, 3);
 // -----------------------
@@ -166,15 +188,26 @@ public static IRSensor leftIR = new IRSensor(22);
 // SOLENOID I/O CLASSES
 // **********************************************************
 // ====================================
+// Pnematic Control Module
+// ====================================
+
+// ====================================
 // Solenoids
 // ====================================
 // ------------------------------------
 // Double Solenoids
 // ------------------------------------
-
+//imported from the API because CAN system is needed
+public static DoubleSolenoid solenoid = new DoubleSolenoid(pcmCANID, 0, 1);
+//double solenoid that moves the camera
+public static DoubleSolenoid cameraSolenoid = new DoubleSolenoid(3, 4);
 // ------------------------------------
 // Single Solenoids
 // ------------------------------------
+// single solenoids that control the catapult
+public static Solenoid catapultSolenoid0 = new Solenoid(0);
+public static Solenoid catapultSolenoid1 = new Solenoid(1);
+public static Solenoid catapultSolenoid2 = new Solenoid(2);
 
 // **********************************************************
 // ANALOG I/O CLASSES
@@ -192,6 +225,9 @@ public static IRSensor leftIR = new IRSensor(22);
 // -------------------------------------
 public static RobotPotentiometer delayPot =
         new RobotPotentiometer(3, 270);
+//transducer (written as a potentiometer)
+public static RobotPotentiometer transducer =
+        new RobotPotentiometer(2, 130);
 
 // -------------------------------------
 // Sonar/Ultrasonic
@@ -250,16 +286,19 @@ public static Joystick rightOperator = new Joystick(3);
 // ------------------------------------
 // Transmission class
 // ------------------------------------
-public static Transmission transmission = new Transmission(
-        rightRearMotor, leftRearMotor);
 
-public static TransmissionFourWheel transmissionFourWheel =
-        new TransmissionFourWheel(rightFrontMotor, rightRearMotor,
-                leftFrontMotor, leftRearMotor);
+/*
+ * public static TransmissionFourWheel transmissionFourWheel =
+ * new TransmissionFourWheel(rightFrontMotor, leftFrontMotor,
+ * rightRearMotor, leftRearMotor);
+ */
+
+public static Transmission_old transmission = new Transmission_old(
+        rightFrontMotor, rightRearMotor, leftFrontMotor,
+        leftRearMotor);
 
 public static Drive drive =
-        new Drive(transmissionFourWheel, rightRearEncoder,
-                rightFrontEncoder, leftRearEncoder, leftFrontEncoder);
+        new Drive(transmission);
 
 // -------------------
 // Assembly classes (e.g. forklift)
@@ -273,5 +312,14 @@ public static final Timer autoTimer = new Timer();
 public static final Timer delayTimer = new Timer();
 public static final ErrorMessage errorMessage = new ErrorMessage(
         true /* append timelog */);
+
+public static final MotorSafetyHelper leftRearMotorSafety =
+        new MotorSafetyHelper(leftRearMotor);
+public static final MotorSafetyHelper rightRearMotorSafety =
+        new MotorSafetyHelper(rightRearMotor);
+public static final MotorSafetyHelper leftFrontMotorSafety =
+        new MotorSafetyHelper(leftFrontMotor);
+public static final MotorSafetyHelper rightFrontMotorSafety =
+        new MotorSafetyHelper(rightFrontMotor);
 
 } // end class

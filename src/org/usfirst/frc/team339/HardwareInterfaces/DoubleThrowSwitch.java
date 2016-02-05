@@ -39,112 +39,128 @@ import edu.wpi.first.wpilibj.Relay;
  */
 public class DoubleThrowSwitch
 {
-    /**
-     * -------------------------------------------------------
-     *
-     * @description This is one of the switches that are part of the double
-     *              pole
-     * @author Bob Brown
-     * @written Sep 19, 2009
-     *          -------------------------------------------------------
-     */
-    private final SingleThrowSwitch switch1;
+/**
+ * -------------------------------------------------------
+ *
+ * @description This is one of the switches that are part of the double
+ *              pole
+ * @author Bob Brown
+ * @written Sep 19, 2009
+ *          -------------------------------------------------------
+ */
+private final SingleThrowSwitch switch1;
 
-    /**
-     * -------------------------------------------------------
-     *
-     * @description This is one of the switches that are part of the double
-     *              pole
-     * @author Bob Brown
-     * @written Sep 19, 2009
-     *          -------------------------------------------------------
-     */
-    private final SingleThrowSwitch switch2;
+/**
+ * -------------------------------------------------------
+ *
+ * @description This is one of the switches that are part of the double
+ *              pole
+ * @author Bob Brown
+ * @written Sep 19, 2009
+ *          -------------------------------------------------------
+ */
+private final SingleThrowSwitch switch2;
 
-    // -------------------------------------------------------
-    /**
-     * constructor which takes in the two switches that will
-     * be checked to see if the this switch, (the OFF position) of
-     * a double pole switch is considered ON. It is considered
-     * ON when the other two switches are off
-     *
-     * @method DoubleThrowSwitch
-     * @param switch1In
-     *            - SingleThrowSwitch - first single throw switch of the
-     *            double pole switch
-     * @param switch2In
-     *            - SingleThrowSwitch - second single throw switch of the
-     *            double pole switch
-     * @author Bob Brown
-     * @written Sep 19, 2009
-     *          -------------------------------------------------------
-     */
-    public DoubleThrowSwitch (final SingleThrowSwitch switch1In,
+// -------------------------------------------------------
+/**
+ * constructor which takes in the two switches that will
+ * be checked to see if the this switch, (the OFF position) of
+ * a double pole switch is considered ON. It is considered
+ * ON when the other two switches are off
+ *
+ * @method DoubleThrowSwitch
+ * @param switch1In
+ *            - SingleThrowSwitch - first single throw switch of the
+ *            double pole switch
+ * @param switch2In
+ *            - SingleThrowSwitch - second single throw switch of the
+ *            double pole switch
+ * @author Bob Brown
+ * @written Sep 19, 2009
+ *          -------------------------------------------------------
+ */
+public DoubleThrowSwitch (final SingleThrowSwitch switch1In,
         final SingleThrowSwitch switch2In)
-        {
-        this.switch1 = switch1In;
-        this.switch2 = switch2In;
-        } // end DoubleThrowSwitch
+{
+    this.switch1 = switch1In;
+    this.switch2 = switch2In;
+} // end DoubleThrowSwitch
 
-    /**
-     * Constructor which takes in the two ports the double throw switch is connected to.
-     * @method DoubleThrowSwitch
-     * @param Channel1
-     * 			-The first port the double throw switch is connected to. When this is on
-     * 		     and Channel2 is off, the switch is considered to be in the "kForward."
-     * 		     If the reverse is true, the switch is considered to be in the "kReverse"
-     *           position.
-     * @param Channel2
-     *          -The second port the double throw switch is connected to.  When this is on
-     * 		     and Channel1 is off, the switch is considered to be in the "kReverse."
-     * 		     If the reverse is true, the switch is considered to be in the "kForward"
-     *           position.
-     * @author Alex Kneipp
-     * @written Jan 18, 2016
-     */
-    public DoubleThrowSwitch(int Channel1, int Channel2)
-    {
-    	this.switch1 = new SingleThrowSwitch(Channel1);
-    	this.switch2 = new SingleThrowSwitch(Channel2);
-    }
+/**
+ * Constructor which takes in the two ports the double throw switch is connected
+ * to.
+ * 
+ * @method DoubleThrowSwitch
+ * @param Channel1
+ *            -The first port the double throw switch is connected to. When this
+ *            is on
+ *            and Channel2 is off, the switch is considered to be in the
+ *            "kForward."
+ *            If the reverse is true, the switch is considered to be in the
+ *            "kReverse"
+ *            position.
+ * @param Channel2
+ *            -The second port the double throw switch is connected to. When
+ *            this is on
+ *            and Channel1 is off, the switch is considered to be in the
+ *            "kReverse."
+ *            If the reverse is true, the switch is considered to be in the
+ *            "kForward"
+ *            position.
+ * @author Alex Kneipp
+ * @written Jan 18, 2016
+ */
+//TODO make it worky
+public DoubleThrowSwitch (int Channel1, int Channel2)
+{
+    this.switch1 = new SingleThrowSwitch(Channel1);
+    this.switch2 = new SingleThrowSwitch(Channel2);
+}
 
-    /**
-     * This method no matter what state the switch is in, and uses the values found in the
-     * WPI Relay class' enum "Value" for compatibility.  If the state of the first port
-     * the switch is plugged into is "on," and the state of the second port the switch is
-     * plugged into is "off," the method returns the "kForward". If the reverse is true,
-     * the method returns "kReverse".  If both are off (the switch is in its center
-     * position), the method return "kOff".  This does not make use of the Relay.Value.kOn
-     * value.
-     * @return The state of the switch.  Either "kForward", "kReverse", or "kOff".
-     * @author Alex Kneipp
-     * @written Jan 18, 2016
-     */
-    public Relay.Value getPosition()
-    {
-    	if(switch1.isOn())
-    		return Relay.Value.kForward;
-    	else if(switch2.isOn())
-    		return Relay.Value.kReverse;
-    	else
-    		return Relay.Value.kOff;
-    }
-    // -------------------------------------------------------
-    /**
-     * This function returns whether or not the switch is on
-     * or not.
-     *
-     * @method isOn
-     * @return true if the switch is "ON", false otherwise
-     * @author Bob Brown
-     * @written Sep 19, 2009
-     *          -------------------------------------------------------
-     */
-    public boolean isOn ()
-        {
-        if ((this.switch1 == null) || (this.switch1.isOn() == true)
+/**
+ * This method no matter what state the switch is in, and uses the values found
+ * in the
+ * WPI Relay class' enum "Value" for compatibility. If the state of the first
+ * port
+ * the switch is plugged into is "on," and the state of the second port the
+ * switch is
+ * plugged into is "off," the method returns the "kForward". If the reverse is
+ * true,
+ * the method returns "kReverse". If both are off (the switch is in its center
+ * position), the method return "kOff". This does not make use of the
+ * Relay.Value.kOn
+ * value.
+ * 
+ * @return The state of the switch. Either "kForward", "kReverse", or "kOff".
+ * @author Alex Kneipp
+ * @written Jan 18, 2016
+ */
+public Relay.Value getPosition ()
+{
+    if (switch1.isOn())
+        return Relay.Value.kForward;
+    else if (switch2.isOn())
+        return Relay.Value.kReverse;
+    else
+        return Relay.Value.kOff;
+}
+
+// -------------------------------------------------------
+/**
+ * This function returns whether or not the switch is on
+ * or not.
+ *
+ * @method isOn
+ * @return true if the switch is "ON", false otherwise
+ * @author Bob Brown
+ * @written Sep 19, 2009
+ *          -------------------------------------------------------
+ */
+public boolean isOn ()
+{
+    if ((this.switch1 == null) || (this.switch1.isOn() == true)
             || (this.switch2 == null) || (this.switch2.isOn() == true))
-            return (false);
-        return (true);
-        } // end isOn
+        return (false);
+    return (true);
+} // end isOn
 } // end class

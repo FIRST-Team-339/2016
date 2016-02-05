@@ -60,6 +60,9 @@
 package org.usfirst.frc.team339.robot;
 
 import org.usfirst.frc.team339.Hardware.Hardware;
+import org.usfirst.frc.team339.HardwareInterfaces.CANNetwork;
+import org.usfirst.frc.team339.HardwareInterfaces.CANObject;
+import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.MotorSafetyHelper;
 import edu.wpi.first.wpilibj.Relay.Direction;
@@ -169,7 +172,10 @@ public void disabledInit ()
     // =========================================================
     // User code goes below here
     // =========================================================
-
+    Hardware.leftRearMotorSafety.setSafetyEnabled(false);
+    Hardware.rightRearMotorSafety.setSafetyEnabled(false);
+    Hardware.leftFrontMotorSafety.setSafetyEnabled(false);
+    Hardware.rightFrontMotorSafety.setSafetyEnabled(false);
     // =========================================================
     // User code goes above here
     // =========================================================
@@ -226,23 +232,35 @@ public void robotInit ()
     // =========================================================
     // User code goes below here
     // =========================================================
+    // -------------------------------------
+    // CAN Network Initialization
+    // -------------------------------------
+    CANObject leftFrontMotor = new CANObject(Hardware.leftFrontMotor,
+            12);
+    CANNetwork.canObjects.add(leftFrontMotor);
+    CANObject rightFrontMotor = new CANObject(Hardware.rightFrontMotor,
+            17);
+    CANNetwork.canObjects.add(rightFrontMotor);
+    CANObject rightRearMotor = new CANObject(Hardware.rightRearMotor,
+            15);
+    CANNetwork.canObjects.add(rightRearMotor);
+    CANObject leftRearMotor = new CANObject(Hardware.leftRearMotor, 11);
+    CANNetwork.canObjects.add(leftRearMotor);
+    CANObject pdp = new CANObject(Hardware.pdp, 0);
+    CANNetwork.canObjects.add(pdp);
+    CANObject solenoid1 = new CANObject(Hardware.solenoid, 0);
+    CANNetwork.canObjects.add(solenoid1);
     // --------------------------------------
     // Encoder Initialization
     // --------------------------------------
-    Hardware.leftRearEncoder.reset();
     Hardware.leftRearEncoder.setDistancePerPulse(0.019706);
+    Hardware.leftRearEncoder.reset();
 
-    Hardware.leftFrontEncoder.reset();
-    Hardware.leftFrontEncoder.setDistancePerPulse(0.019706);
-
-    Hardware.rightRearEncoder.reset();
     Hardware.rightRearEncoder.setDistancePerPulse(0.019706);
+    Hardware.rightRearEncoder.reset();
 
-    Hardware.rightFrontEncoder.reset();
-    Hardware.rightFrontEncoder.setDistancePerPulse(0.019706);
-
-
-
+    Hardware.transmission.initEncoders(Hardware.rightRearEncoder,
+            Hardware.leftRearEncoder);
 
     // -------------------------------------
     // USB camera initialization
@@ -256,9 +274,6 @@ public void robotInit ()
     Hardware.cam0.setWhiteBalanceAuto();
     Hardware.cam0.setWhiteBalanceHoldCurrent();
     Hardware.cam0.updateSettings();
-
-    // Hardware.cameraServer.setQuality(0);
-    // Hardware.cameraServer.setSize(0);
 
     // Starts streaming video
     Hardware.cameraServer.startAutomaticCapture(Hardware.cam0);
@@ -277,10 +292,35 @@ public void robotInit ()
     Hardware.rightRearMotor.enableBrakeMode(true);
     Hardware.leftFrontMotor.enableBrakeMode(true);
     Hardware.rightFrontMotor.enableBrakeMode(true);
-    Hardware.leftRearMotor.setSafetyEnabled(true);
-    Hardware.rightRearMotor.setSafetyEnabled(true);
-    Hardware.leftFrontMotor.setSafetyEnabled(true);
-    Hardware.rightFrontMotor.setSafetyEnabled(true);
+    Hardware.leftRearMotorSafety.setSafetyEnabled(true);
+    Hardware.rightRearMotorSafety.setSafetyEnabled(true);
+    Hardware.leftFrontMotorSafety.setSafetyEnabled(true);
+    Hardware.rightFrontMotorSafety.setSafetyEnabled(true);
+    // Hardware.transmissionFourWheel
+    // .setRightMotorDirection(MotorDirection.REVERSED);
+
+    // --------------------------------------
+    // Compressor Initialization
+    // --------------------------------------
+    Hardware.compressor.setClosedLoopControl(true);
+
+    // --------------------------------------
+    // Encoder Initialization
+    // --------------------------------------
+    Hardware.leftRearEncoder.reset();
+    Hardware.leftRearEncoder.setDistancePerPulse(0.019706);
+
+    Hardware.rightRearEncoder.reset();
+    Hardware.rightRearEncoder.setDistancePerPulse(0.019706);
+
+    // ---------------------------------------
+    // Solenoid Initialization
+    // ---------------------------------------
+    // initializes the solenoids...duh duh duh...
+    Hardware.cameraSolenoid.set(DoubleSolenoid.Value.kForward);
+    Hardware.catapultSolenoid0.set(false);
+    Hardware.catapultSolenoid1.set(false);
+    Hardware.catapultSolenoid2.set(false);
     // =========================================================
     // User code goes above here
     // =========================================================

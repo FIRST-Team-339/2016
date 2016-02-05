@@ -79,14 +79,17 @@ public static void init ()
 
     // set max speed. change by gear?
     Hardware.drive.setMaxSpeed(MAXIMUM_TELEOP_SPEED);
-
-    Hardware.delayTimer.reset();
+    Hardware.transmission.setFirstGearPercentage(FIRST_GEAR_PERCENTAGE);
+    Hardware.transmission
+            .setSecondGearPercentage(SECOND_GEAR_PERCENTAGE);
+    Hardware.transmission.setGear(1);
     // -----------------------------------
     // stop cam0 in case we have declared them
     // in Autonomous. Then declare a new cam0
     // and start it going automatically with the
     // camera server
     // -----------------------------------
+    Hardware.delayTimer.reset();
     CameraServer.getInstance().setSize(1);
 } // end Init
 
@@ -152,8 +155,8 @@ public static void periodic ()
         takingUnlitImage = false;
         }
 
-    // Driving the Robot
-    Hardware.transmissionFourWheel.drive(Hardware.rightDriver.getY(),
+    //Driving the Robot
+    Hardware.transmission.controls(Hardware.rightDriver.getY(),
             Hardware.leftDriver.getY());
 
 
@@ -184,6 +187,8 @@ public static void printStatements ()
 
     // pots-----------------
     // System.out.println("delay pot = " + (int) Hardware.delayPot.get());
+    // prints the value of the transducer- (range 130)
+    // NOT TESTED!!!System.out.println("transducer = " + Hardware.transducer.get());
 
     // Motor controllers-----
     // System.out.println("RR Motor V = " + Hardware.rightRearMotor.get());
@@ -191,6 +196,13 @@ public static void printStatements ()
     // System.out
     // .println("RF Motor V = " + Hardware.rightFrontMotor.get());
     // System.out.println("LF Motor V = " + Hardware.leftFrontMotor.get());
+
+    //Solenoids-------------
+    //prints the state of the solenoids 
+    //    System.out.println("cameraSolenoid = " + Hardware.cameraSolenoid.get());
+    //    System.out.println("catapultSolenoid0 = " + Hardware.catapultSolenoid0.get());
+    //    System.out.println("catapultSolenoid1 = " + Hardware.catapultSolenoid1.get());
+    //    System.out.println("catapultSolenoid2 = " + Hardware.catapultSolenoid2.get());
 
     // Encoders-------------
     // System.out.println(
@@ -210,10 +222,10 @@ public static void printStatements ()
     // System.out.println("Position: " +
     // Hardware.startingPositionDial.getPosition());
 
-    // <<<<<<< HEAD
+    //Relay-----------------
+    //    System.out.println(Hardware.ringLightRelay.get());
+
 } // end printStatements
-  // =======
-  // end printStatements
 
 
 /*
@@ -224,5 +236,9 @@ public static void printStatements ()
 
 private static final double MAXIMUM_TELEOP_SPEED = 1.0;
 
-// >>>>>>> branch 'master' of https://github.com/FIRST-Team-339/2016
+private static final double FIRST_GEAR_PERCENTAGE = 0.5;
+
+private static final double SECOND_GEAR_PERCENTAGE =
+        MAXIMUM_TELEOP_SPEED;
+
 } // end class

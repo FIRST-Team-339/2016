@@ -92,22 +92,133 @@ private static enum AlignmentState
     }
 
 
-private static boolean leftSensorIsOnTape;
 
-private static boolean rightSensorIsOnTape;
-
-// distances we'll be driving in autonomous
-private static class DriveDistance
+/**
+ * A collection of distances we'll be driving in autonomous.
+ */
+private static class DriveDistances
 {
+
+
+/*
+ * Below are the distances traveled by the robot in
+ * FORWARDS_TO_SHOOTING_POSITION. The order
+ * of execution is stated by the first number. The
+ * starting position is denoted by the second.
+ */
+public static final double ROTATE_ZERO_ONE = 0.0;
+public static final double FORWARDS_ONE_ONE = 74.7;
+public static final double ROTATE_ONE_ONE = -60.0;
+public static final double FORWARDS_TWO_ONE = 62.7;
+
+public static final double ROTATE_ZERO_TWO = 0.0;
+public static final double FORWARDS_ONE_TWO = 82.0;
+public static final double ROTATE_ONE_TWO = -60.0;
+public static final double FORWARDS_TWO_TWO = 52.92;
+
+public static final double ROTATE_ZERO_THREE = -20.0;
+public static final double FORWARDS_ONE_THREE = 64.0;
+public static final double ROTATE_ONE_THREE = 20.0;
+public static final double FORWARDS_TWO_THREE = 0.0;
+
+public static final double ROTATE_ZERO_FOUR = 24.8;
+public static final double FORWARDS_ONE_FOUR = 66.1;
+public static final double ROTATE_ONE_FOUR = -24.8;
+public static final double FORWARDS_TWO_FOUR = 0.0;
+
+public static final double ROTATE_ZERO_FIVE = 0.0;
+public static final double FORWARDS_ONE_FIVE = 86.5;
+public static final double ROTATE_ONE_FIVE = 60.0;
+public static final double FORWARDS_TWO_FIVE = 12.0;
 }
+
+
+/**
+ * 
+ * Contains distances and speeds to be traveled,
+ * 
+ * @author Michael Andrzej Klaczynski
+ *
+ */
+private class StateInformation
+{
+double forwardDistance = 0.0;
+double forwardSpeedRatio = 0.0;
+
+double rotationalDistance = 0.0;
+double rotationalSpeedRatio = 0.0;
+
+boolean terminator = false;
+
+public StateInformation (double forwardSpeedRatio, double velocity,
+        double rotation, double rotationalSpeedRatio)
+{
+    this.forwardDistance = forwardSpeedRatio;
+    this.forwardSpeedRatio = velocity;
+    this.rotationalDistance = rotation;
+    this.rotationalSpeedRatio = rotationalSpeedRatio;
+}
+
+/**
+ * Flag as the end of a path.
+ * 
+ * @param terminator
+ */
+public StateInformation (boolean terminator)
+{
+    this.terminator = terminator;
+}
+}
+
+/**
+ * Contains information for driving to a goal from A-tape.
+ * Rows indicate starting position.
+ * Columns contain steps for each path.
+ */
+public StateInformation[][] pathToGoalInformation =
+        {
+                {//Path 1
+                        new StateInformation(74.7, 1.0, 0.0, 0.0),
+                        new StateInformation(0.0, 0.0, -60.0, 1.0),
+                        new StateInformation(62.7, 1.0, 0.0, 0.0),
+                        new StateInformation(true)
+                },
+                {//Path 2
+                        new StateInformation(82.0, 1.0, 0.0, 0.0),
+                        new StateInformation(0.0, 0.0, -60.0, 1.0),
+                        new StateInformation(52.92, 1.0, 0.0, 0.0),
+                        new StateInformation(true)
+                },
+                {//Path 3
+                        new StateInformation(0.0, 0.0, -20.0, 1.0),
+                        new StateInformation(64.0, 1.0, 0.0, 0.0),
+                        new StateInformation(0.0, 0.0, 60.0, 1.0),
+                        new StateInformation(true)
+                },
+                {//Path 4
+                        new StateInformation(0.0, 0.0, -24.8, 1.0),
+                        new StateInformation(64.0, 1.0, 0.0, 0.0),
+                        new StateInformation(0.0, 0.0, 64.8, 1.0),
+                        new StateInformation(true)
+                },
+                {//Path 5
+                        new StateInformation(86.5, 1.0, 0.0, 0.0),
+                        new StateInformation(0.0, 0.0, 60.0, 0.0),
+                        new StateInformation(12.0, 1.0, 0.0, 0.0),
+                        new StateInformation(true)
+                }
+        };//TODO: set up
+
 
 // ==========================================
 // AUTO STATES
 // ==========================================
 private static MainState mainState = MainState.INIT;
-private static MoveToShootingPositionStep moveToShootingPositionStep = MoveToShootingPositionStep.INIT;
+private static MoveToShootingPositionStep moveToShootingPositionStep =
+        MoveToShootingPositionStep.INIT;
 private static StartingPosition startingPosition = StartingPosition.ONE;
-private static AlignmentState alignmentState = AlignmentState.NEITHER_ON_TAPE;
+private static AlignmentState alignmentState =
+        AlignmentState.NEITHER_ON_TAPE;
 
 // ==================================
 // VARIABLES
@@ -127,7 +238,7 @@ private static double forwards2; // amount to move forwards in FORWARDS_TWO
 // TUNEABLES
 // ==========================================
 
-/*
+/**
  * User-Initialization code for autonomous mode should go here. Will be
  * called once when the robot enters autonomous mode.
  *
@@ -149,6 +260,29 @@ public static void init ()
 
     Hardware.drive.setMaxSpeed(MAXIMUM_AUTONOMOUS_SPEED);
 
+
+    // -------------------------------------
+    // motor initialization
+    // -------------------------------------
+    Hardware.leftRearMotor.enableBrakeMode(true);
+    Hardware.rightRearMotor.enableBrakeMode(true);
+    Hardware.leftFrontMotor.enableBrakeMode(true);
+    Hardware.rightFrontMotor.enableBrakeMode(true);
+    Hardware.leftRearMotorSafety.setSafetyEnabled(true);
+    Hardware.rightRearMotorSafety.setSafetyEnabled(true);
+    Hardware.leftFrontMotorSafety.setSafetyEnabled(true);
+    Hardware.rightFrontMotorSafety.setSafetyEnabled(true);
+    //    Hardware.transmissionFourWheel.setLeftMotorDirection(
+    //            Transmission.MotorDirection.REVERSED);
+
+    //--------------------------------------
+    // Encoder Initialization
+    //--------------------------------------
+    Hardware.leftRearEncoder.reset();
+    Hardware.leftRearEncoder.setDistancePerPulse(0.019706);
+
+    Hardware.rightRearEncoder.reset();
+    Hardware.rightRearEncoder.setDistancePerPulse(0.019706);
 
     // -------------------------------------
     // close both of the cameras in case they
@@ -175,9 +309,22 @@ public static void init ()
  */
 public static void periodic ()
 {
-    // runs the overarching state machine.
-    runMainStateMachine();
 
+    //test
+    //TransmissionFourWheel debugTrans = Hardware.transmissionFourWheel;
+    //moveToShootingPositionStep = MoveToShootingPositionStep.FORWARDS_ONE;
+    Hardware.transmission.controls(Hardware.leftDriver.getY(),
+            Hardware.rightDriver.getY());
+
+    // runs the overarching state machine.
+    //runMainStateMachine();
+
+
+    //feed all motor safties
+    Hardware.leftRearMotorSafety.feed();
+    Hardware.rightRearMotorSafety.feed();
+    Hardware.leftFrontMotorSafety.feed();
+    Hardware.rightFrontMotorSafety.feed();
 } // end Periodic
 
 
@@ -228,34 +375,34 @@ private static void initGoalPath ()
     switch (startingPosition)
         {
         case ONE:
-            rotate0 = ROTATE_ZERO_ONE;
-            forwards1 = FORWARDS_ONE_ONE;
-            rotate1 = ROTATE_ONE_ONE;
-            forwards2 = FORWARDS_TWO_ONE;
+            rotate0 = DriveDistances.ROTATE_ZERO_ONE;
+            forwards1 = DriveDistances.FORWARDS_ONE_ONE;
+            rotate1 = DriveDistances.ROTATE_ONE_ONE;
+            forwards2 = DriveDistances.FORWARDS_TWO_ONE;
             break;
         case TWO:
-            rotate0 = ROTATE_ZERO_TWO;
-            forwards1 = FORWARDS_ONE_TWO;
-            rotate1 = ROTATE_ONE_TWO;
-            forwards2 = FORWARDS_TWO_TWO;
+            rotate0 = DriveDistances.ROTATE_ZERO_TWO;
+            forwards1 = DriveDistances.FORWARDS_ONE_TWO;
+            rotate1 = DriveDistances.ROTATE_ONE_TWO;
+            forwards2 = DriveDistances.FORWARDS_TWO_TWO;
             break;
         case THREE:
-            rotate0 = ROTATE_ZERO_THREE;
-            forwards1 = FORWARDS_ONE_THREE;
-            rotate1 = ROTATE_ONE_THREE;
-            forwards2 = FORWARDS_TWO_THREE;
+            rotate0 = DriveDistances.ROTATE_ZERO_THREE;
+            forwards1 = DriveDistances.FORWARDS_ONE_THREE;
+            rotate1 = DriveDistances.ROTATE_ONE_THREE;
+            forwards2 = DriveDistances.FORWARDS_TWO_THREE;
             break;
         case FOUR:
-            rotate0 = ROTATE_ZERO_FOUR;
-            forwards1 = FORWARDS_ONE_FOUR;
-            rotate1 = ROTATE_ONE_FOUR;
-            forwards2 = FORWARDS_TWO_FOUR;
+            rotate0 = DriveDistances.ROTATE_ZERO_FOUR;
+            forwards1 = DriveDistances.FORWARDS_ONE_FOUR;
+            rotate1 = DriveDistances.ROTATE_ONE_FOUR;
+            forwards2 = DriveDistances.FORWARDS_TWO_FOUR;
             break;
         case FIVE:
-            rotate0 = ROTATE_ZERO_FIVE;
-            forwards1 = FORWARDS_ONE_FIVE;
-            rotate1 = ROTATE_ONE_FIVE;
-            forwards2 = FORWARDS_TWO_FIVE;
+            rotate0 = DriveDistances.ROTATE_ZERO_FIVE;
+            forwards1 = DriveDistances.FORWARDS_ONE_FIVE;
+            rotate1 = DriveDistances.ROTATE_ONE_FIVE;
+            forwards2 = DriveDistances.FORWARDS_TWO_FIVE;
             break;
         }
 }
@@ -270,22 +417,22 @@ private static void runMainStateMachine ()
     switch (mainState)
         {
         case INIT:
-            mainStateMachineInit();
+            mainState = mainStateMachineInit();
             break;
         case DELAY:
-            delay();
+            mainState = delay();
             break;
         case FORWARDS_TO_TAPE:
-            forwardsToTape();
+            mainState = forwardsToTape();
             break;
         case ALIGN:
-            align();
+            mainState = align();
             break;
         case MOVE_TO_SHOOTING_POSITION:
-            moveToShootingPosition();
+            mainState = moveToShootingPosition();
             break;
         case SHOOT:
-            shoot();
+            mainState = shoot();
             break;
         case DONE:
             break;
@@ -299,22 +446,24 @@ private static void runMainStateMachine ()
  * ======================================
  */
 
-private static void mainStateMachineInit ()
+private static MainState mainStateMachineInit ()
 {
+    MainState returnState;
 
     if (Hardware.autonomousEnabled.isOn() == true)
         {
 
-        mainState = MainState.DELAY;
+        returnState = MainState.DELAY;
 
         }
     else
         {
-        mainState = MainState.DONE;
+        returnState = MainState.DONE;
         }
     //testing
     //TODO: remove
     mainState = MainState.MOVE_TO_SHOOTING_POSITION;
+    return returnState;
 }
 
 
@@ -323,35 +472,42 @@ private static void mainStateMachineInit ()
  * Continues to FORWARDS_TO_TAPE when time is up.
  * One of the overarching states.
  */
-private static void delay ()
+private static MainState delay ()
 {
+    MainState returnState = MainState.DELAY;
     if (Hardware.delayTimer.get() > delay)
         {
-        mainState = MainState.FORWARDS_TO_TAPE;
+        returnState = MainState.FORWARDS_TO_TAPE;
         Hardware.delayTimer.stop();
         Hardware.delayTimer.reset();
         }
+    return returnState;
+
 }
 
-private static void forwardsToTape ()
+private static MainState forwardsToTape ()
 {
+
+    MainState returnState = MainState.FORWARDS_TO_TAPE;
 
     Hardware.drive.driveForwardInches(999.9);
     if (Hardware.leftIR.isOn() && Hardware.rightIR.isOn())
         {
         alignmentState = AlignmentState.BOTH_ON_TAPE;
-        mainState = MainState.ALIGN;
+        returnState = MainState.ALIGN;
         }
     else if (Hardware.leftIR.isOn())
         {
         alignmentState = AlignmentState.LEFT_ON_TAPE;
-        mainState = MainState.ALIGN;
+        returnState = MainState.ALIGN;
         }
     else if (Hardware.rightIR.isOn())
         {
         alignmentState = AlignmentState.RIGHT_ON_TAPE;
-        mainState = MainState.ALIGN;
+        returnState = MainState.ALIGN;
         }
+
+    return returnState;
 
 }
 
@@ -361,8 +517,10 @@ private static void forwardsToTape ()
  * Aligns robot on gaffers' tape based on IR sensors.
  * One of the overarching states.
  */
-private static void align ()
+private static MainState align ()
 {
+    MainState returnState = MainState.ALIGN;
+
     System.out.println("Alignment State: " + alignmentState);
     switch (alignmentState)
         {
@@ -370,56 +528,66 @@ private static void align ()
             alignFind();
             break;
         case LEFT_ON_TAPE:
-            alignRightSide();
+            alignmentState = alignRightSide();
             break;
         case RIGHT_ON_TAPE:
-            alignLeftSide();
+            alignmentState = alignLeftSide();
             break;
         case BOTH_ON_TAPE:
-            alignFinish();
+            returnState = alignFinish();
             break;
         }
+
+    return returnState;
 }
 
 /**
  * Moves the robot from the gaffers' tape to a position in front of a goal.
  * Movements are based on the robot's initial position.
  * Guided by the Drive utility class.
- * TODO: write Drive utility class.
  * One of the overarching states.
  */
-private static void moveToShootingPosition ()
+private static MainState moveToShootingPosition ()
 {
+    MainState returnState = MainState.MOVE_TO_SHOOTING_POSITION;
+
     System.out.println(
             "MoveToShoot State: " + moveToShootingPositionStep);
     switch (moveToShootingPositionStep)
         {
         case INIT:
-            moveToShootingPositionInit();
+            moveToShootingPositionStep = moveToShootingPositionInit();
             break;
         case ROTATE_ZERO:
             // if not needed, set rotate0 to 0.
-            rotateZero();
+            moveToShootingPositionStep = rotateZero();
             break;
         case FORWARDS_ONE:
-            forwardsOne();
+            moveToShootingPositionStep = forwardsOne();
             break;
         case ROTATE_ONE:
-            rotateOne();
+            moveToShootingPositionStep = rotateOne();
             break;
         case FORWARDS_TWO:
             // if not needed, set forwards2 to 0.
-            forwardsTwo();
+            moveToShootingPositionStep = forwardsTwo();
             break;
         case DONE:
-            moveToShootingPositionDone();
+            returnState = moveToShootingPositionDone();
+            break;
+        default:
+            //this should not happen.
             break;
         }
+
+    return returnState;
 }
 
-private static void shoot ()
+private static MainState shoot ()
 {
     // TODO: write method to shoot cannonball.
+
+    return MainState.DONE;
 }
 
 /*
@@ -435,50 +603,85 @@ private static void shoot ()
  * ==============================================
  */
 
-private static void moveToShootingPositionInit ()
+/**
+ * Called at the beginning of MOVE_TO_SHOOTING_POSITION.
+ * Begins movement sequence.
+ */
+private static MoveToShootingPositionStep moveToShootingPositionInit ()
 {
-    moveToShootingPositionStep = MoveToShootingPositionStep.ROTATE_ZERO;
+    return MoveToShootingPositionStep.ROTATE_ZERO;
 }
 
-private static void rotateZero ()
+/**
+ * The first rotation along the Alignment tape.
+ * From StartingPositions 1, 2, and 5, rotate0 will be set to 0, and this will
+ * do nothing.
+ */
+private static MoveToShootingPositionStep rotateZero ()
 {
+    MoveToShootingPositionStep returnState =
+            MoveToShootingPositionStep.ROTATE_ZERO;
     if (Hardware.drive.turnLeftDegrees(rotate0))
         {
-        moveToShootingPositionStep =
+        returnState =
                 MoveToShootingPositionStep.FORWARDS_ONE;
         }
+    return returnState;
 }
 
-private static void forwardsOne ()
+/**
+ * First movement after first turn on Alignment tape.
+ */
+private static MoveToShootingPositionStep forwardsOne ()
 {
+    MoveToShootingPositionStep returnState =
+            MoveToShootingPositionStep.FORWARDS_ONE;
+
     if (Hardware.drive.driveForwardInches(forwards1))
         {
-        moveToShootingPositionStep =
+        returnState =
                 MoveToShootingPositionStep.ROTATE_ONE;
         }
+    return returnState;
 }
 
-private static void rotateOne ()
+/**
+ * Second rotation; turns to face goal.
+ */
+private static MoveToShootingPositionStep rotateOne ()
 {
+    MoveToShootingPositionStep returnState =
+            MoveToShootingPositionStep.ROTATE_ONE;
+
     if (Hardware.drive.turnLeftDegrees(rotate1))
         ;
         {
-        moveToShootingPositionStep =
+        returnState =
                 MoveToShootingPositionStep.FORWARDS_TWO;
         }
+    return returnState;
 }
 
-private static void forwardsTwo ()
+/**
+ * Final movement forwards to goal, used for positions 1, 2, and 5.
+ */
+private static MoveToShootingPositionStep forwardsTwo ()
 {
+    MoveToShootingPositionStep returnState =
+            MoveToShootingPositionStep.FORWARDS_TWO;
     if (Hardware.drive.driveForwardInches(forwards2))
         {
-        moveToShootingPositionStep = MoveToShootingPositionStep.DONE;
+        returnState = MoveToShootingPositionStep.DONE;
         }
+    return returnState;
 }
 
-private static void moveToShootingPositionDone ()
+/**
+ * Sets main state to SHOOT upon completion.
+ */
+private static MainState moveToShootingPositionDone ()
 {
-    mainState = MainState.SHOOT;
+    return MainState.SHOOT;
 }
 
 /*
@@ -507,9 +710,14 @@ private static void alignFind ()
 
 /**
  * Moves right side to tape when left side is on.
+ * 
+ * @return
  */
-private static void alignRightSide ()
+private static AlignmentState alignRightSide ()
 {
+
+    AlignmentState returnState = AlignmentState.LEFT_ON_TAPE;
+
     double leftAlignmentSpeed = 0.0;
     double rightAlignmentSpeed = 0.0;
 
@@ -518,23 +726,28 @@ private static void alignRightSide ()
     if (Hardware.rightIR.isOn() && Hardware.leftIR.isOn())
         {
         rightAlignmentSpeed = 0.0;
-        alignmentState = AlignmentState.BOTH_ON_TAPE;
+        returnState = AlignmentState.BOTH_ON_TAPE;
         }
     else if (Hardware.leftIR.isOn() == false)
         {
         leftAlignmentSpeed = -ALIGNMENT_SPEED;
         }
 
-    Hardware.transmissionFourWheel.drive(rightAlignmentSpeed,
+    Hardware.transmission.controls(rightAlignmentSpeed,
             leftAlignmentSpeed);
+    return returnState;
 }
 
 /**
  * Moves left side to tape when right side is on.
  * Moves right side back if right side turns off.
+ * 
+ * @return
  */
-private static void alignLeftSide ()
+private static AlignmentState alignLeftSide ()
 {
+
+    AlignmentState returnState = AlignmentState.RIGHT_ON_TAPE;
 
     double leftAlignmentSpeed = 0.0;
     double rightAlignmentSpeed = 0.0;
@@ -544,20 +757,23 @@ private static void alignLeftSide ()
     if (Hardware.rightIR.isOn() && Hardware.leftIR.isOn())
         {
         leftAlignmentSpeed = 0.0;
-        alignmentState = AlignmentState.BOTH_ON_TAPE;
+        returnState = AlignmentState.BOTH_ON_TAPE;
         }
     else if (Hardware.rightIR.isOn() == false)
         {
         rightAlignmentSpeed = -ALIGNMENT_SPEED;
         }
 
-    Hardware.transmissionFourWheel.drive(rightAlignmentSpeed,
+    Hardware.transmission.controls(rightAlignmentSpeed,
             leftAlignmentSpeed);
+
+    return returnState;
 }
 
-private static void alignFinish ()
+
+private static MainState alignFinish ()
 {
-    mainState = MainState.MOVE_TO_SHOOTING_POSITION;
+    return MainState.MOVE_TO_SHOOTING_POSITION;
 }
 /*
  * ==============================================
@@ -570,50 +786,20 @@ private static void alignFinish ()
 // .................../ .  . .  \
 // ................./ --0 --- 0-- \
 // .........++++.. |- - - | | - - -| ..++++
-/*---------//||\\--|     /   \     |--//||\\-------
-//Constants\\||//       |     |       \\||//
-//------ ---------------|     |--------------------*/
+/*
+ * =========//||\\==| / \ |==//||\\======
+ * //Constants\\||// | | \\||//
+ * //======================| |==================
+ */
 // ----------------------\___/
 // ...............................|<!(r% ~@$ #3r3
 
 
-private static final double MAXIMUM_AUTONOMOUS_SPEED = 1.0;
+private static final double MAXIMUM_AUTONOMOUS_SPEED = 0.2;
 
 private static final double MAXIMUM_DELAY = 4.0;
 private static final int ONE_THOUSAND = 1000;
 
 private static final double ALIGNMENT_SPEED = 0.1;
-
-/*------------------------------------------------------------------------------
-Below are the distances traveled by the robot in
-FORWARDS_TO_SHOOTING_POSITION. The order
-of execution is stated by the first number. The
-starting position is denoted by the second.
-------------------------------------------------------------------------------*/
-
-private static final double ROTATE_ZERO_ONE = 0.0;
-private static final double FORWARDS_ONE_ONE = 74.7;
-private static final double ROTATE_ONE_ONE = -60;
-private static final double FORWARDS_TWO_ONE = 62.7;
-
-private static final double ROTATE_ZERO_TWO = 0.0;
-private static final double FORWARDS_ONE_TWO = 82.0;
-private static final double ROTATE_ONE_TWO = -60;
-private static final double FORWARDS_TWO_TWO = 52.92;
-
-private static final double ROTATE_ZERO_THREE = -20.0;
-private static final double FORWARDS_ONE_THREE = 64.0;
-private static final double ROTATE_ONE_THREE = 20.0;
-private static final double FORWARDS_TWO_THREE = 0.0;
-
-private static final double ROTATE_ZERO_FOUR = 24.8;
-private static final double FORWARDS_ONE_FOUR = 66.1;
-private static final double ROTATE_ONE_FOUR = -24.8;
-private static final double FORWARDS_TWO_FOUR = 0.0;
-
-private static final double ROTATE_ZERO_FIVE = 0.0;
-private static final double FORWARDS_ONE_FIVE = 86.5;
-private static final double ROTATE_ONE_FIVE = 60.0;
-private static final double FORWARDS_TWO_FIVE = 12.0;
 
 } // end class
