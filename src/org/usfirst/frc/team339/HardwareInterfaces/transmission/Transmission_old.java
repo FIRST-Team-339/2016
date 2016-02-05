@@ -1,3 +1,7 @@
+<<<<<<< HEAD
+
+package org.usfirst.frc.team339.HardwareInterfaces.transmission;
+=======
 package org.usfirst.frc.team339.HardwareInterfaces.transmission;
 
 /**
@@ -48,6 +52,7 @@ package org.usfirst.frc.team339.HardwareInterfaces.transmission;
  * @written Sep 19, 2009
  *          -------------------------------------------------------
  */
+>>>>>>> branch 'master' of https://github.com/FIRST-Team-339/2016.git
 
 
 import java.util.Vector;
@@ -4220,7 +4225,15 @@ public int upshift (final int gearsToShift)
 public boolean usePID ()
 {
     return this.usePID;
+<<<<<<< HEAD
+=======
 
+>>>>>>> branch 'master' of https://github.com/FIRST-Team-339/2016.git
 }
 
+<<<<<<< HEAD
+// end class
 }
+=======
+}
+>>>>>>> branch 'master' of https://github.com/FIRST-Team-339/2016.git
