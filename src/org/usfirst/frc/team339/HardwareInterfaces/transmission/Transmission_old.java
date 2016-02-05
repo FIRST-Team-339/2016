@@ -1,5 +1,58 @@
+<<<<<<< HEAD
 
 package org.usfirst.frc.team339.HardwareInterfaces.transmission;
+=======
+package org.usfirst.frc.team339.HardwareInterfaces.transmission;
+
+/**
+ * sets the percentage of the joysticks range for the
+ * Third gear for either only one motor configuration or
+ * for the right motor only
+ *
+ * @meth
+ *       // ====================================================================
+ *       // FILE NAME: Transmission.java (Team 339 - Kilroy)
+ *       //
+ *       // CREATED ON: Sep 19, 2009
+ *       // CREATED BY: Bob Brown
+ *       // Converted from C++ code written by Josh Shields - 2009 season
+ *       // MODIFIED ON:
+ *       // MODIFIED BY:
+ *       // ABSTRACT:
+ *       // This class represents a transmission object. A transmission
+ *       // object keeps track of a software gear number and can alter the
+ *       // speed of a motor based on the current gear number. A hardware
+ *       // piston is also supported and will change state between gears
+ *       // one and two.
+ *       //
+ *       // NOTE: Please do not release this code without permission from
+ *       // Team 339.
+ *       // ====================================================================
+ * 
+ *       package org.usfirst.frc.team339.HardwareInterfaces.transmission;
+ * 
+ *       import java.util.Vector;
+ *       import
+ *       org.usfirst.frc.team339.HardwareInterfaces.PIDVelocityController;
+ *       import edu.wpi.first.wpilibj.DoubleSolenoid;
+ *       import edu.wpi.first.wpilibj.Encoder;
+ *       import edu.wpi.first.wpilibj.Relay;
+ *       import edu.wpi.first.wpilibj.SpeedController;
+ * 
+ *       // -------------------------------------------------------
+ *       /**
+ *       This class represents a transmission object. A transmission
+ *       object keeps track of a software gear number and can alter the
+ *       speed of a motor based on the current gear number. A hardware
+ *       piston is also supported and will change state between gears
+ *       one and two.
+ *
+ * @class Transmission
+ * @author Bob Brown
+ * @written Sep 19, 2009
+ *          -------------------------------------------------------
+ */
+>>>>>>> branch 'master' of https://github.com/FIRST-Team-339/2016.git
 
 
 import java.util.Vector;
@@ -4172,7 +4225,15 @@ public int upshift (final int gearsToShift)
 public boolean usePID ()
 {
     return this.usePID;
+<<<<<<< HEAD
+=======
+
+>>>>>>> branch 'master' of https://github.com/FIRST-Team-339/2016.git
 }
 
+<<<<<<< HEAD
 // end class
 }
+=======
+}
+>>>>>>> branch 'master' of https://github.com/FIRST-Team-339/2016.git

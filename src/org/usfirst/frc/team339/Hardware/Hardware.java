@@ -32,6 +32,7 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.MotorSafetyHelper;
+import edu.wpi.first.wpilibj.PowerDistributionPanel;
 import edu.wpi.first.wpilibj.Relay;
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.Timer;
@@ -60,6 +61,8 @@ private static final int rightRearMotorCANID = 15;
 private static final int leftRearMotorCANID = 11;
 private static final int rightFrontMotorCANID = 17;
 private static final int leftFrontMotorCANID = 12;
+private static final int pdpCANID = 0;
+private static final int pcmCANID = 0;
 
 // ---------------------------------------
 // Hardware Tunables
@@ -95,6 +98,8 @@ public static CANTalon leftFrontMotor =
 // ------------------------------------
 // CAN classes
 // ------------------------------------
+public static PowerDistributionPanel pdp =
+        new PowerDistributionPanel(pdpCANID);
 
 // ====================================
 // Relay classes
@@ -117,24 +122,20 @@ public static Compressor compressor = new Compressor();
 // Single and double throw switches
 // ------------------------------------
 
-// Shoot high/low switch
-public static DoubleThrowSwitch doubleThrowSwitch =
-        new DoubleThrowSwitch(4, 5);
-
 //Turns autonomous on or off.
 /**
  * A physical switch that decides whether or not to run autonomous.
  */
 public static SingleThrowSwitch autonomousEnabled =
         new SingleThrowSwitch(19);
-//rename
-public static SingleThrowSwitch autonomousDisabled =
-        new SingleThrowSwitch(6);
+public static SingleThrowSwitch shootHigh =
+        new SingleThrowSwitch(4);
+public static SingleThrowSwitch shootLow =
+        new SingleThrowSwitch(5);
 
-
-
-
-
+//Shoot high/low switch
+public static DoubleThrowSwitch noShoot =
+        new DoubleThrowSwitch(shootHigh, shootLow);
 
 /**
  * Displays the starting position.
@@ -150,8 +151,6 @@ public static SixPositionSwitch startingPositionDial =
 // ------------------------------------
 // Encoders
 // ------------------------------------
-public static Encoder leftFrontEncoder = new Encoder(10, 11);
-public static Encoder rightFrontEncoder = new Encoder(12, 13);
 public static Encoder leftRearEncoder = new Encoder(0, 1);
 public static Encoder rightRearEncoder = new Encoder(2, 3);
 // -----------------------
@@ -185,11 +184,16 @@ public static IRSensor leftIR = new IRSensor(22);
 // SOLENOID I/O CLASSES
 // **********************************************************
 // ====================================
+// Pnematic Control Module
+// ====================================
+
+// ====================================
 // Solenoids
 // ====================================
 // ------------------------------------
 // Double Solenoids
 // ------------------------------------
+
 //double solenoid that moves the camera
 public static DoubleSolenoid cameraSolenoid = new DoubleSolenoid(3, 4);
 // ------------------------------------
@@ -312,7 +316,5 @@ public static final MotorSafetyHelper leftFrontMotorSafety =
         new MotorSafetyHelper(leftFrontMotor);
 public static final MotorSafetyHelper rightFrontMotorSafety =
         new MotorSafetyHelper(rightFrontMotor);
-
-
 
 } // end class
