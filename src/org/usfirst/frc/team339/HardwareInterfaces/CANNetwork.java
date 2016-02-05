@@ -8,6 +8,8 @@ import edu.wpi.first.wpilibj.CANTalon;
  * @author Daniel Resio, Becky Button, and Cole Ramos
  */
 
+//TODO search for more than one item for CAN id
+//TODO add CANUtils.getFaults() in robot init or something
 public class CANNetwork
 {
 
@@ -21,7 +23,7 @@ private int talonNum = 0;
  *            This is an array of CAN objects in use. It is set once in the
  *            constructor.
  */
-public CANNetwork (ArrayList newObjects)
+public CANNetwork (ArrayList<CANObject> newObjects)
 {
     CANNetwork.canObjects = newObjects;
 }
@@ -39,7 +41,7 @@ public CANObject getCAN (int id)
 {
     for (int i = 0; i < canObjects.size(); i++)
     {
-        CANObject tempObj = (CANObject) canObjects.get(i);
+        CANObject tempObj = canObjects.get(i);
         // if CAN object id at location i in the array matches provided id,
         // then return that CANObject
         // else do nothing, continue loop to next spot in array, canObjects
@@ -97,19 +99,4 @@ public CANObject getCANWithId (int id)
     //return a null object because we can't find the CANDevice you're looking for
     return null;
 }
-
-//return a null object because we can't find the CANDevice you're looking for
-
-//	public class CanIdNotFoundException extends Exception {
-//		/**
-//		 * 
-//		 */
-//		private static final long serialVersionUID = 1L;
-//
-//		public CanIdNotFoundException(String message)
-//		{
-//			super(message);
-//		}
-//	}
-
 }
