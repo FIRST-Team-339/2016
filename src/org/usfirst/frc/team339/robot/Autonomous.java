@@ -132,38 +132,82 @@ public static final double ROTATE_ONE_FIVE = 60.0;
 public static final double FORWARDS_TWO_FIVE = 12.0;
 }
 
-private static class States
-{
 
+/**
+ * 
+ * Contains distances and speeds to be traveled,
+ * 
+ * @author Michael Andrzej Klaczynski
+ *
+ */
 private class StateInformation
 {
-double forwardDistance;
-double velocity;
+double forwardDistance = 0.0;
+double forwardSpeedRatio = 0.0;
 
-double rotationalDistance;
+double rotationalDistance = 0.0;
+double rotationalSpeedRatio = 0.0;
 
-public StateInformation (double forwardDistance, double velocity)
+boolean terminator = false;
+
+public StateInformation (double forwardSpeedRatio, double velocity,
+        double rotation, double rotationalSpeedRatio)
 {
-    this.forwardDistance = forwardDistance;
+    this.forwardDistance = forwardSpeedRatio;
+    this.forwardSpeedRatio = velocity;
+    this.rotationalDistance = rotation;
+    this.rotationalSpeedRatio = rotationalSpeedRatio;
+}
+
+/**
+ * Flag as the end of a path.
+ * 
+ * @param terminator
+ */
+public StateInformation (boolean terminator)
+{
+    this.terminator = terminator;
 }
 }
 
-public StateInformation[][] states =
+/**
+ * Contains information for driving to a goal from A-tape.
+ * Rows indicate starting position.
+ * Columns contain steps for each path.
+ */
+public StateInformation[][] pathToGoalInformation =
         {
-                {
-                        new StateInformation(0, 0)
+                {//Path 1
+                        new StateInformation(74.7, 1.0, 0.0, 0.0),
+                        new StateInformation(0.0, 0.0, -60.0, 1.0),
+                        new StateInformation(62.7, 1.0, 0.0, 0.0),
+                        new StateInformation(true)
+                },
+                {//Path 2
+                        new StateInformation(82.0, 1.0, 0.0, 0.0),
+                        new StateInformation(0.0, 0.0, -60.0, 1.0),
+                        new StateInformation(52.92, 1.0, 0.0, 0.0),
+                        new StateInformation(true)
+                },
+                {//Path 3
+                        new StateInformation(0.0, 0.0, -20.0, 1.0),
+                        new StateInformation(64.0, 1.0, 0.0, 0.0),
+                        new StateInformation(0.0, 0.0, 60.0, 1.0),
+                        new StateInformation(true)
+                },
+                {//Path 4
+                        new StateInformation(0.0, 0.0, -24.8, 1.0),
+                        new StateInformation(64.0, 1.0, 0.0, 0.0),
+                        new StateInformation(0.0, 0.0, 64.8, 1.0),
+                        new StateInformation(true)
+                },
+                {//Path 5
+                        new StateInformation(86.5, 1.0, 0.0, 0.0),
+                        new StateInformation(0.0, 0.0, 60.0, 0.0),
+                        new StateInformation(12.0, 1.0, 0.0, 0.0),
+                        new StateInformation(true)
                 }
         };//TODO: set up
-
-public double[][] distances =
-        {
-                {0.0, 74.7, -60, 62.7},
-                {0.0, 82.0, -60.0, 52.92},
-                {-20.0, 64.0, 20.0, 0.0},
-                {24.8, 66.1, -24.8, 0.0},
-                {0.0, 86.5, 60.0, 12.0}
-        };
-}
 
 
 // ==========================================
