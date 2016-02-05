@@ -60,6 +60,8 @@
 package org.usfirst.frc.team339.robot;
 
 import org.usfirst.frc.team339.Hardware.Hardware;
+import org.usfirst.frc.team339.HardwareInterfaces.CANNetwork;
+import org.usfirst.frc.team339.HardwareInterfaces.CANObject;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.MotorSafetyHelper;
@@ -228,6 +230,21 @@ public void robotInit ()
     // =========================================================
     // User code goes below here
     // =========================================================
+    // -------------------------------------
+    // CAN Network Initialization
+    // -------------------------------------
+    CANObject leftFrontMotor = new CANObject(Hardware.leftFrontMotor, 12);
+    CANNetwork.canObjects.add(leftFrontMotor);
+    CANObject rightFrontMotor = new CANObject(Hardware.rightFrontMotor, 17);
+    CANNetwork.canObjects.add(rightFrontMotor);
+    CANObject rightRearMotor = new CANObject(Hardware.rightRearMotor, 15);
+    CANNetwork.canObjects.add(rightRearMotor);
+    CANObject leftRearMotor = new CANObject(Hardware.leftRearMotor, 11);
+    CANNetwork.canObjects.add(leftRearMotor);
+    CANObject pdp = new CANObject(Hardware.pdp, 0);
+    CANNetwork.canObjects.add(pdp);
+    CANObject solenoid1 = new CANObject(Hardware.solenoid, 0);
+    CANNetwork.canObjects.add(solenoid1);
     //--------------------------------------
     // Encoder Initialization
     //--------------------------------------
