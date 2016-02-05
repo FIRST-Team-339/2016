@@ -59,12 +59,6 @@ private static boolean takingUnlitImage = false;
 // brightness, turns on ringlight, starts timer
 private static boolean prepPic = false;
 
-// Makes the brightness to a visible level so our drivers can see.
-private static final int normalAxisCameraBrightness = 50;
-
-// Crazy dark brightness for retroreflective pictures
-private static final int minimumAxisCameraBrightness = 5;
-
 
 
 /**
@@ -118,7 +112,7 @@ public static void periodic ()
         if (prepPic == false)
             {
             Hardware.axisCamera
-                    .writeBrightness(minimumAxisCameraBrightness);
+                    .writeBrightness(MINIMUM_AXIS_CAMERA_BRIGHTNESS);
             Hardware.ringLightRelay.set(Value.kOn);
             Hardware.delayTimer.start();
             prepPic = true;
@@ -131,7 +125,8 @@ public static void periodic ()
     if (Hardware.delayTimer.get() >= .25 && prepPic == true)
         {
         Hardware.axisCamera.saveImagesSafely();
-        Hardware.axisCamera.writeBrightness(normalAxisCameraBrightness);
+        Hardware.axisCamera
+                .writeBrightness(NORMAL_AXIS_CAMERA_BRIGHTNESS);
         Hardware.ringLightRelay.set(Value.kOff);
         Hardware.delayTimer.stop();
         Hardware.delayTimer.reset();
@@ -155,7 +150,7 @@ public static void periodic ()
         takingUnlitImage = false;
         }
 
-    //Driving the Robot
+    // Driving the Robot
     Hardware.transmission.controls(Hardware.rightDriver.getY(),
             Hardware.leftDriver.getY());
 
@@ -188,7 +183,8 @@ public static void printStatements ()
     // pots-----------------
     // System.out.println("delay pot = " + (int) Hardware.delayPot.get());
     // prints the value of the transducer- (range 130)
-    // NOT TESTED!!!System.out.println("transducer = " + Hardware.transducer.get());
+    // NOT TESTED!!!System.out.println("transducer = " +
+    // Hardware.transducer.get());
 
     // Motor controllers-----
     // System.out.println("RR Motor V = " + Hardware.rightRearMotor.get());
@@ -197,12 +193,15 @@ public static void printStatements ()
     // .println("RF Motor V = " + Hardware.rightFrontMotor.get());
     // System.out.println("LF Motor V = " + Hardware.leftFrontMotor.get());
 
-    //Solenoids-------------
-    //prints the state of the solenoids 
-    //    System.out.println("cameraSolenoid = " + Hardware.cameraSolenoid.get());
-    //    System.out.println("catapultSolenoid0 = " + Hardware.catapultSolenoid0.get());
-    //    System.out.println("catapultSolenoid1 = " + Hardware.catapultSolenoid1.get());
-    //    System.out.println("catapultSolenoid2 = " + Hardware.catapultSolenoid2.get());
+    // Solenoids-------------
+    // prints the state of the solenoids
+    // System.out.println("cameraSolenoid = " + Hardware.cameraSolenoid.get());
+    // System.out.println("catapultSolenoid0 = " +
+    // Hardware.catapultSolenoid0.get());
+    // System.out.println("catapultSolenoid1 = " +
+    // Hardware.catapultSolenoid1.get());
+    // System.out.println("catapultSolenoid2 = " +
+    // Hardware.catapultSolenoid2.get());
 
     // Encoders-------------
     // System.out.println(
@@ -222,8 +221,8 @@ public static void printStatements ()
     // System.out.println("Position: " +
     // Hardware.startingPositionDial.getPosition());
 
-    //Relay-----------------
-    //    System.out.println(Hardware.ringLightRelay.get());
+    // Relay-----------------
+    // System.out.println(Hardware.ringLightRelay.get());
 
 } // end printStatements
 
@@ -238,7 +237,12 @@ private static final double MAXIMUM_TELEOP_SPEED = 1.0;
 
 private static final double FIRST_GEAR_PERCENTAGE = 0.5;
 
-private static final double SECOND_GEAR_PERCENTAGE =
-        MAXIMUM_TELEOP_SPEED;
+private static final double SECOND_GEAR_PERCENTAGE = MAXIMUM_TELEOP_SPEED;
+
+// Makes the brightness to a visible level so our drivers can see.
+private static final int NORMAL_AXIS_CAMERA_BRIGHTNESS = 50;
+
+// Crazy dark brightness for retroreflective pictures
+private static final int MINIMUM_AXIS_CAMERA_BRIGHTNESS = 5;
 
 } // end class
