@@ -346,4 +346,3 @@ private final double DEFAULT_MAX_SPEED = 1.0;
 private final double BRAKE_SPEED = .1;
 
 }
-

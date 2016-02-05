@@ -1,9 +1,10 @@
 package org.usfirst.frc.team339.HardwareInterfaces;
 
+import org.usfirst.frc.team339.Hardware.Hardware;
 import edu.wpi.first.wpilibj.CANJaguar;
 import edu.wpi.first.wpilibj.CANTalon;
+import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.PowerDistributionPanel;
-import edu.wpi.first.wpilibj.SolenoidBase;
 
 /*
  * This is a wrapper object for the various types of CANs we know we can get
@@ -23,18 +24,34 @@ import edu.wpi.first.wpilibj.SolenoidBase;
  */
 public class CANObject
 {
+
+//If true, activates debug print statements throughout the class
+private static boolean useDebug = true;
+
+/**
+ * Prints values of the significant variables/methods in CANObject if useDebug is true
+ */
+private void DebugCANUtils()
+{ 
+    if(useDebug == true)
+    {
+        System.out.println("The type Id is " + typeId);
+        System.out.println("The value of the getFault method is " + getFault());
+    }
+}
+
 //add object info 
 private int canId;
 //id for the CAN type
 private static int typeId;
 //type id 1
-private static CANTalon talon;
+private static CANTalon talon = null;
 //type id 2
-private static CANJaguar jaguar;
+private static CANJaguar jaguar = null;
 //type id 3
-private static SolenoidBase pcm;
+private static DoubleSolenoid doubleSolenoid = null;
 //type id 4
-private static PowerDistributionPanel pdp;
+private static PowerDistributionPanel pdp = null;
 
 /**
  * Overrides default constructor
@@ -42,31 +59,6 @@ private static PowerDistributionPanel pdp;
 private CANObject ()
 {
     //can not use this
-}
-
-public CANObject (Object newObject, int newCanId)
-{
-    canId = newCanId;
-    
-    if (canId < 10)
-    {
-        typeId = 4;
-    }
-    else if (canId < 20)
-    {
-        typeId = 1;
-    }
-    else if (canId < 30)
-    {
-        typeId = 3;
-    }
-    switch (typeId)
-    {
-        case 1: talon = (CANTalon)(newObject);
-        case 2: jaguar = (CANJaguar)(newObject);
-        case 3: pcm = (SolenoidBase)(newObject);
-        case 4: pdp = (PowerDistributionPanel)(newObject);
-    }
 }
 
 /**
@@ -82,6 +74,14 @@ public CANObject (CANTalon newTalon, int newCanId)
     talon = newTalon;
     canId = newCanId;
     typeId = 1;
+    
+    //TODO undo comments if the following code is necessary
+    if(useDebug == true)
+    {
+        System.out.println("The talon is " + talon);
+        System.out.println("The canId of the CANTalon is " + canId);
+        System.out.println("The type Id of the CANTalon is " + typeId);
+    }
 }
 
 /**
@@ -97,22 +97,16 @@ public CANObject (CANJaguar newJaguar, int newCanId)
     jaguar = newJaguar;
     canId = newCanId;
     typeId = 2;
+    
+    //TODO undo comments if the following code is necessary
+//    if(useDebug == true)
+//    {
+//        System.out.println("The jaguar is " + jaguar);
+//        System.out.println("The canId of the CANJaguar is " + canId);
+//        System.out.println("The type Id of the CANJaguar is " + typeId);
+//    }
 }
 
-/**
- * Creates CAN Pnuematics Control Module object
- * 
- * @param newPcm
- *            the CAN Pnuematics Control Module associated with this object
- * @param newCanId
- *            the ID of the CAN object
- */
-public CANObject (SolenoidBase newPcm, int newCanId)
-{
-    pcm = newPcm;
-    canId = newCanId;
-    typeId = 3;
-}
 
 /**
  * Creates Power Distribution Board Object
@@ -127,6 +121,38 @@ public CANObject (PowerDistributionPanel newPdp, int newCanId)
     pdp = newPdp;
     canId = newCanId;
     typeId = 4;
+    
+    //TODO undo comments if the following code is necessary
+//    if(useDebug == true)
+//    {
+//        System.out.println("The pdp is " + talon);
+//        System.out.println("The canId of the CANJaguar is " + canId);
+//        System.out.println("The type Id of the CANJaguar is " + typeId);
+//    }
+}
+
+
+/**
+ * Creates CAN Pnuematics Control Module object
+ * 
+ * @param newdoubleSolenoid
+ *            the CAN Pnuematics Control Module associated with this object
+ * @param newCanId
+ *            the ID of the CAN object
+ */
+public CANObject (DoubleSolenoid newdoubleSolenoid, int newCanId)
+{
+    doubleSolenoid = newdoubleSolenoid;
+    canId = newCanId;
+    typeId = 3;
+    
+    //TODO undo comments if the following code is necessary
+//    if(useDebug == true)
+//    {
+//        System.out.println("The Double Solenoid is " + doubleSolenoid);
+//        System.out.println("The canId of the DoubleSolenoid is " + canId);
+//        System.out.println("The type Id of the DoubleSolenoid is " + typeId);
+//    }
 }
 
 /**
@@ -177,12 +203,12 @@ public void setCAN (CANJaguar jaguar)
 /**
  * Sets the object to a Pneumatics Control Module
  * 
- * @param pcm
+ * @param doubleSolenoid
  *            pneumatics control module object to change to
  */
-public void setCAN (SolenoidBase pcm)
+public void setCAN (DoubleSolenoid doubleSolenoid)
 {
-    CANObject.pcm = pcm;
+    CANObject.doubleSolenoid = doubleSolenoid;
     typeId = 3;
 }
 
@@ -241,17 +267,18 @@ public CANJaguar getCANJaguar ()
  * 
  * @return Returns Pnuematic Control Module if type ID is 3, if not returns null
  */
-public SolenoidBase getPCM ()
+public DoubleSolenoid getdoubleSolenoid ()
 {
     if (typeId == 3)
     {
-        return pcm;
+        return doubleSolenoid;
     }
     return null;
 }
 
 /**
- * Checks if the CAN Device is the Power Distribution Panel
+ * // * Checks if the CAN Device is the Power Distribution Panel
+ * // *
  * 
  * @return Returns Power Distribution Panel if the type ID is 3, if not returns
  *         null
@@ -273,7 +300,6 @@ public PowerDistributionPanel getPDP ()
  */
 public static boolean getFault ()
 {
-
     switch (typeId)
     {
         case 1:
@@ -287,23 +313,18 @@ public static boolean getFault ()
             {
                 return true;
             }
-            else
-            {
-                return false;
-            }
+            return false;
         case 2:
             if (jaguar.getFaults() > 0)
             {
                 return true;
             }
-            else
-            {
-                return false;
-            }
+            return false;
         case 3:
-            return pcm.getPCMSolenoidVoltageStickyFault();
+            //TODO the exit line is a problem
+            return doubleSolenoid.getPCMSolenoidVoltageStickyFault();
         case 4:
-            //pdp cannot hold sticky faults or not?
+            //pdp can hold sticky faults but cannot be accessed with code
             return false;
     }
     //object does not exist
