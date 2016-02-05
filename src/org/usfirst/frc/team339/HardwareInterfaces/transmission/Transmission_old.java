@@ -1,7 +1,3 @@
-<<<<<<< HEAD
-
-package org.usfirst.frc.team339.HardwareInterfaces.transmission;
-=======
 package org.usfirst.frc.team339.HardwareInterfaces.transmission;
 
 /**
@@ -52,9 +48,6 @@ package org.usfirst.frc.team339.HardwareInterfaces.transmission;
  * @written Sep 19, 2009
  *          -------------------------------------------------------
  */
->>>>>>> branch 'master' of https://github.com/FIRST-Team-339/2016.git
-
-
 import java.util.Vector;
 import org.usfirst.frc.team339.HardwareInterfaces.PIDVelocityController;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
@@ -213,8 +206,7 @@ private debugStateValues debugState = debugStateValues.DEBUG_NONE;
  *              with each one corresponding to the gear that we are in.
  *              -------------------------------------------------------
  */
-private final Vector<Integer> digitalChannelNumberForGearLight =
-        new Vector<Integer>();
+private final Vector<Integer> digitalChannelNumberForGearLight = new Vector<Integer>();
 
 /**
  * -------------------------------------------------------
@@ -281,8 +273,8 @@ private double leftFifthGearPercentage = 1.00;
  * @written Jan 21, 2011
  *          -------------------------------------------------------
  */
-private final JoystickDirection leftJoystickIsReversed =
-        new JoystickDirection(JoystickDirection.NORMAL);
+private final JoystickDirection leftJoystickIsReversed = new JoystickDirection(
+        JoystickDirection.NORMAL);
 
 /**
  * -------------------------------------------------------
@@ -394,8 +386,8 @@ private boolean presentUpshiftState = false;
  * @written Jan 21, 2011
  *          -------------------------------------------------------
  */
-private final JoystickDirection rightJoystickIsReversed =
-        new JoystickDirection(JoystickDirection.NORMAL);
+private final JoystickDirection rightJoystickIsReversed = new JoystickDirection(
+        JoystickDirection.NORMAL);
 
 /**
  * -------------------------------------------------------
@@ -413,16 +405,14 @@ private final MotorDirection rightMotorDirection = new MotorDirection(
 // ----------------------------------------------------
 // Direction of the right rear motor for mecanum drive.
 // ----------------------------------------------------
-private final MotorDirection rightRearMotorDirection =
-        new MotorDirection(
-                MotorDirection.FORWARD);
+private final MotorDirection rightRearMotorDirection = new MotorDirection(
+        MotorDirection.FORWARD);
 
 // ----------------------------------------------------
 // Direction of the left rear motor for mecanum drive.
 // ----------------------------------------------------
-private final MotorDirection leftRearMotorDirection =
-        new MotorDirection(
-                MotorDirection.FORWARD);
+private final MotorDirection leftRearMotorDirection = new MotorDirection(
+        MotorDirection.FORWARD);
 
 /**
  * -------------------------------------------------------
@@ -917,14 +907,12 @@ public boolean brake (final double brakeVoltage)
         } // if
     else
         {
-        this.brakePreviousPreviousDistanceR =
-                this.brakePreviousDistanceR;
-        this.brakePreviousPreviousDistanceL =
-                this.brakePreviousDistanceL;
-        this.brakePreviousDistanceR =
-                Math.abs(this.oneOrRightMotorEncoder.getDistance());
-        this.brakePreviousDistanceL =
-                Math.abs(this.leftMotorEncoder.getDistance());
+        this.brakePreviousPreviousDistanceR = this.brakePreviousDistanceR;
+        this.brakePreviousPreviousDistanceL = this.brakePreviousDistanceL;
+        this.brakePreviousDistanceR = Math
+                .abs(this.oneOrRightMotorEncoder.getDistance());
+        this.brakePreviousDistanceL = Math
+                .abs(this.leftMotorEncoder.getDistance());
         // continue braking
         // if we are in mecanum, call the appropriate method to
         // send the braking voltage backwards.
@@ -1231,8 +1219,7 @@ public void controls (final double magnitude, final double direction,
         }
 
     double tempRotation = rotation, tempMagnitude = magnitude,
-            tempDirection =
-                    direction;
+            tempDirection = direction;
 
     // Rotation deadzone
     if (Math.abs(rotation) < this.deadbandPercentageZone)
@@ -1281,9 +1268,8 @@ public void controls (final double magnitude, final double direction,
     // map the magnitude along our deadband range
     if ((this.usePID() == true) && (this.isPIDEnabled() == true))
         {
-        tempMagnitude =
-                this.mapSoftwareJoystickValues(tempMagnitude,
-                        this.getFirstGearPercentage());
+        tempMagnitude = this.mapSoftwareJoystickValues(tempMagnitude,
+                this.getFirstGearPercentage());
         }
 
     // limit magnitude to -1.0..1.0
@@ -1343,9 +1329,9 @@ public void controls (final double magnitude, final double direction,
     // see
     // http://thinktank.wpi.edu/resources/346/ControllingMecanumDrive.pdf
     // page 2
-    final double highestSpeed =
-            Math.max(Math.max(leftFrontSpeed, leftRearSpeed),
-                    Math.max(rightFrontSpeed, rightRearSpeed));
+    final double highestSpeed = Math.max(
+            Math.max(leftFrontSpeed, leftRearSpeed),
+            Math.max(rightFrontSpeed, rightRearSpeed));
 
     // PID Controls and debug
     if ((this.usePID() == true) && (this.isPIDEnabled() == true) &&
@@ -1450,13 +1436,14 @@ public void controls (double magnitude, double direction,
     if (driveStraight == true)
         {
 
-        final double encoderSidesDelta =
-                (Math.abs(this.leftMotorEncoder.getDistance()) + Math
-                        .abs(this.leftRearMotorEncoder.getDistance())) -
-                        (Math.abs(this.oneOrRightMotorEncoder
-                                .getDistance()) + Math
-                                        .abs(this.rightRearMotorEncoder
-                                                .getDistance()));
+        final double encoderSidesDelta = (Math
+                .abs(this.leftMotorEncoder.getDistance()) + Math
+                        .abs(this.leftRearMotorEncoder.getDistance()))
+                -
+                (Math.abs(this.oneOrRightMotorEncoder
+                        .getDistance()) + Math
+                                .abs(this.rightRearMotorEncoder
+                                        .getDistance()));
 
         // final double diagonalEncoderPairDelta =
         // (this.oneOrRightMotorEncoder.getDistance() -
@@ -1478,8 +1465,8 @@ public void controls (double magnitude, double direction,
         // encoderPairDelta = otherDiagonalEncoderPairDelta;
         // }
 
-        this.rotationCorrection =
-                encoderSidesDelta * this.mecanumRotationCorrection;
+        this.rotationCorrection = encoderSidesDelta
+                * this.mecanumRotationCorrection;
 
         if (this.getDebugState() == debugStateValues.DEBUG_ALL)
             {
@@ -1490,29 +1477,27 @@ public void controls (double magnitude, double direction,
 
         // Solve for magnitude of resultant vector of the encoders
         // get the sum of the vectors' x components, then y components...
-        final double resultantY =
-                ((this.leftMotorEncoder.getDistance()
-                        + this.leftRearMotorEncoder
-                                .getDistance())
-                        + this.oneOrRightMotorEncoder.getDistance()
-                        + this.rightRearMotorEncoder
-                                .getDistance());
+        final double resultantY = ((this.leftMotorEncoder.getDistance()
+                + this.leftRearMotorEncoder
+                        .getDistance())
+                + this.oneOrRightMotorEncoder.getDistance()
+                + this.rightRearMotorEncoder
+                        .getDistance());
 
-        final double resultantX =
-                (((this.leftMotorEncoder.getDistance()
-                        - this.leftRearMotorEncoder
-                                .getDistance())
-                        - this.oneOrRightMotorEncoder.getDistance())
-                        + this.rightRearMotorEncoder
-                                .getDistance());
+        final double resultantX = (((this.leftMotorEncoder.getDistance()
+                - this.leftRearMotorEncoder
+                        .getDistance())
+                - this.oneOrRightMotorEncoder.getDistance())
+                + this.rightRearMotorEncoder
+                        .getDistance());
 
         // Calculate the resultant vector's direction with arctan
         // Math.atan returns in radians, so we have to convert to degrees
         // subtract it from 90.0 to account for how the location of our
         // calculated
         // is along the unit circle.
-        final double resultantThetaInDegrees =
-                90.0 - ((Math.atan2(resultantY, resultantX) * 180.0)
+        final double resultantThetaInDegrees = 90.0
+                - ((Math.atan2(resultantY, resultantX) * 180.0)
                         / 3.1415);
 
         double deltaTheta = (direction - resultantThetaInDegrees);
@@ -1775,57 +1760,52 @@ private void controlSpeedController (final double joystickInputValue,
         switch (this.getGear())
             {
             case 5:
-                controllerInput =
-                        this.mapSoftwareJoystickValues(
-                                joystickInputValue,
-                                this.getFifthGearPercentage(
-                                        whichJoystick))
-                                *
-                                motorDirection;
+                controllerInput = this.mapSoftwareJoystickValues(
+                        joystickInputValue,
+                        this.getFifthGearPercentage(
+                                whichJoystick))
+                        *
+                        motorDirection;
                 oneSpeedController.set(controllerInput);
                 break;
 
             case 4:
-                controllerInput =
-                        this.mapSoftwareJoystickValues(
-                                joystickInputValue,
-                                this.getFourthGearPercentage(
-                                        whichJoystick))
-                                *
-                                motorDirection;
+                controllerInput = this.mapSoftwareJoystickValues(
+                        joystickInputValue,
+                        this.getFourthGearPercentage(
+                                whichJoystick))
+                        *
+                        motorDirection;
                 oneSpeedController.set(controllerInput);
                 break;
 
             case 3:
-                controllerInput =
-                        this.mapSoftwareJoystickValues(
-                                joystickInputValue,
-                                this.getThirdGearPercentage(
-                                        whichJoystick))
-                                *
-                                motorDirection;
+                controllerInput = this.mapSoftwareJoystickValues(
+                        joystickInputValue,
+                        this.getThirdGearPercentage(
+                                whichJoystick))
+                        *
+                        motorDirection;
                 oneSpeedController.set(controllerInput);
                 break;
 
             case 2:
-                controllerInput =
-                        this.mapSoftwareJoystickValues(
-                                joystickInputValue,
-                                this.getSecondGearPercentage(
-                                        whichJoystick))
-                                *
-                                motorDirection;
+                controllerInput = this.mapSoftwareJoystickValues(
+                        joystickInputValue,
+                        this.getSecondGearPercentage(
+                                whichJoystick))
+                        *
+                        motorDirection;
                 oneSpeedController.set(controllerInput);
                 break;
 
             default:
-                controllerInput =
-                        this.mapSoftwareJoystickValues(
-                                joystickInputValue,
-                                this.getFirstGearPercentage(
-                                        whichJoystick))
-                                *
-                                motorDirection;
+                controllerInput = this.mapSoftwareJoystickValues(
+                        joystickInputValue,
+                        this.getFirstGearPercentage(
+                                whichJoystick))
+                        *
+                        motorDirection;
 
                 oneSpeedController.set(controllerInput);
                 break;
@@ -2226,8 +2206,8 @@ public SpeedController getPrimarySpeedController ()
 
 // -------------------------------------------------------
 
-//TODO put in order
-//TODO consider get encoder methods
+// TODO put in order
+// TODO consider get encoder methods
 /**
  * Returns the total distance on the right rear motor encoder.
  * 
@@ -2458,45 +2438,44 @@ public void initPIDControllers ()
     // Left front PID controller
     if (this.pidLeftController == null)
         {
-        this.pidLeftController =
-                new PIDVelocityController(this.leftSpeedController,
-                        this.leftMotorEncoder, this.pidProportionalGain,
-                        this.pidIntegralGain, this.pidDerivativeGain,
-                        this.pidFeedForward);
+        this.pidLeftController = new PIDVelocityController(
+                this.leftSpeedController,
+                this.leftMotorEncoder, this.pidProportionalGain,
+                this.pidIntegralGain, this.pidDerivativeGain,
+                this.pidFeedForward);
         }
 
     // Left rear PID controller
     if (this.pidLeftRearController == null)
         {
-        this.pidLeftRearController =
-                new PIDVelocityController(this.leftRearSpeedController,
-                        this.leftRearMotorEncoder,
-                        this.pidProportionalGain,
-                        this.pidIntegralGain, this.pidDerivativeGain,
-                        this.pidFeedForward);
+        this.pidLeftRearController = new PIDVelocityController(
+                this.leftRearSpeedController,
+                this.leftRearMotorEncoder,
+                this.pidProportionalGain,
+                this.pidIntegralGain, this.pidDerivativeGain,
+                this.pidFeedForward);
         }
 
     // Right front PID controller
     if (this.pidRightController == null)
         {
-        this.pidRightController =
-                new PIDVelocityController(
-                        this.oneOrRightSpeedController,
-                        this.oneOrRightMotorEncoder,
-                        this.pidProportionalGain,
-                        this.pidIntegralGain, this.pidDerivativeGain,
-                        this.pidFeedForward);
+        this.pidRightController = new PIDVelocityController(
+                this.oneOrRightSpeedController,
+                this.oneOrRightMotorEncoder,
+                this.pidProportionalGain,
+                this.pidIntegralGain, this.pidDerivativeGain,
+                this.pidFeedForward);
         }
 
     // Right rear PID controller
     if (this.pidRightRearController == null)
         {
-        this.pidRightRearController =
-                new PIDVelocityController(this.rightRearSpeedController,
-                        this.rightRearMotorEncoder,
-                        this.pidProportionalGain,
-                        this.pidIntegralGain, this.pidDerivativeGain,
-                        this.pidFeedForward);
+        this.pidRightRearController = new PIDVelocityController(
+                this.rightRearSpeedController,
+                this.rightRearMotorEncoder,
+                this.pidProportionalGain,
+                this.pidIntegralGain, this.pidDerivativeGain,
+                this.pidFeedForward);
         }
 
     // set input and output ranges
@@ -2674,11 +2653,10 @@ private double mapSoftwareJoystickValues (
     // to make the math easier. Absolutize the
     // value and remove the deadband range
     // --------------------------------------
-    final double absJoystickInputValue =
-            java.lang.Math.max(
-                    (Math.abs(joystickInputValue)
-                            - this.deadbandPercentageZone),
-                    0.0);
+    final double absJoystickInputValue = java.lang.Math.max(
+            (Math.abs(joystickInputValue)
+                    - this.deadbandPercentageZone),
+            0.0);
     // --------------------------------------
     // compute the range of the joysticks. This
     // excludes the deadband range
@@ -2687,8 +2665,8 @@ private double mapSoftwareJoystickValues (
     // --------------------------------------
     // computed mapped value
     // --------------------------------------
-    final double mappedValue =
-            absJoystickInputValue * (gearPercentage / deadbandRange);
+    final double mappedValue = absJoystickInputValue
+            * (gearPercentage / deadbandRange);
     // --------------------------------------
     // return the correct value - if the original
     // input was negative, return negative, else positive
@@ -4225,15 +4203,7 @@ public int upshift (final int gearsToShift)
 public boolean usePID ()
 {
     return this.usePID;
-<<<<<<< HEAD
-=======
-
->>>>>>> branch 'master' of https://github.com/FIRST-Team-339/2016.git
 }
 
-<<<<<<< HEAD
 // end class
 }
-=======
-}
->>>>>>> branch 'master' of https://github.com/FIRST-Team-339/2016.git

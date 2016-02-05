@@ -1,7 +1,3 @@
-<<<<<<< HEAD
-
-=======
->>>>>>> branch 'master' of https://github.com/FIRST-Team-339/2016.git
 package org.usfirst.frc.team339.Utils;
 
 import org.usfirst.frc.team339.Hardware.Hardware;
@@ -11,11 +7,11 @@ import org.usfirst.frc.team339.HardwareInterfaces.transmission.Transmission_old;
 // It was mostly commented, just missing javadoc. Learn to read green!
 public class Drive
 {
-//TODO prefix the transmissions throughout the class with "this"
-//Moved maxSpeedScaling factor to bottom with the rest of the variables
-//if there's a reason for moving it back, do so, and leave justification
-//so it doesn't get moved back down again
-//-Alex Kneipp
+// TODO prefix the transmissions throughout the class with "this"
+// Moved maxSpeedScaling factor to bottom with the rest of the variables
+// if there's a reason for moving it back, do so, and leave justification
+// so it doesn't get moved back down again
+// -Alex Kneipp
 /**
  * Constructor for a Drive object. Should only be called once.
  * 
@@ -47,8 +43,8 @@ public Drive (Transmission_old transmission)
  */
 public boolean brake (double brakeSpeed)
 {
-    //TODO maybe make argument a constant in the class.
-    //TODO find out ideal brakespeed.
+    // TODO maybe make argument a constant in the class.
+    // TODO find out ideal brakespeed.
     if (this.transmission.brake(brakeSpeed))
         return true;
     else
@@ -129,8 +125,8 @@ public boolean turnLeftDegrees (double degrees)
  */
 public boolean driveForwardInches (double distance)
 {
-    //stop if the average value of either drive train is greater than
-    //the desired distance traveled.
+    // stop if the average value of either drive train is greater than
+    // the desired distance traveled.
     if (isFourWheel && (transmission.getRightRearEncoderDistance()
             + transmission.getRightFrontEncoderDistance())
             / 2 >= distance ||
@@ -138,7 +134,7 @@ public boolean driveForwardInches (double distance)
                     + transmission.getLeftFrontEncoderDistance()
                             / 2 >= distance)
         {
-        //stop
+        // stop
         if (brake(BRAKE_SPEED))
             {
             return true;
@@ -149,7 +145,7 @@ public boolean driveForwardInches (double distance)
             && transmission.getRightRearEncoderDistance() >= distance
             || transmission.getLeftRearEncoderDistance() >= distance)
         {
-        //Stop
+        // Stop
         if (brake(BRAKE_SPEED))
             {
             return true;
@@ -245,7 +241,7 @@ public double getForwardVelocity ()
  */
 public double getRightMotorVelocity ()
 {
-    //based on the "getForwardVelocity()" method
+    // based on the "getForwardVelocity()" method
     double speed = ((transmission.getRightRearEncoderDistance() -
             prevRightDistance) / 2) / (Hardware.kilroyTimer.get() -
                     prevTime);
@@ -264,7 +260,7 @@ public double getRightMotorVelocity ()
  */
 public double getLeftMotorVelocity ()
 {
-    //based on the "getForwardVelocity()" method
+    // based on the "getForwardVelocity()" method
     double speed = ((transmission.getLeftRearEncoderDistance() -
             prevLeftDistance) / 2) / (Hardware.kilroyTimer.get() -
                     prevTime);
@@ -295,14 +291,14 @@ public void setForwardVelocity (double desiredVelocity)
  */
 public double getRotationalVelocity ()
 {
-    double rotationalVelocity =
-            ((Math.abs(transmission.getLeftRearEncoderDistance())
-                    + Math.abs(
-                            transmission.getRightRearEncoderDistance())
-                            / 2
-                    - ((Math.abs(prevLeftDistance)
-                            + Math.abs(prevRightDistance)) / 2)
-                            / (Hardware.kilroyTimer.get() - prevTime)));
+    double rotationalVelocity = ((Math
+            .abs(transmission.getLeftRearEncoderDistance())
+            + Math.abs(
+                    transmission.getRightRearEncoderDistance())
+                    / 2
+            - ((Math.abs(prevLeftDistance)
+                    + Math.abs(prevRightDistance)) / 2)
+                    / (Hardware.kilroyTimer.get() - prevTime)));
 
     prevLeftDistance = transmission.getLeftRearEncoderDistance();
     prevRightDistance = transmission.getRightRearEncoderDistance();
@@ -317,15 +313,15 @@ private static final double ROBOT_SEMI_MAJOR_RADIUS_INCHES = 12.0;
 
 private boolean isFourWheel = true;
 
-//Commented out because they should be included in the transmission class
+// Commented out because they should be included in the transmission class
 //
-//private Encoder rightRearEncoder;
+// private Encoder rightRearEncoder;
 //
-//private Encoder rightFrontEncoder;
+// private Encoder rightFrontEncoder;
 //
-//private Encoder leftRearEncoder;
+// private Encoder leftRearEncoder;
 //
-//private Encoder leftFrontEncoder;
+// private Encoder leftFrontEncoder;
 //
 private Transmission_old transmission;
 
@@ -346,13 +342,7 @@ private double maxSpeedScalingFactor = 1.0;
 
 private final double DEFAULT_MAX_SPEED = 1.0;
 
-//TODO tweak for the most effective brake method
+// TODO tweak for the most effective brake method
 private final double BRAKE_SPEED = .1;
 
-<<<<<<< HEAD
-}
-
-
-=======
-}
->>>>>>> branch 'master' of https://github.com/FIRST-Team-339/2016.git
+} // end class

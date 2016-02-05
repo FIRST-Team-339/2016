@@ -248,8 +248,8 @@ public void robotInit ()
     CANNetwork.canObjects.add(leftRearMotor);
     CANObject pdp = new CANObject(Hardware.pdp, 0);
     CANNetwork.canObjects.add(pdp);
-    CANObject solenoid1 = new CANObject(Hardware.solenoid, 0);
-    CANNetwork.canObjects.add(solenoid1);
+    // CANObject solenoid1 = new CANObject(Hardware.solenoid, 0);
+    // CANNetwork.canObjects.add(solenoid1);
     // --------------------------------------
     // Encoder Initialization
     // --------------------------------------
