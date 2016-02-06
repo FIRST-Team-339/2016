@@ -297,10 +297,6 @@ public void robotInit ()
     Hardware.rightFrontMotorSafety.setSafetyEnabled(true);
     Hardware.rightRearMotor.setInverted(true);
 
-<<<<<<< HEAD
-=======
-
->>>>>>> branch 'master' of https://github.com/FIRST-Team-339/2016
     // --------------------------------------
     // Compressor Initialization
     // --------------------------------------

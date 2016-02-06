@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 *.class
 *.html
 ~*
@@ -19,6 +18,10 @@ hs_err_pid*
 /bin/
 
 doc/
+<<<<<<< HEAD
+#Kilroy/sysProps.xml
+#/sysProps.xml
+=======
 <<<<<<< HEAD
 #Kilroy/#sysProps.xml
 /#sysProps.xml
