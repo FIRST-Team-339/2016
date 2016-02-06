@@ -2,10 +2,6 @@
 <classpath>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-<<<<<<< HEAD
-	<classpathentry kind="lib" path="C:/Users/Kilroy/wpilib/java/current/lib/NetworkTables.jar" sourcepath="C:/Users/Kilroy/wpilib/java/current/lib/NetworkTables-sources.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Kilroy/wpilib/java/current/lib/WPILib.jar" sourcepath="C:/Users/Kilroy/wpilib/java/current/lib/WPILib-sources.jar"/>
-=======
 	<classpathentry kind="lib" path="C:/Users/Kilroy/wpilib/java/current/lib/NetworkTables.jar" sourcepath="C:/Users/Kilroy/wpilib/java/current/lib/NetworkTables-sources.jar">
 		<attributes>
 			<attribute name="javadoc_location" value="file:/C:/Users/Kilroy/wpilib/java/current/javadoc/"/>
@@ -16,6 +12,5 @@
 			<attribute name="javadoc_location" value="file:/C:/Users/Kilroy/wpilib/java/current/javadoc/"/>
 		</attributes>
 	</classpathentry>
->>>>>>> branch 'master' of https://github.com/FIRST-Team-339/2016
 	<classpathentry kind="output" path="bin"/>
 </classpath>
