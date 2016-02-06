@@ -75,6 +75,7 @@ public static void init ()
 	Hardware.transmission
 	        .setSecondGearPercentage(SECOND_GEAR_PERCENTAGE);
 	Hardware.transmission.setGear(1);
+	Hardware.transmission.setJoysticksAreReversed(false);
 	// -----------------------------------
 	// stop cam0 in case we have declared them
 	// in Autonomous. Then declare a new cam0
