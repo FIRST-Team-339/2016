@@ -24,7 +24,6 @@ import org.usfirst.frc.team339.HardwareInterfaces.SixPositionSwitch;
 import org.usfirst.frc.team339.HardwareInterfaces.transmission.Transmission_old;
 import org.usfirst.frc.team339.Utils.Drive;
 import org.usfirst.frc.team339.Utils.ErrorMessage;
-import edu.wpi.first.wpilibj.CANTalon;
 import edu.wpi.first.wpilibj.CameraServer;
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
@@ -32,11 +31,11 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.MotorSafetyHelper;
-import edu.wpi.first.wpilibj.PowerDistributionPanel;
 import edu.wpi.first.wpilibj.Relay;
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.Talon;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.Victor;
 import edu.wpi.first.wpilibj.vision.AxisCamera;
 import edu.wpi.first.wpilibj.vision.AxisCamera.Resolution;
 import edu.wpi.first.wpilibj.vision.USBCamera;
@@ -126,22 +125,20 @@ public static Compressor compressor = new Compressor();
 /**
  * A physical switch that decides whether or not to run autonomous.
  */
-public static SingleThrowSwitch autonomousEnabled =
-        new SingleThrowSwitch(19);
-public static SingleThrowSwitch shootHigh =
-        new SingleThrowSwitch(8);
-public static SingleThrowSwitch shootLow =
-        new SingleThrowSwitch(7);
+public static SingleThrowSwitch autonomousEnabled = new SingleThrowSwitch(
+        19);
+public static SingleThrowSwitch shootHigh = new SingleThrowSwitch(8);
+public static SingleThrowSwitch shootLow = new SingleThrowSwitch(7);
 // Shoot high/low switch
-public static DoubleThrowSwitch noShoot = 
-	new DoubleThrowSwitch(shootHigh, shootLow);
+public static DoubleThrowSwitch noShoot = new DoubleThrowSwitch(
+        shootHigh, shootLow);
 
 /**
  * Displays the starting position.
  * Position 0 on the switch corresponds to position 1, 1 to 2, etc.
  */
-public static SixPositionSwitch startingPositionDial = 
-	new SixPositionSwitch(14, 15, 16, 17, 18, 21);
+public static SixPositionSwitch startingPositionDial = new SixPositionSwitch(
+        14, 15, 16, 17, 18, 21);
 
 // ------------------------------------
 // Gear Tooth Sensors
@@ -218,11 +215,11 @@ public static Solenoid catapultSolenoid2 = new Solenoid(2);
 // Potentiometers
 // -------------------------------------
 // -------------------------------------
-public static RobotPotentiometer delayPot = 
-	new RobotPotentiometer(3, 270);
+public static RobotPotentiometer delayPot = new RobotPotentiometer(3,
+        270);
 // transducer (written as a potentiometer)
-public static RobotPotentiometer transducer = 
-	new RobotPotentiometer(2, 130);
+public static RobotPotentiometer transducer = new RobotPotentiometer(2,
+        130);
 
 // -------------------------------------
 // Sonar/Ultrasonic
@@ -250,8 +247,8 @@ public static KilroyCamera axisCamera = new KilroyCamera(true);
 // ------------------------------------
 // DriverStations class
 // ------------------------------------
-public static final DriverStation driverStation = 
-	DriverStation.getInstance();
+public static final DriverStation driverStation = DriverStation
+        .getInstance();
 
 // ------------------------------------
 // Joystick classes
@@ -301,13 +298,13 @@ public static final Timer delayTimer = new Timer();
 public static final ErrorMessage errorMessage = new ErrorMessage(
         true /* append timelog */);
 
-public static final MotorSafetyHelper leftRearMotorSafety = 
-	new MotorSafetyHelper(leftRearMotor);
-public static final MotorSafetyHelper rightRearMotorSafety = 
-	new MotorSafetyHelper(rightRearMotor);
-public static final MotorSafetyHelper leftFrontMotorSafety = 
-	new MotorSafetyHelper(leftFrontMotor);
-public static final MotorSafetyHelper rightFrontMotorSafety = 
-	new MotorSafetyHelper(rightFrontMotor);
+public static final MotorSafetyHelper leftRearMotorSafety = new MotorSafetyHelper(
+        leftRearMotor);
+public static final MotorSafetyHelper rightRearMotorSafety = new MotorSafetyHelper(
+        rightRearMotor);
+public static final MotorSafetyHelper leftFrontMotorSafety = new MotorSafetyHelper(
+        leftFrontMotor);
+public static final MotorSafetyHelper rightFrontMotorSafety = new MotorSafetyHelper(
+        rightFrontMotor);
 
 } // end class
