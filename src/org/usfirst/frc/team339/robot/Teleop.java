@@ -236,7 +236,9 @@ public static void printStatements ()
     //            + Hardware.rightFrontEncoder.getDistance());
     //    System.out.println(
     //            "LF distance = " + Hardware.leftFrontEncoder.getDistance());
-        System.out.println("Arm Motor = " + Hardware.armEncoder.getDistance());
+//        System.out.println("Arm Motor = " + Hardware.armEncoder.get());
+        //test the armEncoder reading
+//        Hardware.armMotor.set(1);
 
     //Switches--------------
     //prints state of switches

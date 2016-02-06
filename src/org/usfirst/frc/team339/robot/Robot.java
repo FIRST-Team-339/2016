@@ -252,8 +252,6 @@ public void robotInit ()
 
     Hardware.transmission.initEncoders(Hardware.rightRearEncoder,
             Hardware.leftRearEncoder);
-    Hardware.armEncoder
-            .setDistancePerPulse(distancePerTickForArmEncoder);
             // -------------------------------------
             // USB camera initialization
             // -------------------------------------
@@ -433,5 +431,4 @@ public void testPeriodic ()
 // TUNEABLES
 // ==========================================
 private final double distancePerTickForMotorEncoders = 0.019706;
-private final double distancePerTickForArmEncoder = 0.01;
 } // end class
