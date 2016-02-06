@@ -112,6 +112,8 @@ public void autonomousInit ()
 
     // Dims the brightness level so that we can take a better picture
     // of the retroreflective tape.
+
+    // of the retroreflective tape.
     Hardware.axisCamera.writeBrightness(5);
     // -------------------------------------
     // Call the Autonomous class's Init function,
@@ -229,7 +231,7 @@ public void robotInit ()
     // =========================================================
     // User code goes below here
     // =========================================================
-    
+
     // --------------------------------------
     // Encoder Initialization
     // --------------------------------------
@@ -249,14 +251,18 @@ public void robotInit ()
             .setDistancePerPulse(distancePerTickForMotorEncoders);
     Hardware.rightRearEncoder.reset();
 
+    Hardware.transmission.setMaxGear(2);
     Hardware.transmission.initEncoders(Hardware.rightRearEncoder,
             Hardware.leftRearEncoder);
-            Hardware.armEncoder
-            .setDistancePerPulse(distancePerTickForArmEncoder);
-            // -------------------------------------
-            // USB camera initialization
-            // -------------------------------------
+    // -------------------------------------
+    // USB camera initialization
+    // -------------------------------------
 
+    Hardware.transmission.initEncoders(Hardware.rightRearEncoder,
+            Hardware.leftRearEncoder);
+    // -------------------------------------
+    // USB camera initialization
+    // -------------------------------------
     // Settings for the USB Camera
     Hardware.cam0.setBrightness(50);
     Hardware.cam0.setExposureAuto();
@@ -290,6 +296,7 @@ public void robotInit ()
     Hardware.leftFrontMotorSafety.setSafetyEnabled(true);
     Hardware.rightFrontMotorSafety.setSafetyEnabled(true);
     Hardware.rightRearMotor.setInverted(true);
+
 
     // --------------------------------------
     // Compressor Initialization
@@ -435,5 +442,4 @@ public void testPeriodic ()
 // TUNEABLES
 // ==========================================
 private final double distancePerTickForMotorEncoders = 0.019706;
-private final double distancePerTickForArmEncoder = 0.01;
 } // end class
