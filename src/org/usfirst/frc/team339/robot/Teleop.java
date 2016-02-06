@@ -116,21 +116,28 @@ public static void periodic ()
             Hardware.ringLightRelay.set(Value.kOn);
             Hardware.delayTimer.start();
             prepPic = true;
+            takingLitImage = true;
             }
         }
 
     // Once the brightness is down and the ring light is on then the
     // picture is taken, the brightness returns to normal, the ringlight
     // is turned off, and the timer is stopped and reset.
-    if (Hardware.delayTimer.get() >= .25 && prepPic == true)
+    if (Hardware.delayTimer.get() >= .25 && prepPic == true
+            && takingLitImage == true)
         {
         Hardware.axisCamera.saveImagesSafely();
+        prepPic = false;
+        takingLitImage = false;
+        }
+
+    if (takingLitImage == false && Hardware.delayTimer.get() >= 1)
+        {
         Hardware.axisCamera
                 .writeBrightness(NORMAL_AXIS_CAMERA_BRIGHTNESS);
         Hardware.ringLightRelay.set(Value.kOff);
         Hardware.delayTimer.stop();
         Hardware.delayTimer.reset();
-        prepPic = false;
         }
 
     // If we click buttons 10+11, we take a picture without the
@@ -243,6 +250,6 @@ private static final double SECOND_GEAR_PERCENTAGE = MAXIMUM_TELEOP_SPEED;
 private static final int NORMAL_AXIS_CAMERA_BRIGHTNESS = 50;
 
 // Crazy dark brightness for retroreflective pictures
-private static final int MINIMUM_AXIS_CAMERA_BRIGHTNESS = 5;
+private static final int MINIMUM_AXIS_CAMERA_BRIGHTNESS = 6;
 
 } // end class
