@@ -59,8 +59,6 @@ private static boolean takingUnlitImage = false;
 // brightness, turns on ringlight, starts timer
 private static boolean prepPic = false;
 
-private static boolean resetWhiteBalance = false;
-
 /**
  * User Initialization code for teleop mode should go here. Will be
  * called once when the robot enters teleop mode.
@@ -165,7 +163,9 @@ public static void periodic ()
 
     // Driving the Robot
     Hardware.transmission.controls(Hardware.rightDriver.getY(),
-            Hardware.leftDriver.getY());
+            Hardware.leftDriver.getY(), Hardware.leftFrontMotor,
+            Hardware.leftRearMotor, Hardware.rightFrontMotor,
+            Hardware.rightRearMotor);
     if (Hardware.transmission.getGear() == 1 &&
             Hardware.rightDriver
                     .getRawButton(GEAR_UPSHIFT_JOYSTICK_BUTTON) == true)
@@ -244,14 +244,12 @@ public static void printStatements ()
 
     // Switches--------------
     // prints state of switches
-    // System.out.println("Autonomous Enabled Switch: " +
-    // Hardware.autonomousEnabled.isOn());
+    // System.out.println("Autonomous Enabled Switch: " + Hardware.autonomousEnabled.isOn());
     // System.out.println("Shoot High Switch: " + Hardware.shootHigh.isOn());
     // System.out.println("Shoot Low Switch: " + Hardware.shootLow.isOn());
 
     // print the position the 6 position switch------------
-    // System.out.println("Position: " +
-    // Hardware.startingPositionDial.getPosition());
+    // System.out.println("Position: " + Hardware.startingPositionDial.getPosition());
 
     // Relay-----------------
     // System.out.println(Hardware.ringLightRelay.get());
@@ -274,7 +272,7 @@ private static final double SECOND_GEAR_PERCENTAGE = MAXIMUM_TELEOP_SPEED;
 
 
 // TODO change based on driver request
-private static final int GEAR_UPSHIFT_JOYSTICK_BUTTON = 1;
+private static final int GEAR_UPSHIFT_JOYSTICK_BUTTON = 3;
 
 private static final int GEAR_DOWNSHIFT_JOYSTICK_BUTTON = 2;
 

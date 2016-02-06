@@ -60,8 +60,6 @@
 package org.usfirst.frc.team339.robot;
 
 import org.usfirst.frc.team339.Hardware.Hardware;
-import org.usfirst.frc.team339.HardwareInterfaces.CANNetwork;
-import org.usfirst.frc.team339.HardwareInterfaces.CANObject;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.MotorSafetyHelper;
@@ -113,7 +111,7 @@ public void autonomousInit ()
     System.out.println("Started AutonousInit().");
 
     // Dims the brightness level so that we can take a better picture
-    // of teh retroreflective tape.
+    // of the retroreflective tape.
     Hardware.axisCamera.writeBrightness(5);
     // -------------------------------------
     // Call the Autonomous class's Init function,
@@ -231,27 +229,7 @@ public void robotInit ()
     // =========================================================
     // User code goes below here
     // =========================================================
-    // -------------------------------------
-    // CAN Network Initialization
-    // -------------------------------------
-    CANObject leftFrontMotor = new CANObject(Hardware.leftFrontMotor,
-            12);
-    CANNetwork.canObjects.add(leftFrontMotor);
-    CANObject rightFrontMotor = new CANObject(Hardware.rightFrontMotor,
-            17);
-    CANNetwork.canObjects.add(rightFrontMotor);
-    CANObject rightRearMotor = new CANObject(Hardware.rightRearMotor,
-            15);
-    CANNetwork.canObjects.add(rightRearMotor);
-    CANObject leftRearMotor = new CANObject(Hardware.leftRearMotor, 11);
-    CANNetwork.canObjects.add(leftRearMotor);
-    CANObject pdp = new CANObject(Hardware.pdp, 0);
-    CANNetwork.canObjects.add(pdp);
-    CANObject solenoid1 = new CANObject(Hardware.cameraSolenoid, 0);
-    CANNetwork.canObjects.add(solenoid1);
-    // CANObject solenoid1 = new CANObject(Hardware.solenoid, 0);
-    // CANNetwork.canObjects.add(solenoid1);
-
+    
     // --------------------------------------
     // Encoder Initialization
     // --------------------------------------
@@ -273,8 +251,8 @@ public void robotInit ()
 
     Hardware.transmission.initEncoders(Hardware.rightRearEncoder,
             Hardware.leftRearEncoder);
-            // Hardware.armEncoder
-            // .setDistancePerPulse(distancePerTickForArmEncoder);
+            Hardware.armEncoder
+            .setDistancePerPulse(distancePerTickForArmEncoder);
             // -------------------------------------
             // USB camera initialization
             // -------------------------------------
@@ -306,16 +284,12 @@ public void robotInit ()
     // -------------------------------------
     // motor initialization
     // -------------------------------------
-    Hardware.leftRearMotor.enableBrakeMode(true);
-    Hardware.rightRearMotor.enableBrakeMode(true);
-    Hardware.leftFrontMotor.enableBrakeMode(true);
-    Hardware.rightFrontMotor.enableBrakeMode(true);
+
     Hardware.leftRearMotorSafety.setSafetyEnabled(true);
     Hardware.rightRearMotorSafety.setSafetyEnabled(true);
     Hardware.leftFrontMotorSafety.setSafetyEnabled(true);
     Hardware.rightFrontMotorSafety.setSafetyEnabled(true);
-    // Hardware.transmissionFourWheel
-    // .setRightMotorDirection(MotorDirection.REVERSED);
+    Hardware.rightRearMotor.setInverted(true);
 
     // --------------------------------------
     // Compressor Initialization
