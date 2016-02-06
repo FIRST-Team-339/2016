@@ -31,12 +31,13 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.MotorSafetyHelper;
-import edu.wpi.first.wpilibj.PowerDistributionPanel;
 import edu.wpi.first.wpilibj.Relay;
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.Talon;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.Victor;
+import edu.wpi.first.wpilibj.vision.AxisCamera;
+import edu.wpi.first.wpilibj.vision.AxisCamera.Resolution;
 import edu.wpi.first.wpilibj.vision.USBCamera;
 
 // -------------------------------------------------------
@@ -55,12 +56,18 @@ public class Hardware
 // Public Constants
 // ------------------------------------
 
+// Makes the brightness to a visible level so our drivers can see.
+public static final int NORMAL_AXIS_CAMERA_BRIGHTNESS = 60;
+
+// Crazy dark brightness for retroreflective pictures
+public static final int MINIMUM_AXIS_CAMERA_BRIGHTNESS = 6;
+
+public static final int AXIS_FPS = 15;
+
+public static final Resolution AXIS_RESOLUTION = AxisCamera.Resolution.k320x240;
 // -------------------------------------
 // Private Constants
 // -------------------------------------
-
-private static final int pdpCANID = 0;
-private static final int pcmCANID = 0;
 
 // ---------------------------------------
 // Hardware Tunables
@@ -95,8 +102,6 @@ public static Victor portArmIntakeMotor = new Victor(6);
 // ------------------------------------
 // CAN classes
 // ------------------------------------
-public static PowerDistributionPanel pdp =
-        new PowerDistributionPanel(pdpCANID);
 
 // ====================================
 // Relay classes

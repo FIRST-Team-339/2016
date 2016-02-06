@@ -67,7 +67,7 @@ private static enum MainState
     FORWARDS_TO_TAPE, // drives forwards until detection of the gaffers' tape.
     ALIGN, // aligns its self on the gaffers' tape based of IR sensors.
     MOVE_TO_SHOOTING_POSITION,  // moves towards a good shooting angle based on
-                              // settings.
+                                // settings.
     SHOOT, // ajusts its self (?) and fires the cannonball.
     DONE
     }
@@ -128,9 +128,9 @@ public static final double FORWARDS_TWO_FIVE = 12.0;
 
 
 private static final DriveInstruction[] driveOverDefencesInstuctions =
-        {
-                new DriveInstruction(106.0, 1.0, 0.0, 0.0)
-        };
+    {
+            new DriveInstruction(106.0, 1.0, 0.0, 0.0)
+    };
 
 /**
  * Contains information for driving to a goal from A-tape.
@@ -138,46 +138,60 @@ private static final DriveInstruction[] driveOverDefencesInstuctions =
  * Columns contain steps for each path.
  */
 public static final DriveInstruction[][] driveToGoalInstructions =
-        {
-                {//From Starting Position 1
-                        new DriveInstruction(74.7, 1.0, 0.0, 0.0), // drive out
-                        new DriveInstruction(0.0, 0.0, -60.0, 1.0), // turn perpendicular to goal
-                        new DriveInstruction(62.7, 1.0, 0.0, 0.0), // drive up to goal
-                        new DriveInstruction(true) //continue to shoot
-                },
-                {//From Starting Position 2
-                        new DriveInstruction(82.0, 1.0, 0.0, 0.0), // drive out
-                        new DriveInstruction(0.0, 0.0, -60.0, 1.0), // turn perpendicular to goal
-                        new DriveInstruction(52.92, 1.0, 0.0, 0.0), // drive up to goal
-                        new DriveInstruction(true)//continue to shoot
-                },
-                {//From Starting Position 3
-                        new DriveInstruction(0.0, 0.0, -20.0, 1.0), //turn towards end position
-                        new DriveInstruction(64.0, 1.0, 0.0, 0.0), // drive to end position
-                        new DriveInstruction(0.0, 0.0, 60.0, 1.0), // turn towards goal
-                        new DriveInstruction(true) //continue to shoot
-                },
-                {//From Starting Position 4
-                        new DriveInstruction(0.0, 0.0, -24.8, 1.0), //turn towards end position
-                        new DriveInstruction(64.0, 1.0, 0.0, 0.0), // drive to end position
-                        new DriveInstruction(0.0, 0.0, 64.8, 1.0), // turn towards goal
-                        new DriveInstruction(true) //continue to shoot
-                },
-                {//From Starting Position 5
-                        new DriveInstruction(86.5, 1.0, 0.0, 0.0),// drive out
-                        new DriveInstruction(0.0, 0.0, 60.0, 0.0),// turn perpendicular to goal
-                        new DriveInstruction(12.0, 1.0, 0.0, 0.0),// drive up to goal
-                        new DriveInstruction(true) //continue to shoot
-                }
-        };
+    {
+            {// From Starting Position 1
+                    new DriveInstruction(74.7, 1.0, 0.0, 0.0), // drive out
+                    new DriveInstruction(0.0, 0.0, -60.0, 1.0), // turn
+                                                                // perpendicular
+                                                                // to goal
+                    new DriveInstruction(62.7, 1.0, 0.0, 0.0), // drive up to
+                                                               // goal
+                    new DriveInstruction(true) // continue to shoot
+            },
+            {// From Starting Position 2
+                    new DriveInstruction(82.0, 1.0, 0.0, 0.0), // drive out
+                    new DriveInstruction(0.0, 0.0, -60.0, 1.0), // turn
+                                                                // perpendicular
+                                                                // to goal
+                    new DriveInstruction(52.92, 1.0, 0.0, 0.0), // drive up to
+                                                                // goal
+                    new DriveInstruction(true)// continue to shoot
+            },
+            {// From Starting Position 3
+                    new DriveInstruction(0.0, 0.0, -20.0, 1.0), // turn towards
+                                                                // end position
+                    new DriveInstruction(64.0, 1.0, 0.0, 0.0), // drive to end
+                                                               // position
+                    new DriveInstruction(0.0, 0.0, 60.0, 1.0), // turn towards
+                                                               // goal
+                    new DriveInstruction(true) // continue to shoot
+            },
+            {// From Starting Position 4
+                    new DriveInstruction(0.0, 0.0, -24.8, 1.0), // turn towards
+                                                                // end position
+                    new DriveInstruction(64.0, 1.0, 0.0, 0.0), // drive to end
+                                                               // position
+                    new DriveInstruction(0.0, 0.0, 64.8, 1.0), // turn towards
+                                                               // goal
+                    new DriveInstruction(true) // continue to shoot
+            },
+            {// From Starting Position 5
+                    new DriveInstruction(86.5, 1.0, 0.0, 0.0),// drive out
+                    new DriveInstruction(0.0, 0.0, 60.0, 0.0),// turn
+                                                              // perpendicular
+                                                              // to goal
+                    new DriveInstruction(12.0, 1.0, 0.0, 0.0),// drive up to
+                                                              // goal
+                    new DriveInstruction(true) // continue to shoot
+            }
+    };
 
 // ==========================================
 // AUTO STATES
 // ==========================================
 private static MainState mainState = MainState.INIT;
 private static StartingPosition startingPosition = StartingPosition.ONE;
-private static AlignmentState alignmentState =
-        AlignmentState.NEITHER_ON_TAPE;
+private static AlignmentState alignmentState = AlignmentState.NEITHER_ON_TAPE;
 
 // ==================================
 // VARIABLES
@@ -209,7 +223,7 @@ public static void init ()
     // set the delay time based on potentiometer.
     delay = initDelayTime();
 
-    //get the lane based off of startingPositionPotentiometer
+    // get the lane based off of startingPositionPotentiometer
     lane = getLane();
 
 
@@ -226,12 +240,12 @@ public static void init ()
     Hardware.rightRearMotorSafety.setSafetyEnabled(true);
     Hardware.leftFrontMotorSafety.setSafetyEnabled(true);
     Hardware.rightFrontMotorSafety.setSafetyEnabled(true);
-    //    Hardware.transmissionFourWheel.setLeftMotorDirection(
-    //            Transmission.MotorDirection.REVERSED);
+    // Hardware.transmissionFourWheel.setLeftMotorDirection(
+    // Transmission.MotorDirection.REVERSED);
 
-    //--------------------------------------
+    // --------------------------------------
     // Encoder Initialization
-    //--------------------------------------
+    // --------------------------------------
     Hardware.leftRearEncoder.reset();
     Hardware.leftRearEncoder.setDistancePerPulse(0.019706);
 
@@ -264,17 +278,17 @@ public static void init ()
 public static void periodic ()
 {
 
-    //test
-    //TransmissionFourWheel debugTrans = Hardware.transmissionFourWheel;
-    //moveToShootingPositionStep = MoveToShootingPositionStep.FORWARDS_ONE;
+    // test
+    // TransmissionFourWheel debugTrans = Hardware.transmissionFourWheel;
+    // moveToShootingPositionStep = MoveToShootingPositionStep.FORWARDS_ONE;
     Hardware.transmission.controls(Hardware.leftDriver.getY(),
             Hardware.rightDriver.getY());
 
     // runs the overarching state machine.
-    //runMainStateMachine();
+    // runMainStateMachine();
 
 
-    //feed all motor safties
+    // feed all motor safties
     Hardware.leftRearMotorSafety.feed();
     Hardware.rightRearMotorSafety.feed();
     Hardware.leftFrontMotorSafety.feed();
@@ -305,7 +319,8 @@ private static void runMainStateMachine ()
             mainState = mainInit();
             break;
         case BEGIN_LOWERING_ARM:
-            mainState = beginLoweringArm();
+            // @TODO Uncomment
+            // mainState = beginLoweringArm();
             break;
         case LOWER_ARM_AND_MOVE:
             mainState = lowerArmAndMove();
@@ -357,25 +372,27 @@ private static MainState mainInit ()
     return returnState;
 }
 
-private static MainState beginLoweringArm ()
-{
-    MainState returnState = MainState.LOWER_ARM_AND_MOVE;
-
-    Hardware.armMotor.set(1.0);
-
-    return returnState;
-}
+// @TODO Uncomment
+// private static MainState beginLoweringArm ()
+// {
+// MainState returnState = MainState.LOWER_ARM_AND_MOVE;
+//
+// Hardware.armMotor.set(1.0);
+//
+// return returnState;
+// }
 
 
 private static MainState lowerArmAndMove ()
 {
     MainState returnState = MainState.LOWER_ARM_AND_MOVE;
 
-
-    if (Hardware.armEncoder.getDistance() > ARM_DOWN_DISTANCE)//TODO: set this to a known distance
-        {
-        Hardware.armMotor.set(0.0);
-        }
+    // @TODO Uncomment
+    // if (Hardware.armEncoder.getDistance() > ARM_DOWN_DISTANCE)//TODO: set
+    // this to a known distance
+    // {
+    // Hardware.armMotor.set(0.0);
+    // }
 
     if (Hardware.drive.driveForwardInches(22.75))
         {
@@ -469,22 +486,28 @@ private static MainState moveToShootingPosition ()
 {
     MainState returnState = MainState.MOVE_TO_SHOOTING_POSITION;
 
-    //The required distance to drive is taken from the pathToGoalInformation 2d Array.
-    DriveInstruction currentInstruction =
-            driveToGoalInstructions[Hardware.startingPositionDial
-                    .getPosition()][driveToShootingPositionStep];
+    // The required distance to drive is taken from the pathToGoalInformation 2d
+    // Array.
+    DriveInstruction currentInstruction = driveToGoalInstructions[Hardware.startingPositionDial
+            .getPosition()][driveToShootingPositionStep];
 
     if (Hardware.drive.driveForwardInches(
-            currentInstruction.getForwardDistance()) // Drive, and if we have driven the distance required
+            currentInstruction.getForwardDistance()) // Drive, and if we have
+                                                     // driven the distance
+                                                     // required
             || Hardware.drive.driveForwardInches(
-                    currentInstruction.getRotationalDistance())) // Or the rotation...
+                    currentInstruction.getRotationalDistance())) // Or the
+                                                                 // rotation...
         {
 
-        driveToShootingPositionStep++; //go to next step.
+        driveToShootingPositionStep++; // go to next step.
 
-        if (currentInstruction.isTerminator())//If at end of path, go to next state.
+        if (currentInstruction.isTerminator())// If at end of path, go to next
+                                              // state.
             {
-            returnState = MainState.SHOOT;//The next state should be to shoot, or possibly to align with vision processing.
+            returnState = MainState.SHOOT;// The next state should be to shoot,
+                                          // or possibly to align with vision
+                                          // processing.
             }
         }
 
@@ -603,11 +626,11 @@ private static int getLane ()
 private static final class StateInformation
 {
 
-//Each index refers to a higher starting speed.
+// Each index refers to a higher starting speed.
 static final double[] START_SPEEDS =
-        {.20, .40, .70};
+    {.20, .40, .70};
 static final double[] START_TIMES =
-        {.5, .5, .5};
+    {.5, .5, .5};
 
 
 
@@ -622,7 +645,7 @@ static final double[] START_TIMES =
 
 
 // .....................__ _ __
-// .................../ .  . .  \
+// .................../ . . . \
 // ................./ --0 --- 0-- \
 // .........++++.. |- - - | | - - -| ..++++
 /*

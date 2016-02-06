@@ -1,19 +1,20 @@
 package org.usfirst.frc.team339.HardwareInterfaces;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
-import edu.wpi.first.wpilibj.CANTalon;
-
+/**
+ * NOTE: THIS CODE IS NOT COMPLETE! THERE ARE STILL ERRORS
+ */
 /**
  * @author Daniel Resio, Becky Button, and Cole Ramos
  */
 
 //TODO search for more than one item for CAN id
 //TODO add CANUtils.getFaults() in robot init or something
+//Line 14 had a static in it, but was removed, do't change back unless necessary
 public class CANNetwork
 {
 
-public static ArrayList<CANObject> canObjects =
+public ArrayList<CANObject> canObjects =
         new ArrayList<CANObject>();
 
 private int talonNum = 0;
@@ -23,9 +24,16 @@ private int talonNum = 0;
  *            This is an array of CAN objects in use. It is set once in the
  *            constructor.
  */
-public CANNetwork (ArrayList<CANObject> newObjects)
+
+
+public CANNetwork(){
+    
+}
+
+public CANNetwork (final ArrayList<CANObject> newObjects)
 {
-    CANNetwork.canObjects = newObjects;
+    //private void "CANNetwork.canObjects = newObjects;" <-- originial
+    //Need to make work with static variables
 }
 
 /**
@@ -37,7 +45,7 @@ public CANNetwork (ArrayList<CANObject> newObjects)
  *         CAN object. Make sure to check for null before
  *         you use the return.
  */
-public CANObject getCAN (int id)
+public CANObject getCAN (final int id)
 {
     for (int i = 0; i < canObjects.size(); i++)
     {
@@ -53,9 +61,8 @@ public CANObject getCAN (int id)
     }
     return null;
 }
-
 //If true, activates debug print statements throughout the class
-private static boolean useDebug = true;
+private boolean useDebug = true;
 
 /**
  * Prints values of the significant variables/methods in CANNetwork if useDebug
@@ -81,7 +88,7 @@ private void DebugCANNetwork ()
  *         CAN object. Make sure to check for null before
  *         you use the return.
  */
-public CANObject getCANWithId (int id)
+public CANObject getCANWithId (final int id)
 {
 
     for (int i = 0; i < canObjects.size(); i++)

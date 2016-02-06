@@ -60,13 +60,10 @@
 package org.usfirst.frc.team339.robot;
 
 import org.usfirst.frc.team339.Hardware.Hardware;
-import org.usfirst.frc.team339.HardwareInterfaces.CANNetwork;
-import org.usfirst.frc.team339.HardwareInterfaces.CANObject;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.MotorSafetyHelper;
 import edu.wpi.first.wpilibj.Relay.Direction;
-import edu.wpi.first.wpilibj.vision.AxisCamera.Resolution;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -114,7 +111,7 @@ public void autonomousInit ()
     System.out.println("Started AutonousInit().");
 
     // Dims the brightness level so that we can take a better picture
-    // of teh retroreflective tape.
+    // of the retroreflective tape.
     Hardware.axisCamera.writeBrightness(5);
     // -------------------------------------
     // Call the Autonomous class's Init function,
@@ -232,19 +229,10 @@ public void robotInit ()
     // =========================================================
     // User code goes below here
     // =========================================================
-    // -------------------------------------
-    // CAN Network Initialization
-    // -------------------------------------
-    CANObject pdp = new CANObject(Hardware.pdp, 0);
-    CANNetwork.canObjects.add(pdp);
-    CANObject solenoid1 = new CANObject(Hardware.cameraSolenoid, 0);
-    CANNetwork.canObjects.add(solenoid1);
-    //CANObject solenoid1 = new CANObject(Hardware.solenoid, 0);
-    //CANNetwork.canObjects.add(solenoid1);
-
-    //--------------------------------------
+    
+    // --------------------------------------
     // Encoder Initialization
-    //--------------------------------------
+    // --------------------------------------
     Hardware.leftRearEncoder.setDistancePerPulse(0.019706);
     Hardware.leftRearEncoder.reset();
 
@@ -263,7 +251,7 @@ public void robotInit ()
 
     Hardware.transmission.initEncoders(Hardware.rightRearEncoder,
             Hardware.leftRearEncoder);
-    Hardware.armEncoder
+            Hardware.armEncoder
             .setDistancePerPulse(distancePerTickForArmEncoder);
             // -------------------------------------
             // USB camera initialization
@@ -282,8 +270,13 @@ public void robotInit ()
     Hardware.cameraServer.startAutomaticCapture(Hardware.cam0);
 
     // Sets FPS and Resolution of camera
-    Hardware.axisCamera.writeMaxFPS(15);
-    Hardware.axisCamera.writeResolution(Resolution.k320x240);
+    Hardware.axisCamera.writeMaxFPS(Hardware.AXIS_FPS);
+    Hardware.axisCamera.writeResolution(Hardware.AXIS_RESOLUTION);
+    Hardware.axisCamera
+            .writeBrightness(Hardware.NORMAL_AXIS_CAMERA_BRIGHTNESS);
+            // Hardware.axisCamera
+            // .writeWhiteBalance(AxisCamera.WhiteBalance.kHold);
+
 
     // Tells the relay which way is on (kBackward is unable to be used)
     Hardware.ringLightRelay.setDirection(Direction.kForward);
@@ -298,14 +291,14 @@ public void robotInit ()
     Hardware.rightFrontMotorSafety.setSafetyEnabled(true);
     Hardware.rightRearMotor.setInverted(true);
 
-    //--------------------------------------
+    // --------------------------------------
     // Compressor Initialization
-    //--------------------------------------
+    // --------------------------------------
     Hardware.compressor.setClosedLoopControl(true);
 
-    //--------------------------------------
+    // --------------------------------------
     // Encoder Initialization
-    //--------------------------------------
+    // --------------------------------------
     Hardware.leftRearEncoder.reset();
     Hardware.leftRearEncoder
             .setDistancePerPulse(distancePerTickForMotorEncoders);
@@ -317,7 +310,7 @@ public void robotInit ()
     // ---------------------------------------
     // Solenoid Initialization
     // ---------------------------------------
-    //initializes the solenoids...duh duh duh...
+    // initializes the solenoids...duh duh duh...
     Hardware.cameraSolenoid.set(DoubleSolenoid.Value.kForward);
     Hardware.catapultSolenoid0.set(false);
     Hardware.catapultSolenoid1.set(false);

@@ -85,6 +85,9 @@ public static void init ()
     // -----------------------------------
     Hardware.delayTimer.reset();
     CameraServer.getInstance().setSize(1);
+    Hardware.axisCamera
+            .writeBrightness(Hardware.NORMAL_AXIS_CAMERA_BRIGHTNESS);
+
 } // end Init
 
 /**
@@ -112,7 +115,8 @@ public static void periodic ()
         if (prepPic == false)
             {
             Hardware.axisCamera
-                    .writeBrightness(MINIMUM_AXIS_CAMERA_BRIGHTNESS);
+                    .writeBrightness(
+                            Hardware.MINIMUM_AXIS_CAMERA_BRIGHTNESS);
             Hardware.ringLightRelay.set(Value.kOn);
             Hardware.delayTimer.start();
             prepPic = true;
@@ -134,7 +138,8 @@ public static void periodic ()
     if (takingLitImage == false && Hardware.delayTimer.get() >= 1)
         {
         Hardware.axisCamera
-                .writeBrightness(NORMAL_AXIS_CAMERA_BRIGHTNESS);
+                .writeBrightness(
+                        Hardware.NORMAL_AXIS_CAMERA_BRIGHTNESS);
         Hardware.ringLightRelay.set(Value.kOff);
         Hardware.delayTimer.stop();
         Hardware.delayTimer.reset();
