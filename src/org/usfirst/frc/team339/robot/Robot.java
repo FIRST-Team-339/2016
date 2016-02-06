@@ -113,6 +113,8 @@ public void autonomousInit ()
     // ---------------------------------------
     System.out.println("Started AutonousInit().");
 
+    // Dims the brightness level so that we can take a better picture
+    // of teh retroreflective tape.
     Hardware.axisCamera.writeBrightness(5);
     // -------------------------------------
     // Call the Autonomous class's Init function,
@@ -265,6 +267,8 @@ public void robotInit ()
     // -------------------------------------
     // USB camera initialization
     // -------------------------------------
+
+    // Settings for the USB Camera
     Hardware.cam0.setBrightness(50);
     Hardware.cam0.setExposureAuto();
     Hardware.cam0.setSize(160, 120);
@@ -273,13 +277,14 @@ public void robotInit ()
     Hardware.cam0.setWhiteBalanceHoldCurrent();
     Hardware.cam0.updateSettings();
 
-    // Hardware.cameraServer.setQuality(0);
-    // Hardware.cameraServer.setSize(0);
+    // Starts streaming video
     Hardware.cameraServer.startAutomaticCapture(Hardware.cam0);
 
+    // Sets FPS and Resolution of camera
     Hardware.axisCamera.writeMaxFPS(15);
     Hardware.axisCamera.writeResolution(Resolution.k320x240);
 
+    // Tells the relay which way is on (kBackward is unable to be used)
     Hardware.ringLightRelay.setDirection(Direction.kForward);
 
     // -------------------------------------
@@ -350,7 +355,6 @@ public void teleopInit ()
     // ---------------------------------------
     System.out.println("Started teleopInit().");
 
-    Hardware.axisCamera.writeBrightness(50);
     // -------------------------------------
     // Call the Teleop class's Init function,
     // which contains the user code.
