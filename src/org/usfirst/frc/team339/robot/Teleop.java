@@ -112,8 +112,8 @@ public static void printStatements ()
     //      System.out.println("Right Operator: " + Hardware.rightOperator.getY());
 
     // IR sensors-----------
-    // System.out.println("left IR = " + Hardware.leftIR.isOn());
-    // System.out.println("right IR = " + Hardware.rightIR.isOn());
+    //   System.out.println("left IR = " + Hardware.leftIR.isOn());
+    //   System.out.println("right IR = " + Hardware.rightIR.isOn());
 
     // pots-----------------
     //    System.out.println("delay pot = " + (int) Hardware.delayPot.get());
@@ -121,11 +121,12 @@ public static void printStatements ()
     // NOT TESTED!!!System.out.println("transducer = " + Hardware.transducer.get());
 
     //Motor controllers-----
+    //prints value of the motors
     //    System.out.println("RR Motor V = " + Hardware.rightRearMotor.get());
     //    System.out.println("LR Motor V = " + Hardware.leftRearMotor.get());
-    //    System.out
-    //            .println("RF Motor V = " + Hardware.rightFrontMotor.get());
+    //    System.out.println("RF Motor V = " + Hardware.rightFrontMotor.get());
     //    System.out.println("LF Motor V = " + Hardware.leftFrontMotor.get());
+    //    System.out.println("Arm Motor V = " + Hardware.armMotor.get());
 
     //Solenoids-------------
     //prints the state of the solenoids 
@@ -143,9 +144,14 @@ public static void printStatements ()
     //            + Hardware.rightFrontEncoder.getDistance());
     //    System.out.println(
     //            "LF distance = " + Hardware.leftFrontEncoder.getDistance());
+    //    System.out.println(
+    //            "Arm Motor = " + Hardware.armMotor.get());
 
     //Switches--------------
+    //prints state of switches
     //    System.out.println("Autonomous Enabled Switch: " + Hardware.autonomousEnabled.isOn());
+    //    System.out.println("Shoot High Switch: " + Hardware.shootHigh.isOn());
+    //    System.out.println("Shoot Low Switch: " + Hardware.shootLow.isOn());
 
     //print the position the 6 position switch------------
     //    System.out.println("Position: " + Hardware.startingPositionDial.getPosition());
