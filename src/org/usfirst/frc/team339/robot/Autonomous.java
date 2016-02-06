@@ -62,7 +62,8 @@ public class Autonomous
 private static enum MainState
     {
     INIT, // beginning, check conditions
-    LOWER_ARM_AND_MOVE, DELAY, // waits, depending on settings.
+    BEGIN_LOWERING_ARM, LOWER_ARM_AND_MOVE, DELAY, // waits, depending on
+                                                   // settings.
     FORWARDS_TO_TAPE, // drives forwards until detection of the gaffers' tape.
     ALIGN, // aligns its self on the gaffers' tape based of IR sensors.
     MOVE_TO_SHOOTING_POSITION,  // moves towards a good shooting angle based on
@@ -170,7 +171,6 @@ public static final DriveInstruction[][] driveToGoalInstructions =
                 }
         };
 
-
 // ==========================================
 // AUTO STATES
 // ==========================================
@@ -207,7 +207,10 @@ public static void init ()
 {
 
     // set the delay time based on potentiometer.
-    initDelayTime();
+    delay = initDelayTime();
+
+    //get the lane based off of startingPositionPotentiometer
+    lane = getLane();
 
 
 
@@ -305,6 +308,12 @@ private static void runMainStateMachine ()
         case INIT:
             mainState = mainInit();
             break;
+        case BEGIN_LOWERING_ARM:
+            mainState = beginLoweringArm();
+            break;
+        case LOWER_ARM_AND_MOVE:
+            mainState = lowerArmAndMove();
+            break;
         case DELAY:
             mainState = delay();
             break;
@@ -336,13 +345,12 @@ private static MainState mainInit ()
 {
     MainState returnState;
 
-    delay = initDelayTime();
-    lane = getLane();
+
 
     if (Hardware.autonomousEnabled.isOn() == true)
         {
 
-        returnState = MainState.DELAY;
+        returnState = MainState.BEGIN_LOWERING_ARM;
 
         }
     else
@@ -353,21 +361,30 @@ private static MainState mainInit ()
     return returnState;
 }
 
+private static MainState beginLoweringArm ()
+{
+    MainState returnState = MainState.LOWER_ARM_AND_MOVE;
+
+    Hardware.armMotor.set(1.0);
+
+    return returnState;
+}
+
 
 private static MainState lowerArmAndMove ()
 {
     MainState returnState = MainState.LOWER_ARM_AND_MOVE;
 
-    //    Hardware.drive.
 
-    //    if(Hardware.armMotorEncoder.getDistance < ARM_DOWN_DISTANCE)
-    //        {
-    //        Hardware.armMotor.set(1.0);
-    //        }
-    //        else
-    //  {
-    //        returnState = MainState.DELAY;
-    //  }
+    if (Hardware.armEncoder.getDistance() > ARM_DOWN_DISTANCE)//TODO: set this to a known distance
+        {
+        Hardware.armMotor.set(0.0);
+        }
+
+    if (Hardware.drive.driveForwardInches(22.75))
+        {
+        returnState = MainState.DELAY;
+        }
 
     return returnState;
 }
@@ -627,5 +644,11 @@ private static final double MAXIMUM_DELAY = 4.0;
 private static final int ONE_THOUSAND = 1000;
 
 private static final double ALIGNMENT_SPEED = 0.1;
+
+/**
+ * Encoder distance for arm.
+ * TODO: set
+ */
+private static final double ARM_DOWN_DISTANCE = 10.0;
 
 } // end class
