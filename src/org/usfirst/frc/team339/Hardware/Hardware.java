@@ -22,7 +22,6 @@ import org.usfirst.frc.team339.HardwareInterfaces.KilroyCamera;
 import org.usfirst.frc.team339.HardwareInterfaces.RobotPotentiometer;
 import org.usfirst.frc.team339.HardwareInterfaces.SingleThrowSwitch;
 import org.usfirst.frc.team339.HardwareInterfaces.SixPositionSwitch;
-import org.usfirst.frc.team339.HardwareInterfaces.transmission.TransmissionFourWheel;
 import org.usfirst.frc.team339.HardwareInterfaces.transmission.Transmission_old;
 import org.usfirst.frc.team339.Utils.Drive;
 import org.usfirst.frc.team339.Utils.ErrorMessage;
@@ -34,13 +33,11 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.MotorSafetyHelper;
-import edu.wpi.first.wpilibj.Relay;
 import edu.wpi.first.wpilibj.PowerDistributionPanel;
-import edu.wpi.first.wpilibj.SolenoidBase;
-import edu.wpi.first.wpilibj.SpeedController;
-import edu.wpi.first.wpilibj.Talon;
+import edu.wpi.first.wpilibj.Relay;
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.Victor;
 import edu.wpi.first.wpilibj.vision.USBCamera;
 
 // -------------------------------------------------------
@@ -99,7 +96,7 @@ public static CANTalon leftFrontMotor =
 // ------------------------------------
 // Victor classes
 // ------------------------------------
-
+public static Victor armMotor = new Victor(0);
 // ------------------------------------
 // CAN classes
 // ------------------------------------
@@ -139,8 +136,7 @@ public static SingleThrowSwitch autonomousEnabled =
 public static SingleThrowSwitch shootHigh =
         new SingleThrowSwitch(8);
 public static SingleThrowSwitch shootLow =
-        new SingleThrowSwitch(5);
-
+        new SingleThrowSwitch(7);
 //Shoot high/low switch
 public static DoubleThrowSwitch noShoot =
         new DoubleThrowSwitch(shootHigh, shootLow);
@@ -161,6 +157,7 @@ public static SixPositionSwitch startingPositionDial =
 // ------------------------------------
 public static Encoder leftRearEncoder = new Encoder(0, 1);
 public static Encoder rightRearEncoder = new Encoder(2, 3);
+public static Encoder armEncoder = new Encoder(4, 5);
 // -----------------------
 // Wiring diagram
 // -----------------------
@@ -201,8 +198,7 @@ public static IRSensor leftIR = new IRSensor(22);
 // ------------------------------------
 // Double Solenoids
 // ------------------------------------
-//imported from the API because CAN system is needed
-public static DoubleSolenoid solenoid = new DoubleSolenoid(pcmCANID, 0, 1);
+
 //double solenoid that moves the camera
 public static DoubleSolenoid cameraSolenoid = new DoubleSolenoid(3, 4);
 // ------------------------------------
@@ -299,7 +295,8 @@ public static Joystick rightOperator = new Joystick(3);
 
 public static Transmission_old transmission = new Transmission_old(
         rightFrontMotor, rightRearMotor, leftFrontMotor,
-        leftRearMotor);
+        leftRearMotor, rightRearEncoder, rightRearEncoder,
+        leftRearEncoder, leftRearEncoder);
 
 public static Drive drive =
         new Drive(transmission);
