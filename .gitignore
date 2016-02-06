@@ -19,6 +19,6 @@ hs_err_pid*
 /bin/
 
 doc/
-Kilroy/sysProps.xml
-/sysProps.xml
+#Kilroy/sysProps.xml
+#/sysProps.xml
 
