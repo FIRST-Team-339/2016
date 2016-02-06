@@ -1,3 +1,4 @@
+
 package org.usfirst.frc.team339.Utils;
 
 import org.usfirst.frc.team339.Hardware.Hardware;
@@ -344,5 +345,8 @@ private final double DEFAULT_MAX_SPEED = 1.0;
 
 // TODO tweak for the most effective brake method
 private final double BRAKE_SPEED = .1;
+
+
+
 
 } // end class

@@ -114,7 +114,7 @@ public void autonomousInit ()
     System.out.println("Started AutonousInit().");
 
     // Dims the brightness level so that we can take a better picture
-    // of teh retro-reflective tape.
+    // of teh retroreflective tape.
     Hardware.axisCamera.writeBrightness(5);
     // -------------------------------------
     // Call the Autonomous class's Init function,
@@ -248,11 +248,22 @@ public void robotInit ()
     CANNetwork.canObjects.add(leftRearMotor);
     CANObject pdp = new CANObject(Hardware.pdp, 0);
     CANNetwork.canObjects.add(pdp);
+    CANObject solenoid1 = new CANObject(Hardware.cameraSolenoid, 0);
+    CANNetwork.canObjects.add(solenoid1);
     //CANObject solenoid1 = new CANObject(Hardware.solenoid, 0);
     //CANNetwork.canObjects.add(solenoid1);
+
     //--------------------------------------
     // Encoder Initialization
     //--------------------------------------
+    Hardware.leftRearEncoder.setDistancePerPulse(0.019706);
+    Hardware.leftRearEncoder.reset();
+
+    Hardware.rightRearEncoder.setDistancePerPulse(0.019706);
+    Hardware.rightRearEncoder.reset();
+
+    Hardware.transmission.initEncoders(Hardware.rightRearEncoder,
+            Hardware.leftRearEncoder);
     Hardware.leftRearEncoder
             .setDistancePerPulse(distancePerTickForMotorEncoders);
     Hardware.leftRearEncoder.reset();
