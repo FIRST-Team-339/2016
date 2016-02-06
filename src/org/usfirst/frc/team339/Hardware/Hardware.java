@@ -212,8 +212,9 @@ public static Solenoid catapultSolenoid2 = new Solenoid(2);
 public static RobotPotentiometer delayPot =
         new RobotPotentiometer(3, 270);
 //transducer (written as a potentiometer)
+//set to 50 to hit 100 psi accurately 
 public static RobotPotentiometer transducer =
-        new RobotPotentiometer(2, 130);
+        new RobotPotentiometer(2, 50);
 
 // -------------------------------------
 // Sonar/Ultrasonic
