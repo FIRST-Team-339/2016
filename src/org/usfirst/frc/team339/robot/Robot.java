@@ -230,9 +230,6 @@ public void robotInit ()
     // =========================================================
     // User code goes below here
     // =========================================================
-    // -------------------------------------
-    // CAN Network Initialization
-    // -------------------------------------
 
     //--------------------------------------
     // Encoder Initialization
@@ -283,16 +280,12 @@ public void robotInit ()
     // -------------------------------------
     // motor initialization
     // -------------------------------------
-    Hardware.leftRearMotor.enableBrakeMode(true);
-    Hardware.rightRearMotor.enableBrakeMode(true);
-    Hardware.leftFrontMotor.enableBrakeMode(true);
-    Hardware.rightFrontMotor.enableBrakeMode(true);
+
     Hardware.leftRearMotorSafety.setSafetyEnabled(true);
     Hardware.rightRearMotorSafety.setSafetyEnabled(true);
     Hardware.leftFrontMotorSafety.setSafetyEnabled(true);
     Hardware.rightFrontMotorSafety.setSafetyEnabled(true);
-    //Hardware.transmissionFourWheel
-    //        .setRightMotorDirection(MotorDirection.REVERSED);
+    Hardware.rightRearMotor.setInverted(true);
 
     //--------------------------------------
     // Compressor Initialization

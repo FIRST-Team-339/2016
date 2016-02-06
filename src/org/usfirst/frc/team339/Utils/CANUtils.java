@@ -14,7 +14,7 @@ import org.usfirst.frc.team339.robot.*;
 
 // import org.usfirst.frc.team339.Hardware.Hardware.getStickyFaultForLim;
 /**
- * Contains the method for detecting sticky fau
+ * Contains the method for detecting sticky faults
  * 
  * @author Daniel Resio, Becky Button, and Cole Ramos
  */
