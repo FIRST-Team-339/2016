@@ -235,17 +235,6 @@ public void robotInit ()
     // -------------------------------------
     // CAN Network Initialization
     // -------------------------------------
-    CANObject leftFrontMotor =
-            new CANObject(Hardware.leftFrontMotor, 12);
-    CANNetwork.canObjects.add(leftFrontMotor);
-    CANObject rightFrontMotor =
-            new CANObject(Hardware.rightFrontMotor, 17);
-    CANNetwork.canObjects.add(rightFrontMotor);
-    CANObject rightRearMotor =
-            new CANObject(Hardware.rightRearMotor, 15);
-    CANNetwork.canObjects.add(rightRearMotor);
-    CANObject leftRearMotor = new CANObject(Hardware.leftRearMotor, 11);
-    CANNetwork.canObjects.add(leftRearMotor);
     CANObject pdp = new CANObject(Hardware.pdp, 0);
     CANNetwork.canObjects.add(pdp);
     CANObject solenoid1 = new CANObject(Hardware.cameraSolenoid, 0);
@@ -302,16 +291,12 @@ public void robotInit ()
     // -------------------------------------
     // motor initialization
     // -------------------------------------
-    Hardware.leftRearMotor.enableBrakeMode(true);
-    Hardware.rightRearMotor.enableBrakeMode(true);
-    Hardware.leftFrontMotor.enableBrakeMode(true);
-    Hardware.rightFrontMotor.enableBrakeMode(true);
+
     Hardware.leftRearMotorSafety.setSafetyEnabled(true);
     Hardware.rightRearMotorSafety.setSafetyEnabled(true);
     Hardware.leftFrontMotorSafety.setSafetyEnabled(true);
     Hardware.rightFrontMotorSafety.setSafetyEnabled(true);
-    //Hardware.transmissionFourWheel
-    //        .setRightMotorDirection(MotorDirection.REVERSED);
+    Hardware.rightRearMotor.setInverted(true);
 
     //--------------------------------------
     // Compressor Initialization

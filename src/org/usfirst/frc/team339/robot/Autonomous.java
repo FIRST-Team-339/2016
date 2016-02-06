@@ -221,6 +221,7 @@ public static void init ()
 	Hardware.drive.setMaxSpeed(MAXIMUM_AUTONOMOUS_SPEED);
 
 
+<<<<<<< HEAD
 	// -------------------------------------
 	// motor initialization
 	// -------------------------------------
@@ -232,6 +233,17 @@ public static void init ()
 	Hardware.rightRearMotorSafety.setSafetyEnabled(true);
 	Hardware.leftFrontMotorSafety.setSafetyEnabled(true);
 	Hardware.rightFrontMotorSafety.setSafetyEnabled(true);
+=======
+    // -------------------------------------
+    // motor initialization
+    // -------------------------------------
+    Hardware.leftRearMotorSafety.setSafetyEnabled(true);
+    Hardware.rightRearMotorSafety.setSafetyEnabled(true);
+    Hardware.leftFrontMotorSafety.setSafetyEnabled(true);
+    Hardware.rightFrontMotorSafety.setSafetyEnabled(true);
+    //    Hardware.transmissionFourWheel.setLeftMotorDirection(
+    //            Transmission.MotorDirection.REVERSED);
+>>>>>>> branch 'master' of https://github.com/FIRST-Team-339/2016.git
 
 	Hardware.transmission
 	        .setFirstGearPercentage(MAXIMUM_AUTONOMOUS_SPEED);

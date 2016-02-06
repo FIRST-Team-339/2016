@@ -116,21 +116,28 @@ public static void periodic ()
             Hardware.ringLightRelay.set(Value.kOn);
             Hardware.delayTimer.start();
             prepPic = true;
+            takingLitImage = true;
             }
         }
 
     // Once the brightness is down and the ring light is on then the
     // picture is taken, the brightness returns to normal, the ringlight
     // is turned off, and the timer is stopped and reset.
-    if (Hardware.delayTimer.get() >= .25 && prepPic == true)
+    if (Hardware.delayTimer.get() >= .25 && prepPic == true
+            && takingLitImage == true)
         {
         Hardware.axisCamera.saveImagesSafely();
+        prepPic = false;
+        takingLitImage = false;
+        }
+
+    if (takingLitImage == false && Hardware.delayTimer.get() >= 1)
+        {
         Hardware.axisCamera
                 .writeBrightness(NORMAL_AXIS_CAMERA_BRIGHTNESS);
         Hardware.ringLightRelay.set(Value.kOff);
         Hardware.delayTimer.stop();
         Hardware.delayTimer.reset();
-        prepPic = false;
         }
 
     // If we click buttons 10+11, we take a picture without the
@@ -152,7 +159,9 @@ public static void periodic ()
 
     //Driving the Robot
     Hardware.transmission.controls(Hardware.rightDriver.getY(),
-            Hardware.leftDriver.getY());
+            Hardware.leftDriver.getY(), Hardware.leftFrontMotor,
+            Hardware.leftRearMotor, Hardware.rightFrontMotor,
+            Hardware.rightRearMotor);
     if (Hardware.transmission.getGear() == 1 &&
             Hardware.rightDriver
                     .getRawButton(GEAR_UPSHIFT_JOYSTICK_BUTTON) == true)
@@ -165,7 +174,6 @@ public static void periodic ()
         {
         Hardware.transmission.downshift(1);
         }
-
 } // end Periodic
 
 /**
@@ -261,10 +269,14 @@ private static final double SECOND_GEAR_PERCENTAGE =
 public static final int NORMAL_AXIS_CAMERA_BRIGHTNESS = 50;
 
 // Crazy dark brightness for retroreflective pictures
+<<<<<<< HEAD
 public static final int MINIMUM_AXIS_CAMERA_BRIGHTNESS = 5;
+=======
+private static final int MINIMUM_AXIS_CAMERA_BRIGHTNESS = 6;
+>>>>>>> branch 'master' of https://github.com/FIRST-Team-339/2016.git
 
 //TODO change based on driver request
-private static final int GEAR_UPSHIFT_JOYSTICK_BUTTON = 1;
+private static final int GEAR_UPSHIFT_JOYSTICK_BUTTON = 3;
 
 private static final int GEAR_DOWNSHIFT_JOYSTICK_BUTTON = 2;
 
