@@ -258,10 +258,10 @@ private static final double SECOND_GEAR_PERCENTAGE =
         MAXIMUM_TELEOP_SPEED;
 
 // Makes the brightness to a visible level so our drivers can see.
-private static final int NORMAL_AXIS_CAMERA_BRIGHTNESS = 50;
+public static final int NORMAL_AXIS_CAMERA_BRIGHTNESS = 50;
 
 // Crazy dark brightness for retroreflective pictures
-private static final int MINIMUM_AXIS_CAMERA_BRIGHTNESS = 5;
+public static final int MINIMUM_AXIS_CAMERA_BRIGHTNESS = 5;
 
 //TODO change based on driver request
 private static final int GEAR_UPSHIFT_JOYSTICK_BUTTON = 1;

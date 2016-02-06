@@ -55,6 +55,9 @@ public class Hardware
 // Public Constants
 // ------------------------------------
 
+public static final int DELAY_POT_DEGREES = 270;
+public static final int TRANSDUCER_MAX_VALUE = 130;
+
 // -------------------------------------
 // Private Constants
 // -------------------------------------
@@ -130,7 +133,7 @@ public static Compressor compressor = new Compressor();
 public static SingleThrowSwitch autonomousEnabled =
         new SingleThrowSwitch(19);
 public static SingleThrowSwitch shootHigh =
-        new SingleThrowSwitch(6);
+        new SingleThrowSwitch(8);
 public static SingleThrowSwitch shootLow =
         new SingleThrowSwitch(7);
 //Shoot high/low switch
@@ -220,10 +223,10 @@ public static Solenoid catapultSolenoid2 = new Solenoid(2);
 // -------------------------------------
 // -------------------------------------
 public static RobotPotentiometer delayPot =
-        new RobotPotentiometer(3, 270);
+        new RobotPotentiometer(3, DELAY_POT_DEGREES);
 //transducer (written as a potentiometer)
 public static RobotPotentiometer transducer =
-        new RobotPotentiometer(2, 130);
+        new RobotPotentiometer(2, TRANSDUCER_MAX_VALUE);
 
 // -------------------------------------
 // Sonar/Ultrasonic

@@ -115,7 +115,7 @@ public void autonomousInit ()
 
     // Dims the brightness level so that we can take a better picture
     // of teh retroreflective tape.
-    Hardware.axisCamera.writeBrightness(5);
+
     // -------------------------------------
     // Call the Autonomous class's Init function,
     // which contains the user code.
