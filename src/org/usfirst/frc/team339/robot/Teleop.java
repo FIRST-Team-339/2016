@@ -71,39 +71,6 @@ private static boolean prepPic = false;
 public static void init ()
 {
 
-<<<<<<< HEAD
-	// set max speed. change by gear?
-	Hardware.drive.setMaxSpeed(MAXIMUM_TELEOP_SPEED);
-	Hardware.transmission.setFirstGearPercentage(FIRST_GEAR_PERCENTAGE);
-	Hardware.transmission
-	        .setSecondGearPercentage(SECOND_GEAR_PERCENTAGE);
-	Hardware.transmission.setGear(1);
-	Hardware.transmission.setJoysticksAreReversed(false);
-	// -----------------------------------
-	// stop cam0 in case we have declared them
-	// in Autonomous. Then declare a new cam0
-	// and start it going automatically with the
-	// camera server
-	// -----------------------------------
-	Hardware.delayTimer.reset();
-	CameraServer.getInstance().setSize(1);
-	// set max speed. change by gear?
-	Hardware.drive.setMaxSpeed(MAXIMUM_TELEOP_SPEED);
-	Hardware.transmission.setFirstGearPercentage(FIRST_GEAR_PERCENTAGE);
-	Hardware.transmission
-	        .setSecondGearPercentage(SECOND_GEAR_PERCENTAGE);
-	Hardware.transmission.setGear(1);
-	// -----------------------------------
-	// stop cam0 in case we have declared them
-	// in Autonomous. Then declare a new cam0
-	// and start it going automatically with the
-	// camera server
-	// -----------------------------------
-	Hardware.delayTimer.reset();
-	CameraServer.getInstance().setSize(1);
-	Hardware.axisCamera
-	        .writeBrightness(Hardware.NORMAL_AXIS_CAMERA_BRIGHTNESS);
-=======
     // set max speed. change by gear?
     Hardware.drive.setMaxSpeed(MAXIMUM_TELEOP_SPEED);
     Hardware.transmission.setFirstGearPercentage(FIRST_GEAR_PERCENTAGE);
@@ -134,7 +101,6 @@ public static void init ()
     CameraServer.getInstance().setSize(1);
     Hardware.axisCamera
             .writeBrightness(Hardware.NORMAL_AXIS_CAMERA_BRIGHTNESS);
->>>>>>> branch 'master' of https://github.com/FIRST-Team-339/2016.git
 
 } // end Init
 

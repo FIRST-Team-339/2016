@@ -216,13 +216,7 @@ public static void init ()
 
 
 
-<<<<<<< HEAD
-
-
-	// set the drive values for MOVE_TO_SHOOTING_POSITION
-=======
     // set the drive values for MOVE_TO_SHOOTING_POSITION
->>>>>>> branch 'master' of https://github.com/FIRST-Team-339/2016.git
 
     Hardware.drive.setMaxSpeed(MAXIMUM_AUTONOMOUS_SPEED);
 
@@ -235,15 +229,8 @@ public static void init ()
     Hardware.leftFrontMotorSafety.setSafetyEnabled(true);
     Hardware.rightFrontMotorSafety.setSafetyEnabled(true);
 
-<<<<<<< HEAD
-	Hardware.transmission
-	        .setFirstGearPercentage(MAXIMUM_AUTONOMOUS_SPEED);
-	Hardware.transmission.setGear(1);
-	Hardware.transmission.setJoysticksAreReversed(true);
-=======
     Hardware.transmission
             .setFirstGearPercentage(MAXIMUM_AUTONOMOUS_SPEED);
->>>>>>> branch 'master' of https://github.com/FIRST-Team-339/2016.git
 
     //--------------------------------------
     // Encoder Initialization
@@ -292,19 +279,6 @@ public static void periodic ()
     Hardware.transmission.controls(Hardware.leftDriver.getY(),
             Hardware.rightDriver.getY());
 
-<<<<<<< HEAD
-	System.out.println(enabled);
-	if (enabled)
-	{
-	// runs the overarching state machine.
-	runMainStateMachine();
-	}
-	//feed all motor safties
-	Hardware.leftRearMotorSafety.feed();
-	Hardware.rightRearMotorSafety.feed();
-	Hardware.leftFrontMotorSafety.feed();
-	Hardware.rightFrontMotorSafety.feed();
-=======
     System.out.println(enabled);
     if (enabled)
         {
@@ -316,7 +290,6 @@ public static void periodic ()
     Hardware.rightRearMotorSafety.feed();
     Hardware.leftFrontMotorSafety.feed();
     Hardware.rightFrontMotorSafety.feed();
->>>>>>> branch 'master' of https://github.com/FIRST-Team-339/2016.git
 } // end Periodic
 
 
@@ -336,81 +309,6 @@ private static int initDelayTime ()
 private static void runMainStateMachine ()
 {
 
-<<<<<<< HEAD
-	System.out.println("Main State: " + mainState);
-	switch (mainState)
-	{
-		case INIT:
-			mainInit();
-			mainState = MainState.BEGIN_LOWERING_ARM;
-			break;
-		case BEGIN_LOWERING_ARM:
-			beginLoweringArm();
-			mainState = MainState.LOWER_ARM_AND_MOVE;
-			break;
-		case LOWER_ARM_AND_MOVE:
-			switch (lowerArmAndMove())
-			{
-				case NOT_DONE:
-					mainState = MainState.DONE;
-					break;
-				case DONE:
-					mainState = MainState.INIT_DELAY;
-					break;
-				case FAILED:
-					mainState = MainState.DONE;
-					break;
-			}
-			break;
-		case INIT_DELAY:
-			initDelay();
-			mainState = MainState.DELAY;
-			break;
-		case DELAY:
-			if (delayIsDone())
-			{
-			mainState = MainState.ACCELERATE;
-			}
-			break;
-		case ACCELERATE:
-			if (accelerationIsDone())
-			{
-			mainState =
-			        MainState.FORWARDS_BASED_ON_ENCODERS_OR_IR;
-			}
-			break;
-		case FORWARDS_BASED_ON_ENCODERS_OR_IR:
-			if (isInLaneOne())
-			{
-			mainState = MainState.FORWARDS_TO_TAPE_BY_DISTANCE;
-			}
-			else
-			{
-			mainState = MainState.FORWARDS_UNTIL_TAPE;
-			}
-			break;
-		case FORWARDS_TO_TAPE_BY_DISTANCE:
-			if (hasGoneToTapeByDistance())
-			{
-			mainState = MainState.MOVE_TO_SHOOTING_POSITION;
-			}
-			break;
-		case FORWARDS_UNTIL_TAPE:
-			if (hasMovedToTape())
-			{
-			mainState = MainState.MOVE_TO_SHOOTING_POSITION;
-			}
-			break;
-		case MOVE_TO_SHOOTING_POSITION:
-			mainState = moveToShootingPosition();
-			break;
-		case SHOOT:
-			mainState = shoot();
-			break;
-		case DONE:
-			break;
-	}
-=======
     System.out.println("Main State: " + mainState);
     switch (mainState)
         {
@@ -478,7 +376,6 @@ private static void runMainStateMachine ()
         case DONE:
             break;
         }
->>>>>>> branch 'master' of https://github.com/FIRST-Team-339/2016.git
 }
 
 
@@ -512,33 +409,12 @@ private static MoveWhileLoweringArmReturn lowerArmAndMove ()
             Hardware.rightRearMotor);
     ;
 
-<<<<<<< HEAD
-	if (Hardware.armEncoder.get() > ARM_DOWN_TICKS)//TODO: set this to a known distance
-	{
-	armIsDown = true;
-	Hardware.armMotor.set(0.0);
-	}
-=======
     if (Hardware.armEncoder.getDistance() > ARM_DOWN_DISTANCE)//TODO: set this to a known distance
         {
         armIsDown = true;
         Hardware.armMotor.set(0.0);
         }
->>>>>>> branch 'master' of https://github.com/FIRST-Team-339/2016.git
 
-<<<<<<< HEAD
-	if (Hardware.drive.driveForwardInches(22.75))//TODO: make constant
-	{
-	if (armIsDown)
-	{
-	returnState = MoveWhileLoweringArmReturn.DONE;
-	}
-	else
-	{
-	returnState = MoveWhileLoweringArmReturn.FAILED;
-	}
-	}
-=======
     if (Hardware.drive.driveForwardInches(22.75))//TODO: make constant
         {
         if (armIsDown)
@@ -550,7 +426,6 @@ private static MoveWhileLoweringArmReturn lowerArmAndMove ()
             returnState = MoveWhileLoweringArmReturn.FAILED;
             }
         }
->>>>>>> branch 'master' of https://github.com/FIRST-Team-339/2016.git
 
     return returnState;
 }
@@ -577,15 +452,6 @@ private static boolean delayIsDone ()
 {
     boolean done = false;
 
-<<<<<<< HEAD
-	if (Hardware.delayTimer.get() > delay)
-	{
-	done = true;
-	Hardware.delayTimer.stop();
-	Hardware.delayTimer.reset();
-	}
-	return done;
-=======
     if (Hardware.delayTimer.get() > delay)
         {
         done = true;
@@ -593,7 +459,6 @@ private static boolean delayIsDone ()
         Hardware.delayTimer.reset();
         }
     return done;
->>>>>>> branch 'master' of https://github.com/FIRST-Team-339/2016.git
 
 }
 
@@ -607,18 +472,6 @@ private static boolean accelerationIsDone ()
 {
     boolean done = false;
 
-<<<<<<< HEAD
-	//If there are no more acceleration steps, go to next.
-	if (accelerationIndex == StateInformation.ACCELERATE_SPEEDS.length)
-	{
-	done = true;
-	}
-	else
-	{
-	Hardware.transmission.controls(
-	        StateInformation.ACCELERATE_SPEEDS[accelerationIndex],
-	        StateInformation.ACCELERATE_SPEEDS[accelerationIndex]);
-=======
     //If there are no more acceleration steps, go to next.
     if (accelerationIndex == StateInformation.ACCELERATE_SPEEDS.length)
         {
@@ -629,19 +482,7 @@ private static boolean accelerationIsDone ()
         Hardware.transmission.controls(
                 StateInformation.ACCELERATE_SPEEDS[accelerationIndex],
                 StateInformation.ACCELERATE_SPEEDS[accelerationIndex]);
->>>>>>> branch 'master' of https://github.com/FIRST-Team-339/2016.git
 
-<<<<<<< HEAD
-	if (Hardware.kilroyTimer
-	        .get() > StateInformation.ACCELERATE_TIMES[accelerationIndex])
-		;
-	{
-	Hardware.kilroyTimer.reset();
-	accelerationIndex++;
-	}
-	}
-	return done;
-=======
         if (Hardware.kilroyTimer
                 .get() > StateInformation.ACCELERATE_TIMES[accelerationIndex])
             ;
@@ -651,7 +492,6 @@ private static boolean accelerationIsDone ()
             }
         }
     return done;
->>>>>>> branch 'master' of https://github.com/FIRST-Team-339/2016.git
 }
 
 /**
@@ -663,16 +503,6 @@ private static boolean isInLaneOne ()
 {
     boolean oneness;
 
-<<<<<<< HEAD
-	if (lane == 1)
-	{
-	oneness = true;
-	}
-	else
-	{
-	oneness = false;
-	}
-=======
     if (lane == 1)
         {
         oneness = true;
@@ -681,31 +511,15 @@ private static boolean isInLaneOne ()
         {
         oneness = false;
         }
->>>>>>> branch 'master' of https://github.com/FIRST-Team-339/2016.git
 
     return oneness;
 }
 
-private static boolean hasGoneToTapeByDistance ()
+private static MainState forwardsToTapeByDistance ()
 {
-<<<<<<< HEAD
-	boolean hasReachedDistance = false;
-=======
     MainState returnState = MainState.FORWARDS_TO_TAPE_BY_DISTANCE;
->>>>>>> branch 'master' of https://github.com/FIRST-Team-339/2016.git
 
-<<<<<<< HEAD
-	Hardware.transmission.controls(1.0, 1.0);
-
-	if (Hardware.drive.driveForwardInches(DISTANCE_TO_TAPE))
-	{
-	return true;
-	}
-
-	return hasReachedDistance;
-=======
     return returnState;
->>>>>>> branch 'master' of https://github.com/FIRST-Team-339/2016.git
 }
 
 private static boolean hasMovedToTape ()
@@ -717,17 +531,10 @@ private static boolean hasMovedToTape ()
 
     Hardware.transmission.controls(1.0, 1.0);//TODO: set constants
 
-<<<<<<< HEAD
-	if (Hardware.leftIR.isOn() || Hardware.rightIR.isOn())
-	{
-	tapeness = true;
-	}
-=======
     if (Hardware.leftIR.isOn() || Hardware.rightIR.isOn())
         {
         tapeness = true;
         }
->>>>>>> branch 'master' of https://github.com/FIRST-Team-339/2016.git
 
     return tapeness;
 
@@ -756,39 +563,19 @@ private static MainState moveToShootingPosition ()
             driveToGoalInstructions[Hardware.startingPositionDial
                     .getPosition()][driveToShootingPositionStep];
 
-<<<<<<< HEAD
-	if (Hardware.drive.driveForwardInches(
-	        currentInstruction.getForwardDistance()) // Drive, and if we have driven the distance required
-	        || Hardware.drive.driveForwardInches(
-	                currentInstruction.getRotationalDistance())) // Or the rotation...
-	{
-=======
     if (Hardware.drive.driveForwardInches(
             currentInstruction.getForwardDistance()) // Drive, and if we have driven the distance required
             || Hardware.drive.driveForwardInches(
                     currentInstruction.getRotationalDistance())) // Or the rotation...
         {
->>>>>>> branch 'master' of https://github.com/FIRST-Team-339/2016.git
 
-<<<<<<< HEAD
-	driveToShootingPositionStep++; //go to next step.
-=======
         driveToShootingPositionStep++; //go to next step.
->>>>>>> branch 'master' of https://github.com/FIRST-Team-339/2016.git
 
-<<<<<<< HEAD
-	if (currentInstruction.isTerminator())//If at end of path, go to next state.
-	{
-	returnState = MainState.SHOOT;//The next state should be to shoot, or possibly to align with vision processing.
-	}
-	}
-=======
         if (currentInstruction.isTerminator())//If at end of path, go to next state.
             {
             returnState = MainState.SHOOT;//The next state should be to shoot, or possibly to align with vision processing.
             }
         }
->>>>>>> branch 'master' of https://github.com/FIRST-Team-339/2016.git
 
 
     return returnState;
@@ -798,16 +585,7 @@ private static MainState shoot ()
 {
     // TODO: write method to shoot cannonball.
 
-<<<<<<< HEAD
-	return MainState.DONE;
-}
-
-private static void done ()
-{
-	Hardware.transmission.controls(0.0, 0.0);
-=======
     return MainState.DONE;
->>>>>>> branch 'master' of https://github.com/FIRST-Team-339/2016.git
 }
 
 /*
@@ -821,17 +599,10 @@ private static int getLane ()
 {
     int position = Hardware.startingPositionDial.getPosition();
 
-<<<<<<< HEAD
-	if (position == -1)
-	{
-	position = 0;
-	}
-=======
     if (position == -1)
         {
         position = 0;
         }
->>>>>>> branch 'master' of https://github.com/FIRST-Team-339/2016.git
 
     position = position + 1;
 
@@ -924,12 +695,10 @@ private static final int ONE_THOUSAND = 1000;
 
 private static final double ALIGNMENT_SPEED = 0.1;
 
-private static final double DISTANCE_TO_TAPE = 0; //TODO:  set to known value
-
 /**
  * Encoder distance for arm.
  * TODO: set
  */
-private static final double ARM_DOWN_TICKS = 10.0;
+private static final double ARM_DOWN_DISTANCE = 10.0;
 
 } // end class

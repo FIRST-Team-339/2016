@@ -297,18 +297,10 @@ public void robotInit ()
     Hardware.rightFrontMotorSafety.setSafetyEnabled(true);
     Hardware.rightRearMotor.setInverted(true);
 
-<<<<<<< HEAD
-
-	// --------------------------------------
-	// Compressor Initialization
-	// --------------------------------------
-	Hardware.compressor.setClosedLoopControl(true);
-=======
     // --------------------------------------
     // Compressor Initialization
     // --------------------------------------
     Hardware.compressor.setClosedLoopControl(true);
->>>>>>> branch 'master' of https://github.com/FIRST-Team-339/2016.git
 
     // --------------------------------------
     // Encoder Initialization
