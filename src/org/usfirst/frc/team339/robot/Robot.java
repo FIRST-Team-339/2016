@@ -233,29 +233,32 @@ public void robotInit ()
     // -------------------------------------
     // CAN Network Initialization
     // -------------------------------------
-    CANObject leftFrontMotor = new CANObject(Hardware.leftFrontMotor, 12);
+    CANObject leftFrontMotor =
+            new CANObject(Hardware.leftFrontMotor, 12);
     CANNetwork.canObjects.add(leftFrontMotor);
-    CANObject rightFrontMotor = new CANObject(Hardware.rightFrontMotor, 17);
+    CANObject rightFrontMotor =
+            new CANObject(Hardware.rightFrontMotor, 17);
     CANNetwork.canObjects.add(rightFrontMotor);
-    CANObject rightRearMotor = new CANObject(Hardware.rightRearMotor, 15);
+    CANObject rightRearMotor =
+            new CANObject(Hardware.rightRearMotor, 15);
     CANNetwork.canObjects.add(rightRearMotor);
     CANObject leftRearMotor = new CANObject(Hardware.leftRearMotor, 11);
     CANNetwork.canObjects.add(leftRearMotor);
     CANObject pdp = new CANObject(Hardware.pdp, 0);
     CANNetwork.canObjects.add(pdp);
-    CANObject solenoid1 = new CANObject(Hardware.solenoid, 0);
+    CANObject solenoid1 = new CANObject(Hardware.cameraSolenoid, 0);
     CANNetwork.canObjects.add(solenoid1);
     //--------------------------------------
     // Encoder Initialization
     //--------------------------------------
-        Hardware.leftRearEncoder.setDistancePerPulse(0.019706);
-        Hardware.leftRearEncoder.reset();
-    
-        Hardware.rightRearEncoder.setDistancePerPulse(0.019706);
-        Hardware.rightRearEncoder.reset();
-    
-        Hardware.transmission.initEncoders(Hardware.rightRearEncoder,
-                Hardware.leftRearEncoder);
+    Hardware.leftRearEncoder.setDistancePerPulse(0.019706);
+    Hardware.leftRearEncoder.reset();
+
+    Hardware.rightRearEncoder.setDistancePerPulse(0.019706);
+    Hardware.rightRearEncoder.reset();
+
+    Hardware.transmission.initEncoders(Hardware.rightRearEncoder,
+            Hardware.leftRearEncoder);
 
     // -------------------------------------
     // USB camera initialization

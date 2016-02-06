@@ -62,7 +62,7 @@ public class Autonomous
 private static enum MainState
     {
     INIT, // beginning, check conditions
-    DELAY, // waits, depending on settings.
+    LOWER_ARM_AND_MOVE, DELAY, // waits, depending on settings.
     FORWARDS_TO_TAPE, // drives forwards until detection of the gaffers' tape.
     ALIGN, // aligns its self on the gaffers' tape based of IR sensors.
     MOVE_TO_SHOOTING_POSITION,  // moves towards a good shooting angle based on
@@ -184,6 +184,8 @@ private static AlignmentState alignmentState =
 // ==================================
 private static double delay; // time to delay before begining.
 
+private static int lane;
+
 /**
  * The index at which moveToShootingPosition looks for drive information.
  */
@@ -284,9 +286,9 @@ public static void periodic ()
 /**
  * Sets the delay time in full seconds based on potentiometer.
  */
-private static void initDelayTime ()
+private static int initDelayTime ()
 {
-    delay = (int) MAXIMUM_DELAY * Hardware.delayPot.get()
+    return (int) MAXIMUM_DELAY * Hardware.delayPot.get()
             / ONE_THOUSAND;
 }
 
@@ -301,7 +303,7 @@ private static void runMainStateMachine ()
     switch (mainState)
         {
         case INIT:
-            mainState = mainStateMachineInit();
+            mainState = mainInit();
             break;
         case DELAY:
             mainState = delay();
@@ -330,9 +332,12 @@ private static void runMainStateMachine ()
  * ======================================
  */
 
-private static MainState mainStateMachineInit ()
+private static MainState mainInit ()
 {
     MainState returnState;
+
+    delay = initDelayTime();
+    lane = getLane();
 
     if (Hardware.autonomousEnabled.isOn() == true)
         {
@@ -344,12 +349,28 @@ private static MainState mainStateMachineInit ()
         {
         returnState = MainState.DONE;
         }
-    //testing
-    //TODO: remove
-    mainState = MainState.MOVE_TO_SHOOTING_POSITION;
+
     return returnState;
 }
 
+
+private static MainState lowerArmAndMove ()
+{
+    MainState returnState = MainState.LOWER_ARM_AND_MOVE;
+
+    //    Hardware.drive.
+
+    //    if(Hardware.armMotorEncoder.getDistance < ARM_DOWN_DISTANCE)
+    //        {
+    //        Hardware.armMotor.set(1.0);
+    //        }
+    //        else
+    //  {
+    //        returnState = MainState.DELAY;
+    //  }
+
+    return returnState;
+}
 
 /**
  * Waits.
@@ -559,6 +580,27 @@ private static MainState alignFinish ()
 {
     return MainState.MOVE_TO_SHOOTING_POSITION;
 }
+
+private static int getLane ()
+{
+    return Hardware.startingPositionDial.getPosition();
+}
+
+
+private static final class StateInformation
+{
+
+//Each index refers to a higher starting speed.
+static final double[] START_SPEEDS =
+        {.20, .40, .70};
+static final double[] START_TIMES =
+        {.5, .5, .5};
+
+
+
+}
+
+
 /*
  * ==============================================
  * END ALIGN SUB-STATE METHODS
