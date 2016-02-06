@@ -221,29 +221,13 @@ public static void init ()
 	Hardware.drive.setMaxSpeed(MAXIMUM_AUTONOMOUS_SPEED);
 
 
-<<<<<<< HEAD
 	// -------------------------------------
 	// motor initialization
 	// -------------------------------------
-	Hardware.leftRearMotor.enableBrakeMode(true);
-	Hardware.rightRearMotor.enableBrakeMode(true);
-	Hardware.leftFrontMotor.enableBrakeMode(true);
-	Hardware.rightFrontMotor.enableBrakeMode(true);
 	Hardware.leftRearMotorSafety.setSafetyEnabled(true);
 	Hardware.rightRearMotorSafety.setSafetyEnabled(true);
 	Hardware.leftFrontMotorSafety.setSafetyEnabled(true);
 	Hardware.rightFrontMotorSafety.setSafetyEnabled(true);
-=======
-    // -------------------------------------
-    // motor initialization
-    // -------------------------------------
-    Hardware.leftRearMotorSafety.setSafetyEnabled(true);
-    Hardware.rightRearMotorSafety.setSafetyEnabled(true);
-    Hardware.leftFrontMotorSafety.setSafetyEnabled(true);
-    Hardware.rightFrontMotorSafety.setSafetyEnabled(true);
-    //    Hardware.transmissionFourWheel.setLeftMotorDirection(
-    //            Transmission.MotorDirection.REVERSED);
->>>>>>> branch 'master' of https://github.com/FIRST-Team-339/2016.git
 
 	Hardware.transmission
 	        .setFirstGearPercentage(MAXIMUM_AUTONOMOUS_SPEED);
@@ -287,12 +271,15 @@ public static void init ()
 public static void periodic ()
 {
 
+	System.out.println(Hardware.armEncoder.getDistance());
+
 	//test
 	//TransmissionFourWheel debugTrans = Hardware.transmissionFourWheel;
 	//moveToShootingPositionStep = MoveToShootingPositionStep.FORWARDS_ONE;
 	Hardware.transmission.controls(Hardware.leftDriver.getY(),
 	        Hardware.rightDriver.getY());
 
+	System.out.println(enabled);
 	if (enabled)
 		{
 		// runs the overarching state machine.
@@ -417,7 +404,10 @@ private static MoveWhileLoweringArmReturn lowerArmAndMove ()
 	        MoveWhileLoweringArmReturn.NOT_DONE;
 	boolean armIsDown = false;
 
-	Hardware.transmission.controls(0.3, 0.3);
+	Hardware.transmission.controls(1.0, 1.0, Hardware.leftFrontMotor,
+	        Hardware.leftRearMotor, Hardware.rightFrontMotor,
+	        Hardware.rightRearMotor);
+	;
 
 	if (Hardware.armEncoder.getDistance() > ARM_DOWN_DISTANCE)//TODO: set this to a known distance
 		{
