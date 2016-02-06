@@ -66,7 +66,6 @@ import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.MotorSafetyHelper;
 import edu.wpi.first.wpilibj.Relay.Direction;
-import edu.wpi.first.wpilibj.vision.AxisCamera.Resolution;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -235,14 +234,14 @@ public void robotInit ()
     // -------------------------------------
     // CAN Network Initialization
     // -------------------------------------
-    CANObject leftFrontMotor =
-            new CANObject(Hardware.leftFrontMotor, 12);
+    CANObject leftFrontMotor = new CANObject(Hardware.leftFrontMotor,
+            12);
     CANNetwork.canObjects.add(leftFrontMotor);
-    CANObject rightFrontMotor =
-            new CANObject(Hardware.rightFrontMotor, 17);
+    CANObject rightFrontMotor = new CANObject(Hardware.rightFrontMotor,
+            17);
     CANNetwork.canObjects.add(rightFrontMotor);
-    CANObject rightRearMotor =
-            new CANObject(Hardware.rightRearMotor, 15);
+    CANObject rightRearMotor = new CANObject(Hardware.rightRearMotor,
+            15);
     CANNetwork.canObjects.add(rightRearMotor);
     CANObject leftRearMotor = new CANObject(Hardware.leftRearMotor, 11);
     CANNetwork.canObjects.add(leftRearMotor);
@@ -250,12 +249,12 @@ public void robotInit ()
     CANNetwork.canObjects.add(pdp);
     CANObject solenoid1 = new CANObject(Hardware.cameraSolenoid, 0);
     CANNetwork.canObjects.add(solenoid1);
-    //CANObject solenoid1 = new CANObject(Hardware.solenoid, 0);
-    //CANNetwork.canObjects.add(solenoid1);
+    // CANObject solenoid1 = new CANObject(Hardware.solenoid, 0);
+    // CANNetwork.canObjects.add(solenoid1);
 
-    //--------------------------------------
+    // --------------------------------------
     // Encoder Initialization
-    //--------------------------------------
+    // --------------------------------------
     Hardware.leftRearEncoder.setDistancePerPulse(0.019706);
     Hardware.leftRearEncoder.reset();
 
@@ -274,8 +273,8 @@ public void robotInit ()
 
     Hardware.transmission.initEncoders(Hardware.rightRearEncoder,
             Hardware.leftRearEncoder);
-    Hardware.armEncoder
-            .setDistancePerPulse(distancePerTickForArmEncoder);
+            // Hardware.armEncoder
+            // .setDistancePerPulse(distancePerTickForArmEncoder);
             // -------------------------------------
             // USB camera initialization
             // -------------------------------------
@@ -293,8 +292,13 @@ public void robotInit ()
     Hardware.cameraServer.startAutomaticCapture(Hardware.cam0);
 
     // Sets FPS and Resolution of camera
-    Hardware.axisCamera.writeMaxFPS(15);
-    Hardware.axisCamera.writeResolution(Resolution.k320x240);
+    Hardware.axisCamera.writeMaxFPS(Hardware.AXIS_FPS);
+    Hardware.axisCamera.writeResolution(Hardware.AXIS_RESOLUTION);
+    Hardware.axisCamera
+            .writeBrightness(Hardware.NORMAL_AXIS_CAMERA_BRIGHTNESS);
+            // Hardware.axisCamera
+            // .writeWhiteBalance(AxisCamera.WhiteBalance.kHold);
+
 
     // Tells the relay which way is on (kBackward is unable to be used)
     Hardware.ringLightRelay.setDirection(Direction.kForward);
@@ -310,17 +314,17 @@ public void robotInit ()
     Hardware.rightRearMotorSafety.setSafetyEnabled(true);
     Hardware.leftFrontMotorSafety.setSafetyEnabled(true);
     Hardware.rightFrontMotorSafety.setSafetyEnabled(true);
-    //Hardware.transmissionFourWheel
-    //        .setRightMotorDirection(MotorDirection.REVERSED);
+    // Hardware.transmissionFourWheel
+    // .setRightMotorDirection(MotorDirection.REVERSED);
 
-    //--------------------------------------
+    // --------------------------------------
     // Compressor Initialization
-    //--------------------------------------
+    // --------------------------------------
     Hardware.compressor.setClosedLoopControl(true);
 
-    //--------------------------------------
+    // --------------------------------------
     // Encoder Initialization
-    //--------------------------------------
+    // --------------------------------------
     Hardware.leftRearEncoder.reset();
     Hardware.leftRearEncoder
             .setDistancePerPulse(distancePerTickForMotorEncoders);
@@ -332,7 +336,7 @@ public void robotInit ()
     // ---------------------------------------
     // Solenoid Initialization
     // ---------------------------------------
-    //initializes the solenoids...duh duh duh...
+    // initializes the solenoids...duh duh duh...
     Hardware.cameraSolenoid.set(DoubleSolenoid.Value.kForward);
     Hardware.catapultSolenoid0.set(false);
     Hardware.catapultSolenoid1.set(false);
