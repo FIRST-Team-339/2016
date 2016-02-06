@@ -36,6 +36,7 @@ import edu.wpi.first.wpilibj.PowerDistributionPanel;
 import edu.wpi.first.wpilibj.Relay;
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.Victor;
 import edu.wpi.first.wpilibj.vision.USBCamera;
 
 // -------------------------------------------------------
@@ -94,7 +95,7 @@ public static CANTalon leftFrontMotor =
 // ------------------------------------
 // Victor classes
 // ------------------------------------
-
+public static Victor armMotor = new Victor(0);
 // ------------------------------------
 // CAN classes
 // ------------------------------------
@@ -132,7 +133,6 @@ public static SingleThrowSwitch shootHigh =
         new SingleThrowSwitch(4);
 public static SingleThrowSwitch shootLow =
         new SingleThrowSwitch(5);
-
 //Shoot high/low switch
 public static DoubleThrowSwitch noShoot =
         new DoubleThrowSwitch(shootHigh, shootLow);
@@ -153,6 +153,7 @@ public static SixPositionSwitch startingPositionDial =
 // ------------------------------------
 public static Encoder leftRearEncoder = new Encoder(0, 1);
 public static Encoder rightRearEncoder = new Encoder(2, 3);
+public static Encoder armEncoder = new Encoder(4, 5);
 // -----------------------
 // Wiring diagram
 // -----------------------
@@ -290,7 +291,8 @@ public static Joystick rightOperator = new Joystick(3);
 
 public static Transmission_old transmission = new Transmission_old(
         rightFrontMotor, rightRearMotor, leftFrontMotor,
-        leftRearMotor);
+        leftRearMotor, rightRearEncoder, rightRearEncoder,
+        leftRearEncoder, leftRearEncoder);
 
 public static Drive drive =
         new Drive(transmission);
