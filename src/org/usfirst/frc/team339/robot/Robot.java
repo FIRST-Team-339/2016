@@ -114,7 +114,7 @@ public void autonomousInit ()
     System.out.println("Started AutonousInit().");
 
     // Dims the brightness level so that we can take a better picture
-    // of teh retroreflective tape.
+    // of teh retro-reflective tape.
     Hardware.axisCamera.writeBrightness(5);
     // -------------------------------------
     // Call the Autonomous class's Init function,
@@ -263,10 +263,11 @@ public void robotInit ()
 
     Hardware.transmission.initEncoders(Hardware.rightRearEncoder,
             Hardware.leftRearEncoder);
-    Hardware.armEncoder.setDistancePerPulse(0.01);
-    // -------------------------------------
-    // USB camera initialization
-    // -------------------------------------
+    Hardware.armEncoder
+            .setDistancePerPulse(distancePerTickForArmEncoder);
+            // -------------------------------------
+            // USB camera initialization
+            // -------------------------------------
 
     // Settings for the USB Camera
     Hardware.cam0.setBrightness(50);
@@ -310,10 +311,12 @@ public void robotInit ()
     // Encoder Initialization
     //--------------------------------------
     Hardware.leftRearEncoder.reset();
-    Hardware.leftRearEncoder.setDistancePerPulse(0.019706);
+    Hardware.leftRearEncoder
+            .setDistancePerPulse(distancePerTickForMotorEncoders);
 
     Hardware.rightRearEncoder.reset();
-    Hardware.rightRearEncoder.setDistancePerPulse(0.019706);
+    Hardware.rightRearEncoder
+            .setDistancePerPulse(distancePerTickForMotorEncoders);
 
     // ---------------------------------------
     // Solenoid Initialization
@@ -443,4 +446,5 @@ public void testPeriodic ()
 // TUNEABLES
 // ==========================================
 private final double distancePerTickForMotorEncoders = 0.019706;
+private final double distancePerTickForArmEncoder = 0.01;
 } // end class

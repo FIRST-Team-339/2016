@@ -169,8 +169,11 @@ public static void periodic ()
 } // end Periodic
 
 /**
- * stores print statements for future use, statements are commented out when
- * not in use
+ * stores print statements for future use in the print "bank", statements are
+ * commented out when
+ * not in use, when you write a new print statement, "deposit" the statement in
+ * the "bank"
+ * do not "withdraw" statements, unless directed to
  * 
  * @author Ashley Espeland
  * @written 1/28/16
@@ -224,8 +227,7 @@ public static void printStatements ()
     //            + Hardware.rightFrontEncoder.getDistance());
     //    System.out.println(
     //            "LF distance = " + Hardware.leftFrontEncoder.getDistance());
-    //    System.out.println(
-    //            "Arm Motor = " + Hardware.armMotor.get());
+    //    System.out.println("Arm Motor = " + Hardware.armMotor.getDistance());
 
     //Switches--------------
     //prints state of switches

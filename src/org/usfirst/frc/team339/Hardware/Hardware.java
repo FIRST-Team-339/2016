@@ -130,9 +130,9 @@ public static Compressor compressor = new Compressor();
 public static SingleThrowSwitch autonomousEnabled =
         new SingleThrowSwitch(19);
 public static SingleThrowSwitch shootHigh =
-        new SingleThrowSwitch(4);
+        new SingleThrowSwitch(6);
 public static SingleThrowSwitch shootLow =
-        new SingleThrowSwitch(5);
+        new SingleThrowSwitch(7);
 //Shoot high/low switch
 public static DoubleThrowSwitch noShoot =
         new DoubleThrowSwitch(shootHigh, shootLow);
