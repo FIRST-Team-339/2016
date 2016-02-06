@@ -56,11 +56,6 @@ public static void init ()
 
     // set max speed. change by gear?
     Hardware.drive.setMaxSpeed(MAXIMUM_TELEOP_SPEED);
-    Hardware.drive.setMaxSpeed(MAXIMUM_TELEOP_SPEED);
-    Hardware.transmission.setFirstGearPercentage(FIRST_GEAR_PERCENTAGE);
-    Hardware.transmission
-            .setSecondGearPercentage(SECOND_GEAR_PERCENTAGE);
-    Hardware.transmission.setGear(1);
     Hardware.transmission.setFirstGearPercentage(FIRST_GEAR_PERCENTAGE);
     Hardware.transmission
             .setSecondGearPercentage(SECOND_GEAR_PERCENTAGE);
@@ -88,7 +83,7 @@ public static void init ()
  */
 public static void periodic ()
 {
-    //Print statements to test Hardware on the Robot
+    // Print statements to test Hardware on the Robot
     printStatements();
 
     // If we click buttons 6+7 on the left operator joystick, we dim the
@@ -156,21 +151,33 @@ public static void periodic ()
             Hardware.leftDriver.getY(), Hardware.leftFrontMotor,
             Hardware.leftRearMotor, Hardware.rightFrontMotor,
             Hardware.rightRearMotor);
-    //If we're in 1st gear and we're pressing the upshift button, shift up.
-    if (Hardware.transmission.getGear() == 1 &&
-            Hardware.rightDriver
-                    .getRawButton(GEAR_UPSHIFT_JOYSTICK_BUTTON) == true)
+    // If we're pressing the upshift button, shift up.
+    if (Hardware.rightDriver
+            .getRawButton(GEAR_UPSHIFT_JOYSTICK_BUTTON) == true)
         {
         Hardware.transmission.upshift(1);
         }
-    //If we're in 2nd gear and we press the downshift button, shift down.
-    else if (Hardware.transmission.getGear() == 2 &&
-            Hardware.rightDriver.getRawButton(
-                    GEAR_DOWNSHIFT_JOYSTICK_BUTTON) == true)
+    // If we press the downshift button, shift down.
+    if (Hardware.rightDriver.getRawButton(
+            GEAR_DOWNSHIFT_JOYSTICK_BUTTON) == true)
         {
         Hardware.transmission.downshift(1);
         }
 } // end Periodic
+
+// A method to process images (before we get a Shoot class)
+public static void processImage ()
+{
+    // If we click the Trigger and button 2, then we save an image and will
+    // eventually
+    if (Hardware.leftOperator.getTrigger() == true
+            && Hardware.leftOperator.getRawButton(2))
+        {
+        Hardware.axisCamera.saveImage("ProcessedImage");
+        }
+}
+// End processImage
+
 
 /**
  * stores print statements for future use in the print "bank", statements are
@@ -255,8 +262,7 @@ private static final double MAXIMUM_TELEOP_SPEED = 1.0;
 
 private static final double FIRST_GEAR_PERCENTAGE = 0.5;
 
-private static final double SECOND_GEAR_PERCENTAGE =
-        MAXIMUM_TELEOP_SPEED;
+private static final double SECOND_GEAR_PERCENTAGE = MAXIMUM_TELEOP_SPEED;
 
 //TODO change based on driver request
 private static final int GEAR_UPSHIFT_JOYSTICK_BUTTON = 3;
