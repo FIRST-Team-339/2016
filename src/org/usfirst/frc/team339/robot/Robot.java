@@ -60,9 +60,6 @@
 package org.usfirst.frc.team339.robot;
 
 import org.usfirst.frc.team339.Hardware.Hardware;
-import org.usfirst.frc.team339.HardwareInterfaces.CANNetwork;
-import org.usfirst.frc.team339.HardwareInterfaces.CANObject;
-import org.usfirst.frc.team339.Utils.CANUtils;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.MotorSafetyHelper;
@@ -236,23 +233,6 @@ public void robotInit ()
     // -------------------------------------
     // CAN Network Initialization
     // -------------------------------------
-    CANObject leftFrontMotor =
-            new CANObject(Hardware.leftFrontMotor, 12);
-    Hardware.canNetwork.canObjects.add(leftFrontMotor);
-    CANObject rightFrontMotor =
-            new CANObject(Hardware.rightFrontMotor, 17);
-    Hardware.canNetwork.canObjects.add(rightFrontMotor);
-    CANObject rightRearMotor =
-            new CANObject(Hardware.rightRearMotor, 15);
-    Hardware.canNetwork.canObjects.add(rightRearMotor);
-    CANObject leftRearMotor = new CANObject(Hardware.leftRearMotor, 11);
-    Hardware.canNetwork.canObjects.add(leftRearMotor);
-    CANObject pdp = new CANObject(Hardware.pdp, 0);
-    Hardware.canNetwork.canObjects.add(pdp);
-    CANObject solenoid1 = new CANObject(Hardware.cameraSolenoid, 0);
-    Hardware.canNetwork.canObjects.add(solenoid1);
-    //CANObject solenoid1 = new CANObject(Hardware.solenoid, 0);
-    //CANNetwork.canObjects.add(solenoid1);
 
     //--------------------------------------
     // Encoder Initialization
@@ -339,10 +319,6 @@ public void robotInit ()
     Hardware.catapultSolenoid1.set(false);
     Hardware.catapultSolenoid2.set(false);
     
-    // ---------------------------------------
-    // Checks for Sticky Faults
-    // ---------------------------------------
-    CANUtils.testForFaults();
     
     // =========================================================
     // User code goes above here

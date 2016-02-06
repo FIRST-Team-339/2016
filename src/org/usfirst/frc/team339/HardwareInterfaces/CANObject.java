@@ -5,6 +5,9 @@ import edu.wpi.first.wpilibj.CANTalon;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.PowerDistributionPanel;
 
+/**
+ * NOTE: THIS CODE IS NOT COMPLETE! THERE ARE STILL ERRORS
+ */
 //TODO Create new imports for solenoids
 
 /*
@@ -305,14 +308,14 @@ public boolean getFault ()
     switch (typeId)
     {
         case 1:
-            System.out.println("Fault Foward Limit: " + talon.getFaultForLim() + 
-                    "\nFault Forward Soft Limit: " + talon.getFaultForSoftLim() +
-                    "\nFault Over Temperature: " + talon.getFaultOverTemp() +
-                    "\nFault Hardware Failure: " + talon.getFaultHardwareFailure() + 
-                    "\nFault Reverse Limit: " + talon.getFaultRevLim() +
-                    "\nFault Reverse Soft Limit: " + talon.getFaultRevSoftLim() +
-                    "\nFault Under Voltage: " + talon.getFaultUnderVoltage()
-                    );
+//            System.out.println("Fault Foward Limit: " + talon.getFaultForLim() + 
+//                    "\nFault Forward Soft Limit: " + talon.getFaultForSoftLim() +
+//                    "\nFault Over Temperature: " + talon.getFaultOverTemp() +
+//                    "\nFault Hardware Failure: " + talon.getFaultHardwareFailure() + 
+//                    "\nFault Reverse Limit: " + talon.getFaultRevLim() +
+//                    "\nFault Reverse Soft Limit: " + talon.getFaultRevSoftLim() +
+//                    "\nFault Under Voltage: " + talon.getFaultUnderVoltage()
+//                    );
             //0 is no fault, greater than 0 if there is a fault
             if (talon.getFaultForLim() > 0
                     || talon.getFaultForSoftLim() > 0

@@ -1,7 +1,9 @@
 package org.usfirst.frc.team339.HardwareInterfaces;
 
 import java.util.ArrayList;
-
+/**
+ * NOTE: THIS CODE IS NOT COMPLETE! THERE ARE STILL ERRORS
+ */
 /**
  * @author Daniel Resio, Becky Button, and Cole Ramos
  */

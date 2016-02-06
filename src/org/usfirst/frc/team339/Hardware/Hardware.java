@@ -15,7 +15,6 @@
 
 package org.usfirst.frc.team339.Hardware;
 
-import org.usfirst.frc.team339.HardwareInterfaces.CANNetwork;
 import org.usfirst.frc.team339.HardwareInterfaces.DoubleThrowSwitch;
 import org.usfirst.frc.team339.HardwareInterfaces.IRSensor;
 import org.usfirst.frc.team339.HardwareInterfaces.KilroyCamera;
@@ -63,8 +62,6 @@ private static final int rightRearMotorCANID = 15;
 private static final int leftRearMotorCANID = 11;
 private static final int rightFrontMotorCANID = 17;
 private static final int leftFrontMotorCANID = 12;
-private static final int pdpCANID = 0;
-private static final int pcmCANID = 0;
 
 // ---------------------------------------
 // Hardware Tunables
@@ -100,11 +97,6 @@ public static Victor armMotor = new Victor(0);
 // ------------------------------------
 // CAN classes
 // ------------------------------------
-//Creates our overarching CAN class that stores all CAN objects
-public static CANNetwork canNetwork = new CANNetwork();
-
-public static PowerDistributionPanel pdp =
-        new PowerDistributionPanel(pdpCANID);
 
 // ====================================
 // Relay classes
