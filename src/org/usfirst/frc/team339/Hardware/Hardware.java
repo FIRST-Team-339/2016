@@ -55,8 +55,6 @@ public class Hardware
 // ------------------------------------
 // Public Constants
 // ------------------------------------
-
-
 public static final int DELAY_POT_DEGREES = 270;
 public static final int TRANSDUCER_MAX_VALUE = 50;
 
@@ -268,11 +266,6 @@ public static Joystick rightDriver = new Joystick(1);
 public static Joystick leftOperator = new Joystick(2);
 public static Joystick rightOperator = new Joystick(3);
 
-// ------------------------------------
-// Drive system
-// ------------------------------------
-//
-
 // **********************************************************
 // Kilroy's Ancillary classes
 // **********************************************************
@@ -293,6 +286,10 @@ public static Transmission_old transmission = new Transmission_old(
         leftRearMotor, rightRearEncoder, rightRearEncoder,
         leftRearEncoder, leftRearEncoder);
 
+//------------------------------------
+//Drive system
+//------------------------------------
+//
 public static Drive drive = new Drive(transmission);
 
 // -------------------
@@ -316,5 +313,4 @@ public static final MotorSafetyHelper leftFrontMotorSafety =
         new MotorSafetyHelper(leftFrontMotor);
 public static final MotorSafetyHelper rightFrontMotorSafety =
         new MotorSafetyHelper(rightFrontMotor);
-
 } // end class
