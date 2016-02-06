@@ -15,6 +15,7 @@
 
 package org.usfirst.frc.team339.Hardware;
 
+import org.usfirst.frc.team339.HardwareInterfaces.CANNetwork;
 import org.usfirst.frc.team339.HardwareInterfaces.DoubleThrowSwitch;
 import org.usfirst.frc.team339.HardwareInterfaces.IRSensor;
 import org.usfirst.frc.team339.HardwareInterfaces.KilroyCamera;
@@ -102,6 +103,9 @@ public static CANTalon leftFrontMotor =
 // ------------------------------------
 // CAN classes
 // ------------------------------------
+//Creates our overarching CAN class that stores all CAN objects
+public static CANNetwork canNetwork = new CANNetwork();
+
 public static PowerDistributionPanel pdp =
         new PowerDistributionPanel(pdpCANID);
 
@@ -133,7 +137,7 @@ public static Compressor compressor = new Compressor();
 public static SingleThrowSwitch autonomousEnabled =
         new SingleThrowSwitch(19);
 public static SingleThrowSwitch shootHigh =
-        new SingleThrowSwitch(4);
+        new SingleThrowSwitch(8);
 public static SingleThrowSwitch shootLow =
         new SingleThrowSwitch(5);
 

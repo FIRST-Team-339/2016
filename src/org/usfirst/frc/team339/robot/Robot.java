@@ -62,6 +62,7 @@ package org.usfirst.frc.team339.robot;
 import org.usfirst.frc.team339.Hardware.Hardware;
 import org.usfirst.frc.team339.HardwareInterfaces.CANNetwork;
 import org.usfirst.frc.team339.HardwareInterfaces.CANObject;
+import org.usfirst.frc.team339.Utils.CANUtils;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.MotorSafetyHelper;
@@ -234,17 +235,17 @@ public void robotInit ()
     // CAN Network Initialization
     // -------------------------------------
     CANObject leftFrontMotor = new CANObject(Hardware.leftFrontMotor, 12);
-    CANNetwork.canObjects.add(leftFrontMotor);
+    Hardware.canNetwork.canObjects.add(leftFrontMotor);
     CANObject rightFrontMotor = new CANObject(Hardware.rightFrontMotor, 17);
-    CANNetwork.canObjects.add(rightFrontMotor);
+    Hardware.canNetwork.canObjects.add(rightFrontMotor);
     CANObject rightRearMotor = new CANObject(Hardware.rightRearMotor, 15);
-    CANNetwork.canObjects.add(rightRearMotor);
+    Hardware.canNetwork.canObjects.add(rightRearMotor);
     CANObject leftRearMotor = new CANObject(Hardware.leftRearMotor, 11);
-    CANNetwork.canObjects.add(leftRearMotor);
+    Hardware.canNetwork.canObjects.add(leftRearMotor);
     CANObject pdp = new CANObject(Hardware.pdp, 0);
-    CANNetwork.canObjects.add(pdp);
+    Hardware.canNetwork.canObjects.add(pdp);
     CANObject solenoid1 = new CANObject(Hardware.solenoid, 0);
-    CANNetwork.canObjects.add(solenoid1);
+    Hardware.canNetwork.canObjects.add(solenoid1);
     //--------------------------------------
     // Encoder Initialization
     //--------------------------------------
@@ -313,6 +314,12 @@ public void robotInit ()
     Hardware.catapultSolenoid0.set(false);
     Hardware.catapultSolenoid1.set(false);
     Hardware.catapultSolenoid2.set(false);
+    
+    // ---------------------------------------
+    // Checks for Sticky Faults
+    // ---------------------------------------
+    CANUtils.testForFaults();
+    
     // =========================================================
     // User code goes above here
     // =========================================================

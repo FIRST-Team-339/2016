@@ -1,6 +1,5 @@
 package org.usfirst.frc.team339.HardwareInterfaces;
 
-import org.usfirst.frc.team339.Hardware.Hardware;
 import edu.wpi.first.wpilibj.CANJaguar;
 import edu.wpi.first.wpilibj.CANTalon;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
@@ -21,14 +20,14 @@ import edu.wpi.first.wpilibj.PowerDistributionPanel;
  * on the CAN devices (the Talons, Jaguars, Pneumatic Control Modules, and Power
  * Distribution Panel)
  * 
- * @author Kilroy II
+ * @author Daniel Resio, Becky Button, and Cole Ramos
  *
  */
 public class CANObject
 {
 
 //If true, activates debug print statements throughout the class
-private static boolean useDebug = true;
+private boolean useDebug = true;
 
 /**
  * Prints values of the significant variables/methods in CANObject if useDebug is true
@@ -45,7 +44,7 @@ private void DebugCANUtils()
 //add object info 
 private int canId;
 //id for the CAN type
-private static int typeId;
+private int typeId;
 //type id 1
 private static CANTalon talon = null;
 //type id 2
@@ -71,7 +70,7 @@ private CANObject ()
  * @param newCanId
  *            the ID of the CAN object
  */
-public CANObject (CANTalon newTalon, int newCanId)
+public CANObject (final CANTalon newTalon, int newCanId)
 {
     talon = newTalon;
     canId = newCanId;
@@ -94,7 +93,7 @@ public CANObject (CANTalon newTalon, int newCanId)
  * @param newCanId
  *            the ID of the CAN object
  */
-public CANObject (CANJaguar newJaguar, int newCanId)
+public CANObject (final CANJaguar newJaguar, int newCanId)
 {
     jaguar = newJaguar;
     canId = newCanId;
@@ -118,7 +117,7 @@ public CANObject (CANJaguar newJaguar, int newCanId)
  * @param newCanId
  *            the ID of the CAN object
  */
-public CANObject (PowerDistributionPanel newPdp, int newCanId)
+public CANObject (final PowerDistributionPanel newPdp, int newCanId)
 {
     pdp = newPdp;
     canId = newCanId;
@@ -142,19 +141,20 @@ public CANObject (PowerDistributionPanel newPdp, int newCanId)
  * @param newCanId
  *            the ID of the CAN object
  */
-public CANObject (DoubleSolenoid newdoubleSolenoid, int newCanId)
+public CANObject (final DoubleSolenoid newdoubleSolenoid, int newCanId)
 {
     doubleSolenoid = newdoubleSolenoid;
     canId = newCanId;
     typeId = 3;
     
-    //TODO undo comments if the following code is necessary
+    // TODO undo comments if the following code is necessary
 //    if(useDebug == true)
 //    {
 //        System.out.println("The Double Solenoid is " + doubleSolenoid);
 //        System.out.println("The canId of the DoubleSolenoid is " + canId);
 //        System.out.println("The type Id of the DoubleSolenoid is " + typeId);
 //    }
+    
 }
 
 /**
@@ -173,7 +173,7 @@ public int getCanId ()
  * @param canId
  *            canId object
  */
-public void setCanId (int canId)
+public void setCanId (final int canId)
 {
     this.canId = canId;
 }
@@ -184,7 +184,7 @@ public void setCanId (int canId)
  * @param talon
  *            talon object to change to
  */
-public void setCAN (CANTalon talon)
+public void setCAN (final CANTalon talon)
 {
     CANObject.talon = talon;
     typeId = 1;
@@ -196,7 +196,7 @@ public void setCAN (CANTalon talon)
  * @param jaguar
  *            jaguar object to change to
  */
-public void setCAN (CANJaguar jaguar)
+public void setCAN (final CANJaguar jaguar)
 {
     CANObject.jaguar = jaguar;
     typeId = 2;
@@ -208,7 +208,7 @@ public void setCAN (CANJaguar jaguar)
  * @param doubleSolenoid
  *            pneumatics control module object to change to
  */
-public void setCAN (DoubleSolenoid doubleSolenoid)
+public void setCAN (final DoubleSolenoid doubleSolenoid)
 {
     CANObject.doubleSolenoid = doubleSolenoid;
     typeId = 3;
@@ -220,7 +220,7 @@ public void setCAN (DoubleSolenoid doubleSolenoid)
  * @param pdp
  *            power distribution panel object to change to
  */
-public void setCAN (PowerDistributionPanel pdp)
+public void setCAN (final PowerDistributionPanel pdp)
 {
     CANObject.pdp = pdp;
     typeId = 4;
@@ -300,7 +300,7 @@ public PowerDistributionPanel getPDP ()
  * @return true if there is a fault is present;
  *         false if a fault is not present or the given device is not recognized
  */
-public static boolean getFault ()
+public boolean getFault ()
 {
     switch (typeId)
     {
