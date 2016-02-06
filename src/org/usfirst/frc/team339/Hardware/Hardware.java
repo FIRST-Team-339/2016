@@ -56,6 +56,10 @@ public class Hardware
 // Public Constants
 // ------------------------------------
 
+
+public static final int DELAY_POT_DEGREES = 270;
+public static final int TRANSDUCER_MAX_VALUE = 130;
+
 // Makes the brightness to a visible level so our drivers can see.
 public static final int NORMAL_AXIS_CAMERA_BRIGHTNESS = 60;
 
@@ -64,7 +68,8 @@ public static final int MINIMUM_AXIS_CAMERA_BRIGHTNESS = 6;
 
 public static final int AXIS_FPS = 15;
 
-public static final Resolution AXIS_RESOLUTION = AxisCamera.Resolution.k320x240;
+public static final Resolution AXIS_RESOLUTION =
+        AxisCamera.Resolution.k320x240;
 // -------------------------------------
 // Private Constants
 // -------------------------------------
@@ -220,10 +225,10 @@ public static Solenoid catapultSolenoid2 = new Solenoid(2);
 // -------------------------------------
 // -------------------------------------
 public static RobotPotentiometer delayPot =
-        new RobotPotentiometer(3, 270);
+        new RobotPotentiometer(3, DELAY_POT_DEGREES);
 //transducer (written as a potentiometer)
 public static RobotPotentiometer transducer =
-        new RobotPotentiometer(2, 130);
+        new RobotPotentiometer(2, TRANSDUCER_MAX_VALUE);
 
 // -------------------------------------
 // Sonar/Ultrasonic
