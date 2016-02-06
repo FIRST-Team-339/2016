@@ -44,23 +44,6 @@ import edu.wpi.first.wpilibj.Relay.Value;
  */
 public class Teleop
 {
-
-// ==========================================
-// TUNEABLES
-// ==========================================
-
-// Boolean to check if we're taking a lit picture
-private static boolean takingLitImage = false;
-
-// Boolean to check if we're taking an unlit picture
-private static boolean takingUnlitImage = false;
-
-// this is for preparing to take a picture with the timer; changes
-// brightness, turns on ringlight, starts timer
-private static boolean prepPic = false;
-
-
-
 /**
  * User Initialization code for teleop mode should go here. Will be
  * called once when the robot enters teleop mode.
@@ -73,6 +56,11 @@ public static void init ()
 
     // set max speed. change by gear?
     Hardware.drive.setMaxSpeed(MAXIMUM_TELEOP_SPEED);
+    Hardware.drive.setMaxSpeed(MAXIMUM_TELEOP_SPEED);
+    Hardware.transmission.setFirstGearPercentage(FIRST_GEAR_PERCENTAGE);
+    Hardware.transmission
+            .setSecondGearPercentage(SECOND_GEAR_PERCENTAGE);
+    Hardware.transmission.setGear(1);
     Hardware.transmission.setFirstGearPercentage(FIRST_GEAR_PERCENTAGE);
     Hardware.transmission
             .setSecondGearPercentage(SECOND_GEAR_PERCENTAGE);
@@ -83,24 +71,11 @@ public static void init ()
     // and start it going automatically with the
     // camera server
     // -----------------------------------
-    Hardware.delayTimer.reset();
     CameraServer.getInstance().setSize(1);
-	// set max speed. change by gear?
-	Hardware.drive.setMaxSpeed(MAXIMUM_TELEOP_SPEED);
-	Hardware.transmission.setFirstGearPercentage(FIRST_GEAR_PERCENTAGE);
-	Hardware.transmission
-	        .setSecondGearPercentage(SECOND_GEAR_PERCENTAGE);
-	Hardware.transmission.setGear(1);
-	// -----------------------------------
-	// stop cam0 in case we have declared them
-	// in Autonomous. Then declare a new cam0
-	// and start it going automatically with the
-	// camera server
-	// -----------------------------------
+    Hardware.axisCamera.writeBrightness(
+            Hardware.NORMAL_AXIS_CAMERA_BRIGHTNESS);
+
 	Hardware.delayTimer.reset();
-	CameraServer.getInstance().setSize(1);
-    Hardware.axisCamera
-            .writeBrightness(Hardware.NORMAL_AXIS_CAMERA_BRIGHTNESS);
 
 } // end Init
 
@@ -128,9 +103,8 @@ public static void periodic ()
         {
         if (prepPic == false)
             {
-            Hardware.axisCamera
-                    .writeBrightness(
-                            Hardware.MINIMUM_AXIS_CAMERA_BRIGHTNESS);
+            Hardware.axisCamera.writeBrightness(
+              Hardware.MINIMUM_AXIS_CAMERA_BRIGHTNESS);
             Hardware.ringLightRelay.set(Value.kOn);
             Hardware.delayTimer.start();
             prepPic = true;
@@ -284,15 +258,23 @@ private static final double FIRST_GEAR_PERCENTAGE = 0.5;
 private static final double SECOND_GEAR_PERCENTAGE =
         MAXIMUM_TELEOP_SPEED;
 
-// Makes the brightness to a visible level so our drivers can see.
-private static final int NORMAL_AXIS_CAMERA_BRIGHTNESS = 50;
-
-// Crazy dark brightness for retroreflective pictures
-private static final int MINIMUM_AXIS_CAMERA_BRIGHTNESS = 6;
-
 //TODO change based on driver request
 private static final int GEAR_UPSHIFT_JOYSTICK_BUTTON = 3;
 
 private static final int GEAR_DOWNSHIFT_JOYSTICK_BUTTON = 2;
+
+//==========================================
+//TUNEABLES
+//==========================================
+
+//Boolean to check if we're taking a lit picture
+private static boolean takingLitImage = false;
+
+//Boolean to check if we're taking an unlit picture
+private static boolean takingUnlitImage = false;
+
+//this is for preparing to take a picture with the timer; changes
+//brightness, turns on ringlight, starts timer
+private static boolean prepPic = false;
 
 } // end class
