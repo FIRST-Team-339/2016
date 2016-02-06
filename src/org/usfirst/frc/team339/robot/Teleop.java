@@ -153,7 +153,18 @@ public static void periodic ()
     // Driving the Robot
     Hardware.transmission.controls(Hardware.rightDriver.getY(),
             Hardware.leftDriver.getY());
-
+    if (Hardware.transmission.getGear() == 1 &&
+            Hardware.rightDriver
+                    .getRawButton(GEAR_UPSHIFT_JOYSTICK_BUTTON) == true)
+        {
+        Hardware.transmission.upshift(1);
+        }
+    else if (Hardware.transmission.getGear() == 2 &&
+            Hardware.rightDriver.getRawButton(
+                    GEAR_DOWNSHIFT_JOYSTICK_BUTTON) == true)
+        {
+        Hardware.transmission.downshift(1);
+        }
 
 } // end Periodic
 
@@ -237,12 +248,18 @@ private static final double MAXIMUM_TELEOP_SPEED = 1.0;
 
 private static final double FIRST_GEAR_PERCENTAGE = 0.5;
 
-private static final double SECOND_GEAR_PERCENTAGE = MAXIMUM_TELEOP_SPEED;
+private static final double SECOND_GEAR_PERCENTAGE =
+        MAXIMUM_TELEOP_SPEED;
 
 // Makes the brightness to a visible level so our drivers can see.
 private static final int NORMAL_AXIS_CAMERA_BRIGHTNESS = 50;
 
 // Crazy dark brightness for retroreflective pictures
 private static final int MINIMUM_AXIS_CAMERA_BRIGHTNESS = 5;
+
+//TODO change based on driver request
+private static final int GEAR_UPSHIFT_JOYSTICK_BUTTON = 1;
+
+private static final int GEAR_DOWNSHIFT_JOYSTICK_BUTTON = 2;
 
 } // end class
