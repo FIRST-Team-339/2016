@@ -181,6 +181,20 @@ public static void periodic ()
 
 } // end Periodic
 
+// A method to process images (before we get a Shoot class)
+public static void processImage ()
+{
+    // If we click the Trigger and button 2, then we save an image and will
+    // eventually
+    if (Hardware.leftOperator.getTrigger() == true
+            && Hardware.leftOperator.getRawButton(2))
+        {
+        Hardware.axisCamera.saveImage("ProcessedImage");
+        }
+}
+// End processImage
+
+
 /**
  * stores print statements for future use in the print "bank", statements are
  * commented out when
@@ -244,12 +258,14 @@ public static void printStatements ()
 
     // Switches--------------
     // prints state of switches
-    // System.out.println("Autonomous Enabled Switch: " + Hardware.autonomousEnabled.isOn());
+    // System.out.println("Autonomous Enabled Switch: " +
+    // Hardware.autonomousEnabled.isOn());
     // System.out.println("Shoot High Switch: " + Hardware.shootHigh.isOn());
     // System.out.println("Shoot Low Switch: " + Hardware.shootLow.isOn());
 
     // print the position the 6 position switch------------
-    // System.out.println("Position: " + Hardware.startingPositionDial.getPosition());
+    // System.out.println("Position: " +
+    // Hardware.startingPositionDial.getPosition());
 
     // Relay-----------------
     // System.out.println(Hardware.ringLightRelay.get());

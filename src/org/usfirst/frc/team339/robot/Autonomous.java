@@ -68,7 +68,7 @@ private static enum MainState
     ALIGN, // aligns its self on the gaffers' tape based of IR sensors.
     MOVE_TO_SHOOTING_POSITION,  // moves towards a good shooting angle based on
                                 // settings.
-    SHOOT, // ajusts its self (?) and fires the cannonball.
+    SHOOT, // ajusts itself (?) and fires the cannonball.
     DONE
     }
 
@@ -319,8 +319,7 @@ private static void runMainStateMachine ()
             mainState = mainInit();
             break;
         case BEGIN_LOWERING_ARM:
-            // @TODO Uncomment
-            // mainState = beginLoweringArm();
+            mainState = beginLoweringArm();
             break;
         case LOWER_ARM_AND_MOVE:
             mainState = lowerArmAndMove();
@@ -372,27 +371,27 @@ private static MainState mainInit ()
     return returnState;
 }
 
-// @TODO Uncomment
-// private static MainState beginLoweringArm ()
-// {
-// MainState returnState = MainState.LOWER_ARM_AND_MOVE;
-//
-// Hardware.armMotor.set(1.0);
-//
-// return returnState;
-// }
+
+private static MainState beginLoweringArm ()
+{
+    MainState returnState = MainState.LOWER_ARM_AND_MOVE;
+
+    Hardware.armMotor.set(1.0);
+
+    return returnState;
+}
 
 
 private static MainState lowerArmAndMove ()
 {
     MainState returnState = MainState.LOWER_ARM_AND_MOVE;
 
-    // @TODO Uncomment
-    // if (Hardware.armEncoder.getDistance() > ARM_DOWN_DISTANCE)//TODO: set
-    // this to a known distance
-    // {
-    // Hardware.armMotor.set(0.0);
-    // }
+
+    if (Hardware.armEncoder.getDistance() > ARM_DOWN_DISTANCE)
+    // TODO: set this to a known distance
+        {
+        Hardware.armMotor.set(0.0);
+        }
 
     if (Hardware.drive.driveForwardInches(22.75))
         {
