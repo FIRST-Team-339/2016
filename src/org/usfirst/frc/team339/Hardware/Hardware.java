@@ -290,7 +290,8 @@ public static Joystick rightOperator = new Joystick(3);
 
 public static Transmission_old transmission = new Transmission_old(
         rightFrontMotor, rightRearMotor, leftFrontMotor,
-        leftRearMotor);
+        leftRearMotor, rightRearEncoder, rightRearEncoder,
+        leftRearEncoder, leftRearEncoder);
 
 public static Drive drive =
         new Drive(transmission);

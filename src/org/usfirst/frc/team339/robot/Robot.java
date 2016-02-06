@@ -259,9 +259,6 @@ public void robotInit ()
     Hardware.rightRearEncoder.setDistancePerPulse(0.019706);
     Hardware.rightRearEncoder.reset();
 
-    Hardware.transmission.initEncoders(Hardware.rightRearEncoder,
-            Hardware.leftRearEncoder);
-
     // -------------------------------------
     // USB camera initialization
     // -------------------------------------
