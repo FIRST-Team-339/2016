@@ -235,24 +235,27 @@ public void robotInit ()
     // -------------------------------------
     // CAN Network Initialization
     // -------------------------------------
-    CANObject leftFrontMotor = new CANObject(Hardware.leftFrontMotor,
-            12);
+    CANObject leftFrontMotor =
+            new CANObject(Hardware.leftFrontMotor, 12);
     CANNetwork.canObjects.add(leftFrontMotor);
-    CANObject rightFrontMotor = new CANObject(Hardware.rightFrontMotor,
-            17);
+    CANObject rightFrontMotor =
+            new CANObject(Hardware.rightFrontMotor, 17);
     CANNetwork.canObjects.add(rightFrontMotor);
-    CANObject rightRearMotor = new CANObject(Hardware.rightRearMotor,
-            15);
+    CANObject rightRearMotor =
+            new CANObject(Hardware.rightRearMotor, 15);
     CANNetwork.canObjects.add(rightRearMotor);
     CANObject leftRearMotor = new CANObject(Hardware.leftRearMotor, 11);
     CANNetwork.canObjects.add(leftRearMotor);
     CANObject pdp = new CANObject(Hardware.pdp, 0);
     CANNetwork.canObjects.add(pdp);
-    // CANObject solenoid1 = new CANObject(Hardware.solenoid, 0);
-    // CANNetwork.canObjects.add(solenoid1);
-    // --------------------------------------
+    CANObject solenoid1 = new CANObject(Hardware.cameraSolenoid, 0);
+    CANNetwork.canObjects.add(solenoid1);
+    //CANObject solenoid1 = new CANObject(Hardware.solenoid, 0);
+    //CANNetwork.canObjects.add(solenoid1);
+
+    //--------------------------------------
     // Encoder Initialization
-    // --------------------------------------
+    //--------------------------------------
     Hardware.leftRearEncoder.setDistancePerPulse(0.019706);
     Hardware.leftRearEncoder.reset();
 
@@ -261,10 +264,21 @@ public void robotInit ()
 
     Hardware.transmission.initEncoders(Hardware.rightRearEncoder,
             Hardware.leftRearEncoder);
+    Hardware.leftRearEncoder
+            .setDistancePerPulse(distancePerTickForMotorEncoders);
+    Hardware.leftRearEncoder.reset();
 
-    // -------------------------------------
-    // USB camera initialization
-    // -------------------------------------
+    Hardware.rightRearEncoder
+            .setDistancePerPulse(distancePerTickForMotorEncoders);
+    Hardware.rightRearEncoder.reset();
+
+    Hardware.transmission.initEncoders(Hardware.rightRearEncoder,
+            Hardware.leftRearEncoder);
+    Hardware.armEncoder
+            .setDistancePerPulse(distancePerTickForArmEncoder);
+            // -------------------------------------
+            // USB camera initialization
+            // -------------------------------------
 
     // Settings for the USB Camera
     Hardware.cam0.setBrightness(50);
@@ -296,27 +310,29 @@ public void robotInit ()
     Hardware.rightRearMotorSafety.setSafetyEnabled(true);
     Hardware.leftFrontMotorSafety.setSafetyEnabled(true);
     Hardware.rightFrontMotorSafety.setSafetyEnabled(true);
-    // Hardware.transmissionFourWheel
-    // .setRightMotorDirection(MotorDirection.REVERSED);
+    //Hardware.transmissionFourWheel
+    //        .setRightMotorDirection(MotorDirection.REVERSED);
 
-    // --------------------------------------
+    //--------------------------------------
     // Compressor Initialization
-    // --------------------------------------
+    //--------------------------------------
     Hardware.compressor.setClosedLoopControl(true);
 
-    // --------------------------------------
+    //--------------------------------------
     // Encoder Initialization
-    // --------------------------------------
+    //--------------------------------------
     Hardware.leftRearEncoder.reset();
-    Hardware.leftRearEncoder.setDistancePerPulse(0.019706);
+    Hardware.leftRearEncoder
+            .setDistancePerPulse(distancePerTickForMotorEncoders);
 
     Hardware.rightRearEncoder.reset();
-    Hardware.rightRearEncoder.setDistancePerPulse(0.019706);
+    Hardware.rightRearEncoder
+            .setDistancePerPulse(distancePerTickForMotorEncoders);
 
     // ---------------------------------------
     // Solenoid Initialization
     // ---------------------------------------
-    // initializes the solenoids...duh duh duh...
+    //initializes the solenoids...duh duh duh...
     Hardware.cameraSolenoid.set(DoubleSolenoid.Value.kForward);
     Hardware.catapultSolenoid0.set(false);
     Hardware.catapultSolenoid1.set(false);
@@ -440,5 +456,6 @@ public void testPeriodic ()
 // ==========================================
 // TUNEABLES
 // ==========================================
-
+private final double distancePerTickForMotorEncoders = 0.019706;
+private final double distancePerTickForArmEncoder = 0.01;
 } // end class

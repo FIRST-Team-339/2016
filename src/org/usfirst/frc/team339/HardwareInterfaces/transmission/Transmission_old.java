@@ -1,3 +1,4 @@
+
 package org.usfirst.frc.team339.HardwareInterfaces.transmission;
 
 /**
@@ -206,7 +207,8 @@ private debugStateValues debugState = debugStateValues.DEBUG_NONE;
  *              with each one corresponding to the gear that we are in.
  *              -------------------------------------------------------
  */
-private final Vector<Integer> digitalChannelNumberForGearLight = new Vector<Integer>();
+private final Vector<Integer> digitalChannelNumberForGearLight =
+        new Vector<Integer>();
 
 /**
  * -------------------------------------------------------
@@ -273,8 +275,9 @@ private double leftFifthGearPercentage = 1.00;
  * @written Jan 21, 2011
  *          -------------------------------------------------------
  */
-private final JoystickDirection leftJoystickIsReversed = new JoystickDirection(
-        JoystickDirection.NORMAL);
+private final JoystickDirection leftJoystickIsReversed =
+        new JoystickDirection(
+                JoystickDirection.NORMAL);
 
 /**
  * -------------------------------------------------------
@@ -386,8 +389,9 @@ private boolean presentUpshiftState = false;
  * @written Jan 21, 2011
  *          -------------------------------------------------------
  */
-private final JoystickDirection rightJoystickIsReversed = new JoystickDirection(
-        JoystickDirection.NORMAL);
+private final JoystickDirection rightJoystickIsReversed =
+        new JoystickDirection(
+                JoystickDirection.NORMAL);
 
 /**
  * -------------------------------------------------------
@@ -405,14 +409,16 @@ private final MotorDirection rightMotorDirection = new MotorDirection(
 // ----------------------------------------------------
 // Direction of the right rear motor for mecanum drive.
 // ----------------------------------------------------
-private final MotorDirection rightRearMotorDirection = new MotorDirection(
-        MotorDirection.FORWARD);
+private final MotorDirection rightRearMotorDirection =
+        new MotorDirection(
+                MotorDirection.FORWARD);
 
 // ----------------------------------------------------
 // Direction of the left rear motor for mecanum drive.
 // ----------------------------------------------------
-private final MotorDirection leftRearMotorDirection = new MotorDirection(
-        MotorDirection.FORWARD);
+private final MotorDirection leftRearMotorDirection =
+        new MotorDirection(
+                MotorDirection.FORWARD);
 
 /**
  * -------------------------------------------------------
@@ -907,8 +913,10 @@ public boolean brake (final double brakeVoltage)
         } // if
     else
         {
-        this.brakePreviousPreviousDistanceR = this.brakePreviousDistanceR;
-        this.brakePreviousPreviousDistanceL = this.brakePreviousDistanceL;
+        this.brakePreviousPreviousDistanceR =
+                this.brakePreviousDistanceR;
+        this.brakePreviousPreviousDistanceL =
+                this.brakePreviousDistanceL;
         this.brakePreviousDistanceR = Math
                 .abs(this.oneOrRightMotorEncoder.getDistance());
         this.brakePreviousDistanceL = Math
