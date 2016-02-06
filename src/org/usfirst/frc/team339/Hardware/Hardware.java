@@ -89,6 +89,8 @@ public static Talon leftFrontMotor = new Talon(4);
 // Victor classes
 // ------------------------------------
 public static Victor armMotor = new Victor(0);
+public static Victor starboardArmIntakeMotor = new Victor(5);
+public static Victor portArmIntakeMotor = new Victor(6);
 
 // ------------------------------------
 // CAN classes

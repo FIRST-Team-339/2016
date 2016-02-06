@@ -158,16 +158,19 @@ public static void periodic ()
         }
 
     //Driving the Robot
+    //Hand the transmission class the joystick values and motor controllers for four wheel drive.
     Hardware.transmission.controls(Hardware.rightDriver.getY(),
             Hardware.leftDriver.getY(), Hardware.leftFrontMotor,
             Hardware.leftRearMotor, Hardware.rightFrontMotor,
             Hardware.rightRearMotor);
+    //If we're in 1st gear and we're pressing the upshift button, shift up.
     if (Hardware.transmission.getGear() == 1 &&
             Hardware.rightDriver
                     .getRawButton(GEAR_UPSHIFT_JOYSTICK_BUTTON) == true)
         {
         Hardware.transmission.upshift(1);
         }
+    //If we're in 2nd gear and we press the downshift button, shift down.
     else if (Hardware.transmission.getGear() == 2 &&
             Hardware.rightDriver.getRawButton(
                     GEAR_DOWNSHIFT_JOYSTICK_BUTTON) == true)
