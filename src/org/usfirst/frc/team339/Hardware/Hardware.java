@@ -31,12 +31,13 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.MotorSafetyHelper;
-import edu.wpi.first.wpilibj.PowerDistributionPanel;
 import edu.wpi.first.wpilibj.Relay;
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.Talon;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.Victor;
+import edu.wpi.first.wpilibj.vision.AxisCamera;
+import edu.wpi.first.wpilibj.vision.AxisCamera.Resolution;
 import edu.wpi.first.wpilibj.vision.USBCamera;
 
 // -------------------------------------------------------
@@ -55,15 +56,23 @@ public class Hardware
 // Public Constants
 // ------------------------------------
 
+
 public static final int DELAY_POT_DEGREES = 270;
 public static final int TRANSDUCER_MAX_VALUE = 130;
 
-// -------------------------------------
-// Private Constants
-// -------------------------------------
+// Makes the brightness to a visible level so our drivers can see.
+public static final int NORMAL_AXIS_CAMERA_BRIGHTNESS = 60;
 
-private static final int pdpCANID = 0;
-private static final int pcmCANID = 0;
+// Crazy dark brightness for retroreflective pictures
+public static final int MINIMUM_AXIS_CAMERA_BRIGHTNESS = 6;
+
+public static final int AXIS_FPS = 15;
+
+public static final Resolution AXIS_RESOLUTION =
+        AxisCamera.Resolution.k320x240;
+        // -------------------------------------
+        // Private Constants
+        // -------------------------------------
 
 // ---------------------------------------
 // Hardware Tunables
@@ -92,24 +101,22 @@ public static Talon leftFrontMotor = new Talon(4);
 // Victor classes
 // ------------------------------------
 public static Victor armMotor = new Victor(0);
-
 // ------------------------------------
 // CAN classes
 // ------------------------------------
-public static PowerDistributionPanel pdp =
-        new PowerDistributionPanel(pdpCANID);
 
 // ====================================
 // Relay classes
 // ====================================
-//Relay that controls the RingLight
+
+// Relay that controls the RingLight
 public static Relay ringLightRelay = new Relay(0);
 
 // ------------------------------------
 // Compressor class - runs the compressor
 // with a single relay
 // ------------------------------------
-//relay that controls compressor
+// relay that controls compressor
 public static Compressor compressor = new Compressor();
 
 // ====================================
@@ -119,26 +126,26 @@ public static Compressor compressor = new Compressor();
 // Single and double throw switches
 // ------------------------------------
 
-//Turns autonomous on or off.
+// Turns autonomous on or off.
 /**
  * A physical switch that decides whether or not to run autonomous.
  */
 public static SingleThrowSwitch autonomousEnabled =
-        new SingleThrowSwitch(19);
-public static SingleThrowSwitch shootHigh =
-        new SingleThrowSwitch(8);
-public static SingleThrowSwitch shootLow =
-        new SingleThrowSwitch(7);
-//Shoot high/low switch
-public static DoubleThrowSwitch noShoot =
-        new DoubleThrowSwitch(shootHigh, shootLow);
+        new SingleThrowSwitch(
+                19);
+public static SingleThrowSwitch shootHigh = new SingleThrowSwitch(8);
+public static SingleThrowSwitch shootLow = new SingleThrowSwitch(7);
+// Shoot high/low switch
+public static DoubleThrowSwitch noShoot = new DoubleThrowSwitch(
+        shootHigh, shootLow);
 
 /**
  * Displays the starting position.
  * Position 0 on the switch corresponds to position 1, 1 to 2, etc.
  */
 public static SixPositionSwitch startingPositionDial =
-        new SixPositionSwitch(14, 15, 16, 17, 18, 21);
+        new SixPositionSwitch(
+                14, 15, 16, 17, 18, 21);
 
 // ------------------------------------
 // Gear Tooth Sensors
@@ -150,7 +157,6 @@ public static SixPositionSwitch startingPositionDial =
 public static Encoder leftRearEncoder = new Encoder(0, 1);
 public static Encoder rightRearEncoder = new Encoder(2, 3);
 public static Encoder armEncoder = new Encoder(4, 5);
-
 // -----------------------
 // Wiring diagram
 // -----------------------
@@ -170,6 +176,7 @@ public static Encoder armEncoder = new Encoder(4, 5);
 // -------------------------------------
 // Red Light/IR Sensor class
 // -------------------------------------
+
 public static IRSensor rightIR = new IRSensor(6);
 public static IRSensor leftIR = new IRSensor(22);
 
@@ -190,9 +197,9 @@ public static IRSensor leftIR = new IRSensor(22);
 // ------------------------------------
 // Double Solenoids
 // ------------------------------------
-//double solenoid that moves the camera
-public static DoubleSolenoid cameraSolenoid = new DoubleSolenoid(3, 4);
 
+// double solenoid that moves the camera
+public static DoubleSolenoid cameraSolenoid = new DoubleSolenoid(3, 4);
 // ------------------------------------
 // Single Solenoids
 // ------------------------------------
@@ -217,7 +224,6 @@ public static Solenoid catapultSolenoid2 = new Solenoid(2);
 // -------------------------------------
 public static RobotPotentiometer delayPot =
         new RobotPotentiometer(3, DELAY_POT_DEGREES);
-//transducer (written as a potentiometer)
 public static RobotPotentiometer transducer =
         new RobotPotentiometer(2, TRANSDUCER_MAX_VALUE);
 
@@ -247,8 +253,8 @@ public static KilroyCamera axisCamera = new KilroyCamera(true);
 // ------------------------------------
 // DriverStations class
 // ------------------------------------
-public static final DriverStation driverStation =
-        DriverStation.getInstance();
+public static final DriverStation driverStation = DriverStation
+        .getInstance();
 
 // ------------------------------------
 // Joystick classes
@@ -299,12 +305,16 @@ public static final ErrorMessage errorMessage = new ErrorMessage(
         true /* append timelog */);
 
 public static final MotorSafetyHelper leftRearMotorSafety =
-        new MotorSafetyHelper(leftRearMotor);
+        new MotorSafetyHelper(
+                leftRearMotor);
 public static final MotorSafetyHelper rightRearMotorSafety =
-        new MotorSafetyHelper(rightRearMotor);
+        new MotorSafetyHelper(
+                rightRearMotor);
 public static final MotorSafetyHelper leftFrontMotorSafety =
-        new MotorSafetyHelper(leftFrontMotor);
+        new MotorSafetyHelper(
+                leftFrontMotor);
 public static final MotorSafetyHelper rightFrontMotorSafety =
-        new MotorSafetyHelper(rightFrontMotor);
+        new MotorSafetyHelper(
+                rightFrontMotor);
 
 } // end class
