@@ -213,36 +213,21 @@ public static void periodic ()
  */
 public static void printStatements ()
 {
-    // Joysticks------------
-    //    System.out.println("Left Joystick: " + Hardware.leftDriver.getY());
-    //    System.out
-    //            .println("Right Joystick: " + Hardware.rightDriver.getY());
-    //      System.out.println("Left Operator: " + Hardware.leftOperator.getY());
-    //      System.out.println("Right Operator: " + Hardware.rightOperator.getY());
 	// Joysticks------------
 	// System.out.println("Left Joystick: " + Hardware.leftDriver.getY());
-	// System.out
-	// .println("Right Joystick: " + Hardware.rightDriver.getY());
+	// System.out.println("Right Joystick: " + Hardware.rightDriver.getY());
 	// System.out.println("Left Operator: " + Hardware.leftOperator.getY());
 	// System.out.println("Right Operator: " + Hardware.rightOperator.getY());
 	// IR sensors-----------
 	//   System.out.println("left IR = " + Hardware.leftIR.isOn());
 	//   System.out.println("right IR = " + Hardware.rightIR.isOn());
-    // IR sensors-----------
-    //   System.out.println("left IR = " + Hardware.leftIR.isOn());
-    //   System.out.println("right IR = " + Hardware.rightIR.isOn());
 
     // pots-----------------
     //    System.out.println("delay pot = " + (int) Hardware.delayPot.get());
     //prints the value of the transducer- (range in code is 50)
     //hits psi of 100 accurately
-    //System.out.println("transducer = " +
-    //Hardware.transducer.get());
-	// pots-----------------
-	// System.out.println("delay pot = " + (int) Hardware.delayPot.get());
-	// prints the value of the transducer- (range 130)
-	// NOT TESTED!!!System.out.println("transducer = " +
-	// Hardware.transducer.get());
+    //System.out.println("transducer = " + Hardware.transducer.get());
+    
 	//Motor controllers-----
 	//prints value of the motors
 	//    System.out.println("RR Motor V = " + Hardware.rightRearMotor.get());
@@ -250,13 +235,6 @@ public static void printStatements ()
 	//    System.out.println("RF Motor V = " + Hardware.rightFrontMotor.get());
 	//    System.out.println("LF Motor V = " + Hardware.leftFrontMotor.get());
 	//    System.out.println("Arm Motor V = " + Hardware.armMotor.get());
-    //Motor controllers-----
-    //prints value of the motors
-    //    System.out.println("RR Motor V = " + Hardware.rightRearMotor.get());
-    //    System.out.println("LR Motor V = " + Hardware.leftRearMotor.get());
-    //    System.out.println("RF Motor V = " + Hardware.rightFrontMotor.get());
-    //    System.out.println("LF Motor V = " + Hardware.leftFrontMotor.get());
-    //    System.out.println("Arm Motor V = " + Hardware.armMotor.get());
 
     //Solenoids-------------
     //prints the state of the solenoids 
@@ -267,15 +245,7 @@ public static void printStatements ()
     // Hardware.catapultSolenoid1.get());
     // System.out.println("catapultSolenoid2 = " +
     // Hardware.catapultSolenoid2.get());
-	// Solenoids-------------
-	// prints the state of the solenoids
-	// System.out.println("cameraSolenoid = " + Hardware.cameraSolenoid.get());
-	// System.out.println("catapultSolenoid0 = " +
-	// Hardware.catapultSolenoid0.get());
-	// System.out.println("catapultSolenoid1 = " +
-	// Hardware.catapultSolenoid1.get());
-	// System.out.println("catapultSolenoid2 = " +
-	// Hardware.catapultSolenoid2.get());
+    
 	// Encoders-------------
 	//    System.out.println(
 	//            "RR distance = " + Hardware.rightRearEncoder.getDistance());
@@ -286,33 +256,14 @@ public static void printStatements ()
 	//    System.out.println(
 	//            "LF distance = " + Hardware.leftFrontEncoder.getDistance());
 	//    System.out.println("Arm Motor = " + Hardware.armMotor.getDistance());
-    // Encoders-------------
-    //    System.out.println(
-    //            "RR distance = " + Hardware.rightRearEncoder.getDistance());
-    //    System.out.println(
-    //            "LR distance = " + Hardware.leftRearEncoder.getDistance());
-    //    System.out.println("RF distance = "
-    //            + Hardware.rightFrontEncoder.getDistance());
-    //    System.out.println(
-    //            "LF distance = " + Hardware.leftFrontEncoder.getDistance());
-//        System.out.println("Arm Motor = " + Hardware.armEncoder.get());
-        //test the armEncoder reading
-//        Hardware.armMotor.set(1);
 
     //Switches--------------
     //prints state of switches
     //    System.out.println("Autonomous Enabled Switch: " + Hardware.autonomousEnabled.isOn());
     //    System.out.println("Shoot High Switch: " + Hardware.shootHigh.isOn());
     //    System.out.println("Shoot Low Switch: " + Hardware.shootLow.isOn());
-	// Switches--------------
-	// prints state of switches
-	// System.out.println("Autonomous Enabled Switch: " + Hardware.autonomousEnabled.isOn());
-	// System.out.println("Shoot High Switch: " + Hardware.shootHigh.isOn());
-	// System.out.println("Shoot Low Switch: " + Hardware.shootLow.isOn());
 	//print the position the 6 position switch------------
 	//    System.out.println("Position: " + Hardware.startingPositionDial.getPosition());
-    //print the position the 6 position switch------------
-    //    System.out.println("Position: " + Hardware.startingPositionDial.getPosition());
 
     //Relay-----------------
     //    System.out.println(Hardware.ringLightRelay.get());
