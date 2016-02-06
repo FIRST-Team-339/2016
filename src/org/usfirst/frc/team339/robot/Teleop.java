@@ -159,7 +159,9 @@ public static void periodic ()
 
     //Driving the Robot
     Hardware.transmission.controls(Hardware.rightDriver.getY(),
-            Hardware.leftDriver.getY());
+            Hardware.leftDriver.getY(), Hardware.leftFrontMotor,
+            Hardware.leftRearMotor, Hardware.rightFrontMotor,
+            Hardware.rightRearMotor);
     if (Hardware.transmission.getGear() == 1 &&
             Hardware.rightDriver
                     .getRawButton(GEAR_UPSHIFT_JOYSTICK_BUTTON) == true)
@@ -172,7 +174,6 @@ public static void periodic ()
         {
         Hardware.transmission.downshift(1);
         }
-
 } // end Periodic
 
 /**
@@ -271,7 +272,7 @@ private static final int NORMAL_AXIS_CAMERA_BRIGHTNESS = 50;
 private static final int MINIMUM_AXIS_CAMERA_BRIGHTNESS = 6;
 
 //TODO change based on driver request
-private static final int GEAR_UPSHIFT_JOYSTICK_BUTTON = 1;
+private static final int GEAR_UPSHIFT_JOYSTICK_BUTTON = 3;
 
 private static final int GEAR_DOWNSHIFT_JOYSTICK_BUTTON = 2;
 

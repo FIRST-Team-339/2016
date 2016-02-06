@@ -24,7 +24,6 @@ import org.usfirst.frc.team339.HardwareInterfaces.SixPositionSwitch;
 import org.usfirst.frc.team339.HardwareInterfaces.transmission.Transmission_old;
 import org.usfirst.frc.team339.Utils.Drive;
 import org.usfirst.frc.team339.Utils.ErrorMessage;
-import edu.wpi.first.wpilibj.CANTalon;
 import edu.wpi.first.wpilibj.CameraServer;
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
@@ -35,6 +34,7 @@ import edu.wpi.first.wpilibj.MotorSafetyHelper;
 import edu.wpi.first.wpilibj.PowerDistributionPanel;
 import edu.wpi.first.wpilibj.Relay;
 import edu.wpi.first.wpilibj.Solenoid;
+import edu.wpi.first.wpilibj.Talon;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.Victor;
 import edu.wpi.first.wpilibj.vision.USBCamera;
@@ -58,10 +58,7 @@ public class Hardware
 // -------------------------------------
 // Private Constants
 // -------------------------------------
-private static final int rightRearMotorCANID = 15;
-private static final int leftRearMotorCANID = 11;
-private static final int rightFrontMotorCANID = 17;
-private static final int leftFrontMotorCANID = 12;
+
 private static final int pdpCANID = 0;
 private static final int pcmCANID = 0;
 
@@ -83,19 +80,16 @@ private static final int pcmCANID = 0;
 // ------------------------------------
 // Talon classes
 // ------------------------------------
-public static CANTalon rightRearMotor =
-        new CANTalon(rightRearMotorCANID);
-public static CANTalon leftRearMotor =
-        new CANTalon(leftRearMotorCANID);
-public static CANTalon rightFrontMotor =
-        new CANTalon(rightFrontMotorCANID);
-public static CANTalon leftFrontMotor =
-        new CANTalon(leftFrontMotorCANID);
+public static Talon rightRearMotor = new Talon(2);
+public static Talon leftRearMotor = new Talon(3);
+public static Talon rightFrontMotor = new Talon(1);
+public static Talon leftFrontMotor = new Talon(4);
 
 // ------------------------------------
 // Victor classes
 // ------------------------------------
 public static Victor armMotor = new Victor(0);
+
 // ------------------------------------
 // CAN classes
 // ------------------------------------
@@ -105,7 +99,6 @@ public static PowerDistributionPanel pdp =
 // ====================================
 // Relay classes
 // ====================================
-
 //Relay that controls the RingLight
 public static Relay ringLightRelay = new Relay(0);
 
@@ -154,6 +147,7 @@ public static SixPositionSwitch startingPositionDial =
 public static Encoder leftRearEncoder = new Encoder(0, 1);
 public static Encoder rightRearEncoder = new Encoder(2, 3);
 public static Encoder armEncoder = new Encoder(4, 5);
+
 // -----------------------
 // Wiring diagram
 // -----------------------
@@ -173,7 +167,6 @@ public static Encoder armEncoder = new Encoder(4, 5);
 // -------------------------------------
 // Red Light/IR Sensor class
 // -------------------------------------
-
 public static IRSensor rightIR = new IRSensor(6);
 public static IRSensor leftIR = new IRSensor(22);
 
@@ -194,9 +187,9 @@ public static IRSensor leftIR = new IRSensor(22);
 // ------------------------------------
 // Double Solenoids
 // ------------------------------------
-
 //double solenoid that moves the camera
 public static DoubleSolenoid cameraSolenoid = new DoubleSolenoid(3, 4);
+
 // ------------------------------------
 // Single Solenoids
 // ------------------------------------
@@ -282,20 +275,12 @@ public static Joystick rightOperator = new Joystick(3);
 // ------------------------------------
 // Transmission class
 // ------------------------------------
-
-/*
- * public static TransmissionFourWheel transmissionFourWheel =
- * new TransmissionFourWheel(rightFrontMotor, leftFrontMotor,
- * rightRearMotor, leftRearMotor);
- */
-
 public static Transmission_old transmission = new Transmission_old(
         rightFrontMotor, rightRearMotor, leftFrontMotor,
         leftRearMotor, rightRearEncoder, rightRearEncoder,
         leftRearEncoder, leftRearEncoder);
 
-public static Drive drive =
-        new Drive(transmission);
+public static Drive drive = new Drive(transmission);
 
 // -------------------
 // Assembly classes (e.g. forklift)

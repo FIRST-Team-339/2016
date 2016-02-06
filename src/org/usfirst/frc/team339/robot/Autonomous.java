@@ -222,10 +222,6 @@ public static void init ()
     // -------------------------------------
     // motor initialization
     // -------------------------------------
-    Hardware.leftRearMotor.enableBrakeMode(true);
-    Hardware.rightRearMotor.enableBrakeMode(true);
-    Hardware.leftFrontMotor.enableBrakeMode(true);
-    Hardware.rightFrontMotor.enableBrakeMode(true);
     Hardware.leftRearMotorSafety.setSafetyEnabled(true);
     Hardware.rightRearMotorSafety.setSafetyEnabled(true);
     Hardware.leftFrontMotorSafety.setSafetyEnabled(true);
