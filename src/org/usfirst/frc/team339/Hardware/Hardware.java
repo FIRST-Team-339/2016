@@ -70,9 +70,9 @@ public static final int AXIS_FPS = 15;
 
 public static final Resolution AXIS_RESOLUTION =
         AxisCamera.Resolution.k320x240;
-// -------------------------------------
-// Private Constants
-// -------------------------------------
+        // -------------------------------------
+        // Private Constants
+        // -------------------------------------
 
 // ---------------------------------------
 // Hardware Tunables
@@ -101,8 +101,8 @@ public static Talon leftFrontMotor = new Talon(4);
 // Victor classes
 // ------------------------------------
 public static Victor armMotor = new Victor(0);
-public static Victor starboardArmIntakeMotor = new Victor(5);
-public static Victor portArmIntakeMotor = new Victor(6);
+public static Victor starboardArmIntakeMotor = new Victor(6);
+public static Victor portArmIntakeMotor = new Victor(5);
 
 // ------------------------------------
 // CAN classes
