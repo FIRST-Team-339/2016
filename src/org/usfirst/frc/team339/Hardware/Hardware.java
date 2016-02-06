@@ -58,7 +58,7 @@ public class Hardware
 
 
 public static final int DELAY_POT_DEGREES = 270;
-public static final int TRANSDUCER_MAX_VALUE = 130;
+public static final int TRANSDUCER_MAX_VALUE = 50;
 
 // Makes the brightness to a visible level so our drivers can see.
 public static final int NORMAL_AXIS_CAMERA_BRIGHTNESS = 60;
@@ -227,6 +227,7 @@ public static Solenoid catapultSolenoid2 = new Solenoid(2);
 public static RobotPotentiometer delayPot =
         new RobotPotentiometer(3, DELAY_POT_DEGREES);
 //transducer (written as a potentiometer)
+//set to 50 to hit 100 psi accurately 
 public static RobotPotentiometer transducer =
         new RobotPotentiometer(2, TRANSDUCER_MAX_VALUE);
 

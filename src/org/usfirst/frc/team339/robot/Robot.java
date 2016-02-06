@@ -253,12 +253,15 @@ public void robotInit ()
 
 	Hardware.transmission.initEncoders(Hardware.rightRearEncoder,
 	        Hardware.leftRearEncoder);
-	Hardware.armEncoder
-	        .setDistancePerPulse(distancePerTickForArmEncoder);
 	        // -------------------------------------
 	        // USB camera initialization
 	        // -------------------------------------
 
+    Hardware.transmission.initEncoders(Hardware.rightRearEncoder,
+            Hardware.leftRearEncoder);
+            // -------------------------------------
+            // USB camera initialization
+            // -------------------------------------
 	// Settings for the USB Camera
 	Hardware.cam0.setBrightness(50);
 	Hardware.cam0.setExposureAuto();
@@ -401,13 +404,13 @@ public void teleopPeriodic ()
 @Override
 public void testInit ()
 {
-	// =========================================================
-	// User code goes below here
-	// =========================================================
+    // =========================================================
+    // User code goes below here
+    // =========================================================
 
-	// =========================================================
-	// User code goes above here
-	// =========================================================
+    // =========================================================
+    // User code goes above here
+    // =========================================================
 
 } // end testInit
 
@@ -423,9 +426,9 @@ public void testInit ()
 @Override
 public void testPeriodic ()
 {
-	// =========================================================
-	// User code goes below here
-	// =========================================================
+    // =========================================================
+    // User code goes below here
+    // =========================================================
 
 	// =========================================================
 	// User code goes above here
@@ -437,5 +440,4 @@ public void testPeriodic ()
 // TUNEABLES
 // ==========================================
 private final double distancePerTickForMotorEncoders = 0.019706;
-private final double distancePerTickForArmEncoder = 0.01;
 } // end class
