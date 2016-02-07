@@ -235,13 +235,10 @@ public void robotInit ()
     // --------------------------------------
     // Encoder Initialization
     // --------------------------------------
-
-    Hardware.leftRearEncoder
-            .setDistancePerPulse(distancePerTickForMotorEncoders);
+    Hardware.leftRearEncoder.setDistancePerPulse(distancePerTickForMotorEncoders);
     Hardware.leftRearEncoder.reset();
 
-    Hardware.rightRearEncoder
-            .setDistancePerPulse(distancePerTickForMotorEncoders);
+    Hardware.rightRearEncoder.setDistancePerPulse(distancePerTickForMotorEncoders);
     Hardware.rightRearEncoder.reset();
 
     Hardware.transmission.setMaxGear(2);
