@@ -289,6 +289,8 @@ public static void init ()
 	// ---------------------------------------
 	Hardware.kilroyTimer.stop();
 	Hardware.kilroyTimer.reset();
+	Hardware.leftRearEncoder.reset();
+	Hardware.rightRearEncoder.reset();
 } // end Init
 
 /**
@@ -345,6 +347,7 @@ private static int initDelayTime ()
  */
 private static void runMainStateMachine ()
 {
+
 
 	System.out.println("Main State: " + mainState);
 	switch (mainState)
@@ -421,7 +424,9 @@ private static void runMainStateMachine ()
 		case DONE:
 			done();
 			break;
+
 	}
+
 }
 
 
@@ -454,6 +459,7 @@ private static MoveWhileLoweringArmReturn hasLoweredArmAndMoved ()
 	MoveWhileLoweringArmReturn returnState =
 	        MoveWhileLoweringArmReturn.NOT_DONE;
 	boolean armIsDown = false;
+
 
 	Hardware.transmission.controls(1.0, 1.0, Hardware.leftFrontMotor,
 	        Hardware.leftRearMotor, Hardware.rightFrontMotor,
