@@ -107,11 +107,15 @@ public boolean turnLeftDegrees (double degrees)
         if (!turningRight)
             transmission.controls(
                     (maxSpeedScalingFactor * DEFAULT_MAX_SPEED),
-                    -(maxSpeedScalingFactor * DEFAULT_MAX_SPEED));
+                    -(maxSpeedScalingFactor * DEFAULT_MAX_SPEED),
+                    Hardware.leftFrontMotor, Hardware.leftRearMotor,
+                    Hardware.rightFrontMotor, Hardware.rightRearMotor);
         else
             transmission.controls(
                     -(maxSpeedScalingFactor * DEFAULT_MAX_SPEED),
-                    (maxSpeedScalingFactor * DEFAULT_MAX_SPEED));
+                    (maxSpeedScalingFactor * DEFAULT_MAX_SPEED),
+                    Hardware.leftFrontMotor, Hardware.leftRearMotor,
+                    Hardware.rightFrontMotor, Hardware.rightRearMotor);
         }
     return false;
 }
@@ -166,7 +170,9 @@ public boolean driveForwardInches (double distance)
                                 / 2)
             {
             transmission.controls(AUTO_CORRECTION_SPEED,
-                    (maxSpeedScalingFactor * DEFAULT_MAX_SPEED));
+                    (maxSpeedScalingFactor * DEFAULT_MAX_SPEED),
+                    Hardware.leftFrontMotor, Hardware.leftRearMotor,
+                    Hardware.rightFrontMotor, Hardware.rightRearMotor);
             }
         // if the left drive train is ahead of the right drive train (on a
         // four wheel drive)
@@ -181,7 +187,9 @@ public boolean driveForwardInches (double distance)
             {
             transmission.controls(
                     (maxSpeedScalingFactor * DEFAULT_MAX_SPEED),
-                    AUTO_CORRECTION_SPEED);
+                    AUTO_CORRECTION_SPEED,
+                    Hardware.leftFrontMotor, Hardware.leftRearMotor,
+                    Hardware.rightFrontMotor, Hardware.rightRearMotor);
             }
         // if the right Drive train is ahead of the left drive train (2
         // motor)
@@ -190,7 +198,9 @@ public boolean driveForwardInches (double distance)
                         .getLeftRearEncoderDistance())
             {
             transmission.controls(AUTO_CORRECTION_SPEED,
-                    (maxSpeedScalingFactor * DEFAULT_MAX_SPEED));
+                    (maxSpeedScalingFactor * DEFAULT_MAX_SPEED),
+                    Hardware.leftFrontMotor, Hardware.leftRearMotor,
+                    Hardware.rightFrontMotor, Hardware.rightRearMotor);
             }
         // if the left Drive train is ahead of the right drive train (2
         // motor)
@@ -200,14 +210,18 @@ public boolean driveForwardInches (double distance)
             {
             transmission.controls(
                     (maxSpeedScalingFactor * DEFAULT_MAX_SPEED),
-                    AUTO_CORRECTION_SPEED);
+                    AUTO_CORRECTION_SPEED,
+                    Hardware.leftFrontMotor, Hardware.leftRearMotor,
+                    Hardware.rightFrontMotor, Hardware.rightRearMotor);
             }
         // if they're both equal
         else
             {
             transmission.controls(
                     (maxSpeedScalingFactor * DEFAULT_MAX_SPEED),
-                    (maxSpeedScalingFactor * DEFAULT_MAX_SPEED));
+                    (maxSpeedScalingFactor * DEFAULT_MAX_SPEED),
+                    Hardware.leftFrontMotor, Hardware.leftRearMotor,
+                    Hardware.rightFrontMotor, Hardware.rightRearMotor);
             }
         }
     return false;
