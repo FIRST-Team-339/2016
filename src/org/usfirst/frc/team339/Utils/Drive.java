@@ -200,7 +200,9 @@ public boolean driveForwardInches (double distance)
             {
             transmission.controls(
                     (maxSpeedScalingFactor * DEFAULT_MAX_SPEED),
-                    AUTO_CORRECTION_SPEED);
+                    AUTO_CORRECTION_SPEED,
+                    Hardware.leftFrontMotor, Hardware.leftRearMotor,
+                    Hardware.rightFrontMotor, Hardware.rightRearMotor);
             }
         // if they're both equal
         else
