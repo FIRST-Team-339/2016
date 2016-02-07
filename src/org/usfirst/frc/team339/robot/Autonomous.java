@@ -364,10 +364,10 @@ private static void runMainStateMachine ()
             break;
         case BEGIN_LOWERING_ARM:
             beginLoweringArm();
-
+			mainState = MainState.LOWER_ARM_AND_MOVE;
             break;
         case LOWER_ARM_AND_MOVE:
-            switch (lowerArmAndMove())
+			switch (hasLoweredArmAndMoved())
                 {
                 case NOT_DONE:
                     mainState = MainState.DONE;
@@ -428,6 +428,7 @@ private static void runMainStateMachine ()
             mainState = shoot();
             break;
         case DONE:
+			done();
             break;
         }
 }
@@ -451,8 +452,13 @@ private static void beginLoweringArm ()
 
 }
 
-
-private static MoveWhileLoweringArmReturn lowerArmAndMove ()
+/**
+ * Moves forwards returns DONE when has reached the distance, however,
+ * if the arm is not down by the distance it returns FAILED.
+ * 
+ * @return
+ */
+private static MoveWhileLoweringArmReturn hasLoweredArmAndMoved ()
 {
     MoveWhileLoweringArmReturn returnState =
             MoveWhileLoweringArmReturn.NOT_DONE;
@@ -460,36 +466,16 @@ private static MoveWhileLoweringArmReturn lowerArmAndMove ()
 
     Hardware.transmission.controls(1.0, 1.0, Hardware.leftFrontMotor,
             Hardware.leftRearMotor, Hardware.rightFrontMotor,
-            Hardware.rightRearMotor);
-    ;
-
-    if (Hardware.armEncoder.get() > ARM_DOWN_TICKS)// TODO: set this to a known
-                                                   // distance
+	        Hardware.rightRearMotor); //TODO: set speed to something smaller
+	if (Hardware.armEncoder.getDistance() > 0.8) //TODO: set value
         {
         armIsDown = true;
-        Hardware.armMotor.set(0.0);
         }
-    if (Hardware.armEncoder.getDistance() > 8)// TODO: set this to a known
-                                              // distance
+	if (Hardware.transmission.getLeftRearEncoderDistance() > 22.55
+	        && Hardware.transmission
+	                .getRightRearEncoderDistance() > 22.55)
         {
-        armIsDown = true;
-        Hardware.armMotor.set(0.0);
-        }
-
-    if (Hardware.drive.driveForwardInches(22.75))// TODO: make constant
-        {
-        if (armIsDown)
-            {
-            returnState = MoveWhileLoweringArmReturn.DONE;
-            }
-        else
-            {
-            returnState = MoveWhileLoweringArmReturn.FAILED;
-            }
-        }
-    if (Hardware.drive.driveForwardInches(22.75))// TODO: make constant
-        {
-        if (armIsDown)
+	if (armIsDown == true)
             {
             returnState = MoveWhileLoweringArmReturn.DONE;
             }
@@ -710,6 +696,7 @@ private static MainState shoot ()
 private static void done ()
 {
     Hardware.transmission.controls(0.0, 0.0);
+	Hardware.armMotor.set(0.0);
 }
 
 /*
