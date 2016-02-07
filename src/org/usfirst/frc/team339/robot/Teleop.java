@@ -53,36 +53,6 @@ public class Teleop
  */
 public static void init ()
 {
-
-
-    // set max speed. change by gear?
-    Hardware.drive.setMaxSpeed(MAXIMUM_TELEOP_SPEED);
-    Hardware.transmission.setFirstGearPercentage(FIRST_GEAR_PERCENTAGE);
-    Hardware.transmission
-            .setSecondGearPercentage(SECOND_GEAR_PERCENTAGE);
-    Hardware.transmission.setGear(1);
-    Hardware.transmission.setJoysticksAreReversed(false);
-    // -----------------------------------
-    // stop cam0 in case we have declared them
-    // in Autonomous. Then declare a new cam0
-    // and start it going automatically with the
-    // camera server
-    // -----------------------------------
-    Hardware.delayTimer.reset();
-    CameraServer.getInstance().setSize(1);
-    // set max speed. change by gear?
-    Hardware.drive.setMaxSpeed(MAXIMUM_TELEOP_SPEED);
-    Hardware.transmission.setFirstGearPercentage(FIRST_GEAR_PERCENTAGE);
-    Hardware.transmission
-            .setSecondGearPercentage(SECOND_GEAR_PERCENTAGE);
-    Hardware.transmission.setGear(1);
-    // -----------------------------------
-    // stop cam0 in case we have declared them
-    // in Autonomous. Then declare a new cam0
-    // and start it going automatically with the
-    // camera server
-    // -----------------------------------
-    Hardware.delayTimer.reset();
     CameraServer.getInstance().setSize(1);
     Hardware.axisCamera
             .writeBrightness(Hardware.NORMAL_AXIS_CAMERA_BRIGHTNESS);
@@ -99,41 +69,15 @@ public static void init ()
     // camera server
     // -----------------------------------
     Hardware.delayTimer.reset();
-    CameraServer.getInstance().setSize(1);
-    // set max speed. change by gear?
-    Hardware.drive.setMaxSpeed(MAXIMUM_TELEOP_SPEED);
-    Hardware.transmission.setFirstGearPercentage(FIRST_GEAR_PERCENTAGE);
-    Hardware.transmission
-            .setSecondGearPercentage(SECOND_GEAR_PERCENTAGE);
-    Hardware.transmission.setGear(1);
-    // -----------------------------------
-    // stop cam0 in case we have declared them
-    // in Autonomous. Then declare a new cam0
-    // and start it going automatically with the
-    // camera server
-    // -----------------------------------
-    Hardware.delayTimer.reset();
-    CameraServer.getInstance().setSize(1);
-    Hardware.axisCamera
-            .writeBrightness(Hardware.NORMAL_AXIS_CAMERA_BRIGHTNESS);
-    // set max speed. change by gear?
-    Hardware.drive.setMaxSpeed(MAXIMUM_TELEOP_SPEED);
-    Hardware.transmission.setFirstGearPercentage(FIRST_GEAR_PERCENTAGE);
-    Hardware.transmission
-            .setSecondGearPercentage(SECOND_GEAR_PERCENTAGE);
-    Hardware.transmission.setGear(1);
-    // -----------------------------------
-    // stop cam0 in case we have declared them
-    // in Autonomous. Then declare a new cam0
-    // and start it going automatically with the
-    // camera server
-    // -----------------------------------
-    CameraServer.getInstance().setSize(1);
-    Hardware.axisCamera.writeBrightness(
-            Hardware.NORMAL_AXIS_CAMERA_BRIGHTNESS);
-
-    Hardware.delayTimer.reset();
-
+    Hardware.rightRearEncoder.reset();
+    Hardware.leftRearEncoder.reset();
+    Hardware.leftFrontMotor.set(0.0);
+    Hardware.leftRearMotor.set(0.0);
+    Hardware.rightFrontMotor.set(0.0);
+    Hardware.rightRearMotor.set(0.0);
+    Hardware.armMotor.set(0.0);
+    Hardware.portArmIntakeMotor.set(0.0);
+    Hardware.starboardArmIntakeMotor.set(0.0);
 } // end Init
 
 /**
@@ -237,15 +181,15 @@ public static void periodic ()
     // If we're pressing the upshift button, shift up.
     if (Hardware.rightDriver
             .getRawButton(GEAR_UPSHIFT_JOYSTICK_BUTTON) == true)
-    {
+        {
         Hardware.transmission.upshift(1);
-    }
+        }
     // If we press the downshift button, shift down.
     if (Hardware.rightDriver.getRawButton(
             GEAR_DOWNSHIFT_JOYSTICK_BUTTON) == true)
-    {
+        {
         Hardware.transmission.downshift(1);
-    }
+        }
 } // end Periodic
 
 // A method to process images (before we get a Shoot class)
@@ -255,9 +199,9 @@ public static void processImage ()
     // eventually
     if (Hardware.leftOperator.getTrigger() == true
             && Hardware.leftOperator.getRawButton(2))
-    {
+        {
         Hardware.axisCamera.saveImage("ProcessedImage");
-    }
+        }
 }
 // End processImage
 
@@ -278,24 +222,12 @@ public static void processImage ()
 public static void printStatements ()
 {
     // Joysticks------------
-    //    System.out.println("Left Joystick: " + Hardware.leftDriver.getY());
-    //    System.out
-    //            .println("Right Joystick: " + Hardware.rightDriver.getY());
-    //      System.out.println("Left Operator: " + Hardware.leftOperator.getY());
-    //      System.out.println("Right Operator: " + Hardware.rightOperator.getY());
-    // Joysticks------------
     // System.out.println("Left Joystick: " + Hardware.leftDriver.getY());
     // System.out
     // .println("Right Joystick: " + Hardware.rightDriver.getY());
     // System.out.println("Left Operator: " + Hardware.leftOperator.getY());
     // System.out.println("Right Operator: " + Hardware.rightOperator.getY());
-    // IR sensors-----------
-    //   System.out.println("left IR = " + Hardware.leftIR.isOn());
-    //   System.out.println("right IR = " + Hardware.rightIR.isOn());
-    // System.out.println("Left Joystick: " + Hardware.leftDriver.getY());
-    // System.out.println("Right Joystick: " + Hardware.rightDriver.getY());
-    // System.out.println("Left Operator: " + Hardware.leftOperator.getY());
-    // System.out.println("Right Operator: " + Hardware.rightOperator.getY());
+
     // IR sensors-----------
     //   System.out.println("left IR = " + Hardware.leftIR.isOn());
     //   System.out.println("right IR = " + Hardware.rightIR.isOn());
@@ -304,13 +236,8 @@ public static void printStatements ()
     //    System.out.println("delay pot = " + (int) Hardware.delayPot.get());
     //prints the value of the transducer- (range in code is 50)
     //hits psi of 100 accurately
-    //System.out.println("transducer = " +
-    //Hardware.transducer.get());
-    // pots-----------------
-    // System.out.println("delay pot = " + (int) Hardware.delayPot.get());
-    // prints the value of the transducer- (range 130)
-    // NOT TESTED!!!System.out.println("transducer = " +
-    // Hardware.transducer.get());
+    //System.out.println("transducer = " + Hardware.transducer.get());
+
     //Motor controllers-----
     //prints value of the motors
     //	    System.out.println("RR Motor T = " + Hardware.rightRearMotor.get());
@@ -321,60 +248,6 @@ public static void printStatements ()
     //    	    System.out.println("Starboard Intake Motor V = " + Hardware.starboardArmIntakeMotor.get());
     //    	    System.out.println("Port Intake Motor V = " + Hardware.portArmIntakeMotor.get());
 
-    // pots-----------------
-    //    System.out.println("delay pot = " + (int) Hardware.delayPot.get());
-    //prints the value of the transducer- (range in code is 50)
-    //hits psi of 100 accurately
-    //System.out.println("transducer = " + Hardware.transducer.get());
-
-    //Motor controllers-----
-    //prints value of the motors
-    //    System.out.println("RR Motor V = " + Hardware.rightRearMotor.get());
-    //    System.out.println("LR Motor V = " + Hardware.leftRearMotor.get());
-    //    System.out.println("RF Motor V = " + Hardware.rightFrontMotor.get());
-    //    System.out.println("LF Motor V = " + Hardware.leftFrontMotor.get());
-    //    System.out.println("Arm Motor V = " + Hardware.armMotor.get());
-
-    //Solenoids-------------
-    //prints the state of the solenoids 
-    //    System.out.println("cameraSolenoid = " + Hardware.cameraSolenoid.get());
-    // System.out.println("catapultSolenoid0 = " +
-    // Hardware.catapultSolenoid0.get());
-    // System.out.println("catapultSolenoid1 = " +
-    // Hardware.catapultSolenoid1.get());
-    // System.out.println("catapultSolenoid2 = " +
-    // Hardware.catapultSolenoid2.get());
-    // Solenoids-------------
-    // prints the state of the solenoids
-    // System.out.println("cameraSolenoid = " + Hardware.cameraSolenoid.get());
-    // System.out.println("catapultSolenoid0 = " +
-    // Hardware.catapultSolenoid0.get());
-    // System.out.println("catapultSolenoid1 = " +
-    // Hardware.catapultSolenoid1.get());
-    // System.out.println("catapultSolenoid2 = " +
-    // Hardware.catapultSolenoid2.get());
-    // Encoders-------------
-    //    System.out.println(
-    //            "RR distance = " + Hardware.rightRearEncoder.getDistance());
-    //    System.out.println(
-    //            "LR distance = " + Hardware.leftRearEncoder.getDistance());
-    //    System.out.println("RF distance = "
-    //            + Hardware.rightFrontEncoder.getDistance());
-    //    System.out.println(
-    //            "LF distance = " + Hardware.leftFrontEncoder.getDistance());
-    //    System.out.println("Arm Motor = " + Hardware.armMotor.getDistance());
-    // Encoders-------------
-    //    System.out.println(
-    //            "RR distance = " + Hardware.rightRearEncoder.getDistance());
-    //    System.out.println(
-    //            "LR distance = " + Hardware.leftRearEncoder.getDistance());
-    //    System.out.println("RF distance = "
-    //            + Hardware.rightFrontEncoder.getDistance());
-    //    System.out.println(
-    //            "LF distance = " + Hardware.leftFrontEncoder.getDistance());
-    //        System.out.println("Arm Motor = " + Hardware.armEncoder.get());
-    //test the armEncoder reading
-    //        Hardware.armMotor.set(1);
     //Solenoids-------------
     //prints the state of the solenoids 
     //    System.out.println("cameraSolenoid = " + Hardware.cameraSolenoid.get());
@@ -395,30 +268,18 @@ public static void printStatements ()
     //    System.out.println(
     //            "LF distance = " + Hardware.leftFrontEncoder.getDistance());
     //    System.out.println("Arm Motor = " + Hardware.armMotor.getDistance());
-    //Switches--------------
-    //prints state of switches
-    //    System.out.println("Autonomous Enabled Switch: " + Hardware.autonomousEnabled.isOn());
-    //    System.out.println("Shoot High Switch: " + Hardware.shootHigh.isOn());
-    //    System.out.println("Shoot Low Switch: " + Hardware.shootLow.isOn());
-    // Switches--------------
-    // prints state of switches
-    // System.out.println("Autonomous Enabled Switch: " + Hardware.autonomousEnabled.isOn());
-    // System.out.println("Shoot High Switch: " + Hardware.shootHigh.isOn());
-    // System.out.println("Shoot Low Switch: " + Hardware.shootLow.isOn());
-    //print the position the 6 position switch------------
-    //    System.out.println("Position: " + Hardware.startingPositionDial.getPosition());
 
     //Switches--------------
     //prints state of switches
     //    System.out.println("Autonomous Enabled Switch: " + Hardware.autonomousEnabled.isOn());
     //    System.out.println("Shoot High Switch: " + Hardware.shootHigh.isOn());
     //    System.out.println("Shoot Low Switch: " + Hardware.shootLow.isOn());
+
     //print the position the 6 position switch------------
     //    System.out.println("Position: " + Hardware.startingPositionDial.getPosition());
 
     //Relay-----------------
     //    System.out.println(Hardware.ringLightRelay.get());
-
 } // end printStatements 
 
 
