@@ -235,31 +235,18 @@ public void robotInit ()
     // --------------------------------------
     // Encoder Initialization
     // --------------------------------------
-    Hardware.leftRearEncoder.setDistancePerPulse(0.019706);
+    Hardware.leftRearEncoder.setDistancePerPulse(distancePerTickForMotorEncoders);
     Hardware.leftRearEncoder.reset();
 
-    Hardware.rightRearEncoder.setDistancePerPulse(0.019706);
-    Hardware.rightRearEncoder.reset();
-
-    Hardware.transmission.initEncoders(Hardware.rightRearEncoder,
-            Hardware.leftRearEncoder);
-    Hardware.leftRearEncoder
-            .setDistancePerPulse(distancePerTickForMotorEncoders);
-    Hardware.leftRearEncoder.reset();
-
-    Hardware.rightRearEncoder
-            .setDistancePerPulse(distancePerTickForMotorEncoders);
+    Hardware.rightRearEncoder.setDistancePerPulse(distancePerTickForMotorEncoders);
     Hardware.rightRearEncoder.reset();
 
     Hardware.transmission.setMaxGear(2);
-    Hardware.transmission.initEncoders(Hardware.rightRearEncoder,
-            Hardware.leftRearEncoder);
+
     // -------------------------------------
     // USB camera initialization
     // -------------------------------------
 
-    Hardware.transmission.initEncoders(Hardware.rightRearEncoder,
-            Hardware.leftRearEncoder);
     // -------------------------------------
     // USB camera initialization
     // -------------------------------------
@@ -302,16 +289,6 @@ public void robotInit ()
     // --------------------------------------
     Hardware.compressor.setClosedLoopControl(true);
 
-    // --------------------------------------
-    // Encoder Initialization
-    // --------------------------------------
-    Hardware.leftRearEncoder.reset();
-    Hardware.leftRearEncoder
-            .setDistancePerPulse(distancePerTickForMotorEncoders);
-
-    Hardware.rightRearEncoder.reset();
-    Hardware.rightRearEncoder
-            .setDistancePerPulse(distancePerTickForMotorEncoders);
 
     // ---------------------------------------
     // Solenoid Initialization
@@ -322,6 +299,7 @@ public void robotInit ()
     Hardware.catapultSolenoid1.set(false);
     Hardware.catapultSolenoid2.set(false);
     Hardware.rightRearEncoder.setReverseDirection(true);
+
     // =========================================================
     // User code goes above here
     // =========================================================

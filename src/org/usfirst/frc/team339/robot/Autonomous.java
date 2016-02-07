@@ -119,6 +119,7 @@ private static enum MainState
 	}
 
 
+
 private static enum MoveWhileLoweringArmReturn
 	{
 	NOT_DONE, DONE, FAILED
@@ -262,6 +263,7 @@ public static void init ()
 	Hardware.rightRearEncoder.reset();
 	Hardware.armEncoder.reset();
 
+
 	// -------------------------------------
 	// close both of the cameras in case they
 	// were previously started in a previous
@@ -284,6 +286,13 @@ public static void init ()
 	Hardware.kilroyTimer.reset();
 	Hardware.leftRearEncoder.reset();
 	Hardware.rightRearEncoder.reset();
+	Hardware.leftFrontMotor.set(0.0);
+	Hardware.leftRearMotor.set(0.0);
+	Hardware.rightFrontMotor.set(0.0);
+	Hardware.rightRearMotor.set(0.0);
+	Hardware.armMotor.set(0.0);
+	Hardware.portArmIntakeMotor.set(0.0);
+	Hardware.starboardArmIntakeMotor.set(0.0);
 } // end Init
 
 /**
@@ -340,7 +349,6 @@ private static int initDelayTime ()
  */
 private static void runMainStateMachine ()
 {
-
 
 	System.out.println("Main State: " + mainState);
 	switch (mainState)
@@ -436,9 +444,7 @@ private static void runMainStateMachine ()
 		case DONE:
 			done();
 			break;
-
 	}
-
 }
 
 
@@ -472,7 +478,6 @@ private static MoveWhileLoweringArmReturn hasLoweredArmAndMoved ()
 	        MoveWhileLoweringArmReturn.NOT_DONE;
 	boolean armIsDown = false;
 
-
 	Hardware.transmission.controls(0.3, 0.3, Hardware.leftFrontMotor,
 	        Hardware.leftRearMotor, Hardware.rightFrontMotor,
 	        Hardware.rightRearMotor); //TODO: set speed to something smaller
@@ -493,8 +498,6 @@ private static MoveWhileLoweringArmReturn hasLoweredArmAndMoved ()
 	}
 	}
 
-
-
 	return returnState;
 }
 
@@ -508,7 +511,6 @@ private static MoveWhileLoweringArmReturn hasLoweredArmAndMoved ()
  */
 private static void initDelay ()
 {
-
 
 
 	Hardware.delayTimer.reset();
@@ -719,8 +721,6 @@ private static void done ()
 	Hardware.transmission.controls(0.0, 0.0);
 	Hardware.armMotor.set(0.0);
 }
-
-
 
 /*
  * =============================================
