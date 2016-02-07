@@ -71,6 +71,13 @@ public static void init ()
     Hardware.delayTimer.reset();
     Hardware.rightRearEncoder.reset();
     Hardware.leftRearEncoder.reset();
+    Hardware.leftFrontMotor.set(0.0);
+    Hardware.leftRearMotor.set(0.0);
+    Hardware.rightFrontMotor.set(0.0);
+    Hardware.rightRearMotor.set(0.0);
+    Hardware.armMotor.set(0.0);
+    Hardware.portArmIntakeMotor.set(0.0);
+    Hardware.starboardArmIntakeMotor.set(0.0);
 } // end Init
 
 /**
@@ -289,36 +296,36 @@ public static void printStatements ()
     // System.out.println("catapultSolenoid2 = " +
     // Hardware.catapultSolenoid2.get());
     // Encoders-------------
-    //    System.out.println(
-    //            "RR distance = " + Hardware.rightRearEncoder.getDistance());
-    //    System.out.println(
-    //            "LR distance = " + Hardware.leftRearEncoder.getDistance());
-    //    System.out.println("RF distance = "
-    //            + Hardware.rightFrontEncoder.getDistance());
-    //    System.out.println(
-    //            "LF distance = " + Hardware.leftFrontEncoder.getDistance());
-    //    System.out.println("Arm Motor = " + Hardware.armMotor.getDistance());
-    // Encoders-------------
-    //    System.out.println(
-    //            "RR distance = " + Hardware.rightRearEncoder.getDistance());
-    //    System.out.println(
-    //            "LR distance = " + Hardware.leftRearEncoder.getDistance());
-    //    System.out.println("RF distance = "
-    //            + Hardware.rightFrontEncoder.getDistance());
-    //    System.out.println(
-    //            "LF distance = " + Hardware.leftFrontEncoder.getDistance());
-    //        System.out.println("Arm Motor = " + Hardware.armEncoder.get());
-    //test the armEncoder reading
-    //        Hardware.armMotor.set(1);
-    //Solenoids-------------
-    //prints the state of the solenoids 
-    //    System.out.println("cameraSolenoid = " + Hardware.cameraSolenoid.get());
-    // System.out.println("catapultSolenoid0 = " +
-    // Hardware.catapultSolenoid0.get());
-    // System.out.println("catapultSolenoid1 = " +
-    // Hardware.catapultSolenoid1.get());
-    // System.out.println("catapultSolenoid2 = " +
-    // Hardware.catapultSolenoid2.get());
+    System.out.println(
+            "RR distance = " + Hardware.rightRearEncoder.getDistance());
+    System.out.println(
+            "LR distance = " + Hardware.leftRearEncoder.getDistance());
+            //    System.out.println("RF distance = "
+            //            + Hardware.rightFrontEncoder.getDistance());
+            //    System.out.println(
+            //            "LF distance = " + Hardware.leftFrontEncoder.getDistance());
+            //    System.out.println("Arm Motor = " + Hardware.armMotor.getDistance());
+            // Encoders-------------
+            //    System.out.println(
+            //            "RR distance = " + Hardware.rightRearEncoder.getDistance());
+            //    System.out.println(
+            //            "LR distance = " + Hardware.leftRearEncoder.getDistance());
+            //    System.out.println("RF distance = "
+            //            + Hardware.rightFrontEncoder.getDistance());
+            //    System.out.println(
+            //            "LF distance = " + Hardware.leftFrontEncoder.getDistance());
+            //        System.out.println("Arm Motor = " + Hardware.armEncoder.get());
+            //test the armEncoder reading
+            //        Hardware.armMotor.set(1);
+            //Solenoids-------------
+            //prints the state of the solenoids 
+            //    System.out.println("cameraSolenoid = " + Hardware.cameraSolenoid.get());
+            // System.out.println("catapultSolenoid0 = " +
+            // Hardware.catapultSolenoid0.get());
+            // System.out.println("catapultSolenoid1 = " +
+            // Hardware.catapultSolenoid1.get());
+            // System.out.println("catapultSolenoid2 = " +
+            // Hardware.catapultSolenoid2.get());
 
     // Encoders-------------
     //    System.out.println(

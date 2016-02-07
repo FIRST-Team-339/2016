@@ -322,6 +322,7 @@ public void robotInit ()
     Hardware.catapultSolenoid1.set(false);
     Hardware.catapultSolenoid2.set(false);
     Hardware.rightRearEncoder.setReverseDirection(true);
+
     // =========================================================
     // User code goes above here
     // =========================================================
