@@ -80,9 +80,9 @@ public final class Transmission_old
  *              -------------------------------------------------------
  */
 private static enum debugStateValues
-	{
-	DEBUG_NONE, DEBUG_ALL, DEBUG_ONLY_NON_ZERO, DEBUG_ONLY_PID_DATA
-	}
+    {
+    DEBUG_NONE, DEBUG_ALL, DEBUG_ONLY_NON_ZERO, DEBUG_ONLY_PID_DATA
+    }
 
 // -------------------------------------
 // not supported in the ME type Java, so
@@ -98,17 +98,17 @@ int value;
 
 public JoystickDirection (int initialValue)
 {
-	this.value = initialValue;
+    this.value = initialValue;
 } // end constructor
 
 public int get ()
 {
-	return (this.value);
+    return (this.value);
 } // end get()
 
 public int set (int changedValue)
 {
-	return (this.value = changedValue);
+    return (this.value = changedValue);
 } // end set()
 } // end class
 
@@ -126,22 +126,22 @@ int value;
 
 public MotorDirection (int initialValue)
 {
-	this.value = initialValue;
+    this.value = initialValue;
 } // end constructor
 
 public int get ()
 {
-	return (this.value);
+    return (this.value);
 } // end get()
 
 public boolean reversed ()
 {
-	return (this.value == REVERSED);
+    return (this.value == REVERSED);
 }
 
 public int set (int changedValue)
 {
-	return (this.value = changedValue);
+    return (this.value = changedValue);
 } // end set()
 } // end class
 
@@ -161,17 +161,17 @@ int value;
 
 public WhichJoystick (int initialValue)
 {
-	this.value = initialValue;
+    this.value = initialValue;
 } // end constructor
 
 public int get ()
 {
-	return (this.value);
+    return (this.value);
 } // end get()
 
 public int set (int changedValue)
 {
-	return (this.value = changedValue);
+    return (this.value = changedValue);
 } // end set()
 } // end class
 
@@ -600,8 +600,8 @@ private double rotationCorrection = 0;
  */
 public Transmission_old ()
 {
-	this.init();
-	this.setMaxGear(1);
+    this.init();
+    this.setMaxGear(1);
 } // end Transmission
 
 // -------------------------------------------------------
@@ -618,8 +618,8 @@ public Transmission_old ()
  */
 public Transmission_old (final DoubleSolenoid transmissionSolenoids)
 {
-	this.transmissionSolenoids = transmissionSolenoids;
-	this.init();
+    this.transmissionSolenoids = transmissionSolenoids;
+    this.init();
 } // end Transmission
 
 // -------------------------------------------------------
@@ -639,9 +639,9 @@ public Transmission_old (final DoubleSolenoid transmissionSolenoids)
 public Transmission_old (final DoubleSolenoid transmissionSolenoids,
         final SpeedController firstSpeedController)
 {
-	this.transmissionSolenoids = transmissionSolenoids;
-	this.oneOrRightSpeedController = firstSpeedController;
-	this.init();
+    this.transmissionSolenoids = transmissionSolenoids;
+    this.oneOrRightSpeedController = firstSpeedController;
+    this.init();
 } // end Transmission
 
 // -------------------------------------------------------
@@ -664,10 +664,10 @@ public Transmission_old (final DoubleSolenoid transmissionSolenoids,
         final SpeedController rightSpeedController,
         final SpeedController leftSpeedController)
 {
-	this.transmissionSolenoids = transmissionSolenoids;
-	this.oneOrRightSpeedController = rightSpeedController;
-	this.leftSpeedController = leftSpeedController;
-	this.init();
+    this.transmissionSolenoids = transmissionSolenoids;
+    this.oneOrRightSpeedController = rightSpeedController;
+    this.leftSpeedController = leftSpeedController;
+    this.init();
 } // end Transmission
 
 // -------------------------------------------------------
@@ -684,8 +684,8 @@ public Transmission_old (final DoubleSolenoid transmissionSolenoids,
  */
 public Transmission_old (final Relay transmissionRelay)
 {
-	this.transmissionRelay = transmissionRelay;
-	this.init();
+    this.transmissionRelay = transmissionRelay;
+    this.init();
 } // end Transmission
 
 // -------------------------------------------------------
@@ -705,9 +705,9 @@ public Transmission_old (final Relay transmissionRelay)
 public Transmission_old (final Relay transmissionRelay,
         final SpeedController firstSpeedController)
 {
-	this.transmissionRelay = transmissionRelay;
-	this.oneOrRightSpeedController = firstSpeedController;
-	this.init();
+    this.transmissionRelay = transmissionRelay;
+    this.oneOrRightSpeedController = firstSpeedController;
+    this.init();
 } // end Transmission
 
 // -------------------------------------------------------
@@ -730,10 +730,10 @@ public Transmission_old (final Relay transmissionRelay,
         final SpeedController rightSpeedController,
         final SpeedController leftSpeedController)
 {
-	this.transmissionRelay = transmissionRelay;
-	this.oneOrRightSpeedController = rightSpeedController;
-	this.leftSpeedController = leftSpeedController;
-	this.init();
+    this.transmissionRelay = transmissionRelay;
+    this.oneOrRightSpeedController = rightSpeedController;
+    this.leftSpeedController = leftSpeedController;
+    this.init();
 } // end Transmission
 
 // -------------------------------------------------------
@@ -752,9 +752,9 @@ public Transmission_old (final Relay transmissionRelay,
 public Transmission_old (final SpeedController rightSpeedController,
         final SpeedController leftSpeedController)
 {
-	this.oneOrRightSpeedController = rightSpeedController;
-	this.leftSpeedController = leftSpeedController;
-	this.init();
+    this.oneOrRightSpeedController = rightSpeedController;
+    this.leftSpeedController = leftSpeedController;
+    this.init();
 } // end Transmission
 
 public Transmission_old (
@@ -763,22 +763,22 @@ public Transmission_old (
         final SpeedController leftFrontSpeedController,
         final SpeedController leftRearSpeedController)
 {
-	this.oneOrRightSpeedController = rightFrontSpeedController;
-	this.leftSpeedController = leftFrontSpeedController;
-	this.rightRearSpeedController = rightRearSpeedController;
-	this.leftRearSpeedController = leftRearSpeedController;
+    this.oneOrRightSpeedController = rightFrontSpeedController;
+    this.leftSpeedController = leftFrontSpeedController;
+    this.rightRearSpeedController = rightRearSpeedController;
+    this.leftRearSpeedController = leftRearSpeedController;
 
-	// initialize mecanum drive
-	/*
-	 * this.mecanumDrive = new RobotDrive(this.leftSpeedController,
-	 * this.leftRearSpeedController,
-	 * this.oneOrRightSpeedController,
-	 * this.rightRearSpeedController);
-	 * this.mecanumDrive.setSafetyEnabled(false);
-	 */
+    // initialize mecanum drive
+    /*
+     * this.mecanumDrive = new RobotDrive(this.leftSpeedController,
+     * this.leftRearSpeedController,
+     * this.oneOrRightSpeedController,
+     * this.rightRearSpeedController);
+     * this.mecanumDrive.setSafetyEnabled(false);
+     */
 
-	this.initPIDControllers();
-	this.init();
+    this.initPIDControllers();
+    this.init();
 } // end Transmission
 
 /**
@@ -802,17 +802,17 @@ public Transmission_old (
         Encoder rightFrontEncoder, Encoder rightRearEncoder,
         Encoder leftFrontEncoder, Encoder leftRearEncoder)
 {
-	this.oneOrRightSpeedController = rightFrontSpeedController;
-	this.leftSpeedController = leftFrontSpeedController;
-	this.rightRearSpeedController = rightRearSpeedController;
-	this.leftRearSpeedController = leftRearSpeedController;
+    this.oneOrRightSpeedController = rightFrontSpeedController;
+    this.leftSpeedController = leftFrontSpeedController;
+    this.rightRearSpeedController = rightRearSpeedController;
+    this.leftRearSpeedController = leftRearSpeedController;
 
-	this.initEncoders(rightFrontEncoder, rightRearEncoder,
-	        leftFrontEncoder, leftRearEncoder);
+    this.initEncoders(rightFrontEncoder, rightRearEncoder,
+            leftFrontEncoder, leftRearEncoder);
 
-	this.initPIDControllers();
+    this.initPIDControllers();
 
-	this.init();
+    this.init();
 
 } // end Transmission
 
@@ -845,97 +845,97 @@ public Transmission_old (
 public boolean brake (final double brakeVoltage)
 {
 
-	// UNDER PENALTY OF DEATH - don't use without calling initEncoders()
-	// AND setting the distancePerPulse on them via
-	// setEncodersDistancePerPulse()
-	// in that order.
+    // UNDER PENALTY OF DEATH - don't use without calling initEncoders()
+    // AND setting the distancePerPulse on them via
+    // setEncodersDistancePerPulse()
+    // in that order.
 
-	if ((this.leftMotorEncoder == null) ||
-	        (this.oneOrRightMotorEncoder == null))
-		return true; // just stop if we don't even have encoders.
+    if ((this.leftMotorEncoder == null) ||
+            (this.oneOrRightMotorEncoder == null))
+        return true; // just stop if we don't even have encoders.
 
-	// If the current distance on all of our encoders is
-	// close enough to the previous values
-	//
-	// OR
-	//
-	// the measurement before THAT is greater than our
-	// previous measurement, indicating we go backwards...
-	//
-	// then we're done and we stop the motors.
-	if (((Math.abs(this.leftMotorEncoder
-	        .getDistance()) >= (this.brakePreviousDistanceL
-	                - this.AUTO_ENCODER_THRESHOLD_INCHES))
-	        &&
-	        (Math.abs(this.leftMotorEncoder
-	                .getDistance()) <= (this.brakePreviousDistanceL
-	                        + this.AUTO_ENCODER_THRESHOLD_INCHES))
-	        &&
-	        (Math.abs(this.leftMotorEncoder
-	                .getDistance()) >= (this.brakePreviousPreviousDistanceL
-	                        - this.AUTO_ENCODER_THRESHOLD_INCHES))
-	        &&
-	        (Math.abs(this.leftMotorEncoder
-	                .getDistance()) <= (this.brakePreviousPreviousDistanceL
-	                        + this.AUTO_ENCODER_THRESHOLD_INCHES))
-	        &&
-	        (Math.abs(this.oneOrRightMotorEncoder
-	                .getDistance()) >= (this.brakePreviousDistanceR
-	                        - this.AUTO_ENCODER_THRESHOLD_INCHES))
-	        &&
-	        (Math.abs(this.oneOrRightMotorEncoder
-	                .getDistance()) <= (this.brakePreviousDistanceR
-	                        + this.AUTO_ENCODER_THRESHOLD_INCHES))
-	        &&
-	        (Math.abs(this.oneOrRightMotorEncoder
-	                .getDistance()) >= (this.brakePreviousPreviousDistanceR
-	                        - this.AUTO_ENCODER_THRESHOLD_INCHES))
-	        && (Math
-	                .abs(this.oneOrRightMotorEncoder
-	                        .getDistance()) <= (this.brakePreviousPreviousDistanceR
-	                                + this.AUTO_ENCODER_THRESHOLD_INCHES)))
-	        ||
-	        ((this.brakePreviousPreviousDistanceL >= this.brakePreviousDistanceL)
-	                &&
-	                (this.brakePreviousPreviousDistanceR >= this.brakePreviousDistanceR)
-	                &&
-	                (this.brakePreviousDistanceL >= this.leftMotorEncoder
-	                        .getDistance())
-	                && (this.brakePreviousDistanceR >= this.oneOrRightMotorEncoder
-	                        .getDistance())))
-	{
-	// System.out.println("DONE!");
-	this.brakePreviousDistanceL = 0.0;
-	this.brakePreviousDistanceR = 0.0;
-	this.brakePreviousPreviousDistanceL = 0.0;
-	this.brakePreviousPreviousDistanceR = 0.0;
-	return true;
-	} // if
-	else
-	{
-	this.brakePreviousPreviousDistanceR =
-	        this.brakePreviousDistanceR;
-	this.brakePreviousPreviousDistanceL =
-	        this.brakePreviousDistanceL;
-	this.brakePreviousDistanceR = Math
-	        .abs(this.oneOrRightMotorEncoder.getDistance());
-	this.brakePreviousDistanceL = Math
-	        .abs(this.leftMotorEncoder.getDistance());
-	// continue braking
-	// if we are in mecanum, call the appropriate method to
-	// send the braking voltage backwards.
-	if (this.isMecanumDrive() == true)
-	{
-	this.controls(brakeVoltage, 180.0, //
-	        0.0);
-	}
-	else
-	{
-	// otherwise, use our 2 or 4 wheel braking method.
-	this.controls(brakeVoltage, brakeVoltage);
-	}
-	return false;
-	}
+    // If the current distance on all of our encoders is
+    // close enough to the previous values
+    //
+    // OR
+    //
+    // the measurement before THAT is greater than our
+    // previous measurement, indicating we go backwards...
+    //
+    // then we're done and we stop the motors.
+    if (((Math.abs(this.leftMotorEncoder
+            .getDistance()) >= (this.brakePreviousDistanceL
+                    - this.AUTO_ENCODER_THRESHOLD_INCHES))
+            &&
+            (Math.abs(this.leftMotorEncoder
+                    .getDistance()) <= (this.brakePreviousDistanceL
+                            + this.AUTO_ENCODER_THRESHOLD_INCHES))
+            &&
+            (Math.abs(this.leftMotorEncoder
+                    .getDistance()) >= (this.brakePreviousPreviousDistanceL
+                            - this.AUTO_ENCODER_THRESHOLD_INCHES))
+            &&
+            (Math.abs(this.leftMotorEncoder
+                    .getDistance()) <= (this.brakePreviousPreviousDistanceL
+                            + this.AUTO_ENCODER_THRESHOLD_INCHES))
+            &&
+            (Math.abs(this.oneOrRightMotorEncoder
+                    .getDistance()) >= (this.brakePreviousDistanceR
+                            - this.AUTO_ENCODER_THRESHOLD_INCHES))
+            &&
+            (Math.abs(this.oneOrRightMotorEncoder
+                    .getDistance()) <= (this.brakePreviousDistanceR
+                            + this.AUTO_ENCODER_THRESHOLD_INCHES))
+            &&
+            (Math.abs(this.oneOrRightMotorEncoder
+                    .getDistance()) >= (this.brakePreviousPreviousDistanceR
+                            - this.AUTO_ENCODER_THRESHOLD_INCHES))
+            && (Math
+                    .abs(this.oneOrRightMotorEncoder
+                            .getDistance()) <= (this.brakePreviousPreviousDistanceR
+                                    + this.AUTO_ENCODER_THRESHOLD_INCHES)))
+            ||
+            ((this.brakePreviousPreviousDistanceL >= this.brakePreviousDistanceL)
+                    &&
+                    (this.brakePreviousPreviousDistanceR >= this.brakePreviousDistanceR)
+                    &&
+                    (this.brakePreviousDistanceL >= this.leftMotorEncoder
+                            .getDistance())
+                    && (this.brakePreviousDistanceR >= this.oneOrRightMotorEncoder
+                            .getDistance())))
+        {
+        // System.out.println("DONE!");
+        this.brakePreviousDistanceL = 0.0;
+        this.brakePreviousDistanceR = 0.0;
+        this.brakePreviousPreviousDistanceL = 0.0;
+        this.brakePreviousPreviousDistanceR = 0.0;
+        return true;
+        } // if
+    else
+        {
+        this.brakePreviousPreviousDistanceR =
+                this.brakePreviousDistanceR;
+        this.brakePreviousPreviousDistanceL =
+                this.brakePreviousDistanceL;
+        this.brakePreviousDistanceR = Math
+                .abs(this.oneOrRightMotorEncoder.getDistance());
+        this.brakePreviousDistanceL = Math
+                .abs(this.leftMotorEncoder.getDistance());
+        // continue braking
+        // if we are in mecanum, call the appropriate method to
+        // send the braking voltage backwards.
+        if (this.isMecanumDrive() == true)
+            {
+            this.controls(brakeVoltage, 180.0, //
+                    0.0);
+            }
+        else
+            {
+            // otherwise, use our 2 or 4 wheel braking method.
+            this.controls(brakeVoltage, brakeVoltage);
+            }
+        return false;
+        }
 } // end brake
 
 // -------------------------------------------------------
@@ -955,21 +955,21 @@ public boolean brake (final double brakeVoltage)
  */
 public boolean checkDownshiftButton (final boolean buttonOn)
 {
-	// -------------------------------------
-	// if the button state has changed from
-	// the last call then do something. Only
-	// change gears if the button was off before
-	// and now is suddenly on
-	// -------------------------------------
-	if (this.presentDownshiftState != buttonOn)
-	{
-	if (buttonOn == true)
-	{
-	this.downshift(1);
-	}
-	this.presentDownshiftState = buttonOn;
-	} // if
-	return (this.presentDownshiftState);
+    // -------------------------------------
+    // if the button state has changed from
+    // the last call then do something. Only
+    // change gears if the button was off before
+    // and now is suddenly on
+    // -------------------------------------
+    if (this.presentDownshiftState != buttonOn)
+        {
+        if (buttonOn == true)
+            {
+            this.downshift(1);
+            }
+        this.presentDownshiftState = buttonOn;
+        } // if
+    return (this.presentDownshiftState);
 } // end checkDownshiftButton
 
 // -------------------------------------------------------
@@ -998,8 +998,8 @@ public void checkShiftButtons (final boolean upShiftButtonOn,
 // pass in the button that will
 // control any downshifts
 {
-	this.checkUpshiftButton(upShiftButtonOn);
-	this.checkDownshiftButton(downShiftButtonOn);
+    this.checkUpshiftButton(upShiftButtonOn);
+    this.checkDownshiftButton(downShiftButtonOn);
 } // end checkShiftButtons
 
 // -------------------------------------------------------
@@ -1022,21 +1022,21 @@ public boolean checkUpshiftButton (final boolean buttonOn)// pass in the
 // will
 // control any upshifts
 {
-	// -------------------------------------
-	// if the button state has changed from
-	// the last call then do something. Only
-	// change gears is the button was off before
-	// and now is suddenly on
-	// -------------------------------------
-	if (this.presentUpshiftState != buttonOn)
-	{
-	if (buttonOn == true)
-	{
-	this.upshift(1);
-	}
-	this.presentUpshiftState = buttonOn;
-	} // if
-	return (this.presentUpshiftState);
+    // -------------------------------------
+    // if the button state has changed from
+    // the last call then do something. Only
+    // change gears is the button was off before
+    // and now is suddenly on
+    // -------------------------------------
+    if (this.presentUpshiftState != buttonOn)
+        {
+        if (buttonOn == true)
+            {
+            this.upshift(1);
+            }
+        this.presentUpshiftState = buttonOn;
+        } // if
+    return (this.presentUpshiftState);
 } // end checkUpshiftButton
 
 // -------------------------------------------------------
@@ -1085,17 +1085,17 @@ public void controls (final boolean upShiftSwitch,
         final SpeedController rightSpeedController)
 // the right Motor speed controller
 {
-	// -------------------------------------
-	// make the gears correct as the user wants
-	// them now.
-	// -------------------------------------
-	this.checkShiftButtons(upShiftSwitch, downShiftSwitch);
-	// -------------------------------------
-	// since we have two motors to control,
-	// call controls() to process the input
-	// -------------------------------------
-	this.controls(leftJoystickInputValue, leftSpeedController,
-	        rightJoystickInputValue, rightSpeedController);
+    // -------------------------------------
+    // make the gears correct as the user wants
+    // them now.
+    // -------------------------------------
+    this.checkShiftButtons(upShiftSwitch, downShiftSwitch);
+    // -------------------------------------
+    // since we have two motors to control,
+    // call controls() to process the input
+    // -------------------------------------
+    this.controls(leftJoystickInputValue, leftSpeedController,
+            rightJoystickInputValue, rightSpeedController);
 } // end Controls
 
 // -------------------------------------------------------
@@ -1122,15 +1122,15 @@ public void controls (final double joystickInputValue)
 // speed controller
 {
 
-	// -------------------------------------
-	// call the controls() with
-	// the the stored speed controller
-	// -------------------------------------
-	if (this.oneOrRightSpeedController != null)
-	{
-	this.controls(joystickInputValue,
-	        this.oneOrRightSpeedController);
-	}
+    // -------------------------------------
+    // call the controls() with
+    // the the stored speed controller
+    // -------------------------------------
+    if (this.oneOrRightSpeedController != null)
+        {
+        this.controls(joystickInputValue,
+                this.oneOrRightSpeedController);
+        }
 } // end controls
 
 // -------------------------------------------------------
@@ -1165,33 +1165,33 @@ public void controls (final double leftJoystickInputValue,
 // joystick that controls the
 // right speed controller
 {
-	// -------------------------------------
-	// since we have two motors to control,
-	// call controls() with the stored
-	// speed controllers
-	// -------------------------------------
-	if ((this.oneOrRightSpeedController != null) &&
-	        (this.leftSpeedController != null))
-	    // Control all four wheels if all four are initialized
-	    // and we are in mecanum drive.
-	    if ((this.rightRearSpeedController != null) &&
-	            (this.leftRearSpeedController != null) &&
-	            (this.isMecanumDrive() == true))
-		{
-		this.controls(leftJoystickInputValue,
-		        rightJoystickInputValue,
-		        this.leftSpeedController,
-		        this.leftRearSpeedController,
-		        this.oneOrRightSpeedController,
-		        this.rightRearSpeedController);
-		}
-		else
-		{
-		this.controls(leftJoystickInputValue,
-		        this.leftSpeedController,
-		        rightJoystickInputValue,
-		        this.oneOrRightSpeedController);
-		}
+    // -------------------------------------
+    // since we have two motors to control,
+    // call controls() with the stored
+    // speed controllers
+    // -------------------------------------
+    if ((this.oneOrRightSpeedController != null) &&
+            (this.leftSpeedController != null))
+        // Control all four wheels if all four are initialized
+        // and we are in mecanum drive.
+        if ((this.rightRearSpeedController != null) &&
+                (this.leftRearSpeedController != null) &&
+                (this.isMecanumDrive() == true))
+            {
+            this.controls(leftJoystickInputValue,
+                    rightJoystickInputValue,
+                    this.leftSpeedController,
+                    this.leftRearSpeedController,
+                    this.oneOrRightSpeedController,
+                    this.rightRearSpeedController);
+            }
+        else
+            {
+            this.controls(leftJoystickInputValue,
+                    this.leftSpeedController,
+                    rightJoystickInputValue,
+                    this.oneOrRightSpeedController);
+            }
 
 } // end Controls
 
@@ -1214,226 +1214,226 @@ public void controls (final double leftJoystickInputValue,
 public void controls (final double magnitude, final double direction,
         final double rotation)
 {
-	if ((this.leftSpeedController == null) ||
-	        (this.leftRearSpeedController == null) ||
-	        (this.oneOrRightSpeedController == null) ||
-	        (this.rightRearSpeedController == null))
-	{
-	if (this.getDebugState() == debugStateValues.DEBUG_ALL)
-	{
-	System.out.println("MECANUM controls(): motor is null");
-	}
-	return;
-	}
+    if ((this.leftSpeedController == null) ||
+            (this.leftRearSpeedController == null) ||
+            (this.oneOrRightSpeedController == null) ||
+            (this.rightRearSpeedController == null))
+        {
+        if (this.getDebugState() == debugStateValues.DEBUG_ALL)
+            {
+            System.out.println("MECANUM controls(): motor is null");
+            }
+        return;
+        }
 
-	double tempRotation = rotation, tempMagnitude = magnitude,
-	        tempDirection = direction;
+    double tempRotation = rotation, tempMagnitude = magnitude,
+            tempDirection = direction;
 
-	// Rotation deadzone
-	if (Math.abs(rotation) < this.deadbandPercentageZone)
-	{
-	tempRotation = 0.0;
-	}
-	if (Math.abs(magnitude) < this.deadbandPercentageZone)
-	{
-	tempMagnitude = 0.0;
-	}
+    // Rotation deadzone
+    if (Math.abs(rotation) < this.deadbandPercentageZone)
+        {
+        tempRotation = 0.0;
+        }
+    if (Math.abs(magnitude) < this.deadbandPercentageZone)
+        {
+        tempMagnitude = 0.0;
+        }
 
-	// directional deadband code
-	// Deadband for "up" angle on joystick
-	if ((tempDirection >= (0.0 - this.directionalXOrthagonalZone)) &&
-	        (tempDirection <= (0.0 + this.directionalXOrthagonalZone)))
-	{
-	tempDirection = 0.0;
-	}
-	else if ((tempDirection <= (-180.0
-	        + this.directionalXOrthagonalZone)) &&
-	        (tempDirection >= (180.0
-	                - this.directionalXOrthagonalZone)))
-	{
-	tempDirection = 180.0;
-	}
-	else if ((tempDirection >= (-90.0
-	        - this.directionalYOrthagonalZone)) &&
-	        (tempDirection <= (-90.0
-	                + this.directionalYOrthagonalZone)))
-	{
-	tempDirection = -90.0;
-	}
-	else if ((tempDirection <= (90.0 - this.directionalYOrthagonalZone))
-	        &&
-	        (tempDirection >= (90.0 + this.directionalYOrthagonalZone)))
-	{
-	tempDirection = 90.0;
-	}
+    // directional deadband code
+    // Deadband for "up" angle on joystick
+    if ((tempDirection >= (0.0 - this.directionalXOrthagonalZone)) &&
+            (tempDirection <= (0.0 + this.directionalXOrthagonalZone)))
+        {
+        tempDirection = 0.0;
+        }
+    else if ((tempDirection <= (-180.0
+            + this.directionalXOrthagonalZone)) &&
+            (tempDirection >= (180.0
+                    - this.directionalXOrthagonalZone)))
+        {
+        tempDirection = 180.0;
+        }
+    else if ((tempDirection >= (-90.0
+            - this.directionalYOrthagonalZone)) &&
+            (tempDirection <= (-90.0
+                    + this.directionalYOrthagonalZone)))
+        {
+        tempDirection = -90.0;
+        }
+    else if ((tempDirection <= (90.0 - this.directionalYOrthagonalZone))
+            &&
+            (tempDirection >= (90.0 + this.directionalYOrthagonalZone)))
+        {
+        tempDirection = 90.0;
+        }
 
-	tempRotation = this.limit(rotation);
+    tempRotation = this.limit(rotation);
 
-	// The following section of code is basically
-	// stolen verbatum from the mecanumDrive_Polar method
-	// of the RobotDrive class provided by WPI.
+    // The following section of code is basically
+    // stolen verbatum from the mecanumDrive_Polar method
+    // of the RobotDrive class provided by WPI.
 
-	// map the magnitude along our deadband range
-	if ((this.usePID() == true) && (this.isPIDEnabled() == true))
-	{
-	tempMagnitude = this.mapSoftwareJoystickValues(tempMagnitude,
-	        this.getFirstGearPercentage());
-	}
+    // map the magnitude along our deadband range
+    if ((this.usePID() == true) && (this.isPIDEnabled() == true))
+        {
+        tempMagnitude = this.mapSoftwareJoystickValues(tempMagnitude,
+                this.getFirstGearPercentage());
+        }
 
-	// limit magnitude to -1.0..1.0
-	// Normalized along the cartesian axes
-	tempMagnitude = this.limit(tempMagnitude) * Math.sqrt(2.0);
+    // limit magnitude to -1.0..1.0
+    // Normalized along the cartesian axes
+    tempMagnitude = this.limit(tempMagnitude) * Math.sqrt(2.0);
 
-	// Only re-enable pid if we are actually moving and want to use PID.
-	if ((Math.abs(tempMagnitude) >= this.deadbandPercentageZone) &&
-	        (this.isPIDEnabled() == false) && (this.usePID() == true))
-	{
-	this.enablePID();
-	}
+    // Only re-enable pid if we are actually moving and want to use PID.
+    if ((Math.abs(tempMagnitude) >= this.deadbandPercentageZone) &&
+            (this.isPIDEnabled() == false) && (this.usePID() == true))
+        {
+        this.enablePID();
+        }
 
-	if ((this.getDebugState() == debugStateValues.DEBUG_ONLY_PID_DATA)
-	        ||
-	        (this.getDebugState() == debugStateValues.DEBUG_ALL))
-	{
-	System.out.println("counter: " + this.integralUseCounter);
-	System.out.println("F: " +
-	        this.pidLeftController.getPIDController().getF());
-	}
+    if ((this.getDebugState() == debugStateValues.DEBUG_ONLY_PID_DATA)
+            ||
+            (this.getDebugState() == debugStateValues.DEBUG_ALL))
+        {
+        System.out.println("counter: " + this.integralUseCounter);
+        System.out.println("F: " +
+                this.pidLeftController.getPIDController().getF());
+        }
 
-	if ((Math.abs(tempMagnitude) >= this.deadbandPercentageZone) &&
-	        (this.isPIDEnabled() == true) && (this.usePID() == true))
-		if (this.integralUseCounter == 10)
-		{
-		this.setPIDValues(this.pidProportionalGain, 0,
-		        this.pidDerivativeGain, this.pidFeedForward,
-		        this.pidTolerance);
-		this.integralUseCounter++;
-		}
-		else if (this.integralUseCounter < 10)
-		{
-		this.integralUseCounter++;
-		}
+    if ((Math.abs(tempMagnitude) >= this.deadbandPercentageZone) &&
+            (this.isPIDEnabled() == true) && (this.usePID() == true))
+        if (this.integralUseCounter == 10)
+            {
+            this.setPIDValues(this.pidProportionalGain, 0,
+                    this.pidDerivativeGain, this.pidFeedForward,
+                    this.pidTolerance);
+            this.integralUseCounter++;
+            }
+        else if (this.integralUseCounter < 10)
+            {
+            this.integralUseCounter++;
+            }
 
-	// Add 45 to account for the angle of the rollers
-	// on the mecanum wheels.
-	final double dirInRad = ((tempDirection + 45.0) * 3.14159) / 180.0;
-	final double cosD = Math.cos(dirInRad);
-	final double sinD = Math.sin(dirInRad);
+    // Add 45 to account for the angle of the rollers
+    // on the mecanum wheels.
+    final double dirInRad = ((tempDirection + 45.0) * 3.14159) / 180.0;
+    final double cosD = Math.cos(dirInRad);
+    final double sinD = Math.sin(dirInRad);
 
-	// hold the correct values to send to the speed controllers.
-	// we can then use them for PID.
-	double leftFrontSpeed = (sinD * tempMagnitude) + tempRotation;
-	double rightFrontSpeed = (cosD * tempMagnitude) - tempRotation;
-	double leftRearSpeed = (cosD * tempMagnitude) + tempRotation;
-	double rightRearSpeed = (sinD * tempMagnitude) - tempRotation;
+    // hold the correct values to send to the speed controllers.
+    // we can then use them for PID.
+    double leftFrontSpeed = (sinD * tempMagnitude) + tempRotation;
+    double rightFrontSpeed = (cosD * tempMagnitude) - tempRotation;
+    double leftRearSpeed = (cosD * tempMagnitude) + tempRotation;
+    double rightRearSpeed = (sinD * tempMagnitude) - tempRotation;
 
-	// limit the values to our motor range of -1..1
-	leftFrontSpeed = this.limit(leftFrontSpeed);
-	leftRearSpeed = this.limit(leftRearSpeed);
-	rightFrontSpeed = this.limit(rightFrontSpeed);
-	rightRearSpeed = this.limit(rightRearSpeed);
-	// TODO: scale these, dividing them by the highest greater than 1 so as
-	// to keep the
-	// see
-	// http://thinktank.wpi.edu/resources/346/ControllingMecanumDrive.pdf
-	// page 2
-	final double highestSpeed = Math.max(
-	        Math.max(leftFrontSpeed, leftRearSpeed),
-	        Math.max(rightFrontSpeed, rightRearSpeed));
+    // limit the values to our motor range of -1..1
+    leftFrontSpeed = this.limit(leftFrontSpeed);
+    leftRearSpeed = this.limit(leftRearSpeed);
+    rightFrontSpeed = this.limit(rightFrontSpeed);
+    rightRearSpeed = this.limit(rightRearSpeed);
+    // TODO: scale these, dividing them by the highest greater than 1 so as
+    // to keep the
+    // see
+    // http://thinktank.wpi.edu/resources/346/ControllingMecanumDrive.pdf
+    // page 2
+    final double highestSpeed = Math.max(
+            Math.max(leftFrontSpeed, leftRearSpeed),
+            Math.max(rightFrontSpeed, rightRearSpeed));
 
-	// PID Controls and debug
-	if ((this.usePID() == true) && (this.isPIDEnabled() == true) &&
-	        (this.pidRightController != null) &&
-	        (this.pidLeftController != null) &&
-	        (this.pidRightRearController != null) &&
-	        (this.pidLeftRearController != null))
-	{
+    // PID Controls and debug
+    if ((this.usePID() == true) && (this.isPIDEnabled() == true) &&
+            (this.pidRightController != null) &&
+            (this.pidLeftController != null) &&
+            (this.pidRightRearController != null) &&
+            (this.pidLeftRearController != null))
+        {
 
-	System.out.println("PID is enabled");
+        System.out.println("PID is enabled");
 
-	// If we have are stopped, disable PID to prevent us
-	// from moving due to cumulative error.
-	if (Math.abs(tempMagnitude) <= this.deadbandPercentageZone)
-	{
-	this.disablePID();
-	this.resetPID();
-	}
-	else
-	{
-	this.pidLeftController.setSetpoint(leftFrontSpeed *
-	        this.maxEncoderRate
-	        * this.leftMotorDirection.get());
+        // If we have are stopped, disable PID to prevent us
+        // from moving due to cumulative error.
+        if (Math.abs(tempMagnitude) <= this.deadbandPercentageZone)
+            {
+            this.disablePID();
+            this.resetPID();
+            }
+        else
+            {
+            this.pidLeftController.setSetpoint(leftFrontSpeed *
+                    this.maxEncoderRate
+                    * this.leftMotorDirection.get());
 
-	this.pidRightController.setSetpoint(rightFrontSpeed *
-	        this.maxEncoderRate
-	        * this.rightMotorDirection.get());
+            this.pidRightController.setSetpoint(rightFrontSpeed *
+                    this.maxEncoderRate
+                    * this.rightMotorDirection.get());
 
-	this.pidRightRearController.setSetpoint(rightRearSpeed *
-	        this.maxEncoderRate
-	        * this.rightRearMotorDirection.get());
+            this.pidRightRearController.setSetpoint(rightRearSpeed *
+                    this.maxEncoderRate
+                    * this.rightRearMotorDirection.get());
 
-	this.pidLeftRearController.setSetpoint(leftRearSpeed *
-	        this.maxEncoderRate
-	        * this.leftRearMotorDirection.get());
+            this.pidLeftRearController.setSetpoint(leftRearSpeed *
+                    this.maxEncoderRate
+                    * this.leftRearMotorDirection.get());
 
-	// If we need to, debug the PID data
-	if ((this
-	        .getDebugState() == debugStateValues.DEBUG_ONLY_PID_DATA)
-	        ||
-	        (this.getDebugState() == debugStateValues.DEBUG_ALL))
-	{
-	System.out.println("[PID] SETPOINTS");
-	System.out.println("[PID] " +
-	        this.pidLeftController.getSetpoint() + " / " +
-	        this.pidLeftRearController.getSetpoint() + " / "
-	        +
-	        this.pidRightController.getSetpoint() + " / " +
-	        this.pidRightRearController.getSetpoint());
+            // If we need to, debug the PID data
+            if ((this
+                    .getDebugState() == debugStateValues.DEBUG_ONLY_PID_DATA)
+                    ||
+                    (this.getDebugState() == debugStateValues.DEBUG_ALL))
+                {
+                System.out.println("[PID] SETPOINTS");
+                System.out.println("[PID] " +
+                        this.pidLeftController.getSetpoint() + " / " +
+                        this.pidLeftRearController.getSetpoint() + " / "
+                        +
+                        this.pidRightController.getSetpoint() + " / " +
+                        this.pidRightRearController.getSetpoint());
 
-	System.out.println("[PID] GET");
-	System.out.println("[PID] " +
-	        this.leftMotorEncoder.pidGet() + " / " +
-	        this.leftRearMotorEncoder.pidGet() + " / " +
-	        this.oneOrRightMotorEncoder.pidGet() + " / " +
-	        this.rightRearMotorEncoder.pidGet());
-	}
-	}
-	}
-	else
-	{ // if we aren't using PID at all
+                System.out.println("[PID] GET");
+                System.out.println("[PID] " +
+                        this.leftMotorEncoder.pidGet() + " / " +
+                        this.leftRearMotorEncoder.pidGet() + " / " +
+                        this.oneOrRightMotorEncoder.pidGet() + " / " +
+                        this.rightRearMotorEncoder.pidGet());
+                }
+            }
+        }
+    else
+        { // if we aren't using PID at all
 
-	// Send the different vcltages to the speed controllers
-	this.controlSpeedController(leftFrontSpeed *
-	        this.leftJoystickIsReversed.get(),
-	        this.leftSpeedController,
-	        this.leftMotorDirection.get(),
-	        WhichJoystick.ONE_JOYSTICK);
+        // Send the different vcltages to the speed controllers
+        this.controlSpeedController(leftFrontSpeed *
+                this.leftJoystickIsReversed.get(),
+                this.leftSpeedController,
+                this.leftMotorDirection.get(),
+                WhichJoystick.ONE_JOYSTICK);
 
-	final double LREAR_SCALE_FACTOR = 1.08;// 1.1;
-	this.controlSpeedController(leftRearSpeed *
-	        this.leftJoystickIsReversed.get() * LREAR_SCALE_FACTOR,
-	        this.leftRearSpeedController,
-	        this.leftRearMotorDirection.get(),
-	        WhichJoystick.ONE_JOYSTICK);
+        final double LREAR_SCALE_FACTOR = 1.08;// 1.1;
+        this.controlSpeedController(leftRearSpeed *
+                this.leftJoystickIsReversed.get() * LREAR_SCALE_FACTOR,
+                this.leftRearSpeedController,
+                this.leftRearMotorDirection.get(),
+                WhichJoystick.ONE_JOYSTICK);
 
-	this.controlSpeedController(rightRearSpeed *
-	        this.leftJoystickIsReversed.get(),
-	        this.rightRearSpeedController,
-	        this.rightRearMotorDirection.get(),
-	        WhichJoystick.ONE_JOYSTICK);
+        this.controlSpeedController(rightRearSpeed *
+                this.leftJoystickIsReversed.get(),
+                this.rightRearSpeedController,
+                this.rightRearMotorDirection.get(),
+                WhichJoystick.ONE_JOYSTICK);
 
-	this.controlSpeedController(rightFrontSpeed *
-	        this.leftJoystickIsReversed.get(),
-	        this.oneOrRightSpeedController,
-	        this.rightMotorDirection.get(),
-	        WhichJoystick.ONE_JOYSTICK);
+        this.controlSpeedController(rightFrontSpeed *
+                this.leftJoystickIsReversed.get(),
+                this.oneOrRightSpeedController,
+                this.rightMotorDirection.get(),
+                WhichJoystick.ONE_JOYSTICK);
 
-	/*
-	 * System.out.println("LF: " + leftFrontSpeed + ", LR: "
-	 * + leftRearSpeed +
-	 * ", RF: " + rightFrontSpeed + ", RR: " + rightRearSpeed);
-	 */
-	}
+        /*
+         * System.out.println("LF: " + leftFrontSpeed + ", LR: "
+         * + leftRearSpeed +
+         * ", RF: " + rightFrontSpeed + ", RR: " + rightRearSpeed);
+         */
+        }
 }
 
 public void controls (double magnitude, double direction,
@@ -1441,101 +1441,101 @@ public void controls (double magnitude, double direction,
         boolean driveStraight)
 {
 
-	if (driveStraight == true)
-	{
+    if (driveStraight == true)
+        {
 
-	final double encoderSidesDelta = (Math
-	        .abs(this.leftMotorEncoder.getDistance()) + Math
-	                .abs(this.leftRearMotorEncoder.getDistance()))
-	        -
-	        (Math.abs(this.oneOrRightMotorEncoder
-	                .getDistance()) + Math
-	                        .abs(this.rightRearMotorEncoder
-	                                .getDistance()));
+        final double encoderSidesDelta = (Math
+                .abs(this.leftMotorEncoder.getDistance()) + Math
+                        .abs(this.leftRearMotorEncoder.getDistance()))
+                -
+                (Math.abs(this.oneOrRightMotorEncoder
+                        .getDistance()) + Math
+                                .abs(this.rightRearMotorEncoder
+                                        .getDistance()));
 
-	// final double diagonalEncoderPairDelta =
-	// (this.oneOrRightMotorEncoder.getDistance() -
-	// this.leftRearMotorEncoder
-	// .getDistance());
-	//
-	// final double otherDiagonalEncoderPairDelta =
-	// (this.rightRearMotorEncoder.getDistance() - this.leftMotorEncoder
-	// .getDistance());
-	//
-	// double encoderPairDelta = 0.0;
-	// if (Math.abs(diagonalEncoderPairDelta) > Math
-	// .abs(otherDiagonalEncoderPairDelta))
-	// {
-	// encoderPairDelta = diagonalEncoderPairDelta;
-	// }
-	// else
-	// {
-	// encoderPairDelta = otherDiagonalEncoderPairDelta;
-	// }
+        // final double diagonalEncoderPairDelta =
+        // (this.oneOrRightMotorEncoder.getDistance() -
+        // this.leftRearMotorEncoder
+        // .getDistance());
+        //
+        // final double otherDiagonalEncoderPairDelta =
+        // (this.rightRearMotorEncoder.getDistance() - this.leftMotorEncoder
+        // .getDistance());
+        //
+        // double encoderPairDelta = 0.0;
+        // if (Math.abs(diagonalEncoderPairDelta) > Math
+        // .abs(otherDiagonalEncoderPairDelta))
+        // {
+        // encoderPairDelta = diagonalEncoderPairDelta;
+        // }
+        // else
+        // {
+        // encoderPairDelta = otherDiagonalEncoderPairDelta;
+        // }
 
-	this.rotationCorrection = encoderSidesDelta
-	        * this.mecanumRotationCorrection;
+        this.rotationCorrection = encoderSidesDelta
+                * this.mecanumRotationCorrection;
 
-	if (this.getDebugState() == debugStateValues.DEBUG_ALL)
-	{
-	System.out.println("Rotation correction: " +
-	        this.rotationCorrection + " pair delta: " +
-	        encoderSidesDelta);
-	}
+        if (this.getDebugState() == debugStateValues.DEBUG_ALL)
+            {
+            System.out.println("Rotation correction: " +
+                    this.rotationCorrection + " pair delta: " +
+                    encoderSidesDelta);
+            }
 
-	// Solve for magnitude of resultant vector of the encoders
-	// get the sum of the vectors' x components, then y components...
-	final double resultantY = ((this.leftMotorEncoder.getDistance()
-	        + this.leftRearMotorEncoder
-	                .getDistance())
-	        + this.oneOrRightMotorEncoder.getDistance()
-	        + this.rightRearMotorEncoder
-	                .getDistance());
+        // Solve for magnitude of resultant vector of the encoders
+        // get the sum of the vectors' x components, then y components...
+        final double resultantY = ((this.leftMotorEncoder.getDistance()
+                + this.leftRearMotorEncoder
+                        .getDistance())
+                + this.oneOrRightMotorEncoder.getDistance()
+                + this.rightRearMotorEncoder
+                        .getDistance());
 
-	final double resultantX = (((this.leftMotorEncoder.getDistance()
-	        - this.leftRearMotorEncoder
-	                .getDistance())
-	        - this.oneOrRightMotorEncoder.getDistance())
-	        + this.rightRearMotorEncoder
-	                .getDistance());
+        final double resultantX = (((this.leftMotorEncoder.getDistance()
+                - this.leftRearMotorEncoder
+                        .getDistance())
+                - this.oneOrRightMotorEncoder.getDistance())
+                + this.rightRearMotorEncoder
+                        .getDistance());
 
-	// Calculate the resultant vector's direction with arctan
-	// Math.atan returns in radians, so we have to convert to degrees
-	// subtract it from 90.0 to account for how the location of our
-	// calculated
-	// is along the unit circle.
-	final double resultantThetaInDegrees = 90.0
-	        - ((Math.atan2(resultantY, resultantX) * 180.0)
-	                / 3.1415);
+        // Calculate the resultant vector's direction with arctan
+        // Math.atan returns in radians, so we have to convert to degrees
+        // subtract it from 90.0 to account for how the location of our
+        // calculated
+        // is along the unit circle.
+        final double resultantThetaInDegrees = 90.0
+                - ((Math.atan2(resultantY, resultantX) * 180.0)
+                        / 3.1415);
 
-	double deltaTheta = (direction - resultantThetaInDegrees);
+        double deltaTheta = (direction - resultantThetaInDegrees);
 
-	// Limit to a max compensation of about 30 degrees
-	if (deltaTheta > 30.0)
-	{
-	deltaTheta = 30.0;
-	}
-	else if (deltaTheta < -30.0)
-	{
-	deltaTheta = -30.0;
-	}
+        // Limit to a max compensation of about 30 degrees
+        if (deltaTheta > 30.0)
+            {
+            deltaTheta = 30.0;
+            }
+        else if (deltaTheta < -30.0)
+            {
+            deltaTheta = -30.0;
+            }
 
-	if (this.getDebugState() == debugStateValues.DEBUG_ALL)
-	{
-	System.out.println(
-	        "Resultant angle" + resultantThetaInDegrees +
-	                " delta theta * 1: " + (1.0 * deltaTheta));
-	// System.out.println("Rotation correction: " +
-	// this.rotationCorrection);
-	}
+        if (this.getDebugState() == debugStateValues.DEBUG_ALL)
+            {
+            System.out.println(
+                    "Resultant angle" + resultantThetaInDegrees +
+                            " delta theta * 1: " + (1.0 * deltaTheta));
+            // System.out.println("Rotation correction: " +
+            // this.rotationCorrection);
+            }
 
-	this.controls(magnitude, direction + (deltaTheta * 1.4),
-	        this.rotationCorrection);
-	}
-	else
-	{
-	this.controls(magnitude, direction, rotation);
-	}
+        this.controls(magnitude, direction + (deltaTheta * 1.4),
+                this.rotationCorrection);
+        }
+    else
+        {
+        this.controls(magnitude, direction, rotation);
+        }
 }
 
 // ------------------------------------------------------------------
@@ -1567,59 +1567,58 @@ public void controls (double leftJoystickValue,
         SpeedController rightRearSpeedController)
 {
 
-	if ((this.isPIDEnabled() == true) &&
-	        (this.pidRightController != null) &&
-	        (this.pidLeftController != null))
-		if ((this
-		        .getDebugState() == debugStateValues.DEBUG_ONLY_PID_DATA)
-		        ||
-		        (this.getDebugState() == debugStateValues.DEBUG_ALL))
-		{
-		System.out.println("[PID] RIGHT S" +
-		        this.pidRightController.getSetpoint() + "/" + "P" +
-		        this.pidRightController.getPIDController().getP()
-		        + "/" +
-		        "I"
-		        + this.pidRightController.getPIDController().getI()
-		        +
-		        "/" + "D" +
-		        this.pidRightController.getPIDController().getD());
-		System.out.println("[PID] LEFT S" +
-		        this.pidLeftController.getSetpoint() + "/" + "P" +
-		        this.pidLeftController.getPIDController().getP()
-		        + "/" +
-		        "I"
-		        + this.pidLeftController.getPIDController().getI() +
-		        "/" + "D" +
-		        this.pidLeftController.getPIDController().getD());
+    if ((this.isPIDEnabled() == true) &&
+            (this.pidRightController != null) &&
+            (this.pidLeftController != null))
+        if ((this
+                .getDebugState() == debugStateValues.DEBUG_ONLY_PID_DATA)
+                ||
+                (this.getDebugState() == debugStateValues.DEBUG_ALL))
+            {
+            System.out.println("[PID] RIGHT S" +
+                    this.pidRightController.getSetpoint() + "/" + "P" +
+                    this.pidRightController.getPIDController().getP()
+                    + "/" +
+                    "I"
+                    + this.pidRightController.getPIDController().getI()
+                    +
+                    "/" + "D" +
+                    this.pidRightController.getPIDController().getD());
+            System.out.println("[PID] LEFT S" +
+                    this.pidLeftController.getSetpoint() + "/" + "P" +
+                    this.pidLeftController.getPIDController().getP()
+                    + "/" +
+                    "I"
+                    + this.pidLeftController.getPIDController().getI() +
+                    "/" + "D" +
+                    this.pidLeftController.getPIDController().getD());
 
-		}
+            }
 
-	// left front motor
-	this.controlSpeedController(leftJoystickValue *
-	        this.leftJoystickIsReversed.get(), leftSpeedController,
-	        this.leftMotorDirection.get(), WhichJoystick.LEFT_JOYSTICK);
+    // left front motor
+    this.controlSpeedController(leftJoystickValue *
+            this.leftJoystickIsReversed.get(), leftSpeedController,
+            this.leftMotorDirection.get(), WhichJoystick.LEFT_JOYSTICK);
 
-	// left rear motor
-	this.controlSpeedController(leftJoystickValue *
-	        this.leftJoystickIsReversed.get(), leftRearSpeedController,
-	        this.leftRearMotorDirection.get(),
-	        WhichJoystick.LEFT_JOYSTICK);
+    // left rear motor
+    this.controlSpeedController(leftJoystickValue *
+            this.leftJoystickIsReversed.get(), leftRearSpeedController,
+            this.leftRearMotorDirection.get(),
+            WhichJoystick.LEFT_JOYSTICK);
 
-	// right front motor
-	this.controlSpeedController(rightJoystickValue *
-	        this.rightJoystickIsReversed.get(),
-	        //this.oneOrRightSpeedController,
-	        rightSpeedController,
-	        this.rightMotorDirection.get(),
-	        WhichJoystick.RIGHT_JOYSTICK);
+    // right front motor
+    this.controlSpeedController(rightJoystickValue *
+            this.rightJoystickIsReversed.get(),
+            this.oneOrRightSpeedController,
+            this.rightMotorDirection.get(),
+            WhichJoystick.RIGHT_JOYSTICK);
 
-	// right rear motor
-	this.controlSpeedController(rightJoystickValue *
-	        this.rightJoystickIsReversed.get(),
-	        rightRearSpeedController,
-	        this.rightRearMotorDirection.get(),
-	        WhichJoystick.RIGHT_JOYSTICK);
+    // right rear motor
+    this.controlSpeedController(rightJoystickValue *
+            this.rightJoystickIsReversed.get(),
+            rightRearSpeedController,
+            this.rightRearMotorDirection.get(),
+            WhichJoystick.RIGHT_JOYSTICK);
 }
 
 // -------------------------------------------------------
@@ -1650,13 +1649,13 @@ public void controls (final double joystickInputValue,
 // to control then we consider
 // it to be the right Motor
 {
-	// -------------------------------------
-	// call the ControlSpeedController() with
-	// the correct motor direction
-	// -------------------------------------
-	this.controlSpeedController(joystickInputValue *
-	        this.rightJoystickIsReversed.get(), rightSpeedController,
-	        this.rightMotorDirection.get(), WhichJoystick.ONE_JOYSTICK);
+    // -------------------------------------
+    // call the ControlSpeedController() with
+    // the correct motor direction
+    // -------------------------------------
+    this.controlSpeedController(joystickInputValue *
+            this.rightJoystickIsReversed.get(), rightSpeedController,
+            this.rightMotorDirection.get(), WhichJoystick.ONE_JOYSTICK);
 } // end controls
 
 // -------------------------------------------------------
@@ -1696,18 +1695,18 @@ public void controls (final double leftJoystickInputValue,
         final SpeedController rightSpeedController)
 // the right Motor speed controller
 {
-	// -------------------------------------
-	// since we have two motors to control,
-	// call the ControlSpeedController() with
-	// the correct motor direction
-	// -------------------------------------
-	this.controlSpeedController(leftJoystickInputValue *
-	        this.leftJoystickIsReversed.get(), leftSpeedController,
-	        this.leftMotorDirection.get(), WhichJoystick.LEFT_JOYSTICK);
-	this.controlSpeedController(rightJoystickInputValue *
-	        this.rightJoystickIsReversed.get(), rightSpeedController,
-	        this.rightMotorDirection.get(),
-	        WhichJoystick.RIGHT_JOYSTICK);
+    // -------------------------------------
+    // since we have two motors to control,
+    // call the ControlSpeedController() with
+    // the correct motor direction
+    // -------------------------------------
+    this.controlSpeedController(leftJoystickInputValue *
+            this.leftJoystickIsReversed.get(), leftSpeedController,
+            this.leftMotorDirection.get(), WhichJoystick.LEFT_JOYSTICK);
+    this.controlSpeedController(rightJoystickInputValue *
+            this.rightJoystickIsReversed.get(), rightSpeedController,
+            this.rightMotorDirection.get(),
+            WhichJoystick.RIGHT_JOYSTICK);
 } // end Controls
 
 // -------------------------------------------------------
@@ -1744,117 +1743,117 @@ private void controlSpeedController (final double joystickInputValue,
 // character used to denote which joystick
 // was input
 {
-	double controllerInput = 0.0;
+    double controllerInput = 0.0;
 
-	// --------------------------------------
-	// if a legitimate joystick input value,
-	// save it to be later modified by the
-	// gear ratios
-	// --------------------------------------
-	if (this.isHardwareGearsOnlyOn() == true)
-	{
-	if ((joystickInputValue >= -1.0) && (joystickInputValue <= 1.0))
-	{
-	controllerInput = joystickInputValue * motorDirection;
-	oneSpeedController.set(controllerInput);
+    // --------------------------------------
+    // if a legitimate joystick input value,
+    // save it to be later modified by the
+    // gear ratios
+    // --------------------------------------
+    if (this.isHardwareGearsOnlyOn() == true)
+        {
+        if ((joystickInputValue >= -1.0) && (joystickInputValue <= 1.0))
+            {
+            controllerInput = joystickInputValue * motorDirection;
+            oneSpeedController.set(controllerInput);
 
-	} // if
-	} // if
-	else
-	{
-	// --------------------------------------
-	// Apply proper speed percentage constant
-	// for the gear we are in.
-	// --------------------------------------
-	switch (this.getGear())
-	{
-		case 5:
-			controllerInput = this.mapSoftwareJoystickValues(
-			        joystickInputValue,
-			        this.getFifthGearPercentage(
-			                whichJoystick))
-			        *
-			        motorDirection;
-			oneSpeedController.set(controllerInput);
-			break;
+            } // if
+        } // if
+    else
+        {
+        // --------------------------------------
+        // Apply proper speed percentage constant
+        // for the gear we are in.
+        // --------------------------------------
+        switch (this.getGear())
+            {
+            case 5:
+                controllerInput = this.mapSoftwareJoystickValues(
+                        joystickInputValue,
+                        this.getFifthGearPercentage(
+                                whichJoystick))
+                        *
+                        motorDirection;
+                oneSpeedController.set(controllerInput);
+                break;
 
-		case 4:
-			controllerInput = this.mapSoftwareJoystickValues(
-			        joystickInputValue,
-			        this.getFourthGearPercentage(
-			                whichJoystick))
-			        *
-			        motorDirection;
-			oneSpeedController.set(controllerInput);
-			break;
+            case 4:
+                controllerInput = this.mapSoftwareJoystickValues(
+                        joystickInputValue,
+                        this.getFourthGearPercentage(
+                                whichJoystick))
+                        *
+                        motorDirection;
+                oneSpeedController.set(controllerInput);
+                break;
 
-		case 3:
-			controllerInput = this.mapSoftwareJoystickValues(
-			        joystickInputValue,
-			        this.getThirdGearPercentage(
-			                whichJoystick))
-			        *
-			        motorDirection;
-			oneSpeedController.set(controllerInput);
-			break;
+            case 3:
+                controllerInput = this.mapSoftwareJoystickValues(
+                        joystickInputValue,
+                        this.getThirdGearPercentage(
+                                whichJoystick))
+                        *
+                        motorDirection;
+                oneSpeedController.set(controllerInput);
+                break;
 
-		case 2:
-			controllerInput = this.mapSoftwareJoystickValues(
-			        joystickInputValue,
-			        this.getSecondGearPercentage(
-			                whichJoystick))
-			        *
-			        motorDirection;
-			oneSpeedController.set(controllerInput);
-			break;
+            case 2:
+                controllerInput = this.mapSoftwareJoystickValues(
+                        joystickInputValue,
+                        this.getSecondGearPercentage(
+                                whichJoystick))
+                        *
+                        motorDirection;
+                oneSpeedController.set(controllerInput);
+                break;
 
-		default:
-			controllerInput = this.mapSoftwareJoystickValues(
-			        joystickInputValue,
-			        this.getFirstGearPercentage(
-			                whichJoystick))
-			        *
-			        motorDirection;
+            default:
+                controllerInput = this.mapSoftwareJoystickValues(
+                        joystickInputValue,
+                        this.getFirstGearPercentage(
+                                whichJoystick))
+                        *
+                        motorDirection;
 
-			oneSpeedController.set(controllerInput);
-			break;
+                oneSpeedController.set(controllerInput);
+                break;
 
-	} // switch
-	}
-	if ((this.getDebugState() == debugStateValues.DEBUG_ALL) ||
-	        ((this.getDebugState() == debugStateValues.DEBUG_ONLY_NON_ZERO)
-	                && (Math
-	                        .abs(joystickInputValue) >= this.deadbandPercentageZone)))
-	{
-	char joystickSide = ' ';
-	char controllerSide = ' ';
-	if (whichJoystick == WhichJoystick.LEFT_JOYSTICK)
-	{
-	joystickSide = 'L';
-	}
-	if (whichJoystick == WhichJoystick.RIGHT_JOYSTICK)
-	{
-	joystickSide = 'R';
-	}
+            } // switch
+        }
+    if ((this.getDebugState() == debugStateValues.DEBUG_ALL) ||
+            ((this.getDebugState() == debugStateValues.DEBUG_ONLY_NON_ZERO)
+                    && (Math
+                            .abs(joystickInputValue) >= this.deadbandPercentageZone)))
+        {
+        char joystickSide = ' ';
+        char controllerSide = ' ';
+        if (whichJoystick == WhichJoystick.LEFT_JOYSTICK)
+            {
+            joystickSide = 'L';
+            }
+        if (whichJoystick == WhichJoystick.RIGHT_JOYSTICK)
+            {
+            joystickSide = 'R';
+            }
 
-	if (oneSpeedController.equals(this.leftSpeedController) ||
-	        oneSpeedController
-	                .equals(this.oneOrRightSpeedController))
-	{
-	controllerSide = 'F';
-	}
-	if (oneSpeedController.equals(this.leftRearSpeedController) ||
-	        oneSpeedController
-	                .equals(this.rightRearSpeedController))
-	{
-	controllerSide = 'R';
-	}
-	System.out.println(joystickSide + controllerSide + " Joy = " +
-	        joystickInputValue);
-	System.out
-	        .println(joystickSide + controllerSide + " Contrs = " +
-	                controllerInput);
-	} // if
+        if (oneSpeedController.equals(this.leftSpeedController) ||
+                oneSpeedController
+                        .equals(this.oneOrRightSpeedController))
+            {
+            controllerSide = 'F';
+            }
+        if (oneSpeedController.equals(this.leftRearSpeedController) ||
+                oneSpeedController
+                        .equals(this.rightRearSpeedController))
+            {
+            controllerSide = 'R';
+            }
+        System.out.println(joystickSide + controllerSide + " Joy = " +
+                joystickInputValue);
+        System.out
+                .println(joystickSide + controllerSide + " Contrs = " +
+                        controllerInput);
+        } // if
 
 } // end controlSpeedController
 
@@ -1866,19 +1865,19 @@ private void controlSpeedController (final double joystickInputValue,
  */
 public void disablePID ()
 {
-	this.pidLeftController.disable();
-	this.pidLeftRearController.disable();
-	this.pidRightController.disable();
-	this.pidRightRearController.disable();
+    this.pidLeftController.disable();
+    this.pidLeftRearController.disable();
+    this.pidRightController.disable();
+    this.pidRightRearController.disable();
 
-	this.integralUseCounter = 0;
+    this.integralUseCounter = 0;
 
-	if ((this.getDebugState() == debugStateValues.DEBUG_ONLY_PID_DATA)
-	        ||
-	        (this.getDebugState() == debugStateValues.DEBUG_ALL))
-	{
-	System.out.println("[PID] Disabled PID.");
-	}
+    if ((this.getDebugState() == debugStateValues.DEBUG_ONLY_PID_DATA)
+            ||
+            (this.getDebugState() == debugStateValues.DEBUG_ALL))
+        {
+        System.out.println("[PID] Disabled PID.");
+        }
 }
 
 // -------------------------------------------------------
@@ -1897,11 +1896,11 @@ public int downshift (final int gearsToShift)
 // The number of gears to
 // shift down
 {
-	// --------------------------------------
-	// Shift down the desired number of
-	// gears.
-	// --------------------------------------
-	return (this.setGear(this.getGear() - gearsToShift));
+    // --------------------------------------
+    // Shift down the desired number of
+    // gears.
+    // --------------------------------------
+    return (this.setGear(this.getGear() - gearsToShift));
 } // end downshift
 
 /**
@@ -1914,26 +1913,26 @@ public int downshift (final int gearsToShift)
  */
 public void enablePID ()
 {
-	this.pidLeftController.enable();
-	this.pidLeftRearController.enable();
-	this.pidRightController.enable();
-	this.pidRightRearController.enable();
+    this.pidLeftController.enable();
+    this.pidLeftRearController.enable();
+    this.pidRightController.enable();
+    this.pidRightRearController.enable();
 
-	this.setPIDOutputRange(-this.oneOrRightFirstGearPercentage,
-	        this.oneOrRightFirstGearPercentage);
-	this.setPIDInputRange(-this.minInputRange, this.maxInputRange);
+    this.setPIDOutputRange(-this.oneOrRightFirstGearPercentage,
+            this.oneOrRightFirstGearPercentage);
+    this.setPIDInputRange(-this.minInputRange, this.maxInputRange);
 
-	this.setPIDValues(this.pidProportionalGain, this.pidIntegralGain,
-	        this.pidDerivativeGain, this.pidFeedForward,
-	        this.pidTolerance);
-	this.integralUseCounter = 0;
+    this.setPIDValues(this.pidProportionalGain, this.pidIntegralGain,
+            this.pidDerivativeGain, this.pidFeedForward,
+            this.pidTolerance);
+    this.integralUseCounter = 0;
 
-	if ((this.getDebugState() == debugStateValues.DEBUG_ONLY_PID_DATA)
-	        ||
-	        (this.getDebugState() == debugStateValues.DEBUG_ALL))
-	{
-	System.out.println("[PID] Enabled PID.");
-	}
+    if ((this.getDebugState() == debugStateValues.DEBUG_ONLY_PID_DATA)
+            ||
+            (this.getDebugState() == debugStateValues.DEBUG_ALL))
+        {
+        System.out.println("[PID] Enabled PID.");
+        }
 }
 
 // -------------------------------------------------------
@@ -1948,7 +1947,7 @@ public void enablePID ()
  */
 public debugStateValues getDebugState ()
 {
-	return (this.debugState);
+    return (this.debugState);
 } // end getDebugState
 
 /*
@@ -1958,7 +1957,7 @@ public debugStateValues getDebugState ()
  */
 public double getDirectionalXOrthagonalZone ()
 {
-	return (this.directionalXOrthagonalZone);
+    return (this.directionalXOrthagonalZone);
 }
 
 /*
@@ -1968,7 +1967,7 @@ public double getDirectionalXOrthagonalZone ()
  */
 public double getDirectionalYOrthagonalZone ()
 {
-	return (this.directionalYOrthagonalZone);
+    return (this.directionalYOrthagonalZone);
 }
 
 // -------------------------------------------------------
@@ -1984,7 +1983,7 @@ public double getDirectionalYOrthagonalZone ()
  */
 public double getFifthGearPercentage ()
 {
-	return (this.oneOrRightFifthGearPercentage);
+    return (this.oneOrRightFifthGearPercentage);
 } // end getFifthGearPercentage
 
 /**
@@ -2004,12 +2003,12 @@ public double getFifthGearPercentage ()
  */
 public double getFifthGearPercentage (int whichJoystick)
 {
-	if ((whichJoystick == WhichJoystick.ONE_JOYSTICK) ||
-	        (whichJoystick == WhichJoystick.RIGHT_JOYSTICK) ||
-	        (whichJoystick == WhichJoystick.ONE_JOYSTICK))
-		return (this.getFifthGearPercentage());
-	else
-		return (this.leftFifthGearPercentage);
+    if ((whichJoystick == WhichJoystick.ONE_JOYSTICK) ||
+            (whichJoystick == WhichJoystick.RIGHT_JOYSTICK) ||
+            (whichJoystick == WhichJoystick.ONE_JOYSTICK))
+        return (this.getFifthGearPercentage());
+    else
+        return (this.leftFifthGearPercentage);
 } // end getFifthGearPercentage
 
 // -------------------------------------------------------
@@ -2026,7 +2025,7 @@ public double getFifthGearPercentage (int whichJoystick)
  */
 public double getFirstGearPercentage ()
 {
-	return (this.oneOrRightFirstGearPercentage);
+    return (this.oneOrRightFirstGearPercentage);
 } // end getFirstGearPercentage
 
 // -------------------------------------------------------
@@ -2048,12 +2047,12 @@ public double getFirstGearPercentage ()
  */
 public double getFirstGearPercentage (int whichJoystick)
 {
-	if ((whichJoystick == WhichJoystick.ONE_JOYSTICK) ||
-	        (whichJoystick == WhichJoystick.RIGHT_JOYSTICK) ||
-	        (whichJoystick == WhichJoystick.ONE_JOYSTICK))
-		return (this.getFirstGearPercentage());
-	else
-		return (this.leftFirstGearPercentage);
+    if ((whichJoystick == WhichJoystick.ONE_JOYSTICK) ||
+            (whichJoystick == WhichJoystick.RIGHT_JOYSTICK) ||
+            (whichJoystick == WhichJoystick.ONE_JOYSTICK))
+        return (this.getFirstGearPercentage());
+    else
+        return (this.leftFirstGearPercentage);
 } // end getFirstGearPercentage
 
 // -------------------------------------------------------
@@ -2070,7 +2069,7 @@ public double getFirstGearPercentage (int whichJoystick)
  */
 public double getFourthGearPercentage ()
 {
-	return (this.oneOrRightFourthGearPercentage);
+    return (this.oneOrRightFourthGearPercentage);
 } // end getFourthGearPercentage
 
 // -------------------------------------------------------
@@ -2093,12 +2092,12 @@ public double getFourthGearPercentage ()
  */
 public double getFourthGearPercentage (int whichJoystick)
 {
-	if ((whichJoystick == WhichJoystick.ONE_JOYSTICK) ||
-	        (whichJoystick == WhichJoystick.RIGHT_JOYSTICK) ||
-	        (whichJoystick == WhichJoystick.ONE_JOYSTICK))
-		return (this.getFourthGearPercentage());
-	else
-		return (this.leftFourthGearPercentage);
+    if ((whichJoystick == WhichJoystick.ONE_JOYSTICK) ||
+            (whichJoystick == WhichJoystick.RIGHT_JOYSTICK) ||
+            (whichJoystick == WhichJoystick.ONE_JOYSTICK))
+        return (this.getFourthGearPercentage());
+    else
+        return (this.leftFourthGearPercentage);
 } // end getFourthGearPercentage
 
 // -------------------------------------------------------
@@ -2113,10 +2112,10 @@ public double getFourthGearPercentage (int whichJoystick)
  */
 public int getGear ()
 {
-	// --------------------------------------
-	// Return the gear number.
-	// --------------------------------------
-	return (this.gear);
+    // --------------------------------------
+    // Return the gear number.
+    // --------------------------------------
+    return (this.gear);
 } // end getGear
 
 // ----------------------------------------
@@ -2128,7 +2127,7 @@ public int getGear ()
  */
 public SpeedController getLeftRearSpeedController ()
 {
-	return (this.leftRearSpeedController);
+    return (this.leftRearSpeedController);
 }
 
 // -------------------------------------------------------
@@ -2143,10 +2142,10 @@ public SpeedController getLeftRearSpeedController ()
  */
 public SpeedController getLeftSpeedController ()
 {
-	// --------------------------------------
-	// Return the left Speed Controller.
-	// --------------------------------------
-	return (this.leftSpeedController);
+    // --------------------------------------
+    // Return the left Speed Controller.
+    // --------------------------------------
+    return (this.leftSpeedController);
 } // end getLeftSpeedController
 
 /**
@@ -2160,7 +2159,7 @@ public SpeedController getLeftSpeedController ()
  */
 public double getMaxEncoderRate ()
 {
-	return this.maxEncoderRate;
+    return this.maxEncoderRate;
 }
 
 // -------------------------------------------------------
@@ -2175,7 +2174,7 @@ public double getMaxEncoderRate ()
  */
 public int getMaxGear ()
 {
-	return (this.maxGears);
+    return (this.maxGears);
 } // end getMaxGear
 
 /**
@@ -2191,7 +2190,7 @@ public int getMaxGear ()
  */
 public int getPhysicalGearToChange ()
 {
-	return (this.physicalGearToChange);
+    return (this.physicalGearToChange);
 } // end getPhysicalGearToChange
 
 // -------------------------------------------------------
@@ -2207,10 +2206,10 @@ public int getPhysicalGearToChange ()
  */
 public SpeedController getPrimarySpeedController ()
 {
-	// --------------------------------------
-	// Return the primary Speed Controller.
-	// --------------------------------------
-	return (this.oneOrRightSpeedController);
+    // --------------------------------------
+    // Return the primary Speed Controller.
+    // --------------------------------------
+    return (this.oneOrRightSpeedController);
 } // end getPrimarySpeedController
 
 // -------------------------------------------------------
@@ -2225,7 +2224,7 @@ public SpeedController getPrimarySpeedController ()
  */
 public double getRightRearEncoderDistance ()
 {
-	return this.rightRearMotorEncoder.getDistance();
+    return this.rightRearMotorEncoder.getDistance();
 }
 
 /**
@@ -2236,7 +2235,7 @@ public double getRightRearEncoderDistance ()
  */
 public double getRightFrontEncoderDistance ()
 {
-	return this.oneOrRightMotorEncoder.getDistance();
+    return this.oneOrRightMotorEncoder.getDistance();
 }
 
 /**
@@ -2247,7 +2246,7 @@ public double getRightFrontEncoderDistance ()
  */
 public double getLeftRearEncoderDistance ()
 {
-	return this.leftRearMotorEncoder.getDistance();
+    return this.leftRearMotorEncoder.getDistance();
 }
 
 /**
@@ -2258,7 +2257,7 @@ public double getLeftRearEncoderDistance ()
  */
 public double getLeftFrontEncoderDistance ()
 {
-	return this.leftMotorEncoder.getDistance();
+    return this.leftMotorEncoder.getDistance();
 }
 
 /**
@@ -2269,7 +2268,7 @@ public double getLeftFrontEncoderDistance ()
  */
 public SpeedController getRightRearSpeedController ()
 {
-	return (this.rightRearSpeedController);
+    return (this.rightRearSpeedController);
 }
 
 // ----------------------------------------
@@ -2286,10 +2285,10 @@ public SpeedController getRightRearSpeedController ()
  */
 public SpeedController getRightSpeedController ()
 {
-	// --------------------------------------
-	// Return the right Speed Controller.
-	// --------------------------------------
-	return (this.oneOrRightSpeedController);
+    // --------------------------------------
+    // Return the right Speed Controller.
+    // --------------------------------------
+    return (this.oneOrRightSpeedController);
 } // end getRightSpeedController
 
 /**
@@ -2304,7 +2303,7 @@ public SpeedController getRightSpeedController ()
  */
 public double getSecondGearPercentage ()
 {
-	return (this.oneOrRightSecondGearPercentage);
+    return (this.oneOrRightSecondGearPercentage);
 } // end getSecondGearPercentage
 
 // -------------------------------------------------------
@@ -2326,12 +2325,12 @@ public double getSecondGearPercentage ()
  */
 public double getSecondGearPercentage (int whichJoystick)
 {
-	if ((whichJoystick == WhichJoystick.LEFT_JOYSTICK) ||
-	        (whichJoystick == WhichJoystick.RIGHT_JOYSTICK) ||
-	        (whichJoystick == WhichJoystick.ONE_JOYSTICK))
-		return (this.getSecondGearPercentage());
-	else
-		return (this.leftSecondGearPercentage);
+    if ((whichJoystick == WhichJoystick.LEFT_JOYSTICK) ||
+            (whichJoystick == WhichJoystick.RIGHT_JOYSTICK) ||
+            (whichJoystick == WhichJoystick.ONE_JOYSTICK))
+        return (this.getSecondGearPercentage());
+    else
+        return (this.leftSecondGearPercentage);
 } // end getSecondGearPercentage
 
 // -------------------------------------------------------
@@ -2349,7 +2348,7 @@ public double getSecondGearPercentage (int whichJoystick)
  */
 public double getThirdGearPercentage ()
 {
-	return (this.oneOrRightThirdGearPercentage);
+    return (this.oneOrRightThirdGearPercentage);
 } // end getThirdGearPercentage
 
 // -------------------------------------------------------
@@ -2370,12 +2369,12 @@ public double getThirdGearPercentage ()
  */
 public double getThirdGearPercentage (int whichJoystick)
 {
-	if ((whichJoystick == WhichJoystick.ONE_JOYSTICK) ||
-	        (whichJoystick == WhichJoystick.RIGHT_JOYSTICK) ||
-	        (whichJoystick == WhichJoystick.ONE_JOYSTICK))
-		return (this.getThirdGearPercentage());
-	else
-		return (this.leftThirdGearPercentage);
+    if ((whichJoystick == WhichJoystick.ONE_JOYSTICK) ||
+            (whichJoystick == WhichJoystick.RIGHT_JOYSTICK) ||
+            (whichJoystick == WhichJoystick.ONE_JOYSTICK))
+        return (this.getThirdGearPercentage());
+    else
+        return (this.leftThirdGearPercentage);
 } // end getThirdGearPercentage
 
 // -------------------------------------------------------
@@ -2390,7 +2389,7 @@ public double getThirdGearPercentage (int whichJoystick)
  */
 private void init ()
 {
-	this.setGear(1);
+    this.setGear(1);
 } // end init
 
 /**
@@ -2402,8 +2401,8 @@ private void init ()
  */
 public void initEncoders (Encoder rightEncoder, Encoder leftEncoder)
 {
-	this.leftMotorEncoder = leftEncoder;
-	this.oneOrRightMotorEncoder = rightEncoder;
+    this.leftMotorEncoder = leftEncoder;
+    this.oneOrRightMotorEncoder = rightEncoder;
 }
 
 /**
@@ -2419,10 +2418,10 @@ public void initEncoders (Encoder rightFrontEncoder,
         Encoder rightRearEncoder, Encoder leftFrontEncoder,
         Encoder leftRearEncoder)
 {
-	this.leftMotorEncoder = leftFrontEncoder;
-	this.leftRearMotorEncoder = leftRearEncoder;
-	this.oneOrRightMotorEncoder = rightFrontEncoder;
-	this.rightRearMotorEncoder = rightRearEncoder;
+    this.leftMotorEncoder = leftFrontEncoder;
+    this.leftRearMotorEncoder = leftRearEncoder;
+    this.oneOrRightMotorEncoder = rightFrontEncoder;
+    this.rightRearMotorEncoder = rightRearEncoder;
 }
 
 /**
@@ -2437,74 +2436,74 @@ public void initEncoders (Encoder rightFrontEncoder,
  */
 public void initPIDControllers ()
 {
-	// Check if encoders have been initialized. If not, return.
-	if ((this.leftMotorEncoder == null) ||
-	        (this.leftRearMotorEncoder == null) ||
-	        (this.oneOrRightMotorEncoder == null) ||
-	        (this.rightRearMotorEncoder == null))
-		return;
+    // Check if encoders have been initialized. If not, return.
+    if ((this.leftMotorEncoder == null) ||
+            (this.leftRearMotorEncoder == null) ||
+            (this.oneOrRightMotorEncoder == null) ||
+            (this.rightRearMotorEncoder == null))
+        return;
 
-	// Left front PID controller
-	if (this.pidLeftController == null)
-	{
-	this.pidLeftController = new PIDVelocityController(
-	        this.leftSpeedController,
-	        this.leftMotorEncoder, this.pidProportionalGain,
-	        this.pidIntegralGain, this.pidDerivativeGain,
-	        this.pidFeedForward);
-	}
+    // Left front PID controller
+    if (this.pidLeftController == null)
+        {
+        this.pidLeftController = new PIDVelocityController(
+                this.leftSpeedController,
+                this.leftMotorEncoder, this.pidProportionalGain,
+                this.pidIntegralGain, this.pidDerivativeGain,
+                this.pidFeedForward);
+        }
 
-	// Left rear PID controller
-	if (this.pidLeftRearController == null)
-	{
-	this.pidLeftRearController = new PIDVelocityController(
-	        this.leftRearSpeedController,
-	        this.leftRearMotorEncoder,
-	        this.pidProportionalGain,
-	        this.pidIntegralGain, this.pidDerivativeGain,
-	        this.pidFeedForward);
-	}
+    // Left rear PID controller
+    if (this.pidLeftRearController == null)
+        {
+        this.pidLeftRearController = new PIDVelocityController(
+                this.leftRearSpeedController,
+                this.leftRearMotorEncoder,
+                this.pidProportionalGain,
+                this.pidIntegralGain, this.pidDerivativeGain,
+                this.pidFeedForward);
+        }
 
-	// Right front PID controller
-	if (this.pidRightController == null)
-	{
-	this.pidRightController = new PIDVelocityController(
-	        this.oneOrRightSpeedController,
-	        this.oneOrRightMotorEncoder,
-	        this.pidProportionalGain,
-	        this.pidIntegralGain, this.pidDerivativeGain,
-	        this.pidFeedForward);
-	}
+    // Right front PID controller
+    if (this.pidRightController == null)
+        {
+        this.pidRightController = new PIDVelocityController(
+                this.oneOrRightSpeedController,
+                this.oneOrRightMotorEncoder,
+                this.pidProportionalGain,
+                this.pidIntegralGain, this.pidDerivativeGain,
+                this.pidFeedForward);
+        }
 
-	// Right rear PID controller
-	if (this.pidRightRearController == null)
-	{
-	this.pidRightRearController = new PIDVelocityController(
-	        this.rightRearSpeedController,
-	        this.rightRearMotorEncoder,
-	        this.pidProportionalGain,
-	        this.pidIntegralGain, this.pidDerivativeGain,
-	        this.pidFeedForward);
-	}
+    // Right rear PID controller
+    if (this.pidRightRearController == null)
+        {
+        this.pidRightRearController = new PIDVelocityController(
+                this.rightRearSpeedController,
+                this.rightRearMotorEncoder,
+                this.pidProportionalGain,
+                this.pidIntegralGain, this.pidDerivativeGain,
+                this.pidFeedForward);
+        }
 
-	// set input and output ranges
-	this.setPIDInputRange(this.minInputRange, this.maxInputRange);
+    // set input and output ranges
+    this.setPIDInputRange(this.minInputRange, this.maxInputRange);
 
-	// PID output range
-	this.setPIDOutputRange(this.minOutputRange, this.maxOutputRange);
+    // PID output range
+    this.setPIDOutputRange(this.minOutputRange, this.maxOutputRange);
 
-	// set error tolerance for the controllers
-	this.pidLeftController.setPercentTolerance(this.pidTolerance);
-	this.pidLeftRearController.setPercentTolerance(this.pidTolerance);
-	this.pidRightController.setPercentTolerance(this.pidTolerance);
-	this.pidRightRearController.setPercentTolerance(this.pidTolerance);
+    // set error tolerance for the controllers
+    this.pidLeftController.setPercentTolerance(this.pidTolerance);
+    this.pidLeftRearController.setPercentTolerance(this.pidTolerance);
+    this.pidRightController.setPercentTolerance(this.pidTolerance);
+    this.pidRightRearController.setPercentTolerance(this.pidTolerance);
 
-	if ((this.getDebugState() == debugStateValues.DEBUG_ONLY_PID_DATA)
-	        ||
-	        (this.getDebugState() == debugStateValues.DEBUG_ALL))
-	{
-	System.out.println("[PID] Initialized PID.");
-	}
+    if ((this.getDebugState() == debugStateValues.DEBUG_ONLY_PID_DATA)
+            ||
+            (this.getDebugState() == debugStateValues.DEBUG_ALL))
+        {
+        System.out.println("[PID] Initialized PID.");
+        }
 }
 
 // -------------------------------------------------------
@@ -2521,7 +2520,7 @@ public void initPIDControllers ()
  */
 public boolean isHardwareGearsOnlyOn ()
 {
-	return (this.useHardwareGearsOnly);
+    return (this.useHardwareGearsOnly);
 } // end isHardwareGearsOnlyOn
 
 // ------------------------------------------------
@@ -2533,7 +2532,7 @@ public boolean isHardwareGearsOnlyOn ()
  */
 public boolean isMecanumDrive ()
 {
-	return this.isMecanum;
+    return this.isMecanum;
 }
 
 // -----------------------------------------------------------------
@@ -2547,11 +2546,11 @@ public boolean isMecanumDrive ()
  */
 public boolean isPIDEnabled ()
 {
-	return (this.pidLeftController.getPIDController().isEnable() &&
-	        this.pidRightController.getPIDController().isEnable() &&
-	        this.pidLeftRearController.getPIDController().isEnable()
-	        && this.pidRightRearController
-	                .getPIDController().isEnable());
+    return (this.pidLeftController.getPIDController().isEnable() &&
+            this.pidRightController.getPIDController().isEnable() &&
+            this.pidLeftRearController.getPIDController().isEnable()
+            && this.pidRightRearController
+                    .getPIDController().isEnable());
 }
 
 // -------------------------------------------------------
@@ -2570,19 +2569,19 @@ public boolean isPIDEnabled ()
  */
 public boolean leftMotorIsReversed (final boolean reversed)
 {
-	if (reversed == true)
-	{
-	this.leftMotorDirection.set(MotorDirection.REVERSED);
-	}
-	else
-	{
-	this.leftMotorDirection.set(MotorDirection.FORWARD);
-	}
-	if (this.pidLeftController != null)
-	{
-	this.pidLeftController.setMotorReversed(reversed);
-	}
-	return (reversed);
+    if (reversed == true)
+        {
+        this.leftMotorDirection.set(MotorDirection.REVERSED);
+        }
+    else
+        {
+        this.leftMotorDirection.set(MotorDirection.FORWARD);
+        }
+    if (this.pidLeftController != null)
+        {
+        this.pidLeftController.setMotorReversed(reversed);
+        }
+    return (reversed);
 } // end leftMotorIsReversed
 
 // -------------------------------------------------------
@@ -2601,19 +2600,19 @@ public boolean leftMotorIsReversed (final boolean reversed)
  */
 public boolean leftRearMotorIsReversed (final boolean reversed)
 {
-	if (reversed == true)
-	{
-	this.leftRearMotorDirection.set(MotorDirection.REVERSED);
-	}
-	else
-	{
-	this.leftRearMotorDirection.set(MotorDirection.FORWARD);
-	}
-	if (this.pidLeftRearController != null)
-	{
-	this.pidLeftRearController.setMotorReversed(reversed);
-	}
-	return (reversed);
+    if (reversed == true)
+        {
+        this.leftRearMotorDirection.set(MotorDirection.REVERSED);
+        }
+    else
+        {
+        this.leftRearMotorDirection.set(MotorDirection.FORWARD);
+        }
+    if (this.pidLeftRearController != null)
+        {
+        this.pidLeftRearController.setMotorReversed(reversed);
+        }
+    return (reversed);
 }
 
 /**
@@ -2625,11 +2624,11 @@ public boolean leftRearMotorIsReversed (final boolean reversed)
  */
 private double limit (double input)
 {
-	if (input > 1.0)
-		return 1.0;
-	else if (input < -1.0)
-		return -1.0;
-	return input;
+    if (input > 1.0)
+        return 1.0;
+    else if (input < -1.0)
+        return -1.0;
+    return input;
 }
 
 // -------------------------------------------------------
@@ -2657,32 +2656,32 @@ private double mapSoftwareJoystickValues (
 // gear percentage for this
 // motor and gearing
 {
-	// --------------------------------------
-	// temp computational value for joysticks
-	// to make the math easier. Absolutize the
-	// value and remove the deadband range
-	// --------------------------------------
-	final double absJoystickInputValue = java.lang.Math.max(
-	        (Math.abs(joystickInputValue)
-	                - this.deadbandPercentageZone),
-	        0.0);
-	// --------------------------------------
-	// compute the range of the joysticks. This
-	// excludes the deadband range
-	// --------------------------------------
-	final double deadbandRange = 1.0 - this.deadbandPercentageZone;
-	// --------------------------------------
-	// computed mapped value
-	// --------------------------------------
-	final double mappedValue = absJoystickInputValue
-	        * (gearPercentage / deadbandRange);
-	// --------------------------------------
-	// return the correct value - if the original
-	// input was negative, return negative, else positive
-	// --------------------------------------
-	if (joystickInputValue < 0)
-		return (-mappedValue);
-	return (mappedValue);
+    // --------------------------------------
+    // temp computational value for joysticks
+    // to make the math easier. Absolutize the
+    // value and remove the deadband range
+    // --------------------------------------
+    final double absJoystickInputValue = java.lang.Math.max(
+            (Math.abs(joystickInputValue)
+                    - this.deadbandPercentageZone),
+            0.0);
+    // --------------------------------------
+    // compute the range of the joysticks. This
+    // excludes the deadband range
+    // --------------------------------------
+    final double deadbandRange = 1.0 - this.deadbandPercentageZone;
+    // --------------------------------------
+    // computed mapped value
+    // --------------------------------------
+    final double mappedValue = absJoystickInputValue
+            * (gearPercentage / deadbandRange);
+    // --------------------------------------
+    // return the correct value - if the original
+    // input was negative, return negative, else positive
+    // --------------------------------------
+    if (joystickInputValue < 0)
+        return (-mappedValue);
+    return (mappedValue);
 } // end mapSoftwareJoystickValues
 
 /**
@@ -2693,17 +2692,17 @@ private double mapSoftwareJoystickValues (
  */
 public void resetPID ()
 {
-	this.pidLeftController.reset();
-	this.pidLeftRearController.reset();
-	this.pidRightController.reset();
-	this.pidRightRearController.reset();
+    this.pidLeftController.reset();
+    this.pidLeftRearController.reset();
+    this.pidRightController.reset();
+    this.pidRightRearController.reset();
 
-	if ((this.getDebugState() == debugStateValues.DEBUG_ONLY_PID_DATA)
-	        ||
-	        (this.getDebugState() == debugStateValues.DEBUG_ALL))
-	{
-	System.out.println("[PID] Reset PID.");
-	}
+    if ((this.getDebugState() == debugStateValues.DEBUG_ONLY_PID_DATA)
+            ||
+            (this.getDebugState() == debugStateValues.DEBUG_ALL))
+        {
+        System.out.println("[PID] Reset PID.");
+        }
 }
 
 // -------------------------------------------------------
@@ -2722,19 +2721,19 @@ public void resetPID ()
  */
 public boolean rightMotorIsReversed (final boolean reversed)
 {
-	if (reversed == true)
-	{
-	this.rightMotorDirection.set(MotorDirection.REVERSED);
-	}
-	else
-	{
-	this.rightMotorDirection.set(MotorDirection.FORWARD);
-	}
-	if (this.pidRightController != null)
-	{
-	this.pidRightController.setMotorReversed(reversed);
-	}
-	return (reversed);
+    if (reversed == true)
+        {
+        this.rightMotorDirection.set(MotorDirection.REVERSED);
+        }
+    else
+        {
+        this.rightMotorDirection.set(MotorDirection.FORWARD);
+        }
+    if (this.pidRightController != null)
+        {
+        this.pidRightController.setMotorReversed(reversed);
+        }
+    return (reversed);
 } // end rightMotorIsReversed
 
 // -------------------------------------------------------
@@ -2753,19 +2752,19 @@ public boolean rightMotorIsReversed (final boolean reversed)
  */
 public boolean rightRearMotorIsReversed (final boolean reversed)
 {
-	if (reversed == true)
-	{
-	this.rightRearMotorDirection.set(MotorDirection.REVERSED);
-	}
-	else
-	{
-	this.rightRearMotorDirection.set(MotorDirection.FORWARD);
-	}
-	if (this.pidRightRearController != null)
-	{
-	this.pidRightRearController.setMotorReversed(reversed);
-	}
-	return (reversed);
+    if (reversed == true)
+        {
+        this.rightRearMotorDirection.set(MotorDirection.REVERSED);
+        }
+    else
+        {
+        this.rightRearMotorDirection.set(MotorDirection.FORWARD);
+        }
+    if (this.pidRightRearController != null)
+        {
+        this.pidRightRearController.setMotorReversed(reversed);
+        }
+    return (reversed);
 }
 
 // -------------------------------------------------------
@@ -2812,17 +2811,17 @@ public boolean rightRearMotorIsReversed (final boolean reversed)
 public debugStateValues
         setDebugState (final debugStateValues debugState)
 {
-	switch (debugState)
-	{
-		case DEBUG_NONE:
-		case DEBUG_ALL:
-		case DEBUG_ONLY_NON_ZERO:
-		case DEBUG_ONLY_PID_DATA:
-			this.debugState = debugState;
-			break;
-	} // switch
+    switch (debugState)
+        {
+        case DEBUG_NONE:
+        case DEBUG_ALL:
+        case DEBUG_ONLY_NON_ZERO:
+        case DEBUG_ONLY_PID_DATA:
+            this.debugState = debugState;
+            break;
+        } // switch
 
-	return (this.getDebugState());
+    return (this.getDebugState());
 }
 
 /*
@@ -2840,7 +2839,7 @@ public debugStateValues
  */
 public void setDirectionalXOrthagonalZone (double xPercentage)
 {
-	this.directionalXOrthagonalZone = xPercentage;
+    this.directionalXOrthagonalZone = xPercentage;
 }
 
 /*
@@ -2858,7 +2857,7 @@ public void setDirectionalXOrthagonalZone (double xPercentage)
  */
 public void setDirectionalYOrthagonalZone (double yPercentage)
 {
-	this.directionalYOrthagonalZone = yPercentage;
+    this.directionalYOrthagonalZone = yPercentage;
 }
 
 /**
@@ -2874,23 +2873,23 @@ public void setDirectionalYOrthagonalZone (double yPercentage)
  */
 public void setEncodersDistancePerPulse (double distancePerTick)
 {
-	if (this.oneOrRightMotorEncoder != null)
-	{
-	this.oneOrRightMotorEncoder
-	        .setDistancePerPulse(distancePerTick);
-	}
-	if (this.rightRearMotorEncoder != null)
-	{
-	this.rightRearMotorEncoder.setDistancePerPulse(distancePerTick);
-	}
-	if (this.leftMotorEncoder != null)
-	{
-	this.leftMotorEncoder.setDistancePerPulse(distancePerTick);
-	}
-	if (this.leftRearMotorEncoder != null)
-	{
-	this.leftRearMotorEncoder.setDistancePerPulse(distancePerTick);
-	}
+    if (this.oneOrRightMotorEncoder != null)
+        {
+        this.oneOrRightMotorEncoder
+                .setDistancePerPulse(distancePerTick);
+        }
+    if (this.rightRearMotorEncoder != null)
+        {
+        this.rightRearMotorEncoder.setDistancePerPulse(distancePerTick);
+        }
+    if (this.leftMotorEncoder != null)
+        {
+        this.leftMotorEncoder.setDistancePerPulse(distancePerTick);
+        }
+    if (this.leftRearMotorEncoder != null)
+        {
+        this.leftRearMotorEncoder.setDistancePerPulse(distancePerTick);
+        }
 }
 
 // ----------
@@ -2914,15 +2913,15 @@ public void setEncodersDistancePerPulse (double distancePerTick)
  */
 public double setFifthGearPercentage (final double gearPercentage)
 {
-	if ((gearPercentage > 1.00) || (gearPercentage < 0.0))
-	{
-	this.oneOrRightFifthGearPercentage = 1.00;
-	}
-	else
-	{
-	this.oneOrRightFifthGearPercentage = gearPercentage;
-	}
-	return (this.getFifthGearPercentage());
+    if ((gearPercentage > 1.00) || (gearPercentage < 0.0))
+        {
+        this.oneOrRightFifthGearPercentage = 1.00;
+        }
+    else
+        {
+        this.oneOrRightFifthGearPercentage = gearPercentage;
+        }
+    return (this.getFifthGearPercentage());
 } // end setFifthGearPercentage
 
 // -------------------------------------------------------
@@ -2944,22 +2943,22 @@ public double setFifthGearPercentage (final double gearPercentage)
 public void setFifthGearPercentage (final double leftGearPercentage,
         final int rightGearPercentage)
 {
-	if ((leftGearPercentage > 1.00) || (leftGearPercentage < 0.0))
-	{
-	this.leftFifthGearPercentage = 1.00;
-	}
-	else
-	{
-	this.leftFifthGearPercentage = leftGearPercentage;
-	}
-	if ((rightGearPercentage > 1.00) || (rightGearPercentage < 0.0))
-	{
-	this.oneOrRightFifthGearPercentage = 1.00;
-	}
-	else
-	{
-	this.oneOrRightFifthGearPercentage = rightGearPercentage;
-	}
+    if ((leftGearPercentage > 1.00) || (leftGearPercentage < 0.0))
+        {
+        this.leftFifthGearPercentage = 1.00;
+        }
+    else
+        {
+        this.leftFifthGearPercentage = leftGearPercentage;
+        }
+    if ((rightGearPercentage > 1.00) || (rightGearPercentage < 0.0))
+        {
+        this.oneOrRightFifthGearPercentage = 1.00;
+        }
+    else
+        {
+        this.oneOrRightFifthGearPercentage = rightGearPercentage;
+        }
 } // end setFifthGearPercentage
 
 // -------------------------------------------------------
@@ -2979,15 +2978,15 @@ public void setFifthGearPercentage (final double leftGearPercentage,
  */
 public double setFirstGearPercentage (final double gearPercentage)
 {
-	if ((gearPercentage > 1.00) || (gearPercentage < 0.0))
-	{
-	this.oneOrRightFirstGearPercentage = 1.00;
-	}
-	else
-	{
-	this.oneOrRightFirstGearPercentage = gearPercentage;
-	}
-	return (this.getFirstGearPercentage());
+    if ((gearPercentage > 1.00) || (gearPercentage < 0.0))
+        {
+        this.oneOrRightFirstGearPercentage = 1.00;
+        }
+    else
+        {
+        this.oneOrRightFirstGearPercentage = gearPercentage;
+        }
+    return (this.getFirstGearPercentage());
 } // end setFirstGearPercentage
 
 // -------------------------------------------------------
@@ -3009,22 +3008,22 @@ public double setFirstGearPercentage (final double gearPercentage)
 public void setFirstGearPercentage (final double leftGearPercentage,
         final double rightGearPercentage)
 {
-	if ((leftGearPercentage > 1.00) || (leftGearPercentage < 0.0))
-	{
-	this.leftFirstGearPercentage = 1.00;
-	}
-	else
-	{
-	this.leftFirstGearPercentage = leftGearPercentage;
-	}
-	if ((rightGearPercentage > 1.00) || (rightGearPercentage < 0.0))
-	{
-	this.oneOrRightFirstGearPercentage = 1.00;
-	}
-	else
-	{
-	this.oneOrRightFirstGearPercentage = rightGearPercentage;
-	}
+    if ((leftGearPercentage > 1.00) || (leftGearPercentage < 0.0))
+        {
+        this.leftFirstGearPercentage = 1.00;
+        }
+    else
+        {
+        this.leftFirstGearPercentage = leftGearPercentage;
+        }
+    if ((rightGearPercentage > 1.00) || (rightGearPercentage < 0.0))
+        {
+        this.oneOrRightFirstGearPercentage = 1.00;
+        }
+    else
+        {
+        this.oneOrRightFirstGearPercentage = rightGearPercentage;
+        }
 } // end setFirstGearPercentage
 
 /**
@@ -3043,15 +3042,15 @@ public void setFirstGearPercentage (final double leftGearPercentage,
  */
 public double setFourthGearPercentage (final double gearPercentage)
 {
-	if ((gearPercentage > 1.00) || (gearPercentage < 0.0))
-	{
-	this.oneOrRightFourthGearPercentage = 1.00;
-	}
-	else
-	{
-	this.oneOrRightFourthGearPercentage = gearPercentage;
-	}
-	return (this.getFourthGearPercentage());
+    if ((gearPercentage > 1.00) || (gearPercentage < 0.0))
+        {
+        this.oneOrRightFourthGearPercentage = 1.00;
+        }
+    else
+        {
+        this.oneOrRightFourthGearPercentage = gearPercentage;
+        }
+    return (this.getFourthGearPercentage());
 } // end setFourthGearPercentage
 
 // -------------------------------------------------------
@@ -3074,22 +3073,22 @@ public double setFourthGearPercentage (final double gearPercentage)
 public void setFourthGearPercentage (final double leftGearPercentage,
         final int rightGearPercentage)
 {
-	if ((leftGearPercentage > 1.00) || (leftGearPercentage < 0.0))
-	{
-	this.leftFourthGearPercentage = 1.00;
-	}
-	else
-	{
-	this.leftFourthGearPercentage = leftGearPercentage;
-	}
-	if ((rightGearPercentage > 1.00) || (rightGearPercentage < 0.0))
-	{
-	this.oneOrRightFourthGearPercentage = 1.00;
-	}
-	else
-	{
-	this.oneOrRightFourthGearPercentage = rightGearPercentage;
-	}
+    if ((leftGearPercentage > 1.00) || (leftGearPercentage < 0.0))
+        {
+        this.leftFourthGearPercentage = 1.00;
+        }
+    else
+        {
+        this.leftFourthGearPercentage = leftGearPercentage;
+        }
+    if ((rightGearPercentage > 1.00) || (rightGearPercentage < 0.0))
+        {
+        this.oneOrRightFourthGearPercentage = 1.00;
+        }
+    else
+        {
+        this.oneOrRightFourthGearPercentage = rightGearPercentage;
+        }
 } // end setFourthGearPercentage
 
 // -------------------------------------------------------
@@ -3110,79 +3109,79 @@ public void setFourthGearPercentage (final double leftGearPercentage,
  */
 public int setGear (final int gear)
 {
-	// --------------------------------------
-	// Check bounds of the gear number.
-	// --------------------------------------
-	if (gear > this.maxGears)
-	{
-	this.setGear(this.maxGears);
-	}
-	else if (gear <= 0)
-	{
-	this.setGear(1);
-	}
-	else
-	{
-	// --------------------------------------
-	// only do the following if we have a hardware
-	// transmission controlled by a solenoid.
-	// This is denoted by whether or
-	// not we have a double solenoid to control
-	// --------------------------------------
-	if (this.transmissionSolenoids != null)
-	{
-	// --------------------------------------
-	// If moving beyond physical gear change, move
-	// hardware piston out.
-	// --------------------------------------
-	if (gear > this.getPhysicalGearToChange())
-	{
-	this.transmissionSolenoids
-	        .set(DoubleSolenoid.Value.kForward);
-	}
-	else if (gear <= this.getPhysicalGearToChange())
-	{
-	this.transmissionSolenoids
-	        .set(DoubleSolenoid.Value.kReverse);
-	}
-	} // if
-	// -------------------------------------
-	// if we didn't have a double solenoid we
-	// might a relay instead. check to see
-	// if this is populated
-	// -------------------------------------
-	else if (this.transmissionRelay != null)
-	    // --------------------------------------
-	    // If moving from first gear, move
-	    // hardware piston out.
-	    // --------------------------------------
-	    if (gear > this.getPhysicalGearToChange())
-		{
-		this.transmissionRelay.set(Relay.Value.kForward);
-		}
-		else if (gear <= this.getPhysicalGearToChange())
-		{
-		this.transmissionRelay.set(Relay.Value.kReverse);
-		}
-	// --------------------------------------
-	// Store the new gear number. and turn the
-	// correct light ON if we have an associated
-	// light to turn on
-	// --------------------------------------
-	this.gear = gear;
-	/**
-	 * ------------------------------------
-	 * enable the user chosen light to denote the
-	 * gear that is ON.
-	 * --------------------------------------
-	 */
-	// this.setLightOn(this.getGear());
-	} // else
+    // --------------------------------------
+    // Check bounds of the gear number.
+    // --------------------------------------
+    if (gear > this.maxGears)
+        {
+        this.setGear(this.maxGears);
+        }
+    else if (gear <= 0)
+        {
+        this.setGear(1);
+        }
+    else
+        {
+        // --------------------------------------
+        // only do the following if we have a hardware
+        // transmission controlled by a solenoid.
+        // This is denoted by whether or
+        // not we have a double solenoid to control
+        // --------------------------------------
+        if (this.transmissionSolenoids != null)
+            {
+            // --------------------------------------
+            // If moving beyond physical gear change, move
+            // hardware piston out.
+            // --------------------------------------
+            if (gear > this.getPhysicalGearToChange())
+                {
+                this.transmissionSolenoids
+                        .set(DoubleSolenoid.Value.kForward);
+                }
+            else if (gear <= this.getPhysicalGearToChange())
+                {
+                this.transmissionSolenoids
+                        .set(DoubleSolenoid.Value.kReverse);
+                }
+            } // if
+        // -------------------------------------
+        // if we didn't have a double solenoid we
+        // might a relay instead. check to see
+        // if this is populated
+        // -------------------------------------
+        else if (this.transmissionRelay != null)
+            // --------------------------------------
+            // If moving from first gear, move
+            // hardware piston out.
+            // --------------------------------------
+            if (gear > this.getPhysicalGearToChange())
+                {
+                this.transmissionRelay.set(Relay.Value.kForward);
+                }
+            else if (gear <= this.getPhysicalGearToChange())
+                {
+                this.transmissionRelay.set(Relay.Value.kReverse);
+                }
+        // --------------------------------------
+        // Store the new gear number. and turn the
+        // correct light ON if we have an associated
+        // light to turn on
+        // --------------------------------------
+        this.gear = gear;
+        /**
+         * ------------------------------------
+         * enable the user chosen light to denote the
+         * gear that is ON.
+         * --------------------------------------
+         */
+        // this.setLightOn(this.getGear());
+        } // else
 
-	// ----------------------------------
-	// Return the new gear number.
-	// ----------------------------------
-	return (this.getGear());
+    // ----------------------------------
+    // Return the new gear number.
+    // ----------------------------------
+    return (this.getGear());
 } // end setGear
 
 // -------------------------------------------------------
@@ -3203,7 +3202,7 @@ public int setGear (final int gear)
  */
 public boolean setHardwareGearsOnlyOn (final boolean on)
 {
-	return (this.useHardwareGearsOnly = on);
+    return (this.useHardwareGearsOnly = on);
 } // end setHardwareGearsOnlyOn
 
 /**
@@ -3217,7 +3216,7 @@ public boolean setHardwareGearsOnlyOn (final boolean on)
  */
 public void setIsMecanum (boolean isMecanum)
 {
-	this.isMecanum = isMecanum;
+    this.isMecanum = isMecanum;
 }
 
 // -------------------------------------------------------
@@ -3235,12 +3234,12 @@ public void setIsMecanum (boolean isMecanum)
  */
 public boolean setJoystickDeadbandRange (double percentage)
 {
-	if ((percentage >= 0) && (percentage <= 1.0))
-	{
-	this.deadbandPercentageZone = percentage;
-	return (true);
-	} // end if
-	return (false);
+    if ((percentage >= 0) && (percentage <= 1.0))
+        {
+        this.deadbandPercentageZone = percentage;
+        return (true);
+        } // end if
+    return (false);
 } // setJoystickDeadbandRange
 
 // -------------------------------------------------------
@@ -3262,8 +3261,8 @@ public boolean setJoystickDeadbandRange (double percentage)
  */
 public void setJoysticksAreReversed (boolean reversed)
 {
-	this.setLeftJoystickIsReversed(reversed);
-	this.setRightJoystickIsReversed(reversed);
+    this.setLeftJoystickIsReversed(reversed);
+    this.setRightJoystickIsReversed(reversed);
 } // end setJoysticksAreReversed
 
 // -------------------------------------------------------
@@ -3286,15 +3285,15 @@ public void setJoysticksAreReversed (boolean reversed)
  */
 public boolean setLeftJoystickIsReversed (boolean reversed)
 {
-	if (reversed == true)
-	{
-	this.leftJoystickIsReversed.set(JoystickDirection.REVERSED);
-	}
-	else
-	{
-	this.leftJoystickIsReversed.set(JoystickDirection.NORMAL);
-	}
-	return (reversed);
+    if (reversed == true)
+        {
+        this.leftJoystickIsReversed.set(JoystickDirection.REVERSED);
+        }
+    else
+        {
+        this.leftJoystickIsReversed.set(JoystickDirection.NORMAL);
+        }
+    return (reversed);
 } // end setLeftJoystickIsReversed
 
 // -------------------------------------------------
@@ -3308,7 +3307,7 @@ public boolean setLeftJoystickIsReversed (boolean reversed)
 public SpeedController setLeftRearSpeedController (
         SpeedController controller)
 {
-	return (this.leftRearSpeedController = controller);
+    return (this.leftRearSpeedController = controller);
 }
 
 // ---------------------
@@ -3330,10 +3329,10 @@ public SpeedController setLeftRearSpeedController (
 public SpeedController setLeftSpeedController (
         SpeedController leftSpeedController)
 {
-	// --------------------------------------
-	// Return the newly left Speed Controller.
-	// --------------------------------------
-	return (this.leftSpeedController = leftSpeedController);
+    // --------------------------------------
+    // Return the newly left Speed Controller.
+    // --------------------------------------
+    return (this.leftSpeedController = leftSpeedController);
 } // end getLeftSpeedController
 
 // -------------------------------------------------------
@@ -3394,7 +3393,7 @@ public SpeedController setLeftSpeedController (
  */
 public void setMaxEncoderRate (double encRate)
 {
-	this.maxEncoderRate = encRate;
+    this.maxEncoderRate = encRate;
 }
 
 // -------------------------------------------------------
@@ -3411,19 +3410,19 @@ public void setMaxEncoderRate (double encRate)
  */
 public int setMaxGear (final int maxGear)
 {
-	if (maxGear >= MAX_GEARS_ALLOWED)
-	{
-	this.maxGears = MAX_GEARS_ALLOWED;
-	}
-	else if (maxGear <= 0)
-	{
-	this.maxGears = 1;
-	}
-	else
-	{
-	this.maxGears = maxGear;
-	}
-	return (this.getMaxGear());
+    if (maxGear >= MAX_GEARS_ALLOWED)
+        {
+        this.maxGears = MAX_GEARS_ALLOWED;
+        }
+    else if (maxGear <= 0)
+        {
+        this.maxGears = 1;
+        }
+    else
+        {
+        this.maxGears = maxGear;
+        }
+    return (this.getMaxGear());
 } // end setMaxGear
 
 // -------------------------------------------------------
@@ -3475,75 +3474,75 @@ public void setNotificationLights (final int firstGearDigitalLight,
 // station that will light when
 // gear five is chosen
 {
-	// -------------------------------------
-	// make sure that we clear everything first
-	// to make sure that we didn't call this function
-	// several times and we would then add this info
-	// to the end of the list instead of replacing
-	// it
-	// -------------------------------------
-	this.digitalChannelNumberForGearLight.removeAllElements();
-	// -------------------------------------
-	// if the light number passed in is good
-	// then save it and check the others
-	// -------------------------------------
-	if ((firstGearDigitalLight >= 1) && (firstGearDigitalLight <= 8))
-	{
-	this.digitalChannelNumberForGearLight.addElement(new Integer(
-	        firstGearDigitalLight));
-	// -------------------------------------
-	// check to make sure that we have at least
-	// 2 gears and that the light number passed
-	// in is good, then save it and check for
-	// others
-	// -------------------------------------
-	if ((this.maxGears >= 2) && (secondGearDigitalLight >= 1) &&
-	        (secondGearDigitalLight <= 8))
-	{
-	this.digitalChannelNumberForGearLight
-	        .addElement(new Integer(
-	                secondGearDigitalLight));
-	// -------------------------------------
-	// check to make sure that we have at least
-	// 3 gears and that the light number passed
-	// in is good, then save it and check for
-	// others
-	// -------------------------------------
-	if ((this.maxGears >= 3) && (thirdGearDigitalLight >= 1) &&
-	        (thirdGearDigitalLight <= 8))
-	{
-	this.digitalChannelNumberForGearLight
-	        .addElement(new Integer(thirdGearDigitalLight));
-	// -------------------------------------
-	// check to make sure that we have at least
-	// 4 gears and that the light number passed
-	// in is good, then save it and check for
-	// others
-	// -------------------------------------
-	if ((this.maxGears >= 4)
-	        && (fourthGearDigitalLight >= 1) &&
-	        (fourthGearDigitalLight <= 8))
-	{
-	this.digitalChannelNumberForGearLight
-	        .addElement(new Integer(
-	                fourthGearDigitalLight));
-	// -------------------------------------
-	// we have at least 5 gears so check
-	// that the light number passed
-	// in is good. For max number of gears
-	// coded see MAX_GEARS_ALLOWED.
-	// -------------------------------------
-	if ((fifthGearDigitalLight >= 1) &&
-	        (fifthGearDigitalLight <= 8))
-	{
-	this.digitalChannelNumberForGearLight
-	        .addElement(new Integer(
-	                fifthGearDigitalLight));
-	}
-	} // if - fourth
-	} // if - third
-	} // if - second
-	} // if
+    // -------------------------------------
+    // make sure that we clear everything first
+    // to make sure that we didn't call this function
+    // several times and we would then add this info
+    // to the end of the list instead of replacing
+    // it
+    // -------------------------------------
+    this.digitalChannelNumberForGearLight.removeAllElements();
+    // -------------------------------------
+    // if the light number passed in is good
+    // then save it and check the others
+    // -------------------------------------
+    if ((firstGearDigitalLight >= 1) && (firstGearDigitalLight <= 8))
+        {
+        this.digitalChannelNumberForGearLight.addElement(new Integer(
+                firstGearDigitalLight));
+        // -------------------------------------
+        // check to make sure that we have at least
+        // 2 gears and that the light number passed
+        // in is good, then save it and check for
+        // others
+        // -------------------------------------
+        if ((this.maxGears >= 2) && (secondGearDigitalLight >= 1) &&
+                (secondGearDigitalLight <= 8))
+            {
+            this.digitalChannelNumberForGearLight
+                    .addElement(new Integer(
+                            secondGearDigitalLight));
+            // -------------------------------------
+            // check to make sure that we have at least
+            // 3 gears and that the light number passed
+            // in is good, then save it and check for
+            // others
+            // -------------------------------------
+            if ((this.maxGears >= 3) && (thirdGearDigitalLight >= 1) &&
+                    (thirdGearDigitalLight <= 8))
+                {
+                this.digitalChannelNumberForGearLight
+                        .addElement(new Integer(thirdGearDigitalLight));
+                // -------------------------------------
+                // check to make sure that we have at least
+                // 4 gears and that the light number passed
+                // in is good, then save it and check for
+                // others
+                // -------------------------------------
+                if ((this.maxGears >= 4)
+                        && (fourthGearDigitalLight >= 1) &&
+                        (fourthGearDigitalLight <= 8))
+                    {
+                    this.digitalChannelNumberForGearLight
+                            .addElement(new Integer(
+                                    fourthGearDigitalLight));
+                    // -------------------------------------
+                    // we have at least 5 gears so check
+                    // that the light number passed
+                    // in is good. For max number of gears
+                    // coded see MAX_GEARS_ALLOWED.
+                    // -------------------------------------
+                    if ((fifthGearDigitalLight >= 1) &&
+                            (fifthGearDigitalLight <= 8))
+                        {
+                        this.digitalChannelNumberForGearLight
+                                .addElement(new Integer(
+                                        fifthGearDigitalLight));
+                        }
+                    } // if - fourth
+                } // if - third
+            } // if - second
+        } // if
 } // end setNotificationLights
 
 // -------------------------------------------------------
@@ -3568,28 +3567,28 @@ public void setNotificationLights (final int firstGearDigitalLight,
 public double setOneFifthGearPercentage (final double gearPercentage,
         final int whichJoystick)
 {
-	if ((gearPercentage > 1.00) || (gearPercentage < 0.0))
-	{
-	if ((whichJoystick == WhichJoystick.ONE_JOYSTICK) ||
-	        (whichJoystick == WhichJoystick.RIGHT_JOYSTICK))
-	{
-	this.oneOrRightFifthGearPercentage = 1.00;
-	}
-	else
-	{
-	this.leftFifthGearPercentage = 1.00;
-	}
-	} // if
-	else if ((whichJoystick == WhichJoystick.ONE_JOYSTICK) ||
-	        (whichJoystick == WhichJoystick.RIGHT_JOYSTICK))
-	{
-	this.oneOrRightFifthGearPercentage = gearPercentage;
-	}
-	else
-	{
-	this.leftFifthGearPercentage = gearPercentage;
-	}
-	return (this.getFifthGearPercentage(whichJoystick));
+    if ((gearPercentage > 1.00) || (gearPercentage < 0.0))
+        {
+        if ((whichJoystick == WhichJoystick.ONE_JOYSTICK) ||
+                (whichJoystick == WhichJoystick.RIGHT_JOYSTICK))
+            {
+            this.oneOrRightFifthGearPercentage = 1.00;
+            }
+        else
+            {
+            this.leftFifthGearPercentage = 1.00;
+            }
+        } // if
+    else if ((whichJoystick == WhichJoystick.ONE_JOYSTICK) ||
+            (whichJoystick == WhichJoystick.RIGHT_JOYSTICK))
+        {
+        this.oneOrRightFifthGearPercentage = gearPercentage;
+        }
+    else
+        {
+        this.leftFifthGearPercentage = gearPercentage;
+        }
+    return (this.getFifthGearPercentage(whichJoystick));
 } // end setFifthGearPercentage
 
 // -------------------------------------------------------
@@ -3614,29 +3613,29 @@ public double setOneFifthGearPercentage (final double gearPercentage,
 public double setOneFirstGearPercentage (final double gearPercentage,
         final int whichJoystick)
 {
-	if ((gearPercentage > 1.00) || (gearPercentage < 0.0))
-	{
-	if ((whichJoystick == WhichJoystick.ONE_JOYSTICK) ||
-	        (whichJoystick == WhichJoystick.RIGHT_JOYSTICK))
-	{
-	this.oneOrRightFirstGearPercentage = 1.00;
-	}
-	else
-	{
-	this.leftFirstGearPercentage = 1.00;
-	}
+    if ((gearPercentage > 1.00) || (gearPercentage < 0.0))
+        {
+        if ((whichJoystick == WhichJoystick.ONE_JOYSTICK) ||
+                (whichJoystick == WhichJoystick.RIGHT_JOYSTICK))
+            {
+            this.oneOrRightFirstGearPercentage = 1.00;
+            }
+        else
+            {
+            this.leftFirstGearPercentage = 1.00;
+            }
 
-	} // if
-	else if ((whichJoystick == WhichJoystick.ONE_JOYSTICK) ||
-	        (whichJoystick == WhichJoystick.RIGHT_JOYSTICK))
-	{
-	this.oneOrRightFirstGearPercentage = gearPercentage;
-	}
-	else
-	{
-	this.leftFirstGearPercentage = gearPercentage;
-	}
-	return (this.getFirstGearPercentage(whichJoystick));
+        } // if
+    else if ((whichJoystick == WhichJoystick.ONE_JOYSTICK) ||
+            (whichJoystick == WhichJoystick.RIGHT_JOYSTICK))
+        {
+        this.oneOrRightFirstGearPercentage = gearPercentage;
+        }
+    else
+        {
+        this.leftFirstGearPercentage = gearPercentage;
+        }
+    return (this.getFirstGearPercentage(whichJoystick));
 } // end setFirstGearPercentage
 
 // -------------------------------------------------------
@@ -3661,28 +3660,28 @@ public double setOneFirstGearPercentage (final double gearPercentage,
 public double setOneFourthGearPercentage (final double gearPercentage,
         final int whichJoystick)
 {
-	if ((gearPercentage > 1.00) || (gearPercentage < 0.0))
-	{
-	if ((whichJoystick == WhichJoystick.ONE_JOYSTICK) ||
-	        (whichJoystick == WhichJoystick.RIGHT_JOYSTICK))
-	{
-	this.oneOrRightFourthGearPercentage = 1.00;
-	}
-	else
-	{
-	this.leftFourthGearPercentage = 1.00;
-	}
-	} // if
-	else if ((whichJoystick == WhichJoystick.ONE_JOYSTICK) ||
-	        (whichJoystick == WhichJoystick.RIGHT_JOYSTICK))
-	{
-	this.oneOrRightFourthGearPercentage = gearPercentage;
-	}
-	else
-	{
-	this.leftFourthGearPercentage = gearPercentage;
-	}
-	return (this.getFourthGearPercentage(whichJoystick));
+    if ((gearPercentage > 1.00) || (gearPercentage < 0.0))
+        {
+        if ((whichJoystick == WhichJoystick.ONE_JOYSTICK) ||
+                (whichJoystick == WhichJoystick.RIGHT_JOYSTICK))
+            {
+            this.oneOrRightFourthGearPercentage = 1.00;
+            }
+        else
+            {
+            this.leftFourthGearPercentage = 1.00;
+            }
+        } // if
+    else if ((whichJoystick == WhichJoystick.ONE_JOYSTICK) ||
+            (whichJoystick == WhichJoystick.RIGHT_JOYSTICK))
+        {
+        this.oneOrRightFourthGearPercentage = gearPercentage;
+        }
+    else
+        {
+        this.leftFourthGearPercentage = gearPercentage;
+        }
+    return (this.getFourthGearPercentage(whichJoystick));
 } // end setFourthGearPercentage
 
 /**
@@ -3706,28 +3705,28 @@ public double setOneFourthGearPercentage (final double gearPercentage,
 public double setOneSecondGearPercentage (final double gearPercentage,
         final int whichJoystick)
 {
-	if ((gearPercentage > 1.00) || (gearPercentage < 0.0))
-	{
-	if ((whichJoystick == WhichJoystick.ONE_JOYSTICK) ||
-	        (whichJoystick == WhichJoystick.RIGHT_JOYSTICK))
-	{
-	this.oneOrRightSecondGearPercentage = 1.00;
-	}
-	else
-	{
-	this.leftSecondGearPercentage = 1.00;
-	}
-	} // if
-	else if ((whichJoystick == WhichJoystick.ONE_JOYSTICK) ||
-	        (whichJoystick == WhichJoystick.RIGHT_JOYSTICK))
-	{
-	this.oneOrRightSecondGearPercentage = gearPercentage;
-	}
-	else
-	{
-	this.leftSecondGearPercentage = gearPercentage;
-	}
-	return (this.getSecondGearPercentage(whichJoystick));
+    if ((gearPercentage > 1.00) || (gearPercentage < 0.0))
+        {
+        if ((whichJoystick == WhichJoystick.ONE_JOYSTICK) ||
+                (whichJoystick == WhichJoystick.RIGHT_JOYSTICK))
+            {
+            this.oneOrRightSecondGearPercentage = 1.00;
+            }
+        else
+            {
+            this.leftSecondGearPercentage = 1.00;
+            }
+        } // if
+    else if ((whichJoystick == WhichJoystick.ONE_JOYSTICK) ||
+            (whichJoystick == WhichJoystick.RIGHT_JOYSTICK))
+        {
+        this.oneOrRightSecondGearPercentage = gearPercentage;
+        }
+    else
+        {
+        this.leftSecondGearPercentage = gearPercentage;
+        }
+    return (this.getSecondGearPercentage(whichJoystick));
 } // end setSecondGearPercentage
 
 // -------------------------------------------------------
@@ -3753,28 +3752,28 @@ public double setOneSecondGearPercentage (final double gearPercentage,
 public double setOneThirdGearPercentage (final double gearPercentage,
         final int whichJoystick)
 {
-	if ((gearPercentage > 1.00) || (gearPercentage < 0.0))
-	{
-	if ((whichJoystick == WhichJoystick.ONE_JOYSTICK) ||
-	        (whichJoystick == WhichJoystick.RIGHT_JOYSTICK))
-	{
-	this.oneOrRightThirdGearPercentage = 1.00;
-	}
-	else
-	{
-	this.leftThirdGearPercentage = 1.00;
-	}
-	} // if
-	else if ((whichJoystick == WhichJoystick.ONE_JOYSTICK) ||
-	        (whichJoystick == WhichJoystick.RIGHT_JOYSTICK))
-	{
-	this.oneOrRightThirdGearPercentage = gearPercentage;
-	}
-	else
-	{
-	this.leftThirdGearPercentage = gearPercentage;
-	}
-	return (this.getThirdGearPercentage(whichJoystick));
+    if ((gearPercentage > 1.00) || (gearPercentage < 0.0))
+        {
+        if ((whichJoystick == WhichJoystick.ONE_JOYSTICK) ||
+                (whichJoystick == WhichJoystick.RIGHT_JOYSTICK))
+            {
+            this.oneOrRightThirdGearPercentage = 1.00;
+            }
+        else
+            {
+            this.leftThirdGearPercentage = 1.00;
+            }
+        } // if
+    else if ((whichJoystick == WhichJoystick.ONE_JOYSTICK) ||
+            (whichJoystick == WhichJoystick.RIGHT_JOYSTICK))
+        {
+        this.oneOrRightThirdGearPercentage = gearPercentage;
+        }
+    else
+        {
+        this.leftThirdGearPercentage = gearPercentage;
+        }
+    return (this.getThirdGearPercentage(whichJoystick));
 } // end setThirdGearPercentage
 
 // -------------------------------------------------------
@@ -3795,16 +3794,16 @@ public double setOneThirdGearPercentage (final double gearPercentage,
  */
 public int setPhysicalGearToChange (int physicalGearToChange)
 {
-	if ((physicalGearToChange < 0) ||
-	        (physicalGearToChange > this.maxGears))
-	{
-	this.physicalGearToChange = 1;
-	}
-	else
-	{
-	this.physicalGearToChange = physicalGearToChange;
-	}
-	return (this.getPhysicalGearToChange());
+    if ((physicalGearToChange < 0) ||
+            (physicalGearToChange > this.maxGears))
+        {
+        this.physicalGearToChange = 1;
+        }
+    else
+        {
+        this.physicalGearToChange = physicalGearToChange;
+        }
+    return (this.getPhysicalGearToChange());
 } // end setPhysicalGearToChange
 
 // -------------------------------------------------------
@@ -3822,21 +3821,21 @@ public int setPhysicalGearToChange (int physicalGearToChange)
 public void setPIDInputRange (double min, double max)
 {
 
-	// Only set the values if we can actually access
-	// all of our PID controllers
-	if ((this.pidLeftController == null) ||
-	        (this.pidLeftRearController == null) ||
-	        (this.pidRightController == null) ||
-	        (this.pidRightRearController == null))
-		return;
+    // Only set the values if we can actually access
+    // all of our PID controllers
+    if ((this.pidLeftController == null) ||
+            (this.pidLeftRearController == null) ||
+            (this.pidRightController == null) ||
+            (this.pidRightRearController == null))
+        return;
 
-	this.minInputRange = min;
-	this.maxInputRange = max;
+    this.minInputRange = min;
+    this.maxInputRange = max;
 
-	this.pidLeftController.setInputRange(min, max);
-	this.pidLeftRearController.setInputRange(min, max);
-	this.pidRightController.setInputRange(min, max);
-	this.pidRightRearController.setInputRange(min, max);
+    this.pidLeftController.setInputRange(min, max);
+    this.pidLeftRearController.setInputRange(min, max);
+    this.pidRightController.setInputRange(min, max);
+    this.pidRightRearController.setInputRange(min, max);
 }
 
 /**
@@ -3851,21 +3850,21 @@ public void setPIDInputRange (double min, double max)
  */
 public void setPIDOutputRange (double min, double max)
 {
-	// Only set the values if we can actually access
-	// all of our PID controllers
-	if ((this.pidLeftController == null) ||
-	        (this.pidLeftRearController == null) ||
-	        (this.pidRightController == null) ||
-	        (this.pidRightRearController == null))
-		return;
+    // Only set the values if we can actually access
+    // all of our PID controllers
+    if ((this.pidLeftController == null) ||
+            (this.pidLeftRearController == null) ||
+            (this.pidRightController == null) ||
+            (this.pidRightRearController == null))
+        return;
 
-	this.minOutputRange = min;
-	this.maxOutputRange = max;
+    this.minOutputRange = min;
+    this.maxOutputRange = max;
 
-	this.pidLeftController.setOutputRange(min, max);
-	this.pidLeftRearController.setOutputRange(min, max);
-	this.pidRightController.setOutputRange(min, max);
-	this.pidRightRearController.setOutputRange(min, max);
+    this.pidLeftController.setOutputRange(min, max);
+    this.pidLeftRearController.setOutputRange(min, max);
+    this.pidRightController.setOutputRange(min, max);
+    this.pidRightRearController.setOutputRange(min, max);
 }
 
 /**
@@ -3897,7 +3896,7 @@ public void setPIDOutputRange (double min, double max)
  */
 public void setPIDUse (boolean enabled)
 {
-	this.usePID = enabled;
+    this.usePID = enabled;
 }
 
 /**
@@ -3919,43 +3918,43 @@ public void setPIDUse (boolean enabled)
 public void setPIDValues (double proportional, double integral,
         double derivative, double feedForward, double tolerance)
 {
-	this.pidProportionalGain = proportional;
-	this.pidIntegralGain = integral;
-	this.pidDerivativeGain = derivative;
-	this.pidFeedForward = feedForward;
-	this.pidTolerance = tolerance;
+    this.pidProportionalGain = proportional;
+    this.pidIntegralGain = integral;
+    this.pidDerivativeGain = derivative;
+    this.pidFeedForward = feedForward;
+    this.pidTolerance = tolerance;
 
-	if ((this.pidLeftController == null) ||
-	        (this.pidLeftRearController == null) ||
-	        (this.pidRightController == null) ||
-	        (this.pidRightRearController == null))
-		return;
+    if ((this.pidLeftController == null) ||
+            (this.pidLeftRearController == null) ||
+            (this.pidRightController == null) ||
+            (this.pidRightRearController == null))
+        return;
 
-	// update the controllers with the new values
-	this.pidLeftController.getPIDController().setPID(proportional,
-	        integral, derivative, feedForward);
-	this.pidLeftRearController.getPIDController().setPID(proportional,
-	        integral, derivative, feedForward);
-	this.pidRightController.getPIDController().setPID(proportional,
-	        integral, derivative, feedForward);
-	this.pidRightRearController.getPIDController().setPID(proportional,
-	        integral, derivative, feedForward);
+    // update the controllers with the new values
+    this.pidLeftController.getPIDController().setPID(proportional,
+            integral, derivative, feedForward);
+    this.pidLeftRearController.getPIDController().setPID(proportional,
+            integral, derivative, feedForward);
+    this.pidRightController.getPIDController().setPID(proportional,
+            integral, derivative, feedForward);
+    this.pidRightRearController.getPIDController().setPID(proportional,
+            integral, derivative, feedForward);
 
-	this.pidLeftController.setPercentTolerance(tolerance);
-	this.pidLeftRearController.setPercentTolerance(tolerance);
-	this.pidRightController.setPercentTolerance(tolerance);
-	this.pidRightRearController.setPercentTolerance(tolerance);
+    this.pidLeftController.setPercentTolerance(tolerance);
+    this.pidLeftRearController.setPercentTolerance(tolerance);
+    this.pidRightController.setPercentTolerance(tolerance);
+    this.pidRightRearController.setPercentTolerance(tolerance);
 
-	if ((this.getDebugState() == debugStateValues.DEBUG_ONLY_PID_DATA)
-	        ||
-	        (this.getDebugState() == debugStateValues.DEBUG_ALL))
-	{
-	System.out.println("[PID] Set PID values.\n" + "P: " +
-	        proportional + "\nI: " + integral + "\nD: " + derivative
-	        +
-	        "\nF: " + feedForward);
-	System.out.println("[PID] Set PID tolerance: " + tolerance);
-	}
+    if ((this.getDebugState() == debugStateValues.DEBUG_ONLY_PID_DATA)
+            ||
+            (this.getDebugState() == debugStateValues.DEBUG_ALL))
+        {
+        System.out.println("[PID] Set PID values.\n" + "P: " +
+                proportional + "\nI: " + integral + "\nD: " + derivative
+                +
+                "\nF: " + feedForward);
+        System.out.println("[PID] Set PID tolerance: " + tolerance);
+        }
 
 }
 
@@ -3974,10 +3973,10 @@ public void setPIDValues (double proportional, double integral,
 public SpeedController setPrimarySpeedController (
         SpeedController primarySpeedController)
 {
-	// --------------------------------------
-	// Return the newly set Speed Controller.
-	// --------------------------------------
-	return (this.oneOrRightSpeedController = primarySpeedController);
+    // --------------------------------------
+    // Return the newly set Speed Controller.
+    // --------------------------------------
+    return (this.oneOrRightSpeedController = primarySpeedController);
 } // end setPrimarySpeedController
 
 // -------------------------------------------------------
@@ -4000,15 +3999,15 @@ public SpeedController setPrimarySpeedController (
  */
 public boolean setRightJoystickIsReversed (boolean reversed)
 {
-	if (reversed == true)
-	{
-	this.rightJoystickIsReversed.set(JoystickDirection.REVERSED);
-	}
-	else
-	{
-	this.rightJoystickIsReversed.set(JoystickDirection.NORMAL);
-	}
-	return (reversed);
+    if (reversed == true)
+        {
+        this.rightJoystickIsReversed.set(JoystickDirection.REVERSED);
+        }
+    else
+        {
+        this.rightJoystickIsReversed.set(JoystickDirection.NORMAL);
+        }
+    return (reversed);
 } // end setRightJoystickIsReversed
 
 // -------------------------------------------------
@@ -4022,7 +4021,7 @@ public boolean setRightJoystickIsReversed (boolean reversed)
 public SpeedController setRightRearSpeedController (
         SpeedController controller)
 {
-	return (this.rightRearSpeedController = controller);
+    return (this.rightRearSpeedController = controller);
 }
 
 // -------------------------------------------------------
@@ -4040,15 +4039,15 @@ public SpeedController setRightRearSpeedController (
 public SpeedController setRightSpeedController (
         SpeedController rightSpeedController)
 {
-	// --------------------------------------
-	// Return the newly set right Speed Controller.
-	// --------------------------------------
-	return (this.oneOrRightSpeedController = rightSpeedController);
+    // --------------------------------------
+    // Return the newly set right Speed Controller.
+    // --------------------------------------
+    return (this.oneOrRightSpeedController = rightSpeedController);
 } // end setRightSpeedController
 
 public void setRotationCorrection (double rotationCorrection)
 {
-	this.mecanumRotationCorrection = this.limit(rotationCorrection);
+    this.mecanumRotationCorrection = this.limit(rotationCorrection);
 }
 
 // -------------------------------------------------------
@@ -4068,15 +4067,15 @@ public void setRotationCorrection (double rotationCorrection)
  */
 public double setSecondGearPercentage (final double gearPercentage)
 {
-	if ((gearPercentage > 1.00) || (gearPercentage < 0.0))
-	{
-	this.oneOrRightSecondGearPercentage = 1.00;
-	}
-	else
-	{
-	this.oneOrRightSecondGearPercentage = gearPercentage;
-	}
-	return (this.getSecondGearPercentage());
+    if ((gearPercentage > 1.00) || (gearPercentage < 0.0))
+        {
+        this.oneOrRightSecondGearPercentage = 1.00;
+        }
+    else
+        {
+        this.oneOrRightSecondGearPercentage = gearPercentage;
+        }
+    return (this.getSecondGearPercentage());
 } // end setSecondGearPercentage
 
 // -------------------------------------------------------
@@ -4098,22 +4097,22 @@ public double setSecondGearPercentage (final double gearPercentage)
 public void setSecondGearPercentage (final double leftGearPercentage,
         final double rightGearPercentage)
 {
-	if ((leftGearPercentage > 1.00) || (leftGearPercentage < 0.0))
-	{
-	this.leftSecondGearPercentage = 1.00;
-	}
-	else
-	{
-	this.leftSecondGearPercentage = leftGearPercentage;
-	}
-	if ((rightGearPercentage > 1.00) || (rightGearPercentage < 0.0))
-	{
-	this.oneOrRightSecondGearPercentage = 1.00;
-	}
-	else
-	{
-	this.oneOrRightSecondGearPercentage = rightGearPercentage;
-	}
+    if ((leftGearPercentage > 1.00) || (leftGearPercentage < 0.0))
+        {
+        this.leftSecondGearPercentage = 1.00;
+        }
+    else
+        {
+        this.leftSecondGearPercentage = leftGearPercentage;
+        }
+    if ((rightGearPercentage > 1.00) || (rightGearPercentage < 0.0))
+        {
+        this.oneOrRightSecondGearPercentage = 1.00;
+        }
+    else
+        {
+        this.oneOrRightSecondGearPercentage = rightGearPercentage;
+        }
 } // end setSecondGearPercentage
 
 // -------------------------------------------------------
@@ -4133,15 +4132,15 @@ public void setSecondGearPercentage (final double leftGearPercentage,
  */
 public double setThirdGearPercentage (final double gearPercentage)
 {
-	if ((gearPercentage > 1.00) || (gearPercentage < 0.0))
-	{
-	this.oneOrRightThirdGearPercentage = 1.00;
-	}
-	else
-	{
-	this.oneOrRightThirdGearPercentage = gearPercentage;
-	}
-	return (this.getThirdGearPercentage());
+    if ((gearPercentage > 1.00) || (gearPercentage < 0.0))
+        {
+        this.oneOrRightThirdGearPercentage = 1.00;
+        }
+    else
+        {
+        this.oneOrRightThirdGearPercentage = gearPercentage;
+        }
+    return (this.getThirdGearPercentage());
 } // end setThirdGearPercentage
 
 // -------------------------------------------------------
@@ -4163,22 +4162,22 @@ public double setThirdGearPercentage (final double gearPercentage)
 public void setThirdGearPercentage (final double leftGearPercentage,
         final double rightGearPercentage)
 {
-	if ((leftGearPercentage > 1.00) || (leftGearPercentage < 0.0))
-	{
-	this.leftThirdGearPercentage = 1.00;
-	}
-	else
-	{
-	this.leftThirdGearPercentage = leftGearPercentage;
-	}
-	if ((rightGearPercentage > 1.00) || (rightGearPercentage < 0.0))
-	{
-	this.oneOrRightThirdGearPercentage = 1.00;
-	}
-	else
-	{
-	this.oneOrRightThirdGearPercentage = rightGearPercentage;
-	}
+    if ((leftGearPercentage > 1.00) || (leftGearPercentage < 0.0))
+        {
+        this.leftThirdGearPercentage = 1.00;
+        }
+    else
+        {
+        this.leftThirdGearPercentage = leftGearPercentage;
+        }
+    if ((rightGearPercentage > 1.00) || (rightGearPercentage < 0.0))
+        {
+        this.oneOrRightThirdGearPercentage = 1.00;
+        }
+    else
+        {
+        this.oneOrRightThirdGearPercentage = rightGearPercentage;
+        }
 } // end setThirdGearPercentage
 
 // -------------------------------------------------------
@@ -4195,11 +4194,11 @@ public void setThirdGearPercentage (final double leftGearPercentage,
  */
 public int upshift (final int gearsToShift)
 {
-	// --------------------------------------
-	// Upshift the desired number of gears
-	// and return the new gears number.
-	// --------------------------------------
-	return (this.setGear(this.getGear() + gearsToShift));
+    // --------------------------------------
+    // Upshift the desired number of gears
+    // and return the new gears number.
+    // --------------------------------------
+    return (this.setGear(this.getGear() + gearsToShift));
 } // end upshift
 
 /**
@@ -4211,7 +4210,7 @@ public int upshift (final int gearsToShift)
  */
 public boolean usePID ()
 {
-	return this.usePID;
+    return this.usePID;
 }
 
 // end class
