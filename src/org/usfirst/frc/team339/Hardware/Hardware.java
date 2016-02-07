@@ -24,6 +24,7 @@ import org.usfirst.frc.team339.HardwareInterfaces.SixPositionSwitch;
 import org.usfirst.frc.team339.HardwareInterfaces.transmission.Transmission_old;
 import org.usfirst.frc.team339.Utils.Drive;
 import org.usfirst.frc.team339.Utils.ErrorMessage;
+import org.usfirst.frc.team339.Utils.ManipulatorArm;
 import edu.wpi.first.wpilibj.CameraServer;
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
@@ -295,7 +296,8 @@ public static Drive drive = new Drive(transmission);
 // -------------------
 // Assembly classes (e.g. forklift)
 // -------------------
-
+public static ManipulatorArm pickupArm = new ManipulatorArm(armMotor,
+        starboardArmIntakeMotor, portArmIntakeMotor, armEncoder);
 // ------------------------------------
 // Utility classes
 // ------------------------------------
