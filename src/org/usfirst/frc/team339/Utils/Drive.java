@@ -143,12 +143,7 @@ public boolean driveForwardInches (double distance)
 {
     // stop if the average value of either drive train is greater than
     // the desired distance traveled.
-    if (isFourWheel && (transmission.getRightRearEncoderDistance()
-            + transmission.getRightFrontEncoderDistance())
-            / 2 >= distance ||
-            transmission.getLeftRearEncoderDistance()
-                    + transmission.getLeftFrontEncoderDistance()
-                            / 2 >= distance)
+    if (this.hasDrivenInches(distance) == true)
         {
         // stop
         if (brake(BRAKE_SPEED))
@@ -157,75 +152,51 @@ public boolean driveForwardInches (double distance)
             }
         return false;
         }
-    else if (!isFourWheel
-            && transmission.getRightRearEncoderDistance() >= distance
-            || transmission.getLeftRearEncoderDistance() >= distance)
+    // if the right drive train is ahead of the left drive train (on a
+    // four wheel drive)
+    if ((transmission.getRightRearEncoderDistance()) > (transmission
+            .getLeftRearEncoderDistance()))
         {
-        // Stop
-        if (brake(BRAKE_SPEED))
-            {
-            return true;
-            }
-        return false;
+        transmission.controls(AUTO_CORRECTION_SPEED,
+                (maxSpeedScalingFactor * DEFAULT_MAX_SPEED));
         }
+    // if the left drive train is ahead of the right drive train (on a
+    // four wheel drive)
+    else if ((transmission
+            .getRightRearEncoderDistance()) < (transmission
+                    .getLeftRearEncoderDistance()))
+        {
+        transmission.controls(
+                (maxSpeedScalingFactor * DEFAULT_MAX_SPEED),
+                AUTO_CORRECTION_SPEED);
+        }
+    // if the right Drive train is ahead of the left drive train (2
+    // motor)
+    else if (transmission
+            .getRightRearEncoderDistance() > transmission
+                    .getLeftRearEncoderDistance())
+        {
+        transmission.controls(AUTO_CORRECTION_SPEED,
+                (maxSpeedScalingFactor * DEFAULT_MAX_SPEED));
+        }
+    // if the left Drive train is ahead of the right drive train (2
+    // motor)
+    else if (transmission
+            .getRightRearEncoderDistance() < transmission
+                    .getLeftRearEncoderDistance())
+        {
+        transmission.controls(
+                (maxSpeedScalingFactor * DEFAULT_MAX_SPEED),
+                AUTO_CORRECTION_SPEED,
+                Hardware.leftFrontMotor, Hardware.leftRearMotor,
+                Hardware.rightFrontMotor, Hardware.rightRearMotor);
+        }
+    // if they're both equal
     else
         {
-        // if the right drive train is ahead of the left drive train (on a
-        // four wheel drive)
-        if (isFourWheel
-                && (transmission.getRightRearEncoderDistance()
-                        + transmission.getRightFrontEncoderDistance())
-                        / 2 > (transmission.getLeftRearEncoderDistance()
-                                + transmission
-                                        .getLeftFrontEncoderDistance())
-                                / 2)
-            {
-            transmission.controls(AUTO_CORRECTION_SPEED,
-                    (maxSpeedScalingFactor * DEFAULT_MAX_SPEED));
-            }
-        // if the left drive train is ahead of the right drive train (on a
-        // four wheel drive)
-        else if (isFourWheel
-                && (transmission.getRightRearEncoderDistance()
-                        + transmission.getRightFrontEncoderDistance())
-                        / 2 < (transmission
-                                .getRightRearEncoderDistance()
-                                + transmission
-                                        .getRightFrontEncoderDistance())
-                                / 2)
-            {
-            transmission.controls(
-                    (maxSpeedScalingFactor * DEFAULT_MAX_SPEED),
-                    AUTO_CORRECTION_SPEED);
-            }
-        // if the right Drive train is ahead of the left drive train (2
-        // motor)
-        else if (transmission
-                .getRightRearEncoderDistance() > transmission
-                        .getLeftRearEncoderDistance())
-            {
-            transmission.controls(AUTO_CORRECTION_SPEED,
-                    (maxSpeedScalingFactor * DEFAULT_MAX_SPEED));
-            }
-        // if the left Drive train is ahead of the right drive train (2
-        // motor)
-        else if (transmission
-                .getRightRearEncoderDistance() < transmission
-                        .getLeftRearEncoderDistance())
-            {
-            transmission.controls(
-                    (maxSpeedScalingFactor * DEFAULT_MAX_SPEED),
-                    AUTO_CORRECTION_SPEED,
-                    Hardware.leftFrontMotor, Hardware.leftRearMotor,
-                    Hardware.rightFrontMotor, Hardware.rightRearMotor);
-            }
-        // if they're both equal
-        else
-            {
-            transmission.controls(
-                    (maxSpeedScalingFactor * DEFAULT_MAX_SPEED),
-                    (maxSpeedScalingFactor * DEFAULT_MAX_SPEED));
-            }
+        transmission.controls(
+                (maxSpeedScalingFactor * DEFAULT_MAX_SPEED),
+                (maxSpeedScalingFactor * DEFAULT_MAX_SPEED));
         }
     return false;
 }
@@ -325,7 +296,7 @@ public double getRotationalVelocity ()
     return rotationalVelocity;
 }
 
-private static final double AUTO_CORRECTION_SPEED = 0.95;
+private static final double AUTO_CORRECTION_SPEED = -0.75;
 
 private static final double ROBOT_SEMI_MAJOR_RADIUS_INCHES = 12.0;
 
@@ -358,10 +329,10 @@ private double maxSpeedScalingFactor = 1.0;
  * Constants
  */
 
-private final double DEFAULT_MAX_SPEED = 1.0;
+private final double DEFAULT_MAX_SPEED = -1.0;
 
 // TODO tweak for the most effective brake method
-private final double BRAKE_SPEED = .1;
+private final double BRAKE_SPEED = .2;
 
 
 

@@ -193,6 +193,7 @@ public static void periodic ()
 
 } // end Periodic
 
+
 // A method to process images (before we get a Shoot class)
 public static void processImage ()
 {
