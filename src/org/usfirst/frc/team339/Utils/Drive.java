@@ -65,6 +65,18 @@ public void setMaxSpeed (double max)
     maxSpeedScalingFactor = max;
 }
 
+public boolean hasDrivenInches (double targetDistance)
+{
+    if (transmission.getRightRearEncoderDistance() >= targetDistance
+            || transmission
+                    .getLeftRearEncoderDistance() >= targetDistance)
+        {
+        return true;
+        }
+    else
+        return false;
+}
+
 /**
  * Turns left 'degrees' degrees. Negative values make it turn right.
  * 
