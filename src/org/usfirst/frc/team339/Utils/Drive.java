@@ -67,13 +67,16 @@ public void setMaxSpeed (double max)
 
 public boolean hasDrivenInches (double targetDistance)
 {
+    //if either drive train is beyond the targetDistance
     if (transmission.getRightRearEncoderDistance() >= targetDistance
             || transmission
                     .getLeftRearEncoderDistance() >= targetDistance)
         {
+        //we're done
         return true;
         }
     else
+        //we're not
         return false;
 }
 
