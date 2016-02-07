@@ -410,7 +410,10 @@ private static void runMainStateMachine ()
 			}
 			break;
 		case MOVE_TO_SHOOTING_POSITION:
-			mainState = moveToShootingPosition();
+			if (hasMovedToShootingPostion())
+			{
+
+			}
 			break;
 		case SHOOT:
 			mainState = shoot();
@@ -670,22 +673,22 @@ private static boolean hasMovedToShootingPostion ()
 	if (currentInstruction.isTerminator())// If at end of path, go to
 											// next state.
 	{
-	returnState = MainState.SHOOT;// The next state should be to
-									// shoot, or possibly to align
-									// with vision processing.
+	done = true;// The next state should be to
+				// shoot, or possibly to align
+				// with vision processing.
 	}
 	}
 	if (currentInstruction.isTerminator())// If at end of path, go to next
 											// state.
 	{
-	returnState = MainState.SHOOT;// The next state should be to shoot,
-									// or possibly to align with vision
-									// processing.
+	done = true;// The next state should be to shoot,
+				// or possibly to align with vision
+				// processing.
 	}
 	}
 
 
-	return returnState;
+	return done;
 }
 
 private static MainState shoot ()
