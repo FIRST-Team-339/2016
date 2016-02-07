@@ -61,34 +61,34 @@ public class Autonomous
  * The overarching states of autonomous mode.
  */
 private static enum MainState
-	{
-	INIT, // beginning, check conditions
-	BEGIN_LOWERING_ARM, LOWER_ARM_AND_MOVE,//
-	INIT_DELAY,// sets delay timer.
-	DELAY, // waits, depending on settings.
-	ACCELERATE, // Accelerates at beginning.
-	FORWARDS_BASED_ON_ENCODERS_OR_IR, // decides based on lane whether to move
-										// to tape based on encoders or IR
-	FORWARDS_TO_TAPE_BY_DISTANCE, // drives the distance required to the tape.
-	FORWARDS_UNTIL_TAPE, // drives forwards until detection of the gaffers'
-						// tape.
-	MOVE_TO_SHOOTING_POSITION,  // moves towards a good shooting angle based on
-								// settings.
-	SHOOT, // ajusts its self (?) and fires the cannonball.
-	DONE
-	}
+    {
+    INIT, // beginning, check conditions
+    BEGIN_LOWERING_ARM, LOWER_ARM_AND_MOVE,//
+    INIT_DELAY,// sets delay timer.
+    DELAY, // waits, depending on settings.
+    ACCELERATE, // Accelerates at beginning.
+    FORWARDS_BASED_ON_ENCODERS_OR_IR, // decides based on lane whether to move
+                                     // to tape based on encoders or IR
+    FORWARDS_TO_TAPE_BY_DISTANCE, // drives the distance required to the tape.
+    FORWARDS_UNTIL_TAPE, // drives forwards until detection of the gaffers'
+                        // tape.
+    MOVE_TO_SHOOTING_POSITION,  // moves towards a good shooting angle based on
+                              // settings.
+    SHOOT, // ajusts its self (?) and fires the cannonball.
+    DONE
+    }
 
 
 private static enum MoveWhileLoweringArmReturn
-	{
-	NOT_DONE, DONE, FAILED
-	}
+    {
+    NOT_DONE, DONE, FAILED
+    }
 
 
 private static enum AlignmentState
-	{
-	NEITHER_ON_TAPE, LEFT_ON_TAPE, RIGHT_ON_TAPE, BOTH_ON_TAPE
-	}
+    {
+    NEITHER_ON_TAPE, LEFT_ON_TAPE, RIGHT_ON_TAPE, BOTH_ON_TAPE
+    }
 
 
 
@@ -227,68 +227,70 @@ private static int driveToShootingPositionStep = 0;
 public static void init ()
 {
 
-	enabled = Hardware.autonomousEnabled.isOn();
+    enabled = Hardware.autonomousEnabled.isOn();
 
-	// set the delay time based on potentiometer.
-	delay = initDelayTime();
+    // set the delay time based on potentiometer.
+    delay = initDelayTime();
 
-	// get the lane based off of startingPositionPotentiometer
-	lane = getLane();
-
-
+    // get the lane based off of startingPositionPotentiometer
+    lane = getLane();
 
 
 
-	// set the drive values for MOVE_TO_SHOOTING_POSITION
-	// set the drive values for MOVE_TO_SHOOTING_POSITION
-
-	Hardware.drive.setMaxSpeed(MAXIMUM_AUTONOMOUS_SPEED);
 
 
-	// -------------------------------------
-	// motor initialization
-	// -------------------------------------
-	Hardware.leftRearMotorSafety.setSafetyEnabled(true);
-	Hardware.rightRearMotorSafety.setSafetyEnabled(true);
-	Hardware.leftFrontMotorSafety.setSafetyEnabled(true);
-	Hardware.rightFrontMotorSafety.setSafetyEnabled(true);
+    // set the drive values for MOVE_TO_SHOOTING_POSITION
+    // set the drive values for MOVE_TO_SHOOTING_POSITION
 
-	Hardware.transmission
-	        .setFirstGearPercentage(MAXIMUM_AUTONOMOUS_SPEED);
-	Hardware.transmission.setGear(1);
-	Hardware.transmission.setJoysticksAreReversed(true);
-	Hardware.transmission
-	        .setFirstGearPercentage(MAXIMUM_AUTONOMOUS_SPEED);
-
-	// --------------------------------------
-	// Encoder Initialization
-	// --------------------------------------
-	Hardware.leftRearEncoder.reset();
-	Hardware.leftRearEncoder.setDistancePerPulse(0.019706);
-
-	Hardware.rightRearEncoder.reset();
-	Hardware.armEncoder.reset();
-
-	// -------------------------------------
-	// close both of the cameras in case they
-	// were previously started in a previous
-	// run. Then, change the camera to one that
-	// will eventually process images.
-	// ------------------------------------
-
-	// Sets FPS and Resolution of camera
-	Hardware.axisCamera.writeMaxFPS(15);
-	Hardware.axisCamera.writeResolution(Resolution.k320x240);
-	Hardware.axisCamera
-	        .writeBrightness(Hardware.MINIMUM_AXIS_CAMERA_BRIGHTNESS);
+    Hardware.drive.setMaxSpeed(MAXIMUM_AUTONOMOUS_SPEED);
 
 
-	// ---------------------------------------
-	// turn the timer off and reset the counter
-	// so that we can use it in autonomous
-	// ---------------------------------------
-	Hardware.kilroyTimer.stop();
-	Hardware.kilroyTimer.reset();
+    // -------------------------------------
+    // motor initialization
+    // -------------------------------------
+    Hardware.leftRearMotorSafety.setSafetyEnabled(true);
+    Hardware.rightRearMotorSafety.setSafetyEnabled(true);
+    Hardware.leftFrontMotorSafety.setSafetyEnabled(true);
+    Hardware.rightFrontMotorSafety.setSafetyEnabled(true);
+
+    Hardware.transmission
+            .setFirstGearPercentage(MAXIMUM_AUTONOMOUS_SPEED);
+    Hardware.transmission.setGear(1);
+    Hardware.transmission.setJoysticksAreReversed(true);
+    Hardware.transmission
+            .setFirstGearPercentage(MAXIMUM_AUTONOMOUS_SPEED);
+
+    // --------------------------------------
+    // Encoder Initialization
+    // --------------------------------------
+    Hardware.leftRearEncoder.reset();
+    Hardware.leftRearEncoder.setDistancePerPulse(0.019706);
+
+    Hardware.rightRearEncoder.reset();
+    Hardware.armEncoder.reset();
+
+    // -------------------------------------
+    // close both of the cameras in case they
+    // were previously started in a previous
+    // run. Then, change the camera to one that
+    // will eventually process images.
+    // ------------------------------------
+
+    // Sets FPS and Resolution of camera
+    Hardware.axisCamera.writeMaxFPS(15);
+    Hardware.axisCamera.writeResolution(Resolution.k320x240);
+    Hardware.axisCamera
+            .writeBrightness(Hardware.MINIMUM_AXIS_CAMERA_BRIGHTNESS);
+
+
+    // ---------------------------------------
+    // turn the timer off and reset the counter
+    // so that we can use it in autonomous
+    // ---------------------------------------
+    Hardware.kilroyTimer.stop();
+    Hardware.kilroyTimer.reset();
+    Hardware.leftRearEncoder.reset();
+    Hardware.rightRearEncoder.reset();
 } // end Init
 
 /**
@@ -303,9 +305,9 @@ public static void periodic ()
 
 
 
-	// test
-	// TransmissionFourWheel debugTrans = Hardware.transmissionFourWheel;
-	// moveToShootingPositionStep = MoveToShootingPositionStep.FORWARDS_ONE;
+    // test
+    // TransmissionFourWheel debugTrans = Hardware.transmissionFourWheel;
+    // moveToShootingPositionStep = MoveToShootingPositionStep.FORWARDS_ONE;
 
 
 
@@ -316,17 +318,17 @@ public static void periodic ()
 
 
 
-	System.out.println(enabled);
-	if (enabled)
-	{
-	// runs the overarching state machine.
-	runMainStateMachine();
-	}
-	// feed all motor safties
-	Hardware.leftRearMotorSafety.feed();
-	Hardware.rightRearMotorSafety.feed();
-	Hardware.leftFrontMotorSafety.feed();
-	Hardware.rightFrontMotorSafety.feed();
+    System.out.println(enabled);
+    if (enabled)
+        {
+        // runs the overarching state machine.
+        runMainStateMachine();
+        }
+    // feed all motor safties
+    Hardware.leftRearMotorSafety.feed();
+    Hardware.rightRearMotorSafety.feed();
+    Hardware.leftFrontMotorSafety.feed();
+    Hardware.rightFrontMotorSafety.feed();
 } // end Periodic
 
 
@@ -335,8 +337,8 @@ public static void periodic ()
  */
 private static int initDelayTime ()
 {
-	return (int) (MAXIMUM_DELAY * Hardware.delayPot.get()
-	        / Hardware.DELAY_POT_DEGREES);
+    return (int) (MAXIMUM_DELAY * Hardware.delayPot.get()
+            / Hardware.DELAY_POT_DEGREES);
 }
 
 
@@ -346,81 +348,81 @@ private static int initDelayTime ()
 private static void runMainStateMachine ()
 {
 
-	System.out.println("Main State: " + mainState);
-	switch (mainState)
-	{
-		case INIT:
-			mainInit();
-			mainState = MainState.BEGIN_LOWERING_ARM;
-			break;
-		case BEGIN_LOWERING_ARM:
-			beginLoweringArm();
+    System.out.println("Main State: " + mainState);
+    switch (mainState)
+        {
+        case INIT:
+            mainInit();
+            mainState = MainState.BEGIN_LOWERING_ARM;
+            break;
+        case BEGIN_LOWERING_ARM:
+            beginLoweringArm();
 
-			break;
-		case LOWER_ARM_AND_MOVE:
-			switch (lowerArmAndMove())
-			{
-				case NOT_DONE:
-					mainState = MainState.DONE;
-					break;
-				case DONE:
-					mainState = MainState.INIT_DELAY;
-					break;
-				case FAILED:
-					mainState = MainState.DONE;
-					break;
-			}
-			break;
-		case INIT_DELAY:
-			initDelay();
-			mainState = MainState.DELAY;
-			break;
-		case DELAY:
-			if (delayIsDone())
-			{
-			mainState = MainState.ACCELERATE;
-			}
-			break;
-		case ACCELERATE:
-			if (accelerationIsDone())
-			{
-			mainState = MainState.FORWARDS_BASED_ON_ENCODERS_OR_IR;
-			}
-			break;
-		case FORWARDS_BASED_ON_ENCODERS_OR_IR:
-			if (isInLaneOne())
-			{
-			mainState = MainState.FORWARDS_TO_TAPE_BY_DISTANCE;
-			}
-			else
-			{
-			mainState = MainState.FORWARDS_UNTIL_TAPE;
-			}
-			break;
-		case FORWARDS_TO_TAPE_BY_DISTANCE:
-			if (hasGoneToTapeByDistance())
-			{
-			mainState = MainState.MOVE_TO_SHOOTING_POSITION;
-			}
-			break;
-		case FORWARDS_UNTIL_TAPE:
-			if (hasMovedToTape())
-			{
-			mainState = MainState.MOVE_TO_SHOOTING_POSITION;
-			}
-			break;
-		case MOVE_TO_SHOOTING_POSITION:
-			if (hasMovedToShootingPostion())
-			{
+            break;
+        case LOWER_ARM_AND_MOVE:
+            switch (lowerArmAndMove())
+                {
+                case NOT_DONE:
+                    mainState = MainState.DONE;
+                    break;
+                case DONE:
+                    mainState = MainState.INIT_DELAY;
+                    break;
+                case FAILED:
+                    mainState = MainState.DONE;
+                    break;
+                }
+            break;
+        case INIT_DELAY:
+            initDelay();
+            mainState = MainState.DELAY;
+            break;
+        case DELAY:
+            if (delayIsDone())
+                {
+                mainState = MainState.ACCELERATE;
+                }
+            break;
+        case ACCELERATE:
+            if (accelerationIsDone())
+                {
+                mainState = MainState.FORWARDS_BASED_ON_ENCODERS_OR_IR;
+                }
+            break;
+        case FORWARDS_BASED_ON_ENCODERS_OR_IR:
+            if (isInLaneOne())
+                {
+                mainState = MainState.FORWARDS_TO_TAPE_BY_DISTANCE;
+                }
+            else
+                {
+                mainState = MainState.FORWARDS_UNTIL_TAPE;
+                }
+            break;
+        case FORWARDS_TO_TAPE_BY_DISTANCE:
+            if (hasGoneToTapeByDistance())
+                {
+                mainState = MainState.MOVE_TO_SHOOTING_POSITION;
+                }
+            break;
+        case FORWARDS_UNTIL_TAPE:
+            if (hasMovedToTape())
+                {
+                mainState = MainState.MOVE_TO_SHOOTING_POSITION;
+                }
+            break;
+        case MOVE_TO_SHOOTING_POSITION:
+            if (hasMovedToShootingPostion())
+                {
 
-			}
-			break;
-		case SHOOT:
-			mainState = shoot();
-			break;
-		case DONE:
-			break;
-	}
+                }
+            break;
+        case SHOOT:
+            mainState = shoot();
+            break;
+        case DONE:
+            break;
+        }
 }
 
 
@@ -437,60 +439,60 @@ private static void mainInit ()
 
 private static void beginLoweringArm ()
 {
-	Hardware.armEncoder.reset();
-	Hardware.armMotor.set(1.0);
+    Hardware.armEncoder.reset();
+    Hardware.armMotor.set(1.0);
 
 }
 
 
 private static MoveWhileLoweringArmReturn lowerArmAndMove ()
 {
-	MoveWhileLoweringArmReturn returnState =
-	        MoveWhileLoweringArmReturn.NOT_DONE;
-	boolean armIsDown = false;
+    MoveWhileLoweringArmReturn returnState =
+            MoveWhileLoweringArmReturn.NOT_DONE;
+    boolean armIsDown = false;
 
-	Hardware.transmission.controls(1.0, 1.0, Hardware.leftFrontMotor,
-	        Hardware.leftRearMotor, Hardware.rightFrontMotor,
-	        Hardware.rightRearMotor);
-	;
+    Hardware.transmission.controls(1.0, 1.0, Hardware.leftFrontMotor,
+            Hardware.leftRearMotor, Hardware.rightFrontMotor,
+            Hardware.rightRearMotor);
+    ;
 
-	if (Hardware.armEncoder.get() > ARM_DOWN_TICKS)// TODO: set this to a known
-													// distance
-	{
-	armIsDown = true;
-	Hardware.armMotor.set(0.0);
-	}
-	if (Hardware.armEncoder.getDistance() > 8)// TODO: set this to a known
-												// distance
-	{
-	armIsDown = true;
-	Hardware.armMotor.set(0.0);
-	}
+    if (Hardware.armEncoder.get() > ARM_DOWN_TICKS)// TODO: set this to a known
+                                                   // distance
+        {
+        armIsDown = true;
+        Hardware.armMotor.set(0.0);
+        }
+    if (Hardware.armEncoder.getDistance() > 8)// TODO: set this to a known
+                                              // distance
+        {
+        armIsDown = true;
+        Hardware.armMotor.set(0.0);
+        }
 
-	if (Hardware.drive.driveForwardInches(22.75))// TODO: make constant
-	{
-	if (armIsDown)
-	{
-	returnState = MoveWhileLoweringArmReturn.DONE;
-	}
-	else
-	{
-	returnState = MoveWhileLoweringArmReturn.FAILED;
-	}
-	}
-	if (Hardware.drive.driveForwardInches(22.75))// TODO: make constant
-	{
-	if (armIsDown)
-	{
-	returnState = MoveWhileLoweringArmReturn.DONE;
-	}
-	else
-	{
-	returnState = MoveWhileLoweringArmReturn.FAILED;
-	}
-	}
+    if (Hardware.drive.driveForwardInches(22.75))// TODO: make constant
+        {
+        if (armIsDown)
+            {
+            returnState = MoveWhileLoweringArmReturn.DONE;
+            }
+        else
+            {
+            returnState = MoveWhileLoweringArmReturn.FAILED;
+            }
+        }
+    if (Hardware.drive.driveForwardInches(22.75))// TODO: make constant
+        {
+        if (armIsDown)
+            {
+            returnState = MoveWhileLoweringArmReturn.DONE;
+            }
+        else
+            {
+            returnState = MoveWhileLoweringArmReturn.FAILED;
+            }
+        }
 
-	return returnState;
+    return returnState;
 }
 
 
@@ -503,20 +505,20 @@ private static MoveWhileLoweringArmReturn lowerArmAndMove ()
  */
 private static MainState initDelay ()
 {
-	MainState returnState = MainState.DELAY;
+    MainState returnState = MainState.DELAY;
 
 
-	Hardware.delayTimer.reset();
-	Hardware.delayTimer.start();
-	Hardware.delayTimer.reset();
-	Hardware.delayTimer.start();
+    Hardware.delayTimer.reset();
+    Hardware.delayTimer.start();
+    Hardware.delayTimer.reset();
+    Hardware.delayTimer.start();
 
-	if (Hardware.drive.driveForwardInches(22.75))
-	{
-	returnState = MainState.DELAY;
-	}
+    if (Hardware.drive.driveForwardInches(22.75))
+        {
+        returnState = MainState.DELAY;
+        }
 
-	return returnState;
+    return returnState;
 }
 
 /**
@@ -526,15 +528,15 @@ private static MainState initDelay ()
  */
 private static boolean delayIsDone ()
 {
-	boolean done = false;
+    boolean done = false;
 
-	if (Hardware.delayTimer.get() > delay)
-	{
-	done = true;
-	Hardware.delayTimer.stop();
-	Hardware.delayTimer.reset();
-	}
-	return done;
+    if (Hardware.delayTimer.get() > delay)
+        {
+        done = true;
+        Hardware.delayTimer.stop();
+        Hardware.delayTimer.reset();
+        }
+    return done;
 
 }
 
@@ -546,31 +548,31 @@ private static boolean delayIsDone ()
  */
 private static boolean accelerationIsDone ()
 {
-	boolean done = false;
+    boolean done = false;
 
 
-	// If there are no more acceleration steps, go to next.
-	if (accelerationIndex == StateInformation.ACCELERATE_SPEEDS.length)
-	{
-	done = true;
-	}
-	else
-	{
-	Hardware.transmission.controls(
-	        StateInformation.ACCELERATE_SPEEDS[accelerationIndex],
-	        StateInformation.ACCELERATE_SPEEDS[accelerationIndex]);
+    // If there are no more acceleration steps, go to next.
+    if (accelerationIndex == StateInformation.ACCELERATE_SPEEDS.length)
+        {
+        done = true;
+        }
+    else
+        {
+        Hardware.transmission.controls(
+                StateInformation.ACCELERATE_SPEEDS[accelerationIndex],
+                StateInformation.ACCELERATE_SPEEDS[accelerationIndex]);
 
 
 
-	if (Hardware.kilroyTimer
-	        .get() > StateInformation.ACCELERATE_TIMES[accelerationIndex])
-		;
-	{
-	Hardware.kilroyTimer.reset();
-	accelerationIndex++;
-	}
-	}
-	return done;
+        if (Hardware.kilroyTimer
+                .get() > StateInformation.ACCELERATE_TIMES[accelerationIndex])
+            ;
+            {
+            Hardware.kilroyTimer.reset();
+            accelerationIndex++;
+            }
+        }
+    return done;
 
 }
 
@@ -581,55 +583,55 @@ private static boolean accelerationIsDone ()
  */
 private static boolean isInLaneOne ()
 {
-	boolean oneness;
+    boolean oneness;
 
 
-	if (lane == 1)
-	{
-	oneness = true;
-	}
-	else
-	{
-	oneness = false;
-	}
+    if (lane == 1)
+        {
+        oneness = true;
+        }
+    else
+        {
+        oneness = false;
+        }
 
 
-	return oneness;
+    return oneness;
 }
 
 private static boolean hasGoneToTapeByDistance ()
 {
 
-	boolean hasReachedDistance = false;
+    boolean hasReachedDistance = false;
 
-	MainState returnState = MainState.FORWARDS_TO_TAPE_BY_DISTANCE;
+    MainState returnState = MainState.FORWARDS_TO_TAPE_BY_DISTANCE;
 
-	Hardware.transmission.controls(1.0, 1.0);
+    Hardware.transmission.controls(1.0, 1.0);
 
-	if (Hardware.drive.driveForwardInches(DISTANCE_TO_TAPE))
-	{
-	return true;
-	}
+    if (Hardware.drive.driveForwardInches(DISTANCE_TO_TAPE))
+        {
+        return true;
+        }
 
-	return hasReachedDistance;
+    return hasReachedDistance;
 }
 
 private static boolean hasMovedToTape ()
 {
 
-	boolean tapeness = false;
+    boolean tapeness = false;
 
-	MainState returnState = MainState.FORWARDS_UNTIL_TAPE;
+    MainState returnState = MainState.FORWARDS_UNTIL_TAPE;
 
-	Hardware.transmission.controls(1.0, 1.0);// TODO: set constants
+    Hardware.transmission.controls(1.0, 1.0);// TODO: set constants
 
-	if (Hardware.leftIR.isOn() || Hardware.rightIR.isOn())
-	{
-	tapeness = true;
-	}
+    if (Hardware.leftIR.isOn() || Hardware.rightIR.isOn())
+        {
+        tapeness = true;
+        }
 
 
-	return tapeness;
+    return tapeness;
 
 }
 
@@ -647,60 +649,60 @@ private static boolean hasMovedToTape ()
  */
 private static boolean hasMovedToShootingPostion ()
 {
-	boolean done = false;
+    boolean done = false;
 
-	// The required distance to drive is taken from the pathToGoalInformation 2d
-	// Array.
-	DriveInstruction currentInstruction =
-	        driveToGoalInstructions[Hardware.startingPositionDial
-	                .getPosition()][driveToShootingPositionStep];
+    // The required distance to drive is taken from the pathToGoalInformation 2d
+    // Array.
+    DriveInstruction currentInstruction =
+            driveToGoalInstructions[Hardware.startingPositionDial
+                    .getPosition()][driveToShootingPositionStep];
 
-	if (Hardware.drive.driveForwardInches(
-	        currentInstruction.getForwardDistance()) // Drive, and if we have
-	        // driven the distance
-	        // required
-	        || Hardware.drive.driveForwardInches(
-	                currentInstruction.getRotationalDistance())) // Or the
-																						                // rotation...
-	{
+    if (Hardware.drive.driveForwardInches(
+            currentInstruction.getForwardDistance()) // Drive, and if we have
+            // driven the distance
+            // required
+            || Hardware.drive.driveForwardInches(
+                    currentInstruction.getRotationalDistance())) // Or the
+                                                                                                     // rotation...
+        {
 
-	{
-
-
-
-	driveToShootingPositionStep++; // go to next step.
-
-	if (currentInstruction.isTerminator())// If at end of path, go to
-											// next state.
-	{
-	done = true;// The next state should be to
-				// shoot, or possibly to align
-				// with vision processing.
-	}
-	}
-	if (currentInstruction.isTerminator())// If at end of path, go to next
-											// state.
-	{
-	done = true;// The next state should be to shoot,
-				// or possibly to align with vision
-				// processing.
-	}
-	}
+            {
 
 
-	return done;
+
+            driveToShootingPositionStep++; // go to next step.
+
+            if (currentInstruction.isTerminator())// If at end of path, go to
+                                                  // next state.
+                {
+                done = true;// The next state should be to
+                            // shoot, or possibly to align
+                            // with vision processing.
+                }
+            }
+        if (currentInstruction.isTerminator())// If at end of path, go to next
+                                              // state.
+            {
+            done = true;// The next state should be to shoot,
+                        // or possibly to align with vision
+                        // processing.
+            }
+        }
+
+
+    return done;
 }
 
 private static MainState shoot ()
 {
-	// TODO: write method to shoot cannonball.
+    // TODO: write method to shoot cannonball.
 
-	return MainState.DONE;
+    return MainState.DONE;
 }
 
 private static void done ()
 {
-	Hardware.transmission.controls(0.0, 0.0);
+    Hardware.transmission.controls(0.0, 0.0);
 }
 
 /*
@@ -712,18 +714,18 @@ private static void done ()
 
 private static int getLane ()
 {
-	int position = Hardware.startingPositionDial.getPosition();
+    int position = Hardware.startingPositionDial.getPosition();
 
 
-	if (position == -1)
-	{
-	position = 0;
-	}
+    if (position == -1)
+        {
+        position = 0;
+        }
 
 
-	position = position + 1;
+    position = position + 1;
 
-	return position;
+    return position;
 }
 
 
