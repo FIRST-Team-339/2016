@@ -589,6 +589,8 @@ private double mecanumRotationCorrection = 0.0;
 
 private double rotationCorrection = 0;
 
+private boolean isFourWheel = false;
+
 // -------------------------------------------------------
 /**
  * constructor for the transmission class
@@ -664,6 +666,7 @@ public Transmission_old (final DoubleSolenoid transmissionSolenoids,
         final SpeedController rightSpeedController,
         final SpeedController leftSpeedController)
 {
+    this.isFourWheel = false;
     this.transmissionSolenoids = transmissionSolenoids;
     this.oneOrRightSpeedController = rightSpeedController;
     this.leftSpeedController = leftSpeedController;
@@ -730,6 +733,7 @@ public Transmission_old (final Relay transmissionRelay,
         final SpeedController rightSpeedController,
         final SpeedController leftSpeedController)
 {
+    this.isFourWheel = false;
     this.transmissionRelay = transmissionRelay;
     this.oneOrRightSpeedController = rightSpeedController;
     this.leftSpeedController = leftSpeedController;
@@ -752,6 +756,7 @@ public Transmission_old (final Relay transmissionRelay,
 public Transmission_old (final SpeedController rightSpeedController,
         final SpeedController leftSpeedController)
 {
+    this.isFourWheel = false;
     this.oneOrRightSpeedController = rightSpeedController;
     this.leftSpeedController = leftSpeedController;
     this.init();
@@ -763,6 +768,7 @@ public Transmission_old (
         final SpeedController leftFrontSpeedController,
         final SpeedController leftRearSpeedController)
 {
+    this.isFourWheel = true;
     this.oneOrRightSpeedController = rightFrontSpeedController;
     this.leftSpeedController = leftFrontSpeedController;
     this.rightRearSpeedController = rightRearSpeedController;
@@ -802,6 +808,7 @@ public Transmission_old (
         Encoder rightFrontEncoder, Encoder rightRearEncoder,
         Encoder leftFrontEncoder, Encoder leftRearEncoder)
 {
+    this.isFourWheel = true;
     this.oneOrRightSpeedController = rightFrontSpeedController;
     this.leftSpeedController = leftFrontSpeedController;
     this.rightRearSpeedController = rightRearSpeedController;
@@ -1174,9 +1181,8 @@ public void controls (final double leftJoystickInputValue,
             (this.leftSpeedController != null))
         // Control all four wheels if all four are initialized
         // and we are in mecanum drive.
-        if ((this.rightRearSpeedController != null) &&
-                (this.leftRearSpeedController != null) &&
-                (this.isMecanumDrive() == true))
+        if (isFourWheel //&&
+        /* (this.isMecanumDrive() == true) */)//TODO commented out until it makes sense
             {
             this.controls(leftJoystickInputValue,
                     rightJoystickInputValue,

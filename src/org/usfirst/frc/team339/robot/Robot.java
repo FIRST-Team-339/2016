@@ -62,7 +62,6 @@ package org.usfirst.frc.team339.robot;
 import org.usfirst.frc.team339.Hardware.Hardware;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.IterativeRobot;
-import edu.wpi.first.wpilibj.MotorSafetyHelper;
 import edu.wpi.first.wpilibj.Relay.Direction;
 
 /**
@@ -87,10 +86,6 @@ public class Robot extends IterativeRobot
 // =================================================
 // private data for the class
 // =================================================
-// ----------------------------------------------------
-// new watchdog object
-// ----------------------------------------------------
-MotorSafetyHelper watchdog;
 
 // -------------------------------------------------------
 /**
@@ -110,11 +105,6 @@ public void autonomousInit ()
     // ---------------------------------------
     System.out.println("Started AutonousInit().");
 
-    // Dims the brightness level so that we can take a better picture
-    // of the retroreflective tape.
-
-    // of the retroreflective tape.
-    Hardware.axisCamera.writeBrightness(5);
     // -------------------------------------
     // Call the Autonomous class's Init function,
     // which contains the user code.
@@ -171,10 +161,7 @@ public void disabledInit ()
     // =========================================================
     // User code goes below here
     // =========================================================
-    Hardware.leftRearMotorSafety.setSafetyEnabled(false);
-    Hardware.rightRearMotorSafety.setSafetyEnabled(false);
-    Hardware.leftFrontMotorSafety.setSafetyEnabled(false);
-    Hardware.rightFrontMotorSafety.setSafetyEnabled(false);
+
     // =========================================================
     // User code goes above here
     // =========================================================
@@ -235,31 +222,22 @@ public void robotInit ()
     // --------------------------------------
     // Encoder Initialization
     // --------------------------------------
-    Hardware.leftRearEncoder.setDistancePerPulse(0.019706);
-    Hardware.leftRearEncoder.reset();
-
-    Hardware.rightRearEncoder.setDistancePerPulse(0.019706);
-    Hardware.rightRearEncoder.reset();
-
-    Hardware.transmission.initEncoders(Hardware.rightRearEncoder,
-            Hardware.leftRearEncoder);
     Hardware.leftRearEncoder
             .setDistancePerPulse(distancePerTickForMotorEncoders);
     Hardware.leftRearEncoder.reset();
-
     Hardware.rightRearEncoder
             .setDistancePerPulse(distancePerTickForMotorEncoders);
     Hardware.rightRearEncoder.reset();
 
+    //--------------------------------------
+    // initialize all things with the drive system
+    //--------------------------------------
     Hardware.transmission.setMaxGear(2);
-    Hardware.transmission.initEncoders(Hardware.rightRearEncoder,
-            Hardware.leftRearEncoder);
+
     // -------------------------------------
     // USB camera initialization
     // -------------------------------------
 
-    Hardware.transmission.initEncoders(Hardware.rightRearEncoder,
-            Hardware.leftRearEncoder);
     // -------------------------------------
     // USB camera initialization
     // -------------------------------------
@@ -272,9 +250,6 @@ public void robotInit ()
     Hardware.cam0.setWhiteBalanceHoldCurrent();
     Hardware.cam0.updateSettings();
 
-    // Starts streaming video
-    Hardware.cameraServer.startAutomaticCapture(Hardware.cam0);
-
     // Sets FPS and Resolution of camera
     Hardware.axisCamera.writeMaxFPS(Hardware.AXIS_FPS);
     Hardware.axisCamera.writeResolution(Hardware.AXIS_RESOLUTION);
@@ -283,6 +258,9 @@ public void robotInit ()
             // Hardware.axisCamera
             // .writeWhiteBalance(AxisCamera.WhiteBalance.kHold);
 
+    // Starts streaming video
+    Hardware.cameraServer.startAutomaticCapture(Hardware.cam0);
+
 
     // Tells the relay which way is on (kBackward is unable to be used)
     Hardware.ringLightRelay.setDirection(Direction.kForward);
@@ -290,7 +268,6 @@ public void robotInit ()
     // -------------------------------------
     // motor initialization
     // -------------------------------------
-
     Hardware.leftRearMotorSafety.setSafetyEnabled(true);
     Hardware.rightRearMotorSafety.setSafetyEnabled(true);
     Hardware.leftFrontMotorSafety.setSafetyEnabled(true);
@@ -302,17 +279,6 @@ public void robotInit ()
     // --------------------------------------
     Hardware.compressor.setClosedLoopControl(true);
 
-    // --------------------------------------
-    // Encoder Initialization
-    // --------------------------------------
-    Hardware.leftRearEncoder.reset();
-    Hardware.leftRearEncoder
-            .setDistancePerPulse(distancePerTickForMotorEncoders);
-
-    Hardware.rightRearEncoder.reset();
-    Hardware.rightRearEncoder
-            .setDistancePerPulse(distancePerTickForMotorEncoders);
-
     // ---------------------------------------
     // Solenoid Initialization
     // ---------------------------------------
@@ -321,6 +287,8 @@ public void robotInit ()
     Hardware.catapultSolenoid0.set(false);
     Hardware.catapultSolenoid1.set(false);
     Hardware.catapultSolenoid2.set(false);
+    Hardware.rightRearEncoder.setReverseDirection(true);
+
     // =========================================================
     // User code goes above here
     // =========================================================

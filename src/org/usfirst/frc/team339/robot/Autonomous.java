@@ -62,21 +62,62 @@ public class Autonomous
  */
 private static enum MainState
     {
+    /**
+     * The first state.
+     * Initializes things if necessary,
+     * though most things are initialized
+     * in init().
+     */
     INIT, // beginning, check conditions
-    BEGIN_LOWERING_ARM, LOWER_ARM_AND_MOVE,//
+    /**
+     * Sets arm to head downward.
+     */
+    BEGIN_LOWERING_ARM,
+    /**
+     * Moves at a low speed while lowering arm.
+     * If it reaches the end of the distance, and the arm is not fully down,
+     * skips to DONE.
+     */
+    LOWER_ARM_AND_MOVE,//
+    /**
+     * Resets and starts delay timer.
+     */
     INIT_DELAY,// sets delay timer.
+    /**
+     * Waits.
+     * Waits until the delay is up.
+     */
     DELAY, // waits, depending on settings.
+    /**
+     * Follows a progression of motor speeds
+     * to gradually accelerate.
+     */
     ACCELERATE, // Accelerates at beginning.
+    /**
+     * This state checks to see if we are in lane 1.
+     * If so, we go until we reach an encoder distance (set to distance to
+     * alignment tape),
+     * Else, we go util the sensors find the Alignment tape.
+     */
     FORWARDS_BASED_ON_ENCODERS_OR_IR, // decides based on lane whether to move
-                                      // to tape based on encoders or IR
+                                     // to tape based on encoders or IR
+    /**
+     * Goes forward until it reaches the set distance to the Alignment tape.
+     */
     FORWARDS_TO_TAPE_BY_DISTANCE, // drives the distance required to the tape.
+    /**
+     * Goes forward until it senses the Alignment tape.
+     */
     FORWARDS_UNTIL_TAPE, // drives forwards until detection of the gaffers'
-                         // tape.
-    MOVE_TO_SHOOTING_POSITION,  // moves towards a good shooting angle based on
-                                // settings.
-    SHOOT, // ajusts its self (?) and fires the cannonball.
+                        // tape.
+    ROTATE_ON_ALIGNMENT_LINE, // rotates on the alignment line.
+    FORWARDS_FROM_ALIGNMENT_LINE, // drives from the alignment line.
+    TURN_TO_FACE_GOAL, // rotates toward the goal.
+    DRIVE_UP_TO_GOAL, // drives up the goal.
+    SHOOT, // adjusts its self (?) and fires the cannon ball.
     DONE
     }
+
 
 
 private static enum MoveWhileLoweringArmReturn
@@ -85,57 +126,10 @@ private static enum MoveWhileLoweringArmReturn
     }
 
 
-private static enum AlignmentState
-    {
-    NEITHER_ON_TAPE, LEFT_ON_TAPE, RIGHT_ON_TAPE, BOTH_ON_TAPE
-    }
-
-
-
-/**
- * A collection of distances we'll be driving in autonomous.
- */
-private static class DriveDistances
-{
-
-
-/*
- * Below are the distances traveled by the robot in
- * FORWARDS_TO_SHOOTING_POSITION. The order
- * of execution is stated by the first number. The
- * starting position is denoted by the second.
- */
-public static final double ROTATE_ZERO_ONE = 0.0;
-public static final double FORWARDS_ONE_ONE = 74.7;
-public static final double ROTATE_ONE_ONE = -60.0;
-public static final double FORWARDS_TWO_ONE = 62.7;
-
-public static final double ROTATE_ZERO_TWO = 0.0;
-public static final double FORWARDS_ONE_TWO = 82.0;
-public static final double ROTATE_ONE_TWO = -60.0;
-public static final double FORWARDS_TWO_TWO = 52.92;
-
-public static final double ROTATE_ZERO_THREE = -20.0;
-public static final double FORWARDS_ONE_THREE = 64.0;
-public static final double ROTATE_ONE_THREE = 20.0;
-public static final double FORWARDS_TWO_THREE = 0.0;
-
-public static final double ROTATE_ZERO_FOUR = 24.8;
-public static final double FORWARDS_ONE_FOUR = 66.1;
-public static final double ROTATE_ONE_FOUR = -24.8;
-public static final double FORWARDS_TWO_FOUR = 0.0;
-
-public static final double ROTATE_ZERO_FIVE = 0.0;
-public static final double FORWARDS_ONE_FIVE = 86.5;
-public static final double ROTATE_ONE_FIVE = 60.0;
-public static final double FORWARDS_TWO_FIVE = 12.0;
-}
-
-
 private static final DriveInstruction[] driveOverDefencesInstuctions =
-    {
-            new DriveInstruction(106.0, 1.0, 0.0, 0.0)
-    };
+        {
+                new DriveInstruction(106.0, 1.0, 0.0, 0.0)
+        };
 
 /**
  * Contains information for driving to a goal from A-tape.
@@ -143,53 +137,53 @@ private static final DriveInstruction[] driveOverDefencesInstuctions =
  * Columns contain steps for each path.
  */
 public static final DriveInstruction[][] driveToGoalInstructions =
-    {
-            {// From Starting Position 1
-                    new DriveInstruction(74.7, 1.0, 0.0, 0.0), // drive out
-                    new DriveInstruction(0.0, 0.0, -60.0, 1.0), // turn
-                                                                // perpendicular
-                                                                // to goal
-                    new DriveInstruction(62.7, 1.0, 0.0, 0.0), // drive up to
-                                                               // goal
-                    new DriveInstruction(true) // continue to shoot
-            },
-            {// From Starting Position 2
-                    new DriveInstruction(82.0, 1.0, 0.0, 0.0), // drive out
-                    new DriveInstruction(0.0, 0.0, -60.0, 1.0), // turn
-                                                                // perpendicular
-                                                                // to goal
-                    new DriveInstruction(52.92, 1.0, 0.0, 0.0), // drive up to
-                                                                // goal
-                    new DriveInstruction(true)// continue to shoot
-            },
-            {// From Starting Position 3
-                    new DriveInstruction(0.0, 0.0, -20.0, 1.0), // turn towards
-                                                                // end position
-                    new DriveInstruction(64.0, 1.0, 0.0, 0.0), // drive to end
-                                                               // position
-                    new DriveInstruction(0.0, 0.0, 60.0, 1.0), // turn towards
-                                                               // goal
-                    new DriveInstruction(true) // continue to shoot
-            },
-            {// From Starting Position 4
-                    new DriveInstruction(0.0, 0.0, -24.8, 1.0), // turn towards
-                                                                // end position
-                    new DriveInstruction(64.0, 1.0, 0.0, 0.0), // drive to end
-                                                               // position
-                    new DriveInstruction(0.0, 0.0, 64.8, 1.0), // turn towards
-                                                               // goal
-                    new DriveInstruction(true) // continue to shoot
-            },
-            {// From Starting Position 5
-                    new DriveInstruction(86.5, 1.0, 0.0, 0.0),// drive out
-                    new DriveInstruction(0.0, 0.0, 60.0, 0.0),// turn
-                                                              // perpendicular
-                                                              // to goal
-                    new DriveInstruction(12.0, 1.0, 0.0, 0.0),// drive up to
-                                                              // goal
-                    new DriveInstruction(true) // continue to shoot
-            }
-    };
+        {
+                {// From Starting Position 1
+                        new DriveInstruction(74.7, 1.0, 0.0, 0.0), // drive out
+                        new DriveInstruction(0.0, 0.0, -60.0, 1.0), // turn
+                        // perpendicular
+                        // to goal
+                        new DriveInstruction(62.7, 1.0, 0.0, 0.0), // drive up to
+                        // goal
+                        new DriveInstruction(true) // continue to shoot
+                },
+                {// From Starting Position 2
+                        new DriveInstruction(82.0, 1.0, 0.0, 0.0), // drive out
+                        new DriveInstruction(0.0, 0.0, -60.0, 1.0), // turn
+                        // perpendicular
+                        // to goal
+                        new DriveInstruction(52.92, 1.0, 0.0, 0.0), // drive up to
+                        // goal
+                        new DriveInstruction(true)// continue to shoot
+                },
+                {// From Starting Position 3
+                        new DriveInstruction(0.0, 0.0, -20.0, 1.0), // turn towards
+                        // end position
+                        new DriveInstruction(64.0, 1.0, 0.0, 0.0), // drive to end
+                        // position
+                        new DriveInstruction(0.0, 0.0, 60.0, 1.0), // turn towards
+                        // goal
+                        new DriveInstruction(true) // continue to shoot
+                },
+                {// From Starting Position 4
+                        new DriveInstruction(0.0, 0.0, -24.8, 1.0), // turn towards
+                        // end position
+                        new DriveInstruction(64.0, 1.0, 0.0, 0.0), // drive to end
+                        // position
+                        new DriveInstruction(0.0, 0.0, 64.8, 1.0), // turn towards
+                        // goal
+                        new DriveInstruction(true) // continue to shoot
+                },
+                {// From Starting Position 5
+                        new DriveInstruction(86.5, 1.0, 0.0, 0.0),// drive out
+                        new DriveInstruction(0.0, 0.0, 60.0, 0.0),// turn
+                        // perpendicular
+                        // to goal
+                        new DriveInstruction(12.0, 1.0, 0.0, 0.0),// drive up to
+                        // goal
+                        new DriveInstruction(true) // continue to shoot
+                }
+        };
 
 // ==========================================
 // AUTO STATES
@@ -235,10 +229,6 @@ public static void init ()
     // get the lane based off of startingPositionPotentiometer
     lane = getLane();
 
-
-
-
-
     // set the drive values for MOVE_TO_SHOOTING_POSITION
     // set the drive values for MOVE_TO_SHOOTING_POSITION
 
@@ -265,7 +255,7 @@ public static void init ()
     // --------------------------------------
     Hardware.leftRearEncoder.reset();
     Hardware.leftRearEncoder.setDistancePerPulse(0.019706);
-
+    Hardware.rightRearEncoder.setDistancePerPulse(0.019706);
     Hardware.rightRearEncoder.reset();
     Hardware.armEncoder.reset();
 
@@ -282,13 +272,21 @@ public static void init ()
     Hardware.axisCamera
             .writeBrightness(Hardware.MINIMUM_AXIS_CAMERA_BRIGHTNESS);
 
-
     // ---------------------------------------
     // turn the timer off and reset the counter
     // so that we can use it in autonomous
     // ---------------------------------------
     Hardware.kilroyTimer.stop();
     Hardware.kilroyTimer.reset();
+    Hardware.leftRearEncoder.reset();
+    Hardware.rightRearEncoder.reset();
+    Hardware.leftFrontMotor.set(0.0);
+    Hardware.leftRearMotor.set(0.0);
+    Hardware.rightFrontMotor.set(0.0);
+    Hardware.rightRearMotor.set(0.0);
+    Hardware.armMotor.set(0.0);
+    Hardware.portArmIntakeMotor.set(0.0);
+    Hardware.starboardArmIntakeMotor.set(0.0);
 } // end Init
 
 /**
@@ -301,14 +299,9 @@ public static void init ()
 public static void periodic ()
 {
 
-    System.out.println(Hardware.armEncoder.getDistance());
-
     // test
     // TransmissionFourWheel debugTrans = Hardware.transmissionFourWheel;
     // moveToShootingPositionStep = MoveToShootingPositionStep.FORWARDS_ONE;
-    Hardware.transmission.controls(Hardware.leftDriver.getY(),
-            Hardware.rightDriver.getY());
-
 
     System.out.println(enabled);
     if (enabled)
@@ -316,7 +309,7 @@ public static void periodic ()
         // runs the overarching state machine.
         runMainStateMachine();
         }
-    // feed all motor safties
+    // feed all motor safeties
     Hardware.leftRearMotorSafety.feed();
     Hardware.rightRearMotorSafety.feed();
     Hardware.leftFrontMotorSafety.feed();
@@ -347,15 +340,17 @@ private static void runMainStateMachine ()
             mainInit();
             mainState = MainState.BEGIN_LOWERING_ARM;
             break;
+
         case BEGIN_LOWERING_ARM:
             beginLoweringArm();
-
+            mainState = MainState.LOWER_ARM_AND_MOVE;
             break;
+
         case LOWER_ARM_AND_MOVE:
-            switch (lowerArmAndMove())
+            switch (hasLoweredArmAndMoved())
                 {
                 case NOT_DONE:
-                    mainState = MainState.DONE;
+                    mainState = MainState.LOWER_ARM_AND_MOVE;
                     break;
                 case DONE:
                     mainState = MainState.INIT_DELAY;
@@ -365,22 +360,26 @@ private static void runMainStateMachine ()
                     break;
                 }
             break;
+
         case INIT_DELAY:
             initDelay();
             mainState = MainState.DELAY;
             break;
+
         case DELAY:
             if (delayIsDone())
                 {
                 mainState = MainState.ACCELERATE;
                 }
             break;
+
         case ACCELERATE:
             if (accelerationIsDone())
                 {
                 mainState = MainState.FORWARDS_BASED_ON_ENCODERS_OR_IR;
                 }
             break;
+
         case FORWARDS_BASED_ON_ENCODERS_OR_IR:
             if (isInLaneOne())
                 {
@@ -391,23 +390,58 @@ private static void runMainStateMachine ()
                 mainState = MainState.FORWARDS_UNTIL_TAPE;
                 }
             break;
+
+        case FORWARDS_TO_TAPE_BY_DISTANCE:
+            if (hasDrivenToTapeByDistance())
+                {
+                mainState = MainState.ROTATE_ON_ALIGNMENT_LINE;
+                }
+            break;
+
         case FORWARDS_UNTIL_TAPE:
             if (hasMovedToTape())
                 {
-                mainState = MainState.MOVE_TO_SHOOTING_POSITION;
+                mainState = MainState.ROTATE_ON_ALIGNMENT_LINE;
                 }
             break;
-        case MOVE_TO_SHOOTING_POSITION:
-            mainState = moveToShootingPosition();
+
+        case ROTATE_ON_ALIGNMENT_LINE:
+            if (hasRotatedTowardsShootingPosition())
+                {
+                mainState = MainState.FORWARDS_FROM_ALIGNMENT_LINE;
+                }
             break;
+
+        case FORWARDS_FROM_ALIGNMENT_LINE:
+            if (hasMovedFowardsFromTape())
+                {
+                mainState = MainState.TURN_TO_FACE_GOAL;
+                }
+            break;
+
+        case TURN_TO_FACE_GOAL:
+            if (hasTurnedToFaceGoal())
+                {
+                mainState = MainState.DRIVE_UP_TO_GOAL;
+                }
+            break;
+
+        case DRIVE_UP_TO_GOAL:
+            if (hasDrivenUpToGoal())
+                {
+                mainState = MainState.SHOOT;
+                }
+            break;
+
         case SHOOT:
             mainState = shoot();
             break;
+
         case DONE:
+            done();
             break;
         }
 }
-
 
 /*
  * ======================================
@@ -427,44 +461,29 @@ private static void beginLoweringArm ()
 
 }
 
-
-private static MoveWhileLoweringArmReturn lowerArmAndMove ()
+/**
+ * Moves forwards returns DONE when has reached the distance, however,
+ * if the arm is not down by the distance it returns FAILED.
+ * 
+ * @return
+ */
+private static MoveWhileLoweringArmReturn hasLoweredArmAndMoved ()
 {
-    MoveWhileLoweringArmReturn returnState = MoveWhileLoweringArmReturn.NOT_DONE;
+    MoveWhileLoweringArmReturn returnState =
+            MoveWhileLoweringArmReturn.NOT_DONE;
     boolean armIsDown = false;
 
-    Hardware.transmission.controls(1.0, 1.0, Hardware.leftFrontMotor,
+    Hardware.transmission.controls(0.3, 0.3, Hardware.leftFrontMotor,
             Hardware.leftRearMotor, Hardware.rightFrontMotor,
-            Hardware.rightRearMotor);
-    ;
-
-    if (Hardware.armEncoder.get() > ARM_DOWN_TICKS)// TODO: set this to a known
-                                                   // distance
+            Hardware.rightRearMotor); //TODO: set speed to something smaller
+    if (Hardware.armEncoder.getDistance() > 0.8) //TODO: set value
         {
-        armIsDown = true;
         Hardware.armMotor.set(0.0);
-        }
-    if (Hardware.armEncoder.getDistance() > 8)// TODO: set this to a known
-                                              // distance
-        {
         armIsDown = true;
-        Hardware.armMotor.set(0.0);
         }
-
-    if (Hardware.drive.driveForwardInches(22.75))// TODO: make constant
+    if (Hardware.drive.hasDrivenInches(22.55))
         {
-        if (armIsDown)
-            {
-            returnState = MoveWhileLoweringArmReturn.DONE;
-            }
-        else
-            {
-            returnState = MoveWhileLoweringArmReturn.FAILED;
-            }
-        }
-    if (Hardware.drive.driveForwardInches(22.75))// TODO: make constant
-        {
-        if (armIsDown)
+        if (armIsDown == true)
             {
             returnState = MoveWhileLoweringArmReturn.DONE;
             }
@@ -485,9 +504,8 @@ private static MoveWhileLoweringArmReturn lowerArmAndMove ()
 /**
  * Starts the delay timer.
  */
-private static MainState initDelay ()
+private static void initDelay ()
 {
-    MainState returnState = MainState.DELAY;
 
 
     Hardware.delayTimer.reset();
@@ -495,12 +513,7 @@ private static MainState initDelay ()
     Hardware.delayTimer.reset();
     Hardware.delayTimer.start();
 
-    if (Hardware.drive.driveForwardInches(22.75))
-        {
-        returnState = MainState.DELAY;
-        }
 
-    return returnState;
 }
 
 /**
@@ -581,7 +594,7 @@ private static boolean isInLaneOne ()
     return oneness;
 }
 
-private static boolean hasGoneToTapeByDistance ()
+private static boolean hasDrivenToTapeByDistance ()
 {
 
     boolean hasReachedDistance = false;
@@ -618,61 +631,78 @@ private static boolean hasMovedToTape ()
 }
 
 /**
- * Aligns robot on gaffers' tape based on IR sensors.
- * One of the overarching states.
+ * Moves from the alignment line towards the goal.
+ * 
+ * @return
  */
-
-
-/**
- * Moves the robot from the gaffers' tape to a position in front of a goal.
- * Movements are based on the robot's initial position.
- * Guided by the Drive utility class.
- * One of the overarching states.
- */
-private static MainState moveToShootingPosition ()
+private static boolean hasMovedFowardsFromTape ()
 {
-    MainState returnState = MainState.MOVE_TO_SHOOTING_POSITION;
-
-    // The required distance to drive is taken from the pathToGoalInformation 2d
-    // Array.
-    DriveInstruction currentInstruction = driveToGoalInstructions[Hardware.startingPositionDial
-            .getPosition()][driveToShootingPositionStep];
+    boolean done = false;
 
     if (Hardware.drive.driveForwardInches(
-            currentInstruction.getForwardDistance()) // Drive, and if we have
-                                                     // driven the distance
-                                                     // required
-            || Hardware.drive.driveForwardInches(
-                    currentInstruction.getRotationalDistance())) // Or the
-                                                                 // rotation...
+            StateInformation.FORWARDS_FROM_ALIGNMENT_LINE_DISTANCE[lane
+                    - 1]))
         {
-
-            {
-
-
-
-            driveToShootingPositionStep++; // go to next step.
-
-            if (currentInstruction.isTerminator())// If at end of path, go to
-                                                  // next state.
-                {
-                returnState = MainState.SHOOT;// The next state should be to
-                                              // shoot, or possibly to align
-                                              // with vision processing.
-                }
-            }
-        if (currentInstruction.isTerminator())// If at end of path, go to next
-                                              // state.
-            {
-            returnState = MainState.SHOOT;// The next state should be to shoot,
-                                          // or possibly to align with vision
-                                          // processing.
-            }
+        done = true;
         }
 
-
-    return returnState;
+    return done;
 }
+
+/**
+ * Rotates on the alignment line to face the final shooting position.
+ * 
+ * @return
+ */
+private static boolean hasRotatedTowardsShootingPosition ()
+{
+    boolean done = false;
+
+    if (Hardware.drive.turnLeftDegrees(
+            StateInformation.ROTATE_ON_ALIGNMENT_LINE_DISTANCE[lane
+                    - 1]))
+        {
+        done = true;
+        }
+    return done;
+}
+
+/**
+ * Rotates to face the goal.
+ * 
+ * @return true when complete.
+ */
+private static boolean hasTurnedToFaceGoal ()
+{
+    boolean done = false;
+
+    if (Hardware.drive.turnLeftDegrees(
+            StateInformation.TURN_TO_FACE_GOAL_DISTANCE[lane - 1]))
+
+        {
+        done = true;
+        }
+    return done;
+}
+
+/**
+ * Drives to the final shooting position.
+ * 
+ * @return true when complete.
+ */
+private static boolean hasDrivenUpToGoal ()
+{
+    boolean done = false;
+
+    if (Hardware.drive.driveForwardInches(
+            StateInformation.DRIVE_UP_TO_GOAL[lane - 1]))
+
+        {
+        done = true;
+        }
+    return done;
+}
+
 
 private static MainState shoot ()
 {
@@ -684,6 +714,7 @@ private static MainState shoot ()
 private static void done ()
 {
     Hardware.transmission.controls(0.0, 0.0);
+    Hardware.armMotor.set(0.0);
 }
 
 /*
@@ -716,9 +747,9 @@ private static final class StateInformation
 // Each index refers to a higher starting speed.
 // TODO: different based on lanes.
 static final double[] ACCELERATE_SPEEDS =
-    {.20, .40, .70};
+        {.20, .40, .70};
 static final double[] ACCELERATE_TIMES =
-    {.5, .5, .5};
+        {.5, .5, .5};
 
 /**
  * Distances to rotate upon reaching alignment line.
@@ -726,67 +757,66 @@ static final double[] ACCELERATE_TIMES =
  * Set to Zero for 1, 2, and 5.
  */
 static final double[] ROTATE_ON_ALIGNMENT_LINE_DISTANCE =
-    {
-            0.0, // lane 1 (not neccesary)
-            0.0, // lane 2 (not neccesary)
-            -20, // lane 3
-            24.8, // lane 4
-            0.0 // lane 5 (not neccesary)
-    };
+        {
+                0.0, // lane 1 (not neccesary)
+                0.0, // lane 2 (not neccesary)
+                -20, // lane 3
+                24.8, // lane 4
+                0.0 // lane 5 (not neccesary)
+        };
 
 /**
  * Distances to drive after reaching alignment tape.
  * Lane is indicated by index.
  */
 static final double[] FORWARDS_FROM_ALIGNMENT_LINE_DISTANCE =
-    {
-            74.7,// lane 1
-            82.0,// lane 2
-            64.0, // lane 3
-            66.1,// lane 4
-            86.5 // lane 5
-    };
+        {
+                74.7,// lane 1
+                82.0,// lane 2
+                64.0, // lane 3
+                66.1,// lane 4
+                86.5 // lane 5
+        };
 
 /**
  * Distances to rotate to face goal.
  */
 static final double[] TURN_TO_FACE_GOAL_DISTANCE =
-    {
-            -60.0,// lane 1
-            -60.0,// lane 2
-            20.0,// lane 3
-            -24.85,// lane 4
-            60 // lane 5
-    };
+        {
+                -60.0,// lane 1
+                -60.0,// lane 2
+                20.0,// lane 3
+                -24.85,// lane 4
+                60 // lane 5
+        };
 
 /**
  * Distances to travel once facing the goal.
  * Not neccesary for lanes 3 and 4; set to zero.
  */
 static final double[] DRIVE_UP_TO_GOAL =
-    {
-            62.7,// lane 1
-            52.9,// lane 2
-            0.0,// lane 3 (not neccesary)
-            0.0,// lane 4 (not neccesary)
-            12.0 // lane 5
-    };
+        {
+                62.7,// lane 1
+                52.9,// lane 2
+                0.0,// lane 3 (not neccesary)
+                0.0,// lane 4 (not neccesary)
+                12.0 // lane 5
+        };
 
 }
 
 
-// .....................__ _ __
-// .................../ . . . \
-// ................./ --0 --- 0-- \
-// .........++++.. |- - - | | - - -| ..++++
 /*
- * =========//||\\==| / \ |==//||\\======
- * //Constants\\||// | | \\||//
- * //======================| |==================
+ * . . . . . . . . . . . . __ _ __
+ * // .................../ . . . . \
+ * // ................./ --0 --- 0-- \
+ * // .........++++.. |- - - | | - - -| ..++++
+ * ===========//||\\==| . . / . \ . . |==//||\\======
+ * //Constants\\||// .| . .| . . |. . |. \\||//
+ * //======================| . . |==================
+ * // ----------------------\___/
+ * // ...............................|<!(r% ~@$ #3r3
  */
-// ----------------------\___/
-// ...............................|<!(r% ~@$ #3r3
-
 
 private static final double MAXIMUM_AUTONOMOUS_SPEED = 0.2;
 
@@ -795,7 +825,7 @@ private static final int ONE_THOUSAND = 1000;
 
 private static final double ALIGNMENT_SPEED = 0.1;
 
-private static final double DISTANCE_TO_TAPE = 0; // TODO: set to known value
+private static final double DISTANCE_TO_TAPE = 180.0;
 
 /**
  * Encoder distance for arm.
