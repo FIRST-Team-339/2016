@@ -62,12 +62,7 @@ public static void init ()
     Hardware.transmission
             .setSecondGearPercentage(SECOND_GEAR_PERCENTAGE);
     Hardware.transmission.setGear(1);
-    // -----------------------------------
-    // stop cam0 in case we have declared them
-    // in Autonomous. Then declare a new cam0
-    // and start it going automatically with the
-    // camera server
-    // -----------------------------------
+
     Hardware.delayTimer.reset();
     Hardware.rightRearEncoder.reset();
     Hardware.leftRearEncoder.reset();
@@ -91,6 +86,7 @@ public static void periodic ()
 {
     //Print statements to test Hardware on the Robot
     printStatements();
+
     // If we click buttons 6+7 on the left operator joystick, we dim the
     // brightness a lot, turn the ringlight on, and then if we haven't
     // already taken an image then we do and set the boolean to true to
@@ -100,76 +96,53 @@ public static void periodic ()
     // light to turn on.
     if (Hardware.leftOperator.getRawButton(6) == true &&
             Hardware.leftOperator.getRawButton(7) == true)
-    {
-        if (prepPic == false)
         {
-            Hardware.axisCamera
-                    .writeBrightness(
-                            Hardware.MINIMUM_AXIS_CAMERA_BRIGHTNESS);
-            Hardware.ringLightRelay.set(Value.kOn);
-            Hardware.delayTimer.start();
-            prepPic = true;
-            takingLitImage = true;
-        }
-    }
-    // If we click buttons 6+7 on the left operator joystick, we dim the
-    // brightness a lot, turn the ringlight on, and then if we haven't
-    // already taken an image then we do and set the boolean to true to
-    // prevent us taking more images. Otherwise we don't turn on the
-    // ringlight and we don't take a picture. We added a timer to delay
-    // taking the picture for the brightness to dim and for the ring
-    // light to turn on.
-    if (Hardware.leftOperator.getRawButton(6) == true &&
-            Hardware.leftOperator.getRawButton(7) == true)
-    {
         if (prepPic == false)
-        {
+            {
             Hardware.axisCamera.writeBrightness(
                     Hardware.MINIMUM_AXIS_CAMERA_BRIGHTNESS);
             Hardware.ringLightRelay.set(Value.kOn);
             Hardware.delayTimer.start();
             prepPic = true;
             takingLitImage = true;
+            }
         }
-    }
 
     // Once the brightness is down and the ring light is on then the
     // picture is taken, the brightness returns to normal, the ringlight
     // is turned off, and the timer is stopped and reset.
     if (Hardware.delayTimer.get() >= .25 && prepPic == true
             && takingLitImage == true)
-    {
+        {
         Hardware.axisCamera.saveImagesSafely();
         prepPic = false;
         takingLitImage = false;
-    }
+        }
 
     if (takingLitImage == false && Hardware.delayTimer.get() >= 1)
-    {
+        {
         Hardware.axisCamera
                 .writeBrightness(
                         Hardware.NORMAL_AXIS_CAMERA_BRIGHTNESS);
         Hardware.ringLightRelay.set(Value.kOff);
         Hardware.delayTimer.stop();
         Hardware.delayTimer.reset();
-    }
+        }
 
     // If we click buttons 10+11, we take a picture without the
     // ringlight and set the boolean to true so we don't take a bunch of
     // other pictures.
     if (Hardware.leftOperator.getRawButton(10) == true &&
             Hardware.leftOperator.getRawButton(11) == true)
-    {
-        if (takingUnlitImage == false)
         {
+        if (takingUnlitImage == false)
+            {
             takingUnlitImage = true;
             Hardware.axisCamera.saveImagesSafely();
+            }
         }
-    }
     else
-    {
         takingUnlitImage = false;
-    }
 
 
     //Driving the Robot
@@ -179,17 +152,13 @@ public static void periodic ()
             Hardware.leftRearMotor, Hardware.rightFrontMotor,
             Hardware.rightRearMotor);
     // If we're pressing the upshift button, shift up.
-    if (Hardware.rightDriver
-            .getRawButton(GEAR_UPSHIFT_JOYSTICK_BUTTON) == true)
-        {
+    if (Hardware.rightDriver.getRawButton(
+            GEAR_UPSHIFT_JOYSTICK_BUTTON) == true)
         Hardware.transmission.upshift(1);
-        }
     // If we press the downshift button, shift down.
     if (Hardware.rightDriver.getRawButton(
             GEAR_DOWNSHIFT_JOYSTICK_BUTTON) == true)
-        {
         Hardware.transmission.downshift(1);
-        }
 } // end Periodic
 
 // A method to process images (before we get a Shoot class)
@@ -275,7 +244,7 @@ public static void printStatements ()
     //    System.out.println("Shoot High Switch: " + Hardware.shootHigh.isOn());
     //    System.out.println("Shoot Low Switch: " + Hardware.shootLow.isOn());
 
-    //print the position the 6 position switch------------
+    //print the position of the 6 position switch------------
     //    System.out.println("Position: " + Hardware.startingPositionDial.getPosition());
 
     //Relay-----------------

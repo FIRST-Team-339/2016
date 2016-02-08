@@ -69,9 +69,10 @@ public static final int AXIS_FPS = 15;
 
 public static final Resolution AXIS_RESOLUTION =
         AxisCamera.Resolution.k320x240;
-        // -------------------------------------
-        // Private Constants
-        // -------------------------------------
+        
+// -------------------------------------
+// Private Constants
+// -------------------------------------
 
 // ---------------------------------------
 // Hardware Tunables
@@ -117,7 +118,6 @@ public static Relay ringLightRelay = new Relay(0);
 // Compressor class - runs the compressor
 // with a single relay
 // ------------------------------------
-//relay that controls compressor
 public static Compressor compressor = new Compressor();
 
 // ====================================
@@ -298,6 +298,7 @@ public static Drive drive = new Drive(transmission);
 // -------------------
 public static ManipulatorArm pickupArm = new ManipulatorArm(armMotor,
         starboardArmIntakeMotor, portArmIntakeMotor, armEncoder);
+
 // ------------------------------------
 // Utility classes
 // ------------------------------------
