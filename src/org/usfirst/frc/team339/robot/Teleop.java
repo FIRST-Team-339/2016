@@ -32,6 +32,7 @@
 package org.usfirst.frc.team339.robot;
 
 import org.usfirst.frc.team339.Hardware.Hardware;
+import org.usfirst.frc.team339.Vision.ImageProcessor;
 import edu.wpi.first.wpilibj.CameraServer;
 import edu.wpi.first.wpilibj.Relay.Value;
 
@@ -88,7 +89,7 @@ private char[] reports;
 public static void periodic ()
 // we changed this from a static for testing purposes-Heather :)
 {
-    //Print statements to test Hardware on the Robot
+    // Print statements to test Hardware on the Robot
     printStatements();
 
     // If we click buttons 6+7 on the left operator joystick, we dim the
@@ -115,6 +116,7 @@ public static void periodic ()
     // Once the brightness is down and the ring light is on then the
     // picture is taken, the brightness returns to normal, the ringlight
     // is turned off, and the timer is stopped and reset.
+    // @TODO Change .25 to a constant
     if (Hardware.delayTimer.get() >= .25 && prepPic == true
             && takingLitImage == true)
         {
@@ -148,9 +150,29 @@ public static void periodic ()
     else
         takingUnlitImage = false;
 
+    // if the left operator trigger is pressed, then we check to see if
+    // we're taking a processed picture through the boolean. If we are
+    // not currently taking a processed picture, then it lets us take a
+    // picture and sets the boolean to true so we don't take multiple
+    // pictures. If it is true, then it does nothing. If we don't click
+    // the trigger, then the boolean resets itself to false to take
+    // pictures again.
+    if (Hardware.leftOperator.getTrigger() == true)
+        {
+        if (processingImage == false)
+            {
+            processImage();
+            }
+        }
+    else
+        {
+        processingImage = false;
+        }
 
-    //Driving the Robot
-    //Hand the transmission class the joystick values and motor controllers for four wheel drive.
+
+    // Driving the Robot
+    // Hand the transmission class the joystick values and motor controllers for
+    // four wheel drive.
     Hardware.transmission.controls(Hardware.rightDriver.getY(),
             Hardware.leftDriver.getY(), Hardware.leftFrontMotor,
             Hardware.leftRearMotor, Hardware.rightFrontMotor,
@@ -166,16 +188,27 @@ public static void periodic ()
 } // end
   // Periodic
 
-// A method to process images (before we get a Shoot class)
+
+/**
+ * 
+ * Processes images with the Axis Camera for use in autonomous when
+ * trying to score. Will eventually be moved to a Shoot class when
+ * one is made.
+ * 
+ * @author Marlene McGraw
+ * @written 2/6/16
+ * 
+ */
 public static void processImage ()
 {
-    // If we click the Trigger and button 2, then we save an image and will
-    // eventually
-    if (Hardware.leftOperator.getTrigger() == true
-            && Hardware.leftOperator.getRawButton(2))
-        {
-        Hardware.axisCamera.saveImage("ProcessedImage");
-        }
+
+    // If we took a picture, we set the boolean to true to prevent
+    // taking more pictures and create an image processor to process
+    // images.
+    processingImage = true;
+    ImageProcessor imageProcessor = new ImageProcessor(
+            Hardware.axisCamera);
+
 }
 // End processImage
 
@@ -203,28 +236,30 @@ public static void printStatements ()
     // System.out.println("Right Operator: " + Hardware.rightOperator.getY());
 
     // IR sensors-----------
-    //   System.out.println("left IR = " + Hardware.leftIR.isOn());
-    //   System.out.println("right IR = " + Hardware.rightIR.isOn());
+    // System.out.println("left IR = " + Hardware.leftIR.isOn());
+    // System.out.println("right IR = " + Hardware.rightIR.isOn());
 
     // pots-----------------
-    //    System.out.println("delay pot = " + (int) Hardware.delayPot.get());
-    //prints the value of the transducer- (range in code is 50)
-    //hits psi of 100 accurately
-    //System.out.println("transducer = " + Hardware.transducer.get());
+    // System.out.println("delay pot = " + (int) Hardware.delayPot.get());
+    // prints the value of the transducer- (range in code is 50)
+    // hits psi of 100 accurately
+    // System.out.println("transducer = " + Hardware.transducer.get());
 
-    //Motor controllers-----
-    //prints value of the motors
-    //	    System.out.println("RR Motor T = " + Hardware.rightRearMotor.get());
-    //	    System.out.println("LR Motor T = " + Hardware.leftRearMotor.get());
-    //	    System.out.println("RF Motor T = " + Hardware.rightFrontMotor.get());
-    //	    System.out.println("LF Motor T = " + Hardware.leftFrontMotor.get());
-    //          System.out.println("Arm Motor V = " + Hardware.armMotor.get());
-    //    	    System.out.println("Starboard Intake Motor V = " + Hardware.starboardArmIntakeMotor.get());
-    //    	    System.out.println("Port Intake Motor V = " + Hardware.portArmIntakeMotor.get());
+    // Motor controllers-----
+    // prints value of the motors
+    // System.out.println("RR Motor T = " + Hardware.rightRearMotor.get());
+    // System.out.println("LR Motor T = " + Hardware.leftRearMotor.get());
+    // System.out.println("RF Motor T = " + Hardware.rightFrontMotor.get());
+    // System.out.println("LF Motor T = " + Hardware.leftFrontMotor.get());
+    // System.out.println("Arm Motor V = " + Hardware.armMotor.get());
+    // System.out.println("Starboard Intake Motor V = " +
+    // Hardware.starboardArmIntakeMotor.get());
+    // System.out.println("Port Intake Motor V = " +
+    // Hardware.portArmIntakeMotor.get());
 
-    //Solenoids-------------
-    //prints the state of the solenoids 
-    //    System.out.println("cameraSolenoid = " + Hardware.cameraSolenoid.get());
+    // Solenoids-------------
+    // prints the state of the solenoids
+    // System.out.println("cameraSolenoid = " + Hardware.cameraSolenoid.get());
     // System.out.println("catapultSolenoid0 = " +
     // Hardware.catapultSolenoid0.get());
     // System.out.println("catapultSolenoid1 = " +
@@ -233,27 +268,29 @@ public static void printStatements ()
     // Hardware.catapultSolenoid2.get());
 
     // Encoders-------------
-    //    System.out.println(
-    //            "RR distance = " + Hardware.rightRearEncoder.getDistance());
-    //    System.out.println(
-    //            "LR distance = " + Hardware.leftRearEncoder.getDistance());
-    //    System.out.println("RF distance = "
-    //            + Hardware.rightFrontEncoder.getDistance());
-    //    System.out.println(
-    //            "LF distance = " + Hardware.leftFrontEncoder.getDistance());
-    //    System.out.println("Arm Motor = " + Hardware.armMotor.getDistance());
+    // System.out.println(
+    // "RR distance = " + Hardware.rightRearEncoder.getDistance());
+    // System.out.println(
+    // "LR distance = " + Hardware.leftRearEncoder.getDistance());
+    // System.out.println("RF distance = "
+    // + Hardware.rightFrontEncoder.getDistance());
+    // System.out.println(
+    // "LF distance = " + Hardware.leftFrontEncoder.getDistance());
+    // System.out.println("Arm Motor = " + Hardware.armMotor.getDistance());
 
-    //Switches--------------
-    //prints state of switches
-    //    System.out.println("Autonomous Enabled Switch: " + Hardware.autonomousEnabled.isOn());
-    //    System.out.println("Shoot High Switch: " + Hardware.shootHigh.isOn());
-    //    System.out.println("Shoot Low Switch: " + Hardware.shootLow.isOn());
+    // Switches--------------
+    // prints state of switches
+    // System.out.println("Autonomous Enabled Switch: " +
+    // Hardware.autonomousEnabled.isOn());
+    // System.out.println("Shoot High Switch: " + Hardware.shootHigh.isOn());
+    // System.out.println("Shoot Low Switch: " + Hardware.shootLow.isOn());
 
-    //print the position of the 6 position switch------------
-    //    System.out.println("Position: " + Hardware.startingPositionDial.getPosition());
+    // print the position of the 6 position switch------------
+    // System.out.println("Position: " +
+    // Hardware.startingPositionDial.getPosition());
 
-    //Relay-----------------
-    //    System.out.println(Hardware.ringLightRelay.get());
+    // Relay-----------------
+    // System.out.println(Hardware.ringLightRelay.get());
 } // end printStatements
 
 
@@ -277,6 +314,8 @@ private static final int GEAR_DOWNSHIFT_JOYSTICK_BUTTON = 2;
 // ==========================================
 // TUNEABLES
 // ==========================================
+
+private static boolean processingImage = false;
 
 // Boolean to check if we're taking a lit picture
 private static boolean takingLitImage = false;
