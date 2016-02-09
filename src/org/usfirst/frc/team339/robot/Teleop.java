@@ -76,6 +76,9 @@ public static void init ()
     Hardware.starboardArmIntakeMotor.set(0.0);
 } // end Init
 
+
+private char[] reports;
+
 /**
  * User Periodic code for teleop mode should go here. Will be called
  * periodically at a regular rate while the robot is in teleop mode.
@@ -84,6 +87,7 @@ public static void init ()
  * @written Jan 13, 2015
  */
 public static void periodic ()
+// we changed this from a static for testing purposes-Heather :)
 {
     //Print statements to test Hardware on the Robot
     printStatements();
@@ -175,7 +179,8 @@ public static void periodic ()
     if (Hardware.rightDriver.getRawButton(
             GEAR_DOWNSHIFT_JOYSTICK_BUTTON) == true)
         Hardware.transmission.downshift(1);
-} // end Periodic
+} // end
+  // Periodic
 
 // A method to process images (before we get a Shoot class)
 public static void processImage ()
@@ -265,7 +270,7 @@ public static void printStatements ()
 
     //Relay-----------------
     //    System.out.println(Hardware.ringLightRelay.get());
-} // end printStatements 
+} // end printStatements
 
 
 /*
@@ -278,26 +283,25 @@ private static final double MAXIMUM_TELEOP_SPEED = 1.0;
 
 private static final double FIRST_GEAR_PERCENTAGE = 0.5;
 
-private static final double SECOND_GEAR_PERCENTAGE =
-        MAXIMUM_TELEOP_SPEED;
+private static final double SECOND_GEAR_PERCENTAGE = MAXIMUM_TELEOP_SPEED;
 
-//TODO change based on driver request
+// TODO change based on driver request
 private static final int GEAR_UPSHIFT_JOYSTICK_BUTTON = 3;
 
 private static final int GEAR_DOWNSHIFT_JOYSTICK_BUTTON = 2;
 
-//==========================================
-//TUNEABLES
-//==========================================
+// ==========================================
+// TUNEABLES
+// ==========================================
 
-//Boolean to check if we're taking a lit picture
+// Boolean to check if we're taking a lit picture
 private static boolean takingLitImage = false;
 
-//Boolean to check if we're taking an unlit picture
+// Boolean to check if we're taking an unlit picture
 private static boolean takingUnlitImage = false;
 
-//this is for preparing to take a picture with the timer; changes
-//brightness, turns on ringlight, starts timer
+// this is for preparing to take a picture with the timer; changes
+// brightness, turns on ringlight, starts timer
 private static boolean prepPic = false;
 
 } // end class

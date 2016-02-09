@@ -25,6 +25,7 @@ import org.usfirst.frc.team339.HardwareInterfaces.transmission.Transmission_old;
 import org.usfirst.frc.team339.Utils.Drive;
 import org.usfirst.frc.team339.Utils.ErrorMessage;
 import org.usfirst.frc.team339.Utils.Guidance;
+import org.usfirst.frc.team339.Vision.ImageProcessor;
 import org.usfirst.frc.team339.Utils.ManipulatorArm;
 import edu.wpi.first.wpilibj.CameraServer;
 import edu.wpi.first.wpilibj.Compressor;
