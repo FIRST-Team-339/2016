@@ -69,7 +69,7 @@ public static final int AXIS_FPS = 15;
 
 public static final Resolution AXIS_RESOLUTION =
         AxisCamera.Resolution.k320x240;
-        
+
 // -------------------------------------
 // Private Constants
 // -------------------------------------
@@ -92,6 +92,8 @@ public static final Resolution AXIS_RESOLUTION =
 // ------------------------------------
 // Talon classes
 // ------------------------------------
+
+//TODO change all Talon's to TalonSRX's
 public static Talon rightRearMotor = new Talon(2);
 public static Talon leftRearMotor = new Talon(3);
 public static Talon rightFrontMotor = new Talon(1);

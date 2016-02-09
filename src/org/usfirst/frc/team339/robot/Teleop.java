@@ -148,9 +148,7 @@ public static void periodic ()
     //Driving the Robot
     //Hand the transmission class the joystick values and motor controllers for four wheel drive.
     Hardware.transmission.controls(Hardware.rightDriver.getY(),
-            Hardware.leftDriver.getY(), Hardware.leftFrontMotor,
-            Hardware.leftRearMotor, Hardware.rightFrontMotor,
-            Hardware.rightRearMotor);
+            Hardware.leftDriver.getY());
     // If we're pressing the upshift button, shift up.
     if (Hardware.rightDriver.getRawButton(
             GEAR_UPSHIFT_JOYSTICK_BUTTON) == true)
@@ -160,6 +158,8 @@ public static void periodic ()
             GEAR_DOWNSHIFT_JOYSTICK_BUTTON) == true)
         Hardware.transmission.downshift(1);
 } // end Periodic
+
+static boolean hasBegunTurning = true;
 
 // A method to process images (before we get a Shoot class)
 public static void processImage ()
@@ -228,14 +228,10 @@ public static void printStatements ()
     // Hardware.catapultSolenoid2.get());
 
     // Encoders-------------
-    //    System.out.println(
-    //            "RR distance = " + Hardware.rightRearEncoder.getDistance());
-    //    System.out.println(
-    //            "LR distance = " + Hardware.leftRearEncoder.getDistance());
-    //    System.out.println("RF distance = "
-    //            + Hardware.rightFrontEncoder.getDistance());
-    //    System.out.println(
-    //            "LF distance = " + Hardware.leftFrontEncoder.getDistance());
+    //System.out.println(
+    //        "RR distance = " + Hardware.rightRearEncoder.getDistance());
+    //System.out.println(
+    //        "LR distance = " + Hardware.leftRearEncoder.getDistance());
     //    System.out.println("Arm Motor = " + Hardware.armMotor.getDistance());
 
     //Switches--------------
