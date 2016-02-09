@@ -24,6 +24,7 @@ import org.usfirst.frc.team339.HardwareInterfaces.SixPositionSwitch;
 import org.usfirst.frc.team339.HardwareInterfaces.transmission.Transmission_old;
 import org.usfirst.frc.team339.Utils.Drive;
 import org.usfirst.frc.team339.Utils.ErrorMessage;
+import org.usfirst.frc.team339.Utils.Guidance;
 import org.usfirst.frc.team339.Utils.ManipulatorArm;
 import edu.wpi.first.wpilibj.CameraServer;
 import edu.wpi.first.wpilibj.Compressor;
@@ -69,7 +70,7 @@ public static final int AXIS_FPS = 15;
 
 public static final Resolution AXIS_RESOLUTION =
         AxisCamera.Resolution.k320x240;
-        
+
 // -------------------------------------
 // Private Constants
 // -------------------------------------
@@ -258,6 +259,8 @@ public static KilroyCamera axisCamera = new KilroyCamera(true);
 // ------------------------------------
 public static final DriverStation driverStation =
         DriverStation.getInstance();
+
+public static Guidance arrowDashboard = new Guidance();
 
 // ------------------------------------
 // Joystick classes

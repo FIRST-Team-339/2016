@@ -32,6 +32,7 @@
 package org.usfirst.frc.team339.robot;
 
 import org.usfirst.frc.team339.Hardware.Hardware;
+import org.usfirst.frc.team339.Utils.Guidance.Direction;
 import edu.wpi.first.wpilibj.CameraServer;
 import edu.wpi.first.wpilibj.Relay.Value;
 
@@ -87,6 +88,21 @@ public static void periodic ()
     //Print statements to test Hardware on the Robot
     printStatements();
 
+    // Smartdashboard arrow test
+    if (Hardware.rightOperator.getRawButton(8))
+    {
+        Hardware.arrowDashboard.setDirection(Direction.left);
+    }
+    else if (Hardware.rightOperator.getRawButton(9))
+    {
+        Hardware.arrowDashboard.setDirection(Direction.right);
+    }
+    else
+    {
+        Hardware.arrowDashboard.setDirection(Direction.neutral);
+    }
+
+
     // If we click buttons 6+7 on the left operator joystick, we dim the
     // brightness a lot, turn the ringlight on, and then if we haven't
     // already taken an image then we do and set the boolean to true to
@@ -96,51 +112,51 @@ public static void periodic ()
     // light to turn on.
     if (Hardware.leftOperator.getRawButton(6) == true &&
             Hardware.leftOperator.getRawButton(7) == true)
-        {
+    {
         if (prepPic == false)
-            {
+        {
             Hardware.axisCamera.writeBrightness(
                     Hardware.MINIMUM_AXIS_CAMERA_BRIGHTNESS);
             Hardware.ringLightRelay.set(Value.kOn);
             Hardware.delayTimer.start();
             prepPic = true;
             takingLitImage = true;
-            }
         }
+    }
 
     // Once the brightness is down and the ring light is on then the
     // picture is taken, the brightness returns to normal, the ringlight
     // is turned off, and the timer is stopped and reset.
     if (Hardware.delayTimer.get() >= .25 && prepPic == true
             && takingLitImage == true)
-        {
+    {
         Hardware.axisCamera.saveImagesSafely();
         prepPic = false;
         takingLitImage = false;
-        }
+    }
 
     if (takingLitImage == false && Hardware.delayTimer.get() >= 1)
-        {
+    {
         Hardware.axisCamera
                 .writeBrightness(
                         Hardware.NORMAL_AXIS_CAMERA_BRIGHTNESS);
         Hardware.ringLightRelay.set(Value.kOff);
         Hardware.delayTimer.stop();
         Hardware.delayTimer.reset();
-        }
+    }
 
     // If we click buttons 10+11, we take a picture without the
     // ringlight and set the boolean to true so we don't take a bunch of
     // other pictures.
     if (Hardware.leftOperator.getRawButton(10) == true &&
             Hardware.leftOperator.getRawButton(11) == true)
-        {
+    {
         if (takingUnlitImage == false)
-            {
+        {
             takingUnlitImage = true;
             Hardware.axisCamera.saveImagesSafely();
-            }
         }
+    }
     else
         takingUnlitImage = false;
 
@@ -168,9 +184,9 @@ public static void processImage ()
     // eventually
     if (Hardware.leftOperator.getTrigger() == true
             && Hardware.leftOperator.getRawButton(2))
-        {
+    {
         Hardware.axisCamera.saveImage("ProcessedImage");
-        }
+    }
 }
 // End processImage
 
