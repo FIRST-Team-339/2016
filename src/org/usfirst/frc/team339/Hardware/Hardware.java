@@ -24,6 +24,7 @@ import org.usfirst.frc.team339.HardwareInterfaces.SixPositionSwitch;
 import org.usfirst.frc.team339.HardwareInterfaces.transmission.Transmission_old;
 import org.usfirst.frc.team339.Utils.Drive;
 import org.usfirst.frc.team339.Utils.ErrorMessage;
+import org.usfirst.frc.team339.Utils.Guidance;
 import org.usfirst.frc.team339.Vision.ImageProcessor;
 import org.usfirst.frc.team339.Utils.ManipulatorArm;
 import edu.wpi.first.wpilibj.CameraServer;
@@ -68,7 +69,9 @@ public static final int MINIMUM_AXIS_CAMERA_BRIGHTNESS = 6;
 
 public static final int AXIS_FPS = 15;
 
-public static final Resolution AXIS_RESOLUTION = AxisCamera.Resolution.k320x240;
+public static final Resolution AXIS_RESOLUTION =
+        AxisCamera.Resolution.k320x240;
+
 // -------------------------------------
 // Private Constants
 // -------------------------------------
@@ -110,14 +113,13 @@ public static Victor portArmIntakeMotor = new Victor(5);
 // ====================================
 // Relay classes
 // ====================================
-// Relay that controls the RingLight
+//Relay that controls the RingLight
 public static Relay ringLightRelay = new Relay(0);
 
 // ------------------------------------
 // Compressor class - runs the compressor
 // with a single relay
 // ------------------------------------
-// relay that controls compressor
 public static Compressor compressor = new Compressor();
 
 // ====================================
@@ -127,7 +129,7 @@ public static Compressor compressor = new Compressor();
 // Single and double throw switches
 // ------------------------------------
 
-// Turns autonomous on or off.
+//Turns autonomous on or off.
 /**
  * A physical switch that decides whether or not to run autonomous.
  */
@@ -137,7 +139,7 @@ public static SingleThrowSwitch shootHigh =
         new SingleThrowSwitch(8);
 public static SingleThrowSwitch shootLow =
         new SingleThrowSwitch(7);
-// Shoot high/low switch
+//Shoot high/low switch
 public static DoubleThrowSwitch noShoot =
         new DoubleThrowSwitch(shootHigh, shootLow);
 
@@ -198,7 +200,7 @@ public static IRSensor leftIR = new IRSensor(22);
 // ------------------------------------
 // Double Solenoids
 // ------------------------------------
-// double solenoid that moves the camera
+//double solenoid that moves the camera
 public static DoubleSolenoid cameraSolenoid = new DoubleSolenoid(3, 4);
 
 // ------------------------------------
@@ -225,8 +227,8 @@ public static Solenoid catapultSolenoid2 = new Solenoid(2);
 // -------------------------------------
 public static RobotPotentiometer delayPot =
         new RobotPotentiometer(3, DELAY_POT_DEGREES);
-// transducer (written as a potentiometer)
-// set to 50 to hit 100 psi accurately
+//transducer (written as a potentiometer)
+//set to 50 to hit 100 psi accurately 
 public static RobotPotentiometer transducer =
         new RobotPotentiometer(2, TRANSDUCER_MAX_VALUE);
 
@@ -259,6 +261,8 @@ public static KilroyCamera axisCamera = new KilroyCamera(true);
 public static final DriverStation driverStation =
         DriverStation.getInstance();
 
+public static Guidance arrowDashboard = new Guidance();
+
 // ------------------------------------
 // Joystick classes
 // ------------------------------------
@@ -287,9 +291,9 @@ public static Transmission_old transmission = new Transmission_old(
         leftRearMotor, rightRearEncoder, rightRearEncoder,
         leftRearEncoder, leftRearEncoder);
 
-// ------------------------------------
-// Drive system
-// ------------------------------------
+//------------------------------------
+//Drive system
+//------------------------------------
 //
 public static Drive drive = new Drive(transmission);
 
@@ -307,8 +311,6 @@ public static final Timer autoTimer = new Timer();
 public static final Timer delayTimer = new Timer();
 public static final ErrorMessage errorMessage = new ErrorMessage(
         true /* append timelog */);
-public static final ImageProcessor imageProcessor = new ImageProcessor(
-        axisCamera);
 
 public static final MotorSafetyHelper leftRearMotorSafety =
         new MotorSafetyHelper(leftRearMotor);

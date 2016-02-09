@@ -33,6 +33,7 @@ package org.usfirst.frc.team339.robot;
 
 import org.usfirst.frc.team339.Hardware.Hardware;
 import org.usfirst.frc.team339.Vision.ImageProcessor;
+import org.usfirst.frc.team339.Utils.Guidance.Direction;
 import edu.wpi.first.wpilibj.CameraServer;
 import edu.wpi.first.wpilibj.Relay.Value;
 
@@ -91,6 +92,21 @@ public static void periodic ()
 {
     // Print statements to test Hardware on the Robot
     printStatements();
+
+    // Smartdashboard arrow test
+    if (Hardware.rightOperator.getRawButton(8))
+    {
+        Hardware.arrowDashboard.setDirection(Direction.left);
+    }
+    else if (Hardware.rightOperator.getRawButton(9))
+    {
+        Hardware.arrowDashboard.setDirection(Direction.right);
+    }
+    else
+    {
+        Hardware.arrowDashboard.setDirection(Direction.neutral);
+    }
+
 
     // If we click buttons 6+7 on the left operator joystick, we dim the
     // brightness a lot, turn the ringlight on, and then if we haven't
@@ -252,10 +268,8 @@ public static void printStatements ()
     // System.out.println("RF Motor T = " + Hardware.rightFrontMotor.get());
     // System.out.println("LF Motor T = " + Hardware.leftFrontMotor.get());
     // System.out.println("Arm Motor V = " + Hardware.armMotor.get());
-    // System.out.println("Starboard Intake Motor V = " +
-    // Hardware.starboardArmIntakeMotor.get());
-    // System.out.println("Port Intake Motor V = " +
-    // Hardware.portArmIntakeMotor.get());
+    //    	    System.out.println("Starboard Intake Motor V = " + Hardware.starboardArmIntakeMotor.get());
+    //    	    System.out.println("Port Intake Motor V = " + Hardware.portArmIntakeMotor.get());
 
     // Solenoids-------------
     // prints the state of the solenoids
@@ -280,14 +294,12 @@ public static void printStatements ()
 
     // Switches--------------
     // prints state of switches
-    // System.out.println("Autonomous Enabled Switch: " +
-    // Hardware.autonomousEnabled.isOn());
+    //    System.out.println("Autonomous Enabled Switch: " + Hardware.autonomousEnabled.isOn());
     // System.out.println("Shoot High Switch: " + Hardware.shootHigh.isOn());
     // System.out.println("Shoot Low Switch: " + Hardware.shootLow.isOn());
 
     // print the position of the 6 position switch------------
-    // System.out.println("Position: " +
-    // Hardware.startingPositionDial.getPosition());
+    //    System.out.println("Position: " + Hardware.startingPositionDial.getPosition());
 
     // Relay-----------------
     // System.out.println(Hardware.ringLightRelay.get());
