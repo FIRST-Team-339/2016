@@ -4,15 +4,9 @@ package org.usfirst.frc.team339.Utils;
 import org.usfirst.frc.team339.Hardware.Hardware;
 import org.usfirst.frc.team339.HardwareInterfaces.transmission.Transmission_old;
 
-// TODO: COMMENT YOUR CODE!!!!!!!!!!!
-// It was mostly commented, just missing javadoc. Learn to read green!
+
 public class Drive
 {
-// TODO prefix the transmissions throughout the class with "this"
-// Moved maxSpeedScaling factor to bottom with the rest of the variables
-// if there's a reason for moving it back, do so, and leave justification
-// so it doesn't get moved back down again
-// -Alex Kneipp
 /**
  * Constructor for a Drive object. Should only be called once.
  * 
@@ -47,9 +41,10 @@ public boolean brake (double brakeSpeed)
     // TODO maybe make argument a constant in the class.
     // TODO find out ideal brakespeed.
     if (this.transmission.brake(brakeSpeed))
+        {
         return true;
-    else
-        return false;
+        }
+    return false;
 }
 
 /**
@@ -65,19 +60,28 @@ public void setMaxSpeed (double max)
     maxSpeedScalingFactor = max;
 }
 
+/**
+ * Checks to see if we have driven a certain distance since the last time the
+ * encoders were reset.
+ * 
+ * @param targetDistance
+ *            The distance to check our actual distance against.
+ * @return
+ *         True if we have driven targetDistance inches, false otherwise.
+ * @author Alex Kneipp
+ */
 public boolean hasDrivenInches (double targetDistance)
 {
     //if either drive train is beyond the targetDistance
-    if (transmission.getRightRearEncoderDistance() >= targetDistance
-            || transmission
+    if (this.transmission
+            .getRightRearEncoderDistance() >= targetDistance
+            || this.transmission
                     .getLeftRearEncoderDistance() >= targetDistance)
         {
         //we're done
         return true;
         }
-    else
-        //we're not
-        return false;
+    return false;
 }
 
 /**
@@ -93,41 +97,109 @@ public boolean turnLeftDegrees (double degrees)
 {
     double turnInRadians = Math.toRadians(degrees);
     boolean turningRight = turnInRadians < 0;
-    if (turningRight
-            && transmission.getRightRearEncoderDistance() >= Math
-                    .abs(turnInRadians * ROBOT_SEMI_MAJOR_RADIUS_INCHES)
-            || transmission.getLeftRearEncoderDistance() <= -Math.abs(
-                    turnInRadians * ROBOT_SEMI_MAJOR_RADIUS_INCHES))
+    //If we're turning right and the right drive train is above the limit or the left is below the negative limit
+    if (turningRight == true)
         {
-        if (brake(BRAKE_SPEED))
+        if (this.transmission
+                .getRightRearEncoderDistance() <= (turnInRadians
+                        * ROBOT_TURNING_RADIUS)
+                || this.transmission
+                        .getLeftRearEncoderDistance() >= -(turnInRadians
+                                * ROBOT_TURNING_RADIUS))
             {
-            return true;
+            //brake and if we're done braking, tell caller we're done
+            return (brake(BRAKE_SPEED));
             }
-        return false;
+        this.transmission.controls(
+                -(maxTurningSpeedScalingFactor * DEFAULT_MAX_SPEED),
+                (maxTurningSpeedScalingFactor * DEFAULT_MAX_SPEED));
         }
-    else if (transmission.getRightRearEncoderDistance() >= -Math
-            .abs(turnInRadians * ROBOT_SEMI_MAJOR_RADIUS_INCHES)
-            ||
-            transmission.getLeftRearEncoderDistance() <= Math.abs(
-                    turnInRadians * ROBOT_SEMI_MAJOR_RADIUS_INCHES))
-        {
-        if (brake(BRAKE_SPEED))
-            {
-            return true;
-            }
-        return false;
-        }
+    //If we're turning left and the right drive train is below the negative limit or the left is above the limit
     else
         {
-        if (!turningRight)
-            transmission.controls(
-                    (maxSpeedScalingFactor * DEFAULT_MAX_SPEED),
-                    -(maxSpeedScalingFactor * DEFAULT_MAX_SPEED));
-        else
-            transmission.controls(
-                    -(maxSpeedScalingFactor * DEFAULT_MAX_SPEED),
-                    (maxSpeedScalingFactor * DEFAULT_MAX_SPEED));
+        if (this.transmission
+                .getRightRearEncoderDistance() >= (turnInRadians
+                        * ROBOT_TURNING_RADIUS)
+                ||
+                this.transmission
+                        .getLeftRearEncoderDistance() <= -(turnInRadians
+                                * ROBOT_TURNING_RADIUS))
+            {
+            //brake and if we're done braking, tell caller we're done
+            return (brake(BRAKE_SPEED));
+            }
+        this.transmission.controls(
+                (maxTurningSpeedScalingFactor * DEFAULT_MAX_SPEED),
+                -(maxTurningSpeedScalingFactor * DEFAULT_MAX_SPEED));
         }
+    //We're not done driving yet!!
+    return false;
+}
+
+/**
+ * Turns left 'degrees' degrees. Negative values make it turn right. Additional
+ * boolean parameter from other method controls whether or not we brake at the
+ * end.
+ * 
+ * @param degrees
+ *            The number of degrees to turn. Positive values turn
+ *            the robot left, negative ones right.
+ * @param brakeAtEnd
+ *            True if we want to brake at the end of the turn, false if we
+ *            don't.
+ * @return True if we're done turning, false otherwise.
+ * @author Alex Kneipp
+ */
+public boolean turnLeftDegrees (double degrees, boolean brakeAtEnd)
+{
+    double turnInRadians = Math.toRadians(degrees);
+    boolean turningRight = turnInRadians < 0;
+    //If we're turning right and the right drive train is above the limit or the left is below the negative limit
+    if (turningRight == true)
+        {
+        if (this.transmission
+                .getRightRearEncoderDistance() <= (turnInRadians
+                        * ROBOT_TURNING_RADIUS)
+                || this.transmission
+                        .getLeftRearEncoderDistance() >= -(turnInRadians
+                                * ROBOT_TURNING_RADIUS))
+            {
+            //brake and if we're done braking, tell caller we're done
+            if (brakeAtEnd == true)
+                {
+                return (brake(BRAKE_SPEED));
+                }
+            return true;
+            }
+        //drive the robot, right train backwards, left train forwards
+        this.transmission.controls(
+                -(maxTurningSpeedScalingFactor * DEFAULT_MAX_SPEED),
+                (maxTurningSpeedScalingFactor * DEFAULT_MAX_SPEED));
+        }
+    //If we're turning left and the right drive train is below the negative limit or the left is above the limit
+    else
+        {
+        if (this.transmission
+                .getRightRearEncoderDistance() >= (turnInRadians
+                        * ROBOT_TURNING_RADIUS)
+                ||
+                this.transmission
+                        .getLeftRearEncoderDistance() <= -(turnInRadians
+                                * ROBOT_TURNING_RADIUS))
+            {
+            //brake and if we're done braking, tell caller we're done
+            if (brakeAtEnd == true)
+                {
+                return (brake(BRAKE_SPEED));
+                }
+            return true;
+            }
+        //drive the robot, right train forwards, left train backwards
+        this.transmission.controls(
+                (maxTurningSpeedScalingFactor * DEFAULT_MAX_SPEED),
+                -(maxTurningSpeedScalingFactor * DEFAULT_MAX_SPEED));
+        }
+    //We're not done driving yet!!
     return false;
 }
 
@@ -146,7 +218,7 @@ public boolean driveForwardInches (double distance)
     if (this.hasDrivenInches(distance) == true)
         {
         // stop
-        if (brake(BRAKE_SPEED))
+        if (brake(BRAKE_SPEED) == true)
             {
             return true;
             }
@@ -154,47 +226,48 @@ public boolean driveForwardInches (double distance)
         }
     // if the right drive train is ahead of the left drive train (on a
     // four wheel drive)
-    if ((transmission.getRightRearEncoderDistance()) > (transmission
-            .getLeftRearEncoderDistance()))
+    if ((this.transmission
+            .getRightRearEncoderDistance()) > (transmission
+                    .getLeftRearEncoderDistance()))
         {
-        transmission.controls(AUTO_CORRECTION_SPEED,
+        this.transmission.controls(
+                maxSpeedScalingFactor * AUTO_CORRECTION_SPEED,
                 (maxSpeedScalingFactor * DEFAULT_MAX_SPEED));
         }
     // if the left drive train is ahead of the right drive train (on a
     // four wheel drive)
-    else if ((transmission
-            .getRightRearEncoderDistance()) < (transmission
+    else if ((this.transmission
+            .getRightRearEncoderDistance()) < (this.transmission
                     .getLeftRearEncoderDistance()))
         {
-        transmission.controls(
+        this.transmission.controls(
                 (maxSpeedScalingFactor * DEFAULT_MAX_SPEED),
-                AUTO_CORRECTION_SPEED);
+                maxSpeedScalingFactor * AUTO_CORRECTION_SPEED);
         }
     // if the right Drive train is ahead of the left drive train (2
     // motor)
-    else if (transmission
-            .getRightRearEncoderDistance() > transmission
+    else if (this.transmission
+            .getRightRearEncoderDistance() > this.transmission
                     .getLeftRearEncoderDistance())
         {
-        transmission.controls(AUTO_CORRECTION_SPEED,
+        this.transmission.controls(
+                maxSpeedScalingFactor * AUTO_CORRECTION_SPEED,
                 (maxSpeedScalingFactor * DEFAULT_MAX_SPEED));
         }
     // if the left Drive train is ahead of the right drive train (2
     // motor)
-    else if (transmission
-            .getRightRearEncoderDistance() < transmission
+    else if (this.transmission
+            .getRightRearEncoderDistance() < this.transmission
                     .getLeftRearEncoderDistance())
         {
-        transmission.controls(
+        this.transmission.controls(
                 (maxSpeedScalingFactor * DEFAULT_MAX_SPEED),
-                AUTO_CORRECTION_SPEED,
-                Hardware.leftFrontMotor, Hardware.leftRearMotor,
-                Hardware.rightFrontMotor, Hardware.rightRearMotor);
+                maxSpeedScalingFactor * AUTO_CORRECTION_SPEED);
         }
     // if they're both equal
     else
         {
-        transmission.controls(
+        this.transmission.controls(
                 (maxSpeedScalingFactor * DEFAULT_MAX_SPEED),
                 (maxSpeedScalingFactor * DEFAULT_MAX_SPEED));
         }
@@ -210,13 +283,13 @@ public boolean driveForwardInches (double distance)
  */
 public double getForwardVelocity ()
 {
-    double speed = (((transmission.getLeftRearEncoderDistance()
-            + transmission.getRightRearEncoderDistance()) / 2
+    double speed = (((this.transmission.getLeftRearEncoderDistance()
+            + this.transmission.getRightRearEncoderDistance()) / 2
             - (prevLeftDistance + prevRightDistance) / 2))
             / (Hardware.kilroyTimer.get() - prevTime);
 
-    prevLeftDistance = transmission.getLeftRearEncoderDistance();
-    prevRightDistance = transmission.getRightRearEncoderDistance();
+    prevLeftDistance = this.transmission.getLeftRearEncoderDistance();
+    prevRightDistance = this.transmission.getRightRearEncoderDistance();
     prevTime = Hardware.kilroyTimer.get();
 
     return speed;
@@ -231,11 +304,11 @@ public double getForwardVelocity ()
 public double getRightMotorVelocity ()
 {
     // based on the "getForwardVelocity()" method
-    double speed = ((transmission.getRightRearEncoderDistance() -
+    double speed = ((this.transmission.getRightRearEncoderDistance() -
             prevRightDistance) / 2) / (Hardware.kilroyTimer.get() -
                     prevTime);
 
-    prevRightDistance = transmission.getRightRearEncoderDistance();
+    prevRightDistance = this.transmission.getRightRearEncoderDistance();
     prevTime = Hardware.kilroyTimer.get();
 
     return speed;
@@ -250,11 +323,11 @@ public double getRightMotorVelocity ()
 public double getLeftMotorVelocity ()
 {
     // based on the "getForwardVelocity()" method
-    double speed = ((transmission.getLeftRearEncoderDistance() -
+    double speed = ((this.transmission.getLeftRearEncoderDistance() -
             prevLeftDistance) / 2) / (Hardware.kilroyTimer.get() -
                     prevTime);
 
-    prevLeftDistance = transmission.getLeftRearEncoderDistance();
+    prevLeftDistance = this.transmission.getLeftRearEncoderDistance();
     prevTime = Hardware.kilroyTimer.get();
 
     return speed;
@@ -281,16 +354,16 @@ public void setForwardVelocity (double desiredVelocity)
 public double getRotationalVelocity ()
 {
     double rotationalVelocity = ((Math
-            .abs(transmission.getLeftRearEncoderDistance())
+            .abs(this.transmission.getLeftRearEncoderDistance())
             + Math.abs(
-                    transmission.getRightRearEncoderDistance())
+                    this.transmission.getRightRearEncoderDistance())
                     / 2
             - ((Math.abs(prevLeftDistance)
                     + Math.abs(prevRightDistance)) / 2)
                     / (Hardware.kilroyTimer.get() - prevTime)));
 
-    prevLeftDistance = transmission.getLeftRearEncoderDistance();
-    prevRightDistance = transmission.getRightRearEncoderDistance();
+    prevLeftDistance = this.transmission.getLeftRearEncoderDistance();
+    prevRightDistance = this.transmission.getRightRearEncoderDistance();
     prevTime = Hardware.kilroyTimer.get();
 
     return rotationalVelocity;
@@ -298,20 +371,10 @@ public double getRotationalVelocity ()
 
 private static final double AUTO_CORRECTION_SPEED = -0.75;
 
-private static final double ROBOT_SEMI_MAJOR_RADIUS_INCHES = 12.0;
+private static final double ROBOT_TURNING_RADIUS = 12.0;
 
 private boolean isFourWheel = true;
 
-// Commented out because they should be included in the transmission class
-//
-// private Encoder rightRearEncoder;
-//
-// private Encoder rightFrontEncoder;
-//
-// private Encoder leftRearEncoder;
-//
-// private Encoder leftFrontEncoder;
-//
 private Transmission_old transmission;
 
 private double prevTime = 0.0;
@@ -324,6 +387,9 @@ private double desiredForwardVelocity = 0.0;
  * The scaling factor upon which all speeds will be scaled.
  */
 private double maxSpeedScalingFactor = 1.0;
+
+//prevents us from turning uncontrollably
+private double maxTurningSpeedScalingFactor = .5;
 
 /*
  * Constants

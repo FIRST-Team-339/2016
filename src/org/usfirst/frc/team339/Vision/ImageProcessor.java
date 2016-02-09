@@ -64,8 +64,7 @@ private KilroyCamera camera = null;
 
 private Image currentImage = null;
 
-private final ArrayList<VisionOperatorInterface> operators =
-        new ArrayList<VisionOperatorInterface>();
+private final ArrayList<VisionOperatorInterface> operators = new ArrayList<VisionOperatorInterface>();
 
 ParticleReport[] reports = null;
 
@@ -74,9 +73,9 @@ public ImageProcessor (KilroyCamera camera)
     // this.operators.add(new SaveColorImageJPEGOperator(
     // "/home/lvuser/images/Test.jpg"));
     this.operators.add(new LoadColorImageJPEGOperator(
-            "/home/lvuser/images/ToteR.jpg"));
+            "/home/lvuser/images/Firstpic.jpg"));
     this.operators
-            .add(new ColorThresholdOperator(26, 50, 59, 150, 79, 233));
+            .add(new ColorThresholdOperator(0, 153, 0, 75, 5, 141));
     this.operators.add(new RemoveSmallObjectsOperator(2, true));
     this.operators.add(new ConvexHullOperator(true));
     this.operators.add(new SaveBinaryImagePNGOperator(
@@ -132,14 +131,12 @@ public void updateParticalAnalysisReports ()
             NIVision.imaqCountParticles(this.currentImage, 0));
 
     // Measure particles and sort by particle size
-    final Vector<ParticleReport> particles =
-            new Vector<ParticleReport>();
+    final Vector<ParticleReport> particles = new Vector<ParticleReport>();
 
     if (numParticles > 0)
         {
 
-        for (int particleIndex =
-                0; particleIndex < numParticles; particleIndex++)
+        for (int particleIndex = 0; particleIndex < numParticles; particleIndex++)
             {
 
             final ParticleReport par = new ParticleReport();

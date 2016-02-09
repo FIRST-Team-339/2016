@@ -32,6 +32,8 @@
 package org.usfirst.frc.team339.robot;
 
 import org.usfirst.frc.team339.Hardware.Hardware;
+import org.usfirst.frc.team339.Vision.ImageProcessor;
+import org.usfirst.frc.team339.Utils.Guidance.Direction;
 import edu.wpi.first.wpilibj.CameraServer;
 import edu.wpi.first.wpilibj.Relay.Value;
 
@@ -75,6 +77,9 @@ public static void init ()
     Hardware.starboardArmIntakeMotor.set(0.0);
 } // end Init
 
+
+private char[] reports;
+
 /**
  * User Periodic code for teleop mode should go here. Will be called
  * periodically at a regular rate while the robot is in teleop mode.
@@ -83,9 +88,25 @@ public static void init ()
  * @written Jan 13, 2015
  */
 public static void periodic ()
+// we changed this from a static for testing purposes-Heather :)
 {
     //Print statements to test Hardware on the Robot
     printStatements();
+
+    // Smartdashboard arrow test
+    if (Hardware.rightOperator.getRawButton(8))
+    {
+        Hardware.arrowDashboard.setDirection(Direction.left);
+    }
+    else if (Hardware.rightOperator.getRawButton(9))
+    {
+        Hardware.arrowDashboard.setDirection(Direction.right);
+    }
+    else
+    {
+        Hardware.arrowDashboard.setDirection(Direction.neutral);
+    }
+
 
     // If we click buttons 6+7 on the left operator joystick, we dim the
     // brightness a lot, turn the ringlight on, and then if we haven't
@@ -111,6 +132,7 @@ public static void periodic ()
     // Once the brightness is down and the ring light is on then the
     // picture is taken, the brightness returns to normal, the ringlight
     // is turned off, and the timer is stopped and reset.
+    // @TODO Change .25 to a constant
     if (Hardware.delayTimer.get() >= .25 && prepPic == true
             && takingLitImage == true)
         {
@@ -144,13 +166,30 @@ public static void periodic ()
     else
         takingUnlitImage = false;
 
+    // if the left operator trigger is pressed, then we check to see if
+    // we're taking a processed picture through the boolean. If we are
+    // not currently taking a processed picture, then it lets us take a
+    // picture and sets the boolean to true so we don't take multiple
+    // pictures. If it is true, then it does nothing. If we don't click
+    // the trigger, then the boolean resets itself to false to take
+    // pictures again.
+    if (Hardware.leftOperator.getTrigger() == true)
+        {
+        if (processingImage == false)
+            {
+            processImage();
+            }
+        }
+    else
+        {
+        processingImage = false;
+        }
 
     //Driving the Robot
-    //Hand the transmission class the joystick values and motor controllers for four wheel drive.
+    // Hand the transmission class the joystick values and motor controllers for
+    // four wheel drive.
     Hardware.transmission.controls(Hardware.rightDriver.getY(),
-            Hardware.leftDriver.getY(), Hardware.leftFrontMotor,
-            Hardware.leftRearMotor, Hardware.rightFrontMotor,
-            Hardware.rightRearMotor);
+            Hardware.leftDriver.getY());
     // If we're pressing the upshift button, shift up.
     if (Hardware.rightDriver.getRawButton(
             GEAR_UPSHIFT_JOYSTICK_BUTTON) == true)
@@ -161,17 +200,29 @@ public static void periodic ()
         Hardware.transmission.downshift(1);
 } // end Periodic
 
-// A method to process images (before we get a Shoot class)
+static boolean hasBegunTurning = true;
+
+/**
+ * 
+ * Processes images with the Axis Camera for use in autonomous when
+ * trying to score. Will eventually be moved to a Shoot class when
+ * one is made.
+ * 
+ * @author Marlene McGraw
+ * @written 2/6/16
+ * 
+ */
 public static void processImage ()
 {
-    // If we click the Trigger and button 2, then we save an image and will
-    // eventually
-    if (Hardware.leftOperator.getTrigger() == true
-            && Hardware.leftOperator.getRawButton(2))
-        {
-        Hardware.axisCamera.saveImage("ProcessedImage");
+
+    // If we took a picture, we set the boolean to true to prevent
+    // taking more pictures and create an image processor to process
+    // images.
+    processingImage = true;
+    ImageProcessor imageProcessor = new ImageProcessor(
+            Hardware.axisCamera);
+
         }
-}
 // End processImage
 
 
@@ -228,14 +279,10 @@ public static void printStatements ()
     // Hardware.catapultSolenoid2.get());
 
     // Encoders-------------
-    //    System.out.println(
-    //            "RR distance = " + Hardware.rightRearEncoder.getDistance());
-    //    System.out.println(
-    //            "LR distance = " + Hardware.leftRearEncoder.getDistance());
-    //    System.out.println("RF distance = "
-    //            + Hardware.rightFrontEncoder.getDistance());
-    //    System.out.println(
-    //            "LF distance = " + Hardware.leftFrontEncoder.getDistance());
+    //System.out.println(
+    //        "RR distance = " + Hardware.rightRearEncoder.getDistance());
+    //System.out.println(
+    //        "LR distance = " + Hardware.leftRearEncoder.getDistance());
     //    System.out.println("Arm Motor = " + Hardware.armMotor.getDistance());
 
     //Switches--------------
@@ -273,6 +320,8 @@ private static final int GEAR_DOWNSHIFT_JOYSTICK_BUTTON = 2;
 //==========================================
 //TUNEABLES
 //==========================================
+
+private static boolean processingImage = false;
 
 //Boolean to check if we're taking a lit picture
 private static boolean takingLitImage = false;
