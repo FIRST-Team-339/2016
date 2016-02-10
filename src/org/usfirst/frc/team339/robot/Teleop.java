@@ -33,7 +33,6 @@ package org.usfirst.frc.team339.robot;
 
 import org.usfirst.frc.team339.Hardware.Hardware;
 import org.usfirst.frc.team339.Vision.ImageProcessor;
-import org.usfirst.frc.team339.Utils.Guidance.Direction;
 import edu.wpi.first.wpilibj.CameraServer;
 import edu.wpi.first.wpilibj.Relay.Value;
 
@@ -90,22 +89,10 @@ private char[] reports;
 public static void periodic ()
 // we changed this from a static for testing purposes-Heather :)
 {
+
     //Print statements to test Hardware on the Robot
     printStatements();
 
-    // Smartdashboard arrow test
-    if (Hardware.rightOperator.getRawButton(8))
-    {
-        Hardware.arrowDashboard.setDirection(Direction.left);
-    }
-    else if (Hardware.rightOperator.getRawButton(9))
-    {
-        Hardware.arrowDashboard.setDirection(Direction.right);
-    }
-    else
-    {
-        Hardware.arrowDashboard.setDirection(Direction.neutral);
-    }
 
 
     // If we click buttons 6+7 on the left operator joystick, we dim the
@@ -190,7 +177,7 @@ public static void periodic ()
     // four wheel drive.
     Hardware.transmission.controls(Hardware.rightDriver.getY(),
             Hardware.leftDriver.getY());
-    // If we're pressing the upshift button, shift up.
+    //    // If we're pressing the upshift button, shift up.
     if (Hardware.rightDriver.getRawButton(
             GEAR_UPSHIFT_JOYSTICK_BUTTON) == true)
         Hardware.transmission.upshift(1);
@@ -222,7 +209,7 @@ public static void processImage ()
     ImageProcessor imageProcessor = new ImageProcessor(
             Hardware.axisCamera);
 
-        }
+}
 // End processImage
 
 
