@@ -32,8 +32,8 @@
 package org.usfirst.frc.team339.robot;
 
 import org.usfirst.frc.team339.Hardware.Hardware;
-import org.usfirst.frc.team339.Vision.ImageProcessor;
 import org.usfirst.frc.team339.Utils.Guidance.Direction;
+import org.usfirst.frc.team339.Vision.ImageProcessor;
 import edu.wpi.first.wpilibj.CameraServer;
 import edu.wpi.first.wpilibj.Relay.Value;
 
@@ -93,17 +93,21 @@ public static void periodic ()
     //Print statements to test Hardware on the Robot
     printStatements();
 
+    //puts green arrows on smart dashboard, if certain buttons are pushed
     // Smartdashboard arrow test
-    if (Hardware.rightOperator.getRawButton(8))
+    if (Hardware.rightOperator.getRawButton(8) == false)
     {
+        //SmartDashboard.putBoolean("Left", true);
         Hardware.arrowDashboard.setDirection(Direction.left);
     }
-    else if (Hardware.rightOperator.getRawButton(9))
+    else if (Hardware.rightOperator.getRawButton(9) == false)
     {
+        //SmartDashboard.putBoolean("Right", true);
         Hardware.arrowDashboard.setDirection(Direction.right);
     }
     else
     {
+        // SmartDashboard.putBoolean("Neutral", false);
         Hardware.arrowDashboard.setDirection(Direction.neutral);
     }
 
@@ -117,17 +121,17 @@ public static void periodic ()
     // light to turn on.
     if (Hardware.leftOperator.getRawButton(6) == true &&
             Hardware.leftOperator.getRawButton(7) == true)
-        {
+    {
         if (prepPic == false)
-            {
+        {
             Hardware.axisCamera.writeBrightness(
                     Hardware.MINIMUM_AXIS_CAMERA_BRIGHTNESS);
             Hardware.ringLightRelay.set(Value.kOn);
             Hardware.delayTimer.start();
             prepPic = true;
             takingLitImage = true;
-            }
         }
+    }
 
     // Once the brightness is down and the ring light is on then the
     // picture is taken, the brightness returns to normal, the ringlight
@@ -135,34 +139,34 @@ public static void periodic ()
     // @TODO Change .25 to a constant
     if (Hardware.delayTimer.get() >= .25 && prepPic == true
             && takingLitImage == true)
-        {
+    {
         Hardware.axisCamera.saveImagesSafely();
         prepPic = false;
         takingLitImage = false;
-        }
+    }
 
     if (takingLitImage == false && Hardware.delayTimer.get() >= 1)
-        {
+    {
         Hardware.axisCamera
                 .writeBrightness(
                         Hardware.NORMAL_AXIS_CAMERA_BRIGHTNESS);
         Hardware.ringLightRelay.set(Value.kOff);
         Hardware.delayTimer.stop();
         Hardware.delayTimer.reset();
-        }
+    }
 
     // If we click buttons 10+11, we take a picture without the
     // ringlight and set the boolean to true so we don't take a bunch of
     // other pictures.
     if (Hardware.leftOperator.getRawButton(10) == true &&
             Hardware.leftOperator.getRawButton(11) == true)
-        {
+    {
         if (takingUnlitImage == false)
-            {
+        {
             takingUnlitImage = true;
             Hardware.axisCamera.saveImagesSafely();
-            }
         }
+    }
     else
         takingUnlitImage = false;
 
@@ -174,16 +178,16 @@ public static void periodic ()
     // the trigger, then the boolean resets itself to false to take
     // pictures again.
     if (Hardware.leftOperator.getTrigger() == true)
-        {
+    {
         if (processingImage == false)
-            {
-            processImage();
-            }
-        }
-    else
         {
-        processingImage = false;
+            processImage();
         }
+    }
+    else
+    {
+        processingImage = false;
+    }
 
     //Driving the Robot
     // Hand the transmission class the joystick values and motor controllers for
@@ -222,7 +226,7 @@ public static void processImage ()
     ImageProcessor imageProcessor = new ImageProcessor(
             Hardware.axisCamera);
 
-        }
+}
 // End processImage
 
 
@@ -271,12 +275,12 @@ public static void printStatements ()
     //Solenoids-------------
     //prints the state of the solenoids 
     //    System.out.println("cameraSolenoid = " + Hardware.cameraSolenoid.get());
-    // System.out.println("catapultSolenoid0 = " +
-    // Hardware.catapultSolenoid0.get());
-    // System.out.println("catapultSolenoid1 = " +
-    // Hardware.catapultSolenoid1.get());
-    // System.out.println("catapultSolenoid2 = " +
-    // Hardware.catapultSolenoid2.get());
+    //   System.out.println("catapultSolenoid0 = " +
+    //   Hardware.catapultSolenoid0.get());
+    //   System.out.println("catapultSolenoid1 = " +
+    //   Hardware.catapultSolenoid1.get());
+    //   System.out.println("catapultSolenoid2 = " +
+    //   Hardware.catapultSolenoid2.get());
 
     // Encoders-------------
     //System.out.println(
