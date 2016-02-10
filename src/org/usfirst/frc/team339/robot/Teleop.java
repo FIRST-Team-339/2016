@@ -223,8 +223,10 @@ public static void processImage ()
     // taking more pictures and create an image processor to process
     // images.
     processingImage = true;
-    ImageProcessor imageProcessor = new ImageProcessor(
-            Hardware.axisCamera);
+    Hardware.imageProcessor.processImage();
+    // System.out.println("Length: " +
+    // Hardware.imageProcessor.reports.length);
+    // System.out.println("Center of Mass Y: ");
 
 }
 // End processImage
@@ -313,28 +315,27 @@ private static final double MAXIMUM_TELEOP_SPEED = 1.0;
 
 private static final double FIRST_GEAR_PERCENTAGE = 0.5;
 
-private static final double SECOND_GEAR_PERCENTAGE =
-        MAXIMUM_TELEOP_SPEED;
+private static final double SECOND_GEAR_PERCENTAGE = MAXIMUM_TELEOP_SPEED;
 
-//TODO change based on driver request
+// TODO change based on driver request
 private static final int GEAR_UPSHIFT_JOYSTICK_BUTTON = 3;
 
 private static final int GEAR_DOWNSHIFT_JOYSTICK_BUTTON = 2;
 
-//==========================================
-//TUNEABLES
-//==========================================
+// ==========================================
+// TUNEABLES
+// ==========================================
 
 private static boolean processingImage = false;
 
-//Boolean to check if we're taking a lit picture
+// Boolean to check if we're taking a lit picture
 private static boolean takingLitImage = false;
 
-//Boolean to check if we're taking an unlit picture
+// Boolean to check if we're taking an unlit picture
 private static boolean takingUnlitImage = false;
 
-//this is for preparing to take a picture with the timer; changes
-//brightness, turns on ringlight, starts timer
+// this is for preparing to take a picture with the timer; changes
+// brightness, turns on ringlight, starts timer
 private static boolean prepPic = false;
 
 } // end class

@@ -66,12 +66,13 @@ private Image currentImage = null;
 
 private final ArrayList<VisionOperatorInterface> operators = new ArrayList<VisionOperatorInterface>();
 
-ParticleReport[] reports = null;
+public ParticleReport[] reports = null;
 
 public ImageProcessor (KilroyCamera camera)
 {
     // this.operators.add(new SaveColorImageJPEGOperator(
     // "/home/lvuser/images/Test.jpg"));
+    // this.camera.getImage().image;
     this.operators.add(new LoadColorImageJPEGOperator(
             "/home/lvuser/images/Firstpic.jpg"));
     this.operators
@@ -105,7 +106,7 @@ public void processImage ()
 {
     this.updateImage();
     this.applyOperators();
-    this.updateParticalAnalysisReports();
+    // this.updateParticalAnalysisReports();
 }
 
 public void updateImage ()
