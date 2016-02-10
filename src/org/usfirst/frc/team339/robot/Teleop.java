@@ -32,7 +32,6 @@
 package org.usfirst.frc.team339.robot;
 
 import org.usfirst.frc.team339.Hardware.Hardware;
-import org.usfirst.frc.team339.Vision.ImageProcessor;
 import org.usfirst.frc.team339.Utils.Guidance.Direction;
 import edu.wpi.first.wpilibj.CameraServer;
 import edu.wpi.first.wpilibj.Relay.Value;
@@ -90,22 +89,22 @@ private char[] reports;
 public static void periodic ()
 // we changed this from a static for testing purposes-Heather :)
 {
-    //Print statements to test Hardware on the Robot
+    // Print statements to test Hardware on the Robot
     printStatements();
 
     // Smartdashboard arrow test
     if (Hardware.rightOperator.getRawButton(8))
-    {
+        {
         Hardware.arrowDashboard.setDirection(Direction.left);
-    }
+        }
     else if (Hardware.rightOperator.getRawButton(9))
-    {
+        {
         Hardware.arrowDashboard.setDirection(Direction.right);
-    }
+        }
     else
-    {
+        {
         Hardware.arrowDashboard.setDirection(Direction.neutral);
-    }
+        }
 
 
     // If we click buttons 6+7 on the left operator joystick, we dim the
@@ -177,6 +176,7 @@ public static void periodic ()
         {
         if (processingImage == false)
             {
+            Hardware.axisCamera.saveImage("Firstpic");
             processImage();
             }
         }
@@ -185,7 +185,7 @@ public static void periodic ()
         processingImage = false;
         }
 
-    //Driving the Robot
+    // Driving the Robot
     // Hand the transmission class the joystick values and motor controllers for
     // four wheel drive.
     Hardware.transmission.controls(Hardware.rightDriver.getY(),
@@ -219,10 +219,12 @@ public static void processImage ()
     // taking more pictures and create an image processor to process
     // images.
     processingImage = true;
-    ImageProcessor imageProcessor = new ImageProcessor(
-            Hardware.axisCamera);
+    Hardware.imageProcessor.processImage();
+    // System.out.println("Length: " +
+    // Hardware.imageProcessor.reports.length);
+    // System.out.println("Center of Mass Y: ");
 
-        }
+}
 // End processImage
 
 
@@ -249,28 +251,30 @@ public static void printStatements ()
     // System.out.println("Right Operator: " + Hardware.rightOperator.getY());
 
     // IR sensors-----------
-    //   System.out.println("left IR = " + Hardware.leftIR.isOn());
-    //   System.out.println("right IR = " + Hardware.rightIR.isOn());
+    // System.out.println("left IR = " + Hardware.leftIR.isOn());
+    // System.out.println("right IR = " + Hardware.rightIR.isOn());
 
     // pots-----------------
-    //    System.out.println("delay pot = " + (int) Hardware.delayPot.get());
-    //prints the value of the transducer- (range in code is 50)
-    //hits psi of 100 accurately
-    //System.out.println("transducer = " + Hardware.transducer.get());
+    // System.out.println("delay pot = " + (int) Hardware.delayPot.get());
+    // prints the value of the transducer- (range in code is 50)
+    // hits psi of 100 accurately
+    // System.out.println("transducer = " + Hardware.transducer.get());
 
-    //Motor controllers-----
-    //prints value of the motors
-    //	    System.out.println("RR Motor T = " + Hardware.rightRearMotor.get());
-    //	    System.out.println("LR Motor T = " + Hardware.leftRearMotor.get());
-    //	    System.out.println("RF Motor T = " + Hardware.rightFrontMotor.get());
-    //	    System.out.println("LF Motor T = " + Hardware.leftFrontMotor.get());
-    //          System.out.println("Arm Motor V = " + Hardware.armMotor.get());
-    //    	    System.out.println("Starboard Intake Motor V = " + Hardware.starboardArmIntakeMotor.get());
-    //    	    System.out.println("Port Intake Motor V = " + Hardware.portArmIntakeMotor.get());
+    // Motor controllers-----
+    // prints value of the motors
+    // System.out.println("RR Motor T = " + Hardware.rightRearMotor.get());
+    // System.out.println("LR Motor T = " + Hardware.leftRearMotor.get());
+    // System.out.println("RF Motor T = " + Hardware.rightFrontMotor.get());
+    // System.out.println("LF Motor T = " + Hardware.leftFrontMotor.get());
+    // System.out.println("Arm Motor V = " + Hardware.armMotor.get());
+    // System.out.println("Starboard Intake Motor V = " +
+    // Hardware.starboardArmIntakeMotor.get());
+    // System.out.println("Port Intake Motor V = " +
+    // Hardware.portArmIntakeMotor.get());
 
-    //Solenoids-------------
-    //prints the state of the solenoids 
-    //    System.out.println("cameraSolenoid = " + Hardware.cameraSolenoid.get());
+    // Solenoids-------------
+    // prints the state of the solenoids
+    // System.out.println("cameraSolenoid = " + Hardware.cameraSolenoid.get());
     // System.out.println("catapultSolenoid0 = " +
     // Hardware.catapultSolenoid0.get());
     // System.out.println("catapultSolenoid1 = " +
@@ -279,24 +283,26 @@ public static void printStatements ()
     // Hardware.catapultSolenoid2.get());
 
     // Encoders-------------
-    //System.out.println(
-    //        "RR distance = " + Hardware.rightRearEncoder.getDistance());
-    //System.out.println(
-    //        "LR distance = " + Hardware.leftRearEncoder.getDistance());
-    //    System.out.println("Arm Motor = " + Hardware.armMotor.getDistance());
+    // System.out.println(
+    // "RR distance = " + Hardware.rightRearEncoder.getDistance());
+    // System.out.println(
+    // "LR distance = " + Hardware.leftRearEncoder.getDistance());
+    // System.out.println("Arm Motor = " + Hardware.armMotor.getDistance());
 
-    //Switches--------------
-    //prints state of switches
-    //    System.out.println("Autonomous Enabled Switch: " + Hardware.autonomousEnabled.isOn());
-    //    System.out.println("Shoot High Switch: " + Hardware.shootHigh.isOn());
-    //    System.out.println("Shoot Low Switch: " + Hardware.shootLow.isOn());
+    // Switches--------------
+    // prints state of switches
+    // System.out.println("Autonomous Enabled Switch: " +
+    // Hardware.autonomousEnabled.isOn());
+    // System.out.println("Shoot High Switch: " + Hardware.shootHigh.isOn());
+    // System.out.println("Shoot Low Switch: " + Hardware.shootLow.isOn());
 
-    //print the position of the 6 position switch------------
-    //    System.out.println("Position: " + Hardware.startingPositionDial.getPosition());
+    // print the position of the 6 position switch------------
+    // System.out.println("Position: " +
+    // Hardware.startingPositionDial.getPosition());
 
-    //Relay-----------------
-    //    System.out.println(Hardware.ringLightRelay.get());
-} // end printStatements 
+    // Relay-----------------
+    // System.out.println(Hardware.ringLightRelay.get());
+} // end printStatements
 
 
 /*
@@ -309,28 +315,27 @@ private static final double MAXIMUM_TELEOP_SPEED = 1.0;
 
 private static final double FIRST_GEAR_PERCENTAGE = 0.5;
 
-private static final double SECOND_GEAR_PERCENTAGE =
-        MAXIMUM_TELEOP_SPEED;
+private static final double SECOND_GEAR_PERCENTAGE = MAXIMUM_TELEOP_SPEED;
 
-//TODO change based on driver request
+// TODO change based on driver request
 private static final int GEAR_UPSHIFT_JOYSTICK_BUTTON = 3;
 
 private static final int GEAR_DOWNSHIFT_JOYSTICK_BUTTON = 2;
 
-//==========================================
-//TUNEABLES
-//==========================================
+// ==========================================
+// TUNEABLES
+// ==========================================
 
 private static boolean processingImage = false;
 
-//Boolean to check if we're taking a lit picture
+// Boolean to check if we're taking a lit picture
 private static boolean takingLitImage = false;
 
-//Boolean to check if we're taking an unlit picture
+// Boolean to check if we're taking an unlit picture
 private static boolean takingUnlitImage = false;
 
-//this is for preparing to take a picture with the timer; changes
-//brightness, turns on ringlight, starts timer
+// this is for preparing to take a picture with the timer; changes
+// brightness, turns on ringlight, starts timer
 private static boolean prepPic = false;
 
 } // end class
