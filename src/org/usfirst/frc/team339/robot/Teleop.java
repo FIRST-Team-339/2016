@@ -32,6 +32,7 @@
 package org.usfirst.frc.team339.robot;
 
 import org.usfirst.frc.team339.Hardware.Hardware;
+import org.usfirst.frc.team339.Utils.Guidance.Direction;
 import org.usfirst.frc.team339.Vision.ImageProcessor;
 import edu.wpi.first.wpilibj.CameraServer;
 import edu.wpi.first.wpilibj.Relay.Value;
@@ -92,6 +93,24 @@ public static void periodic ()
 
     //Print statements to test Hardware on the Robot
     printStatements();
+
+    //puts green arrows on smart dashboard, if certain buttons are pushed
+    // Smartdashboard arrow test
+    if (Hardware.rightOperator.getRawButton(8) == false)
+    {
+        //SmartDashboard.putBoolean("Left", true);
+        Hardware.arrowDashboard.setDirection(Direction.left);
+    }
+    else if (Hardware.rightOperator.getRawButton(9) == false)
+    {
+        //SmartDashboard.putBoolean("Right", true);
+        Hardware.arrowDashboard.setDirection(Direction.right);
+    }
+    else
+    {
+        // SmartDashboard.putBoolean("Neutral", false);
+        Hardware.arrowDashboard.setDirection(Direction.neutral);
+    }
 
 
 
@@ -177,7 +196,7 @@ public static void periodic ()
     // four wheel drive.
     Hardware.transmission.controls(Hardware.rightDriver.getY(),
             Hardware.leftDriver.getY());
-    //    // If we're pressing the upshift button, shift up.
+    //    If we're pressing the upshift button, shift up.
     if (Hardware.rightDriver.getRawButton(
             GEAR_UPSHIFT_JOYSTICK_BUTTON) == true)
         Hardware.transmission.upshift(1);
@@ -206,8 +225,10 @@ public static void processImage ()
     // taking more pictures and create an image processor to process
     // images.
     processingImage = true;
-    ImageProcessor imageProcessor = new ImageProcessor(
-            Hardware.axisCamera);
+    Hardware.imageProcessor.processImage();
+    // System.out.println("Length: " +
+    // Hardware.imageProcessor.reports.length);
+    // System.out.println("Center of Mass Y: ");
 
 }
 // End processImage
@@ -296,8 +317,7 @@ private static final double MAXIMUM_TELEOP_SPEED = 1.0;
 
 private static final double FIRST_GEAR_PERCENTAGE = 0.5;
 
-private static final double SECOND_GEAR_PERCENTAGE =
-        MAXIMUM_TELEOP_SPEED;
+private static final double SECOND_GEAR_PERCENTAGE = MAXIMUM_TELEOP_SPEED;
 
 //TODO change based on driver request
 private static final int GEAR_UPSHIFT_JOYSTICK_BUTTON = 3;
