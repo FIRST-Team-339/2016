@@ -69,7 +69,8 @@ public static final int MINIMUM_AXIS_CAMERA_BRIGHTNESS = 6;
 
 public static final int AXIS_FPS = 15;
 
-public static final Resolution AXIS_RESOLUTION = AxisCamera.Resolution.k320x240;
+public static final Resolution AXIS_RESOLUTION =
+        AxisCamera.Resolution.k320x240;
 
 // -------------------------------------
 // Private Constants
@@ -94,7 +95,7 @@ public static final Resolution AXIS_RESOLUTION = AxisCamera.Resolution.k320x240;
 // Talon classes
 // ------------------------------------
 
-// TODO change all Talon's to TalonSRX's
+// TODO: change all Talon's to TalonSRX's
 public static Talon rightRearMotor = new Talon(2);
 public static Talon leftRearMotor = new Talon(3);
 public static Talon rightFrontMotor = new Talon(1);
@@ -103,6 +104,7 @@ public static Talon leftFrontMotor = new Talon(4);
 // ------------------------------------
 // Victor classes
 // ------------------------------------
+// TODO: change all Victors to VictorSP's
 public static Victor armMotor = new Victor(0);
 public static Victor starboardArmIntakeMotor = new Victor(6);
 public static Victor portArmIntakeMotor = new Victor(5);
@@ -134,8 +136,9 @@ public static Compressor compressor = new Compressor();
 /**
  * A physical switch that decides whether or not to run autonomous.
  */
-public static SingleThrowSwitch autonomousEnabled = new SingleThrowSwitch(
-        19);
+public static SingleThrowSwitch autonomousEnabled =
+        new SingleThrowSwitch(
+                19);
 public static SingleThrowSwitch shootHigh = new SingleThrowSwitch(8);
 public static SingleThrowSwitch shootLow = new SingleThrowSwitch(7);
 // Shoot high/low switch
@@ -146,8 +149,9 @@ public static DoubleThrowSwitch noShoot = new DoubleThrowSwitch(
  * Displays the starting position.
  * Position 0 on the switch corresponds to position 1, 1 to 2, etc.
  */
-public static SixPositionSwitch startingPositionDial = new SixPositionSwitch(
-        14, 15, 16, 17, 18, 21);
+public static SixPositionSwitch startingPositionDial =
+        new SixPositionSwitch(
+                14, 15, 16, 17, 18, 21);
 
 // ------------------------------------
 // Gear Tooth Sensors
@@ -259,8 +263,8 @@ public static ImageProcessor imageProcessor = new ImageProcessor(
 // ------------------------------------
 // DriverStations class
 // ------------------------------------
-public static final DriverStation driverStation = DriverStation
-        .getInstance();
+public static final DriverStation driverStation =
+        DriverStation.getInstance();
 
 public static Guidance arrowDashboard = new Guidance();
 
@@ -313,12 +317,16 @@ public static final Timer delayTimer = new Timer();
 public static final ErrorMessage errorMessage = new ErrorMessage(
         true /* append timelog */);
 
-public static final MotorSafetyHelper leftRearMotorSafety = new MotorSafetyHelper(
-        leftRearMotor);
-public static final MotorSafetyHelper rightRearMotorSafety = new MotorSafetyHelper(
-        rightRearMotor);
-public static final MotorSafetyHelper leftFrontMotorSafety = new MotorSafetyHelper(
-        leftFrontMotor);
-public static final MotorSafetyHelper rightFrontMotorSafety = new MotorSafetyHelper(
-        rightFrontMotor);
+public static final MotorSafetyHelper leftRearMotorSafety =
+        new MotorSafetyHelper(
+                leftRearMotor);
+public static final MotorSafetyHelper rightRearMotorSafety =
+        new MotorSafetyHelper(
+                rightRearMotor);
+public static final MotorSafetyHelper leftFrontMotorSafety =
+        new MotorSafetyHelper(
+                leftFrontMotor);
+public static final MotorSafetyHelper rightFrontMotorSafety =
+        new MotorSafetyHelper(
+                rightFrontMotor);
 } // end class
