@@ -350,10 +350,10 @@ public boolean turnByDegrees (turnWhichWay whichWay, double degrees,
     if (whichWay == turnWhichWay.TURN_RIGHT)
         {
         if (this.transmission
-                .getRightRearEncoderDistance() <= (turnInRadians
+                .getRightRearEncoderDistance() <= -(turnInRadians
                         * ROBOT_TURNING_RADIUS)
                 || this.transmission
-                        .getLeftRearEncoderDistance() >= -(turnInRadians
+                        .getLeftRearEncoderDistance() >= (turnInRadians
                                 * ROBOT_TURNING_RADIUS))
             {
             //brake and if we're done braking, tell caller we're done
@@ -365,9 +365,9 @@ public boolean turnByDegrees (turnWhichWay whichWay, double degrees,
             }
         //drive the robot, right train backwards, left train forwards
         this.transmission.controls(
-                -(maxTurningSpeedScalingFactor
-                        * leftJoystickInputValue),
                 (maxTurningSpeedScalingFactor
+                        * leftJoystickInputValue),
+                -(maxTurningSpeedScalingFactor
                         * rightJoystickInputValue));
         }
     //----------------------------------------
@@ -392,8 +392,9 @@ public boolean turnByDegrees (turnWhichWay whichWay, double degrees,
             }
         //drive the robot, right train forwards, left train backwards
         this.transmission.controls(
-                (maxTurningSpeedScalingFactor * leftJoystickInputValue),
                 -(maxTurningSpeedScalingFactor
+                        * leftJoystickInputValue),
+                (maxTurningSpeedScalingFactor
                         * rightJoystickInputValue));
         }
     //We're not done driving yet!!
