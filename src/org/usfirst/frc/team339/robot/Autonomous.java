@@ -654,11 +654,28 @@ private static boolean hasRotatedTowardsShootingPosition ()
 {
 	boolean done = false;
 
+	//TODO: rewrite.
+
+	//checks for negativity. If so, turns right.
+	if (DriveInformation.ROTATE_ON_ALIGNMENT_LINE_DISTANCE[lane
+	        - 1] < 0)
+	{
+	if (Hardware.drive.turnRightDegrees(
+	        -DriveInformation.ROTATE_ON_ALIGNMENT_LINE_DISTANCE[lane
+	                - 1]))
+	{
+	done = true;
+	}
+	}
+
+	else
+	{
 	if (Hardware.drive.turnLeftDegrees(
 	        DriveInformation.ROTATE_ON_ALIGNMENT_LINE_DISTANCE[lane
 	                - 1]))
 	{
 	done = true;
+	}
 	}
 	return done;
 }
@@ -672,11 +689,28 @@ private static boolean hasTurnedToFaceGoal ()
 {
 	boolean done = false;
 
-	if (Hardware.drive.turnLeftDegrees(
-	        DriveInformation.TURN_TO_FACE_GOAL_DISTANCE[lane - 1]))
+	//TODO: rewrite.
 
+	//checks for negativity. If so, turns right.
+	if (DriveInformation.TURN_TO_FACE_GOAL_DEGREES[lane
+	        - 1] < 0)
+	{
+	if (Hardware.drive.turnRightDegrees(
+	        -DriveInformation.TURN_TO_FACE_GOAL_DEGREES[lane
+	                - 1]))
 	{
 	done = true;
+	}
+	}
+
+	else
+	{
+	if (Hardware.drive.turnLeftDegrees(
+	        DriveInformation.TURN_TO_FACE_GOAL_DEGREES[lane
+	                - 1]))
+	{
+	done = true;
+	}
 	}
 	return done;
 }
@@ -754,6 +788,10 @@ private static int getLane ()
 	return position;
 }
 
+/**
+ * Reset left and right encoders.
+ * To be called at the end of any state that uses Drive.
+ */
 private static void resetEncoders ()
 {
 	Hardware.leftRearEncoder.reset();
@@ -800,7 +838,7 @@ static final double[] FORWARDS_FROM_ALIGNMENT_LINE_DISTANCE =
 /**
  * Distances to rotate to face goal.
  */
-static final double[] TURN_TO_FACE_GOAL_DISTANCE =
+static final double[] TURN_TO_FACE_GOAL_DEGREES =
         {
                 -60.0,// lane 1
                 -60.0,// lane 2
