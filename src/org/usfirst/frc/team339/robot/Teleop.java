@@ -138,8 +138,11 @@ public static void periodic ()
     // Once the brightness is down and the ring light is on then the
     // picture is taken, the brightness returns to normal, the ringlight
     // is turned off, and the timer is stopped and reset.
-    // @TODO Change .25 to a constant
-    if (Hardware.delayTimer.get() >= .25 && prepPic == true
+    // @TODO Change .25 to a constant, see line 65 under Hardware
+    //Replaced '.25' with Hardware.CAMERA_DELAY_TIME' change back if camera fails
+    //FROM JOSEF AND NASEEM 2/10/2K16
+    if (Hardware.delayTimer.get() >= Hardware.CAMERA_DELAY_TIME
+            && prepPic == true
             && takingLitImage == true)
         {
         Hardware.axisCamera.saveImagesSafely();
@@ -198,8 +201,11 @@ public static void periodic ()
     //            Hardware.leftDriver.getY());
     Hardware.transmission.setJoysticksAreReversed(true);
     if (Hardware.rightDriver.getTrigger() == true)
+        {
         if (done == false)
-            done = Hardware.drive.turnRightDegrees(90);
+            done = Hardware.drive.turnLeftDegrees(90);
+        //done = Hardware.drive.driveForwardInches(48.0);
+        }
     //    If we're pressing the upshift button, shift up.
     if (Hardware.rightDriver.getRawButton(
             GEAR_UPSHIFT_JOYSTICK_BUTTON) == true)
