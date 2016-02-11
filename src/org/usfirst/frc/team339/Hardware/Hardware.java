@@ -61,6 +61,9 @@ public class Hardware
 public static final int DELAY_POT_DEGREES = 270;
 public static final int TRANSDUCER_MAX_VALUE = 50;
 
+//The amount of time the camera is delayed for picture taking, so the light isn't too bright.
+public static final double CAMERA_DELAY_TIME = .25;
+
 // Makes the brightness to a visible level so our drivers can see.
 public static final int NORMAL_AXIS_CAMERA_BRIGHTNESS = 60;
 

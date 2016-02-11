@@ -236,6 +236,8 @@ public static void init ()
 	Hardware.armMotor.set(0.0);
 	Hardware.portArmIntakeMotor.set(0.0);
 	Hardware.starboardArmIntakeMotor.set(0.0);
+
+	Hardware.drive.setMaxSpeed(MAXIMUM_AUTONOMOUS_SPEED);
 } // end Init
 
 /**
@@ -293,7 +295,9 @@ private static void runMainStateMachine ()
 		case INIT:
 			//Doesn't do much.
 			mainInit();
-			mainState = MainState.BEGIN_LOWERING_ARM;
+			//mainState = MainState.BEGIN_LOWERING_ARM;
+			//temporary; for testing
+			mainState = MainState.FORWARDS_FROM_ALIGNMENT_LINE;
 			break;
 
 		case BEGIN_LOWERING_ARM:
@@ -315,6 +319,7 @@ private static void runMainStateMachine ()
 					//Goes to Accelerate when done
 					mainState =
 					        MainState.FORWARDS_BASED_ON_ENCODERS_OR_IR;
+					resetEncoders();
 					break;
 				case FAILED:
 					//Unless arm is not down. In that case, stop everything.
@@ -358,13 +363,17 @@ private static void runMainStateMachine ()
 			if (hasDrivenToTapeByDistance())
 			//when done, proceed from Alignment line.
 			{
+			resetEncoders();
 			mainState = MainState.FORWARDS_FROM_ALIGNMENT_LINE;
 			}
 			break;
 
 		case FORWARDS_UNTIL_TAPE:
+			//Drive until IR sensors pick up tape.
 			if (hasMovedToTape())
 			{
+			//When done, possibly rotate.
+			resetEncoders();
 			mainState = MainState.ROTATE_ON_ALIGNMENT_LINE;
 			}
 			break;
@@ -372,6 +381,7 @@ private static void runMainStateMachine ()
 		case ROTATE_ON_ALIGNMENT_LINE:
 			if (hasRotatedTowardsShootingPosition())
 			{
+			resetEncoders();
 			mainState = MainState.FORWARDS_FROM_ALIGNMENT_LINE;
 			}
 			break;
@@ -379,6 +389,7 @@ private static void runMainStateMachine ()
 		case FORWARDS_FROM_ALIGNMENT_LINE:
 			if (hasMovedFowardsFromTape())
 			{
+			resetEncoders();
 			mainState = MainState.TURN_TO_FACE_GOAL;
 			}
 			break;
@@ -386,6 +397,7 @@ private static void runMainStateMachine ()
 		case TURN_TO_FACE_GOAL:
 			if (hasTurnedToFaceGoal())
 			{
+			resetEncoders();
 			mainState = MainState.DRIVE_UP_TO_GOAL;
 			}
 			break;
@@ -393,6 +405,7 @@ private static void runMainStateMachine ()
 		case DRIVE_UP_TO_GOAL:
 			if (hasDrivenUpToGoal())
 			{
+			resetEncoders();
 			mainState = MainState.SHOOT;
 			}
 			break;
@@ -470,14 +483,10 @@ private static MoveWhileLoweringArmReturn hasLoweredArmAndMoved ()
 	}
 
 
-
-	Hardware.transmission.controls(-0.3, -0.3); //TODO: set speed
-	//TODO: Use Drive class.
-
-
 	//Go forth. TODO: set to a very low speed.
-	if (Hardware.drive.hasDrivenInches(DISTANCE_TO_OUTER_WORKS))
-	//if (Hardware.drive.driveForwardInches(DISTANCE_TO_OUTER_WORKS))
+	if (Hardware.drive.driveForwardInches(DISTANCE_TO_OUTER_WORKS,
+	        false, 0.3,
+	        0.3))
 	//The distance has been reached. Now check the arm's status.
 	{
 	//The arm is down and we have reached the distance. Go on.
@@ -549,14 +558,17 @@ private static boolean delayIsDone ()
  */
 private static boolean isInLaneOne ()
 {
+	//the state of being in lane 1.
 	boolean oneness;
 
 
 	if (lane == 1)
+	//we are in lane 1
 	{
 	oneness = true;
 	}
 	else
+	//we are not
 	{
 	oneness = false;
 	}
@@ -576,7 +588,7 @@ private static boolean hasDrivenToTapeByDistance ()
 	boolean hasReachedDistance = false;
 
 	//Drive forwards.
-	if (Hardware.drive.driveForwardInches(DISTANCE_TO_TAPE))
+	if (Hardware.drive.driveForwardInches(DISTANCE_TO_TAPE, false))
 	//If we have reached the desired distance, return true.
 	{
 	hasReachedDistance = true;
@@ -599,7 +611,7 @@ private static boolean hasMovedToTape ()
 	//Move forwards.
 	//TODO: make/use method to drive continuously.
 	//TODO: set a good speed.
-	Hardware.drive.driveForwardInches(99999);
+	Hardware.drive.driveContinuous();
 
 	//simply check if we have detected the tape on either side.
 	if (Hardware.leftIR.isOn() || Hardware.rightIR.isOn())
@@ -624,7 +636,8 @@ private static boolean hasMovedFowardsFromTape ()
 
 	if (Hardware.drive.driveForwardInches(
 	        DriveInformation.FORWARDS_FROM_ALIGNMENT_LINE_DISTANCE[lane
-	                - 1]))
+	                - 1],
+	        true))
 	{
 	done = true;
 	}
@@ -677,8 +690,9 @@ private static boolean hasDrivenUpToGoal ()
 {
 	boolean done = false;
 
-	Hardware.drive.driveForwardInches(99999);
+	Hardware.drive.driveContinuous();
 
+	//Distance according to drawings.
 	//if (Hardware.drive.driveForwardInches(
 	//       DriveInformation.DRIVE_UP_TO_GOAL[lane - 1]))
 
@@ -740,6 +754,14 @@ private static int getLane ()
 	return position;
 }
 
+private static void resetEncoders ()
+{
+	Hardware.leftRearEncoder.reset();
+	Hardware.rightRearEncoder.reset();
+}
+
+
+
 /**
  * Contains distances to drive.
  *
@@ -790,6 +812,8 @@ static final double[] TURN_TO_FACE_GOAL_DISTANCE =
 /**
  * Distances to travel once facing the goal.
  * Not neccesary for lanes 3 and 4; set to zero.
+ * Actually, we may not use this much at all, given that we will probably just
+ * use the IR to sense the cleets at the bottom of the tower.
  */
 static final double[] DRIVE_UP_TO_GOAL =
         {
@@ -815,7 +839,7 @@ static final double[] DRIVE_UP_TO_GOAL =
  * // ...............................|<!(r% ~@$ #3r3
  */
 
-private static final double MAXIMUM_AUTONOMOUS_SPEED = 1.0;
+private static final double MAXIMUM_AUTONOMOUS_SPEED = 0.65;
 
 /**
  * The maximum time to wait at the beginning of the match.
@@ -839,6 +863,9 @@ private static final double DISTANCE_TO_OUTER_WORKS = 22.75;
  */
 private static final double ARM_DOWN_TICKS = 0.0;
 
+/**
+ * Set to true to print out print statements.
+ */
 private static final boolean DEBUGGING_DEFAULT = true;
 
 } // end class
