@@ -199,8 +199,7 @@ public static void periodic ()
     Hardware.transmission.setJoysticksAreReversed(true);
     if (Hardware.rightDriver.getTrigger() == true)
         if (done == false)
-            done = Hardware.drive.driveForwardInches(48, true, 1.0,
-                    1.0);
+            done = Hardware.drive.turnRightDegrees(90);
     //    If we're pressing the upshift button, shift up.
     if (Hardware.rightDriver.getRawButton(
             GEAR_UPSHIFT_JOYSTICK_BUTTON) == true)
