@@ -296,7 +296,8 @@ private static void runMainStateMachine ()
 			//Doesn't do much.
 			mainInit();
 			//mainState = MainState.BEGIN_LOWERING_ARM;
-			//temporary; for testing
+
+			//temporary; for testing. set back to BEGIN_LOWERING_ARM
 			mainState = MainState.FORWARDS_FROM_ALIGNMENT_LINE;
 			break;
 
