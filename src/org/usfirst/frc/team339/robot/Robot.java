@@ -234,6 +234,7 @@ public void robotInit ()
     // initialize all things with the drive system
     //--------------------------------------
     Hardware.transmission.setMaxGear(2);
+    Hardware.transmission.setJoystickDeadbandRange(.2);
 
     // -------------------------------------
     // USB camera initialization
