@@ -236,6 +236,8 @@ public static void init ()
 	Hardware.armMotor.set(0.0);
 	Hardware.portArmIntakeMotor.set(0.0);
 	Hardware.starboardArmIntakeMotor.set(0.0);
+
+	Hardware.drive.setMaxSpeed(MAXIMUM_AUTONOMOUS_SPEED);
 } // end Init
 
 /**
@@ -293,7 +295,9 @@ private static void runMainStateMachine ()
 		case INIT:
 			//Doesn't do much.
 			mainInit();
-			mainState = MainState.BEGIN_LOWERING_ARM;
+			//mainState = MainState.BEGIN_LOWERING_ARM;
+			//temporary; for testing
+			mainState = MainState.FORWARDS_FROM_ALIGNMENT_LINE;
 			break;
 
 		case BEGIN_LOWERING_ARM:
@@ -315,6 +319,7 @@ private static void runMainStateMachine ()
 					//Goes to Accelerate when done
 					mainState =
 					        MainState.FORWARDS_BASED_ON_ENCODERS_OR_IR;
+					resetEncoders();
 					break;
 				case FAILED:
 					//Unless arm is not down. In that case, stop everything.
@@ -358,6 +363,7 @@ private static void runMainStateMachine ()
 			if (hasDrivenToTapeByDistance())
 			//when done, proceed from Alignment line.
 			{
+			resetEncoders();
 			mainState = MainState.FORWARDS_FROM_ALIGNMENT_LINE;
 			}
 			break;
@@ -367,6 +373,7 @@ private static void runMainStateMachine ()
 			if (hasMovedToTape())
 			{
 			//When done, possibly rotate.
+			resetEncoders();
 			mainState = MainState.ROTATE_ON_ALIGNMENT_LINE;
 			}
 			break;
@@ -374,6 +381,7 @@ private static void runMainStateMachine ()
 		case ROTATE_ON_ALIGNMENT_LINE:
 			if (hasRotatedTowardsShootingPosition())
 			{
+			resetEncoders();
 			mainState = MainState.FORWARDS_FROM_ALIGNMENT_LINE;
 			}
 			break;
@@ -381,6 +389,7 @@ private static void runMainStateMachine ()
 		case FORWARDS_FROM_ALIGNMENT_LINE:
 			if (hasMovedFowardsFromTape())
 			{
+			resetEncoders();
 			mainState = MainState.TURN_TO_FACE_GOAL;
 			}
 			break;
@@ -388,6 +397,7 @@ private static void runMainStateMachine ()
 		case TURN_TO_FACE_GOAL:
 			if (hasTurnedToFaceGoal())
 			{
+			resetEncoders();
 			mainState = MainState.DRIVE_UP_TO_GOAL;
 			}
 			break;
@@ -395,6 +405,7 @@ private static void runMainStateMachine ()
 		case DRIVE_UP_TO_GOAL:
 			if (hasDrivenUpToGoal())
 			{
+			resetEncoders();
 			mainState = MainState.SHOOT;
 			}
 			break;
@@ -470,11 +481,6 @@ private static MoveWhileLoweringArmReturn hasLoweredArmAndMoved ()
 	//stop the arm.
 	Hardware.pickupArm.move(0.0);
 	}
-
-
-
-	//Hardware.drive.driveContinuous(0.3, 0.3);
-	//Hardware.transmission.controls(-0.3, -0.3); //TODO: set speed
 
 
 	//Go forth. TODO: set to a very low speed.
@@ -748,6 +754,12 @@ private static int getLane ()
 	return position;
 }
 
+private static void resetEncoders ()
+{
+	Hardware.leftRearEncoder.reset();
+	Hardware.rightRearEncoder.reset();
+}
+
 /**
  * Contains distances to drive.
  *
@@ -825,7 +837,7 @@ static final double[] DRIVE_UP_TO_GOAL =
  * // ...............................|<!(r% ~@$ #3r3
  */
 
-private static final double MAXIMUM_AUTONOMOUS_SPEED = 1.0;
+private static final double MAXIMUM_AUTONOMOUS_SPEED = 0.65;
 
 /**
  * The maximum time to wait at the beginning of the match.
