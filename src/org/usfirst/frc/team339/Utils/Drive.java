@@ -162,47 +162,28 @@ public boolean driveForwardInches (double distance, boolean brakeAtEnd,
             }
         return true;
         }
-    // if the right drive train is ahead of the left drive train (on a
-    // four wheel drive)
+    // if we are presently going straight - keep the
+    // speeds equal
     if (this.transmission
             .getRightRearEncoderDistance() == this.transmission
                     .getRightFrontEncoderDistance())
         this.transmission.controls(
                 (leftJoystickInputValue * DEFAULT_MAX_SPEED),
                 (rightJoystickInputValue * DEFAULT_MAX_SPEED));
+    // if the left drive train is ahead of the right drive train (on a
+    // four wheel drive)
     else if ((this.transmission
             .getRightRearEncoderDistance()) < (this.transmission
                     .getLeftRearEncoderDistance()))
         this.transmission.controls(
                 leftJoystickInputValue * CORRECTION_FACTOR,
                 (rightJoystickInputValue * DEFAULT_MAX_SPEED));
-    // if the left drive train is ahead of the right drive train (on a
+    // if the right drive train is ahead of the left drive train (on a
     // four wheel drive)
     else
         this.transmission.controls(
                 (leftJoystickInputValue * DEFAULT_MAX_SPEED),
                 rightJoystickInputValue * CORRECTION_FACTOR);
-    //    // if the right Drive train is ahead of the left drive train (2
-    //    // motor)
-    //    else if (this.transmission
-    //            .getRightRearEncoderDistance() > this.transmission
-    //                    .getLeftRearEncoderDistance())
-    //        {
-    //        this.transmission.controls(
-    //                leftJoystickInputValue * AUTO_CORRECTION_SPEED,
-    //                (rightJoystickInputValue * DEFAULT_MAX_SPEED));
-    //        }
-    //    // if the left Drive train is ahead of the right drive train (2
-    //    // motor)
-    //    else if (this.transmission
-    //            .getRightRearEncoderDistance() < this.transmission
-    //                    .getLeftRearEncoderDistance())
-    //        {
-    //        this.transmission.controls(
-    //                (leftJoystickInputValue * DEFAULT_MAX_SPEED),
-    //                rightJoystickInputValue * AUTO_CORRECTION_SPEED);
-    //        }
-    // if they're both equal
     return false;
 } // end driveForwardInches()
 
@@ -328,40 +309,45 @@ public void setMaxSpeed (double max)
 } // end setMaxSpeed()
 
 /**
- * Turns left 'degrees' degrees. Negative values make it turn right.
- * (Just calls turnLeftDegrees(degrees, true))
- * 
- * @param degrees
- *            The number of degrees to turn. Positive values turn
- *            the robot left, negative ones right.
- * @return True if we're done turning, false otherwise.
- * @author Alex Kneipp
- */
-public boolean turnLeftDegrees (double degrees)
-{
-    return (turnLeftDegrees(degrees, true));
-} // end turnLeftDegrees()
-
-/**
  * Turns left 'degrees' degrees. Negative values make it turn right. Additional
  * boolean parameter from other method controls whether or not we brake at the
  * end.
  * 
+ * @param whichWay
+ *            - enum which represents either TURN_RIGHT or
+ *            TURN_LEFT (enum type = turnWhichWay)
  * @param degrees
  *            The number of degrees to turn. Positive values turn
  *            the robot left, negative ones right.
  * @param brakeAtEnd
  *            True if we want to brake at the end of the turn, false if we
  *            don't.
+ * @param leftJoystickInputValue
+ *            - input from the L joystick - simulates speed
+ * @param rightJoystickInputValue
+ *            - input from the R joystick - simulates speed
  * @return True if we're done turning, false otherwise.
  * @author Alex Kneipp
  */
-public boolean turnLeftDegrees (double degrees, boolean brakeAtEnd)
+public boolean turnByDegrees (turnWhichWay whichWay, double degrees,
+        boolean brakeAtEnd,
+        final double leftJoystickInputValue,
+        final double rightJoystickInputValue)
 {
+    //-----------------------------------------
+    // Make sure that the degrees requested stays
+    // within 0-180
+    //-----------------------------------------
+    double turnDegrees = 0.0;
+    turnDegrees = Math.max(degrees, 0.0);
+    turnDegrees = Math.min(turnDegrees, 180);
+
     double turnInRadians = Math.toRadians(degrees);
-    boolean turningRight = turnInRadians < 0;
-    //If we're turning right and the right drive train is above the limit or the left is below the negative limit
-    if (turningRight == true)
+
+    //----------------------------------------
+    // are we turning right
+    //----------------------------------------
+    if (whichWay == turnWhichWay.TURN_RIGHT)
         {
         if (this.transmission
                 .getRightRearEncoderDistance() <= (turnInRadians
@@ -379,10 +365,14 @@ public boolean turnLeftDegrees (double degrees, boolean brakeAtEnd)
             }
         //drive the robot, right train backwards, left train forwards
         this.transmission.controls(
-                -(maxTurningSpeedScalingFactor * DEFAULT_MAX_SPEED),
-                (maxTurningSpeedScalingFactor * DEFAULT_MAX_SPEED));
+                -(maxTurningSpeedScalingFactor
+                        * leftJoystickInputValue),
+                (maxTurningSpeedScalingFactor
+                        * rightJoystickInputValue));
         }
-    //If we're turning left and the right drive train is below the negative limit or the left is above the limit
+    //----------------------------------------
+    // we are turning left
+    //----------------------------------------
     else
         {
         if (this.transmission
@@ -402,12 +392,185 @@ public boolean turnLeftDegrees (double degrees, boolean brakeAtEnd)
             }
         //drive the robot, right train forwards, left train backwards
         this.transmission.controls(
-                (maxTurningSpeedScalingFactor * DEFAULT_MAX_SPEED),
-                -(maxTurningSpeedScalingFactor * DEFAULT_MAX_SPEED));
+                (maxTurningSpeedScalingFactor * leftJoystickInputValue),
+                -(maxTurningSpeedScalingFactor
+                        * rightJoystickInputValue));
         }
     //We're not done driving yet!!
     return false;
+} // end turnByDegrees()
+
+/**
+ * Turns left 'degrees' degrees.
+ * CALLS turnLeftDegrees(degrees, true)
+ * 
+ * @param degrees
+ *            The number of degrees to turn left. Range is from 0-180.
+ * @return True if we're done turning, false otherwise.
+ * @author Alex Kneipp
+ */
+public boolean turnLeftDegrees (double degrees)
+{
+    return (turnLeftDegrees(degrees, true));
 } // end turnLeftDegrees()
+
+/**
+ * Turns left 'degrees' degrees. Additional boolean parameter
+ * from other method controls whether or not we brake at the
+ * end.
+ * Calls turnLeftDegrees (degrees, brakeAtEnd,
+ * DEFAULT_MAX_SPEED, DEFAULT_MAX_SPEED)
+ * 
+ * @param degrees
+ *            The number of degrees to turn. Range is from 0-180.
+ * @param brakeAtEnd
+ *            True if we want to brake at the end of the turn, false if we
+ *            don't.
+ * @return True if we're done turning, false otherwise.
+ * @author Alex Kneipp
+ */
+public boolean turnLeftDegrees (double degrees, boolean brakeAtEnd)
+{
+    return (this.turnLeftDegrees(degrees, brakeAtEnd,
+            DEFAULT_MAX_SPEED, DEFAULT_MAX_SPEED));
+} // end turnLeftDegrees()
+
+/**
+ * Turns left 'degrees' degrees. Additional boolean parameter
+ * from other method controls whether or not we brake at the
+ * end Assumed to be true.
+ * Calls turnLeftDegrees (degrees, true,
+ * leftJoystickInputValue, rightJoystickInputValue)
+ * 
+ * @param degrees
+ *            The number of degrees to turn. Range is from 0-180.
+ * @param leftJoystickInputValue
+ *            - input from the L joystick - simulates speed
+ * @param rightJoystickInputValue
+ *            - input from the R joystick - simulates speed
+ * @return True if we're done turning, false otherwise.
+ * @author Alex Kneipp
+ */
+public boolean turnLeftDegrees (double degrees,
+        final double leftJoystickInputValue,
+        final double rightJoystickInputValue)
+{
+    return (this.turnLeftDegrees(degrees, true,
+            leftJoystickInputValue, rightJoystickInputValue));
+} // end turnLeftDegrees()
+
+/**
+ * Turns left 'degrees' degrees. Additional boolean parameter
+ * from other method controls whether or not we brake at the
+ * end.
+ * Calls turnByDegrees (turnWhichWay.TURN_LEFT, degrees, brakeAtEnd,
+ * leftJoystickInputValue, rightJoystickInputValue)
+ * 
+ * @param degrees
+ *            The number of degrees to turn. Range is from 0-180.
+ * @param brakeAtEnd
+ *            True if we want to brake at the end of the turn, false if we
+ *            don't.
+ * @param leftJoystickInputValue
+ *            - input from the L joystick - simulates speed
+ * @param rightJoystickInputValue
+ *            - input from the R joystick - simulates speed
+ * @return True if we're done turning, false otherwise.
+ * @author Alex Kneipp
+ */
+public boolean turnLeftDegrees (double degrees, boolean brakeAtEnd,
+        final double leftJoystickInputValue,
+        final double rightJoystickInputValue)
+{
+    return (this.turnByDegrees(turnWhichWay.TURN_LEFT, degrees,
+            brakeAtEnd,
+            leftJoystickInputValue, rightJoystickInputValue));
+} // end turnLeftDegrees()
+
+/**
+ * Turns right 'degrees' degrees.
+ * (Just calls turnRightDegrees(degrees, true))
+ * 
+ * @param degrees
+ *            The number of degrees to turn. Range is from 0-180.
+ * @return True if we're done turning, false otherwise.
+ * @author Alex Kneipp
+ */
+public boolean turnRightDegrees (double degrees)
+{
+    return (turnRightDegrees(degrees, true));
+} // end turnLeftDegrees()
+
+/**
+ * Turns right 'degrees' degrees. Additional boolean parameter
+ * from other method controls whether or not we brake at the
+ * end.
+ * Calls turnRightDegrees (degrees, brakeAtEnd,
+ * DEFAULT_MAX_SPEED, DEFAULT_MAX_SPEED)
+ * 
+ * @param degrees
+ *            The number of degrees to turn. Range is from 0-180.
+ * @param brakeAtEnd
+ *            True if we want to brake at the end of the turn, false if we
+ *            don't.
+ * @return True if we're done turning, false otherwise.
+ * @author Robert Brown
+ */
+public boolean turnRightDegrees (double degrees, boolean brakeAtEnd)
+{
+    return (this.turnRightDegrees(degrees, brakeAtEnd,
+            DEFAULT_MAX_SPEED, DEFAULT_MAX_SPEED));
+} // end turnRightDegrees()
+
+/**
+ * Turns right 'degrees' degrees.
+ * (Just calls turnRightDegrees(degrees, true))
+ * 
+ * @param degrees
+ *            The number of degrees to turn. Range is from 0-180.
+ * @param leftJoystickInputValue
+ *            - input from the L joystick - simulates speed
+ * @param rightJoystickInputValue
+ *            - input from the R joystick - simulates speed
+ * @return True if we're done turning, false otherwise.
+ * @author Alex Kneipp
+ */
+public boolean turnRightDegrees (double degrees,
+        final double leftJoystickInputValue,
+        final double rightJoystickInputValue)
+{
+    return (turnRightDegrees(degrees, true,
+            leftJoystickInputValue, rightJoystickInputValue));
+} // end turnLeftDegrees()
+
+/**
+ * Turns right 'degrees' degrees. Additional boolean parameter
+ * from other method controls whether or not we brake at the
+ * end.
+ * Calls turnByDegrees (turnWhichWay.TURN_RIGHT, degrees, brakeAtEnd)
+ * 
+ * @param degrees
+ *            The number of degrees to turn. Range is from 0-180.
+ * @param leftJoystickInputValue
+ *            - input from the L joystick - simulates speed
+ * @param rightJoystickInputValue
+ *            - input from the R joystick - simulates speed
+ * @return True if we're done turning, false otherwise.
+ * @author Robert Brown
+ */
+public boolean turnRightDegrees (double degrees, boolean brakeAtEnd,
+        final double leftJoystickInputValue,
+        final double rightJoystickInputValue)
+{
+    return (this.turnByDegrees(turnWhichWay.TURN_RIGHT, degrees,
+            brakeAtEnd, leftJoystickInputValue,
+            rightJoystickInputValue));
+} // end turnRightDegrees()
+
+public enum turnWhichWay
+    {
+    TURN_RIGHT, TURN_LEFT;
+    }
 
 private static final double CORRECTION_FACTOR = -0.75;
 
