@@ -98,7 +98,7 @@ public static final Resolution AXIS_RESOLUTION =
 // Talon classes
 // ------------------------------------
 
-// TODO change all Talon's to TalonSRX's
+// TODO: change all Talon's to TalonSRX's
 public static Talon rightRearMotor = new Talon(2);
 public static Talon leftRearMotor = new Talon(3);
 public static Talon rightFrontMotor = new Talon(1);
@@ -107,6 +107,7 @@ public static Talon leftFrontMotor = new Talon(4);
 // ------------------------------------
 // Victor classes
 // ------------------------------------
+// TODO: change all Victors to VictorSP's
 public static Victor armMotor = new Victor(0);
 public static Victor starboardArmIntakeMotor = new Victor(6);
 public static Victor portArmIntakeMotor = new Victor(5);
@@ -265,8 +266,8 @@ public static ImageProcessor imageProcessor = new ImageProcessor(
 // ------------------------------------
 // DriverStations class
 // ------------------------------------
-public static final DriverStation driverStation = DriverStation
-        .getInstance();
+public static final DriverStation driverStation =
+        DriverStation.getInstance();
 
 public static Guidance arrowDashboard = new Guidance();
 
