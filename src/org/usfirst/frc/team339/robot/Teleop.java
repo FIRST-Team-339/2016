@@ -33,7 +33,6 @@ package org.usfirst.frc.team339.robot;
 
 import org.usfirst.frc.team339.Hardware.Hardware;
 import org.usfirst.frc.team339.Utils.Guidance.Direction;
-import org.usfirst.frc.team339.Vision.ImageProcessor;
 import edu.wpi.first.wpilibj.CameraServer;
 import edu.wpi.first.wpilibj.Relay.Value;
 
@@ -136,8 +135,11 @@ public static void periodic ()
     // Once the brightness is down and the ring light is on then the
     // picture is taken, the brightness returns to normal, the ringlight
     // is turned off, and the timer is stopped and reset.
-    // @TODO Change .25 to a constant
-    if (Hardware.delayTimer.get() >= .25 && prepPic == true
+    // @TODO Change .25 to a constant, see line 65 under Hardware
+    //Replaced '.25' with Hardware.CAMERA_DELAY_TIME' change back if camera fails
+    //FROM JOSEF AND NASEEM 2/10/2K16
+    if (Hardware.delayTimer.get() >= Hardware.CAMERA_DELAY_TIME
+            && prepPic == true
             && takingLitImage == true)
     {
         Hardware.axisCamera.saveImagesSafely();
@@ -315,7 +317,8 @@ private static final double MAXIMUM_TELEOP_SPEED = 1.0;
 
 private static final double FIRST_GEAR_PERCENTAGE = 0.5;
 
-private static final double SECOND_GEAR_PERCENTAGE = MAXIMUM_TELEOP_SPEED;
+private static final double SECOND_GEAR_PERCENTAGE =
+        MAXIMUM_TELEOP_SPEED;
 
 // TODO change based on driver request
 private static final int GEAR_UPSHIFT_JOYSTICK_BUTTON = 3;

@@ -61,6 +61,9 @@ public class Hardware
 public static final int DELAY_POT_DEGREES = 270;
 public static final int TRANSDUCER_MAX_VALUE = 50;
 
+//The amount of time the camera is delayed for picture taking, so the light isn't too bright.
+public static final double CAMERA_DELAY_TIME = .25;
+
 // Makes the brightness to a visible level so our drivers can see.
 public static final int NORMAL_AXIS_CAMERA_BRIGHTNESS = 60;
 
@@ -69,7 +72,8 @@ public static final int MINIMUM_AXIS_CAMERA_BRIGHTNESS = 6;
 
 public static final int AXIS_FPS = 15;
 
-public static final Resolution AXIS_RESOLUTION = AxisCamera.Resolution.k320x240;
+public static final Resolution AXIS_RESOLUTION =
+        AxisCamera.Resolution.k320x240;
 
 // -------------------------------------
 // Private Constants
@@ -134,8 +138,9 @@ public static Compressor compressor = new Compressor();
 /**
  * A physical switch that decides whether or not to run autonomous.
  */
-public static SingleThrowSwitch autonomousEnabled = new SingleThrowSwitch(
-        19);
+public static SingleThrowSwitch autonomousEnabled =
+        new SingleThrowSwitch(
+                19);
 public static SingleThrowSwitch shootHigh = new SingleThrowSwitch(8);
 public static SingleThrowSwitch shootLow = new SingleThrowSwitch(7);
 // Shoot high/low switch
@@ -146,8 +151,9 @@ public static DoubleThrowSwitch noShoot = new DoubleThrowSwitch(
  * Displays the starting position.
  * Position 0 on the switch corresponds to position 1, 1 to 2, etc.
  */
-public static SixPositionSwitch startingPositionDial = new SixPositionSwitch(
-        14, 15, 16, 17, 18, 21);
+public static SixPositionSwitch startingPositionDial =
+        new SixPositionSwitch(
+                14, 15, 16, 17, 18, 21);
 
 // ------------------------------------
 // Gear Tooth Sensors
@@ -313,12 +319,16 @@ public static final Timer delayTimer = new Timer();
 public static final ErrorMessage errorMessage = new ErrorMessage(
         true /* append timelog */);
 
-public static final MotorSafetyHelper leftRearMotorSafety = new MotorSafetyHelper(
-        leftRearMotor);
-public static final MotorSafetyHelper rightRearMotorSafety = new MotorSafetyHelper(
-        rightRearMotor);
-public static final MotorSafetyHelper leftFrontMotorSafety = new MotorSafetyHelper(
-        leftFrontMotor);
-public static final MotorSafetyHelper rightFrontMotorSafety = new MotorSafetyHelper(
-        rightFrontMotor);
+public static final MotorSafetyHelper leftRearMotorSafety =
+        new MotorSafetyHelper(
+                leftRearMotor);
+public static final MotorSafetyHelper rightRearMotorSafety =
+        new MotorSafetyHelper(
+                rightRearMotor);
+public static final MotorSafetyHelper leftFrontMotorSafety =
+        new MotorSafetyHelper(
+                leftFrontMotor);
+public static final MotorSafetyHelper rightFrontMotorSafety =
+        new MotorSafetyHelper(
+                rightFrontMotor);
 } // end class
