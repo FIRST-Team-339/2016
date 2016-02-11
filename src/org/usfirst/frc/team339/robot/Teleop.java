@@ -33,7 +33,6 @@ package org.usfirst.frc.team339.robot;
 
 import org.usfirst.frc.team339.Hardware.Hardware;
 import org.usfirst.frc.team339.Utils.Guidance.Direction;
-import org.usfirst.frc.team339.Vision.ImageProcessor;
 import edu.wpi.first.wpilibj.CameraServer;
 import edu.wpi.first.wpilibj.Relay.Value;
 
@@ -79,6 +78,7 @@ public static void init ()
 
 
 private char[] reports;
+private static boolean done = false;
 
 /**
  * User Periodic code for teleop mode should go here. Will be called
@@ -97,20 +97,20 @@ public static void periodic ()
     //puts green arrows on smart dashboard, if certain buttons are pushed
     // Smartdashboard arrow test
     if (Hardware.rightOperator.getRawButton(8) == false)
-    {
+        {
         //SmartDashboard.putBoolean("Left", true);
         Hardware.arrowDashboard.setDirection(Direction.left);
-    }
+        }
     else if (Hardware.rightOperator.getRawButton(9) == false)
-    {
+        {
         //SmartDashboard.putBoolean("Right", true);
         Hardware.arrowDashboard.setDirection(Direction.right);
-    }
+        }
     else
-    {
+        {
         // SmartDashboard.putBoolean("Neutral", false);
         Hardware.arrowDashboard.setDirection(Direction.neutral);
-    }
+        }
 
 
 
@@ -194,8 +194,13 @@ public static void periodic ()
     //Driving the Robot
     // Hand the transmission class the joystick values and motor controllers for
     // four wheel drive.
-    Hardware.transmission.controls(Hardware.rightDriver.getY(),
-            Hardware.leftDriver.getY());
+    //    Hardware.transmission.controls(Hardware.rightDriver.getY(),
+    //            Hardware.leftDriver.getY());
+    Hardware.transmission.setJoysticksAreReversed(true);
+    if (Hardware.rightDriver.getTrigger() == true)
+        if (done == false)
+            done = Hardware.drive.driveForwardInches(48, true, 1.0,
+                    1.0);
     //    If we're pressing the upshift button, shift up.
     if (Hardware.rightDriver.getRawButton(
             GEAR_UPSHIFT_JOYSTICK_BUTTON) == true)
@@ -317,7 +322,8 @@ private static final double MAXIMUM_TELEOP_SPEED = 1.0;
 
 private static final double FIRST_GEAR_PERCENTAGE = 0.5;
 
-private static final double SECOND_GEAR_PERCENTAGE = MAXIMUM_TELEOP_SPEED;
+private static final double SECOND_GEAR_PERCENTAGE =
+        MAXIMUM_TELEOP_SPEED;
 
 //TODO change based on driver request
 private static final int GEAR_UPSHIFT_JOYSTICK_BUTTON = 3;

@@ -164,24 +164,24 @@ public boolean driveForwardInches (double distance, boolean brakeAtEnd,
         }
     // if the right drive train is ahead of the left drive train (on a
     // four wheel drive)
-    if ((this.transmission
-            .getRightRearEncoderDistance()) > (transmission
-                    .getLeftRearEncoderDistance()))
-        {
+    if (this.transmission
+            .getRightRearEncoderDistance() == this.transmission
+                    .getRightFrontEncoderDistance())
         this.transmission.controls(
-                leftJoystickInputValue * AUTO_CORRECTION_SPEED,
+                (leftJoystickInputValue * DEFAULT_MAX_SPEED),
                 (rightJoystickInputValue * DEFAULT_MAX_SPEED));
-        }
-    // if the left drive train is ahead of the right drive train (on a
-    // four wheel drive)
     else if ((this.transmission
             .getRightRearEncoderDistance()) < (this.transmission
                     .getLeftRearEncoderDistance()))
-        {
+        this.transmission.controls(
+                leftJoystickInputValue * CORRECTION_FACTOR,
+                (rightJoystickInputValue * DEFAULT_MAX_SPEED));
+    // if the left drive train is ahead of the right drive train (on a
+    // four wheel drive)
+    else
         this.transmission.controls(
                 (leftJoystickInputValue * DEFAULT_MAX_SPEED),
-                rightJoystickInputValue * AUTO_CORRECTION_SPEED);
-        }
+                rightJoystickInputValue * CORRECTION_FACTOR);
     //    // if the right Drive train is ahead of the left drive train (2
     //    // motor)
     //    else if (this.transmission
@@ -203,12 +203,6 @@ public boolean driveForwardInches (double distance, boolean brakeAtEnd,
     //                rightJoystickInputValue * AUTO_CORRECTION_SPEED);
     //        }
     // if they're both equal
-    else
-        {
-        this.transmission.controls(
-                (leftJoystickInputValue * DEFAULT_MAX_SPEED),
-                (rightJoystickInputValue * DEFAULT_MAX_SPEED));
-        }
     return false;
 } // end driveForwardInches()
 
@@ -415,7 +409,7 @@ public boolean turnLeftDegrees (double degrees, boolean brakeAtEnd)
     return false;
 } // end turnLeftDegrees()
 
-private static final double AUTO_CORRECTION_SPEED = -0.75;
+private static final double CORRECTION_FACTOR = -0.75;
 
 private static final double ROBOT_TURNING_RADIUS = 12.0;
 
