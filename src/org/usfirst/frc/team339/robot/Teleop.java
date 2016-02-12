@@ -72,13 +72,15 @@ public static void init ()
     Hardware.rightFrontMotor.set(0.0);
     Hardware.rightRearMotor.set(0.0);
     Hardware.armMotor.set(0.0);
-    Hardware.portArmIntakeMotor.set(0.0);
-    Hardware.starboardArmIntakeMotor.set(0.0);
+    Hardware.armIntakeMotor.set(0.0);
 } // end Init
 
 
 private char[] reports;
 private static boolean done = false;
+private static boolean done2 = false;
+private static edu.wpi.first.wpilibj.DoubleSolenoid.Value Reverse;
+private static edu.wpi.first.wpilibj.DoubleSolenoid.Value Forward;
 
 /**
  * User Periodic code for teleop mode should go here. Will be called
@@ -110,6 +112,29 @@ public static void periodic ()
         {
         // SmartDashboard.putBoolean("Neutral", false);
         Hardware.arrowDashboard.setDirection(Direction.neutral);
+        }
+    // TODO Make better variable names
+    /*
+     * Axis Camera double solenoid moves up on Button 6 and Down on Button 7 on
+     * the Right
+     * Operator Joystick
+     * 
+     */
+    if (Hardware.rightOperator.getRawButton(6) == true)
+        {
+        if (done == false)
+            {
+            Hardware.cameraSolenoid.set(Forward);
+            done = true;
+            }
+        }
+    else if (Hardware.rightOperator.getRawButton(7) == true)
+        {
+        if (done2 == false)
+            {
+            Hardware.cameraSolenoid.set(Reverse);
+            done2 = true;
+            }
         }
 
 
@@ -200,13 +225,6 @@ public static void periodic ()
     // four wheel drive.
     Hardware.transmission.controls(Hardware.rightDriver.getY(),
             Hardware.leftDriver.getY());
-    // Hardware.transmission.setJoysticksAreReversed(true);
-    // if (Hardware.rightDriver.getTrigger() == true)
-    // {
-    // if (done == false)
-    // done = Hardware.drive.turnLeftDegrees(90);
-    // //done = Hardware.drive.driveForwardInches(48.0);
-    // }
     // If we're pressing the upshift button, shift up.
     if (Hardware.rightDriver.getRawButton(
             GEAR_UPSHIFT_JOYSTICK_BUTTON) == true)
@@ -215,6 +233,10 @@ public static void periodic ()
     if (Hardware.rightDriver.getRawButton(
             GEAR_DOWNSHIFT_JOYSTICK_BUTTON) == true)
         Hardware.transmission.downshift(1);
+    Hardware.leftFrontMotorSafety.feed();
+    Hardware.rightFrontMotorSafety.feed();
+    Hardware.leftRearMotorSafety.feed();
+    Hardware.leftRearMotorSafety.feed();
 } // end Periodic
 
 static boolean hasBegunTurning = true;

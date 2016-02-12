@@ -294,10 +294,10 @@ public void robotInit ()
     // -------------------------------------
     // motor initialization
     // -------------------------------------
-    Hardware.leftRearMotorSafety.setSafetyEnabled(true);
-    Hardware.rightRearMotorSafety.setSafetyEnabled(true);
-    Hardware.leftFrontMotorSafety.setSafetyEnabled(true);
-    Hardware.rightFrontMotorSafety.setSafetyEnabled(true);
+    Hardware.leftRearMotorSafety.setSafetyEnabled(false);
+    Hardware.rightRearMotorSafety.setSafetyEnabled(false);
+    Hardware.leftFrontMotorSafety.setSafetyEnabled(false);
+    Hardware.rightFrontMotorSafety.setSafetyEnabled(false);
     Hardware.rightRearMotor.setInverted(true);
 
     // --------------------------------------
@@ -376,8 +376,6 @@ public void teleopPeriodic ()
     // -------------------------------------
     // Watch dog code used to go here.
     // -------------------------------------
-
-
 
     // -------------------------------------
     // Call the Teleop class's Periodic function,
