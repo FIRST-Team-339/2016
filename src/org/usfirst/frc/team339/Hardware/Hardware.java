@@ -74,6 +74,7 @@ public static final int AXIS_FPS = 15;
 
 public static final Resolution AXIS_RESOLUTION =
         AxisCamera.Resolution.k320x240;
+private static final double ARM_POT_MAX_DEGREES = 270;
 
 // -------------------------------------
 // Private Constants
@@ -237,6 +238,7 @@ public static RobotPotentiometer delayPot = new RobotPotentiometer(3,
 // set to 50 to hit 100 psi accurately
 public static RobotPotentiometer transducer = new RobotPotentiometer(2,
         TRANSDUCER_MAX_VALUE);
+
 
 // -------------------------------------
 // Sonar/Ultrasonic

@@ -195,9 +195,9 @@ public static void init ()
 	Hardware.rightFrontMotorSafety.setSafetyEnabled(true);
 
 	Hardware.transmission
-	        .setFirstGearPercentage(MAXIMUM_AUTONOMOUS_SPEED);
+	        .setFirstGearPercentage(1);
 	Hardware.transmission.setGear(1);
-	Hardware.transmission.setJoysticksAreReversed(true);
+	Hardware.transmission.setJoysticksAreReversed(false);
 
 	// --------------------------------------
 	// Encoder Initialization
@@ -297,8 +297,19 @@ private static void runMainStateMachine ()
 			mainInit();
 			//mainState = MainState.BEGIN_LOWERING_ARM;
 
-			//temporary; for testing. set back to BEGIN_LOWERING_ARM
-			mainState = MainState.FORWARDS_FROM_ALIGNMENT_LINE;
+			if (lane == 1)
+			//lower the arm to pass beneath the bar.
+			{
+			mainState = MainState.BEGIN_LOWERING_ARM;
+			}
+			else
+			//lowering the arm would get in the way. Skip to delay.
+			{
+			mainState = MainState.INIT_DELAY;
+			}
+
+			//temporary; for testing. TODO: set back to BEGIN_LOWERING_ARM
+			mainState = MainState.ROTATE_ON_ALIGNMENT_LINE;
 			break;
 
 		case BEGIN_LOWERING_ARM:
@@ -484,28 +495,30 @@ private static MoveWhileLoweringArmReturn hasLoweredArmAndMoved ()
 	}
 
 
-	//Go forth. TODO: set to a very low speed.
-	if (Hardware.drive.driveForwardInches(DISTANCE_TO_OUTER_WORKS,
-	        false, 0.3,
-	        0.3))
+	//Go forth.
+	if (Hardware.drive.driveForwardInches(
+	        DriveInformation.DISTANCE_TO_OUTER_WORKS,
+	        false,
+	        DriveInformation.MOTOR_RATIO_TO_OUTER_WORKS[lane - 1],
+	        DriveInformation.MOTOR_RATIO_TO_OUTER_WORKS[lane - 1]))
 	//The distance has been reached. Now check the arm's status.
 	{
-	//The arm is down and we have reached the distance. Go on.
-	if (armIsDown == true)
-	{
-	returnStatus = MoveWhileLoweringArmReturn.DONE;
-	}
-	else
-	//The arm is not down. Return FAILED, just to be safe.
+
+	if (lane == 1 && armIsDown == false)
+	//We want the arm to be down, but it is not.
+	//Return FAILED, just to be safe.
 	{
 	returnStatus = MoveWhileLoweringArmReturn.FAILED;
+	}
+	else
+	//The arm is down and we have reached the distance. Go on.
+	{
+	returnStatus = MoveWhileLoweringArmReturn.DONE;
 	}
 	}
 
 	return returnStatus;
 }
-
-
 
 
 
@@ -522,7 +535,6 @@ private static void initDelay ()
 
 /**
  * Waits.
- * Continues to ACCELERATE when time is up.
  * One of the overarching states.
  */
 private static boolean delayIsDone ()
@@ -589,7 +601,8 @@ private static boolean hasDrivenToTapeByDistance ()
 	boolean hasReachedDistance = false;
 
 	//Drive forwards.
-	if (Hardware.drive.driveForwardInches(DISTANCE_TO_TAPE, false))
+	if (Hardware.drive.driveForwardInches(
+	        DriveInformation.DISTANCE_TO_TAPE, false))
 	//If we have reached the desired distance, return true.
 	{
 	hasReachedDistance = true;
@@ -655,29 +668,10 @@ private static boolean hasRotatedTowardsShootingPosition ()
 {
 	boolean done = false;
 
-	//TODO: rewrite.
-
-	//checks for negativity. If so, turns right.
-	if (DriveInformation.ROTATE_ON_ALIGNMENT_LINE_DISTANCE[lane
-	        - 1] < 0)
-	{
-	if (Hardware.drive.turnRightDegrees(
-	        -DriveInformation.ROTATE_ON_ALIGNMENT_LINE_DISTANCE[lane
-	                - 1]))
-	{
-	done = true;
-	}
-	}
-
-	else
-	{
-	if (Hardware.drive.turnLeftDegrees(
+	done = hasTurnedBasedOnSign(
 	        DriveInformation.ROTATE_ON_ALIGNMENT_LINE_DISTANCE[lane
-	                - 1]))
-	{
-	done = true;
-	}
-	}
+	                - 1]);
+
 	return done;
 }
 
@@ -690,29 +684,9 @@ private static boolean hasTurnedToFaceGoal ()
 {
 	boolean done = false;
 
-	//TODO: rewrite.
+	done = hasTurnedBasedOnSign(
+	        DriveInformation.TURN_TO_FACE_GOAL_DEGREES[lane - 1]);
 
-	//checks for negativity. If so, turns right.
-	if (DriveInformation.TURN_TO_FACE_GOAL_DEGREES[lane
-	        - 1] < 0)
-	{
-	if (Hardware.drive.turnRightDegrees(
-	        -DriveInformation.TURN_TO_FACE_GOAL_DEGREES[lane
-	                - 1]))
-	{
-	done = true;
-	}
-	}
-
-	else
-	{
-	if (Hardware.drive.turnLeftDegrees(
-	        DriveInformation.TURN_TO_FACE_GOAL_DEGREES[lane
-	                - 1]))
-	{
-	done = true;
-	}
-	}
 	return done;
 }
 
@@ -780,7 +754,7 @@ private static int getLane ()
 
 	if (position == -1)
 	{
-	position = 0;
+	position = 1;
 	}
 
 
@@ -799,7 +773,27 @@ private static void resetEncoders ()
 	Hardware.rightRearEncoder.reset();
 }
 
+/**
+ * For turning in drive based on array of positive and negative values.
+ * Use to turn a number of degrees
+ * COUNTERCLOCKWISE.
+ * Kilroy must turn along different paths.
+ * You must use this to be versatile.
+ */
+private static boolean hasTurnedBasedOnSign (double degrees)
+{
+	boolean done = false;
 
+	if (degrees < 0)
+	{
+	done = Hardware.drive.turnRightDegrees(degrees, true, .3, .3);
+	}
+	else
+	{
+	done = Hardware.drive.turnLeftDegrees(degrees, true, .3, .3);
+	}
+	return done;
+}
 
 /**
  * Contains distances to drive.
@@ -808,6 +802,19 @@ private static void resetEncoders ()
 private static final class DriveInformation
 {
 
+/**
+ * The motor controller values for moving to the outer works.
+ * As these are initial speeds, keep them low, to go easy on the motors.
+ * Lane is indicated by index.
+ */
+static final double[] MOTOR_RATIO_TO_OUTER_WORKS =
+        {
+                0.4, // lane 1, should be extra low.
+                0.4, // lane 2
+                0.4, // lane 3
+                0.4, // lane 4
+                0.4 // lane 5
+        };
 
 /**
  * Distances to rotate upon reaching alignment line.
@@ -863,6 +870,16 @@ static final double[] DRIVE_UP_TO_GOAL =
                 12.0 // lane 5
         };
 
+/**
+ * Distance from Outer Works checkpoint to Alignment Line
+ */
+private static final double DISTANCE_TO_TAPE = 180.0;
+
+/**
+ * Distance between the front of the robot to the Outer Works.
+ */
+private static final double DISTANCE_TO_OUTER_WORKS = 22.75;
+
 }
 
 
@@ -878,23 +895,13 @@ static final double[] DRIVE_UP_TO_GOAL =
  * // ...............................|<!(r% ~@$ #3r3
  */
 
-private static final double MAXIMUM_AUTONOMOUS_SPEED = 0.65;
+private static final double MAXIMUM_AUTONOMOUS_SPEED = 0.70;
 
 /**
  * The maximum time to wait at the beginning of the match.
  * Used to scale the ratio given by the potentiometer.
  */
 private static final double MAXIMUM_DELAY = 3.0;
-
-/**
- * Distance from Outer Works checkpoint to Alignment Line
- */
-private static final double DISTANCE_TO_TAPE = 180.0;
-
-/**
- * Distance between the front of the robot to the Outer Works.
- */
-private static final double DISTANCE_TO_OUTER_WORKS = 22.75;
 
 /**
  * Encoder distance for arm.
