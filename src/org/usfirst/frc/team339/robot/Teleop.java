@@ -79,6 +79,9 @@ public static void init ()
 
 private char[] reports;
 private static boolean done = false;
+private static boolean done2 = false;
+private static edu.wpi.first.wpilibj.DoubleSolenoid.Value Reverse;
+private static edu.wpi.first.wpilibj.DoubleSolenoid.Value Forward;
 
 /**
  * User Periodic code for teleop mode should go here. Will be called
@@ -111,7 +114,29 @@ public static void periodic ()
         // SmartDashboard.putBoolean("Neutral", false);
         Hardware.arrowDashboard.setDirection(Direction.neutral);
         }
-
+    //TODO Make better variable names
+    /*
+     * Axis Camera double solenoid moves up on Button 6 and Down on Button 7 on
+     * the Right
+     * Operator Joystick
+     * 
+     */
+    if (Hardware.rightOperator.getRawButton(6) == true)
+        {
+        if (done == false)
+            {
+            Hardware.cameraSolenoid.set(Forward);
+            done = true;
+            }
+        }
+    else if (Hardware.rightOperator.getRawButton(7) == true)
+        {
+        if (done2 == false)
+            {
+            Hardware.cameraSolenoid.set(Reverse);
+            done2 = true;
+            }
+        }
 
 
     // If we click buttons 6+7 on the left operator joystick, we dim the
@@ -299,9 +324,11 @@ public static void printStatements ()
     // Encoders-------------
     //System.out.println(
     //        "RR distance = " + Hardware.rightRearEncoder.getDistance());
-    //System.out.println(
-    //        "LR distance = " + Hardware.leftRearEncoder.getDistance());
-    //    System.out.println("Arm Motor = " + Hardware.armMotor.getDistance());
+    //    System.out.println(
+    //            "LR distance = " + Hardware.leftRearEncoder.getDistance());
+    //    System.out
+    //            .println(
+    //                    "Arm Motor = " + Hardware.armEncoder.getDistance());
 
     //Switches--------------
     //prints state of switches
