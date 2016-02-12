@@ -165,7 +165,6 @@ public static void periodic ()
     // is turned off, and the timer is stopped and reset.
     // @TODO Change .25 to a constant, see line 65 under Hardware
     //Replaced '.25' with Hardware.CAMERA_DELAY_TIME' change back if camera fails
-    //FROM JOSEF AND NASEEM 2/10/2K16
     if (Hardware.delayTimer.get() >= Hardware.CAMERA_DELAY_TIME
             && prepPic == true
             && takingLitImage == true)
@@ -222,15 +221,8 @@ public static void periodic ()
     //Driving the Robot
     // Hand the transmission class the joystick values and motor controllers for
     // four wheel drive.
-    //    Hardware.transmission.controls(Hardware.rightDriver.getY(),
-    //            Hardware.leftDriver.getY());
-    Hardware.transmission.setJoysticksAreReversed(true);
-    if (Hardware.rightDriver.getTrigger() == true)
-        {
-        if (done == false)
-            done = Hardware.drive.turnLeftDegrees(90);
-        //done = Hardware.drive.driveForwardInches(48.0);
-        }
+        Hardware.transmission.controls(Hardware.rightDriver.getY(),
+                Hardware.leftDriver.getY());
     //    If we're pressing the upshift button, shift up.
     if (Hardware.rightDriver.getRawButton(
             GEAR_UPSHIFT_JOYSTICK_BUTTON) == true)
@@ -239,6 +231,10 @@ public static void periodic ()
     if (Hardware.rightDriver.getRawButton(
             GEAR_DOWNSHIFT_JOYSTICK_BUTTON) == true)
         Hardware.transmission.downshift(1);
+    Hardware.leftFrontMotorSafety.feed();
+    Hardware.rightFrontMotorSafety.feed();
+    Hardware.leftRearMotorSafety.feed();
+    Hardware.leftRearMotorSafety.feed();
 } // end Periodic
 
 static boolean hasBegunTurning = true;

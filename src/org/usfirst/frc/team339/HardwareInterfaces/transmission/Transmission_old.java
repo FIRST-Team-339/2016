@@ -3232,7 +3232,7 @@ public void setIsMecanum (boolean isMecanum)
  * @method setAllGearLightsOff
  * @param percentage
  *            the percentage of the range that we want to make
- *            into a dead-band
+ *            into a dead-band The range is 0.0 - 1.0
  * @return boolean - denotes whether or not the dead-band range was set
  * @author Bob Brown
  * @written Sep 20, 2009
