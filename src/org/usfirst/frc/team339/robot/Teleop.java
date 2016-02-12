@@ -72,13 +72,15 @@ public static void init ()
     Hardware.rightFrontMotor.set(0.0);
     Hardware.rightRearMotor.set(0.0);
     Hardware.armMotor.set(0.0);
-    Hardware.portArmIntakeMotor.set(0.0);
-    Hardware.starboardArmIntakeMotor.set(0.0);
+    Hardware.armIntakeMotor.set(0.0);
 } // end Init
 
 
 private char[] reports;
 private static boolean done = false;
+private static boolean done2 = false;
+private static edu.wpi.first.wpilibj.DoubleSolenoid.Value Reverse;
+private static edu.wpi.first.wpilibj.DoubleSolenoid.Value Forward;
 
 /**
  * User Periodic code for teleop mode should go here. Will be called
@@ -187,6 +189,9 @@ public static void periodic ()
 
     }
     //    If we're pressing the upshift button, shift up.
+    Hardware.transmission.controls(Hardware.rightDriver.getY(),
+            Hardware.leftDriver.getY());
+    // If we're pressing the upshift button, shift up.
     if (Hardware.rightDriver
             .getRawButton(GEAR_UPSHIFT_JOYSTICK_BUTTON) == true)
     {
@@ -201,6 +206,10 @@ public static void periodic ()
 
 
 
+    Hardware.leftFrontMotorSafety.feed();
+    Hardware.rightFrontMotorSafety.feed();
+    Hardware.leftRearMotorSafety.feed();
+    Hardware.leftRearMotorSafety.feed();
 } // end Periodic
 
 static boolean hasBegunTurning = true;
@@ -222,7 +231,7 @@ public static void processImage ()
     // taking more pictures and create an image processor to process
     // images.
     processingImage = true;
-    Hardware.imageProcessor.processImage();
+    // Hardware.imageProcessor.processImage();
     // System.out.println("Length: " +
     // Hardware.imageProcessor.reports.length);
     // System.out.println("Center of Mass Y: ");
@@ -258,25 +267,27 @@ public static void printStatements ()
     //   System.out.println("right IR = " + Hardware.rightIR.isOn());
 
     // pots-----------------
-    //    System.out.println("delay pot = " + (int) Hardware.delayPot.get());
-    //prints the value of the transducer- (range in code is 50)
-    //hits psi of 100 accurately
-    //System.out.println("transducer = " + Hardware.transducer.get());
+    // System.out.println("delay pot = " + (int) Hardware.delayPot.get());
+    // prints the value of the transducer- (range in code is 50)
+    // hits psi of 100 accurately
+    // System.out.println("transducer = " + Hardware.transducer.get());
     //System.out.println("Test Pot = " + Hardware.armPot.get());
 
-    //Motor controllers-----
-    //prints value of the motors
-    //	    System.out.println("RR Motor T = " + Hardware.rightRearMotor.get());
-    //	    System.out.println("LR Motor T = " + Hardware.leftRearMotor.get());
-    //	    System.out.println("RF Motor T = " + Hardware.rightFrontMotor.get());
-    //	    System.out.println("LF Motor T = " + Hardware.leftFrontMotor.get());
-    //          System.out.println("Arm Motor V = " + Hardware.armMotor.get());
-    //    	    System.out.println("Starboard Intake Motor V = " + Hardware.starboardArmIntakeMotor.get());
-    //    	    System.out.println("Port Intake Motor V = " + Hardware.portArmIntakeMotor.get());
+    // Motor controllers-----
+    // prints value of the motors
+    // System.out.println("RR Motor T = " + Hardware.rightRearMotor.get());
+    // System.out.println("LR Motor T = " + Hardware.leftRearMotor.get());
+    // System.out.println("RF Motor T = " + Hardware.rightFrontMotor.get());
+    // System.out.println("LF Motor T = " + Hardware.leftFrontMotor.get());
+    // System.out.println("Arm Motor V = " + Hardware.armMotor.get());
+    // System.out.println("Starboard Intake Motor V = " +
+    // Hardware.starboardArmIntakeMotor.get());
+    // System.out.println("Port Intake Motor V = " +
+    // Hardware.portArmIntakeMotor.get());
 
-    //Solenoids-------------
-    //prints the state of the solenoids 
-    //    System.out.println("cameraSolenoid = " + Hardware.cameraSolenoid.get());
+    // Solenoids-------------
+    // prints the state of the solenoids
+    // System.out.println("cameraSolenoid = " + Hardware.cameraSolenoid.get());
     // System.out.println("catapultSolenoid0 = " +
     // Hardware.catapultSolenoid0.get());
     // System.out.println("catapultSolenoid1 = " +
@@ -285,24 +296,26 @@ public static void printStatements ()
     // Hardware.catapultSolenoid2.get());
 
     // Encoders-------------
-    //System.out.println(
-    //        "RR distance = " + Hardware.rightRearEncoder.getDistance());
-    //System.out.println(
-    //        "LR distance = " + Hardware.leftRearEncoder.getDistance());
-    //    System.out.println("Arm Motor = " + Hardware.armMotor.getDistance());
+    // System.out.println(
+    // "RR distance = " + Hardware.rightRearEncoder.getDistance());
+    // System.out.println(
+    // "LR distance = " + Hardware.leftRearEncoder.getDistance());
+    // System.out.println("Arm Motor = " + Hardware.armMotor.getDistance());
 
-    //Switches--------------
-    //prints state of switches
-    //    System.out.println("Autonomous Enabled Switch: " + Hardware.autonomousEnabled.isOn());
-    //    System.out.println("Shoot High Switch: " + Hardware.shootHigh.isOn());
-    //    System.out.println("Shoot Low Switch: " + Hardware.shootLow.isOn());
+    // Switches--------------
+    // prints state of switches
+    // System.out.println("Autonomous Enabled Switch: " +
+    // Hardware.autonomousEnabled.isOn());
+    // System.out.println("Shoot High Switch: " + Hardware.shootHigh.isOn());
+    // System.out.println("Shoot Low Switch: " + Hardware.shootLow.isOn());
 
-    //print the position of the 6 position switch------------
-    //    System.out.println("Position: " + Hardware.startingPositionDial.getPosition());
+    // print the position of the 6 position switch------------
+    // System.out.println("Position: " +
+    // Hardware.startingPositionDial.getPosition());
 
-    //Relay-----------------
-    //    System.out.println(Hardware.ringLightRelay.get());
-} // end printStatements 
+    // Relay-----------------
+    // System.out.println(Hardware.ringLightRelay.get());
+} // end printStatements
 
 
 /*
@@ -323,20 +336,20 @@ private static final int GEAR_UPSHIFT_JOYSTICK_BUTTON = 3;
 
 private static final int GEAR_DOWNSHIFT_JOYSTICK_BUTTON = 2;
 
-//==========================================
-//TUNEABLES
-//==========================================
+// ==========================================
+// TUNEABLES
+// ==========================================
 
 private static boolean processingImage = false;
 
-//Boolean to check if we're taking a lit picture
+// Boolean to check if we're taking a lit picture
 private static boolean takingLitImage = false;
 
-//Boolean to check if we're taking an unlit picture
+// Boolean to check if we're taking an unlit picture
 private static boolean takingUnlitImage = false;
 
-//this is for preparing to take a picture with the timer; changes
-//brightness, turns on ringlight, starts timer
+// this is for preparing to take a picture with the timer; changes
+// brightness, turns on ringlight, starts timer
 private static boolean prepPic = false;
 
 } // end class

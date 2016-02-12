@@ -25,8 +25,8 @@ import org.usfirst.frc.team339.HardwareInterfaces.transmission.Transmission_old;
 import org.usfirst.frc.team339.Utils.Drive;
 import org.usfirst.frc.team339.Utils.ErrorMessage;
 import org.usfirst.frc.team339.Utils.Guidance;
+import org.usfirst.frc.team339.Utils.ImageProcessing;
 import org.usfirst.frc.team339.Utils.ManipulatorArm;
-import org.usfirst.frc.team339.Vision.ImageProcessor;
 import edu.wpi.first.wpilibj.CameraServer;
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
@@ -62,7 +62,8 @@ public static final int DELAY_POT_DEGREES = 270;
 public static final int TRANSDUCER_MAX_VALUE = 50;
 public static final int ARM_POT_MAX_VALUE = 360;//360 is a placeholder
 
-//The amount of time the camera is delayed for picture taking, so the light isn't too bright.
+// The amount of time the camera is delayed for picture taking, so the light
+// isn't too bright.
 public static final double CAMERA_DELAY_TIME = .25;
 
 // Makes the brightness to a visible level so our drivers can see.
@@ -73,8 +74,7 @@ public static final int MINIMUM_AXIS_CAMERA_BRIGHTNESS = 6;
 
 public static final int AXIS_FPS = 15;
 
-public static final Resolution AXIS_RESOLUTION =
-        AxisCamera.Resolution.k320x240;
+public static final Resolution AXIS_RESOLUTION = AxisCamera.Resolution.k320x240;
 
 // -------------------------------------
 // Private Constants
@@ -110,8 +110,7 @@ public static Talon leftFrontMotor = new Talon(4);
 // ------------------------------------
 // TODO: change all Victors to VictorSP's
 public static Victor armMotor = new Victor(0);
-public static Victor starboardArmIntakeMotor = new Victor(6);
-public static Victor portArmIntakeMotor = new Victor(5);
+public static Victor armIntakeMotor = new Victor(5);
 
 // ------------------------------------
 // CAN classes
@@ -140,9 +139,8 @@ public static Compressor compressor = new Compressor();
 /**
  * A physical switch that decides whether or not to run autonomous.
  */
-public static SingleThrowSwitch autonomousEnabled =
-        new SingleThrowSwitch(
-                19);
+public static SingleThrowSwitch autonomousEnabled = new SingleThrowSwitch(
+        19);
 public static SingleThrowSwitch shootHigh = new SingleThrowSwitch(8);
 public static SingleThrowSwitch shootLow = new SingleThrowSwitch(7);
 // Shoot high/low switch
@@ -153,9 +151,8 @@ public static DoubleThrowSwitch noShoot = new DoubleThrowSwitch(
  * Displays the starting position.
  * Position 0 on the switch corresponds to position 1, 1 to 2, etc.
  */
-public static SixPositionSwitch startingPositionDial =
-        new SixPositionSwitch(
-                14, 15, 16, 17, 18, 21);
+public static SixPositionSwitch startingPositionDial = new SixPositionSwitch(
+        14, 15, 16, 17, 18, 21);
 
 // ------------------------------------
 // Gear Tooth Sensors
@@ -166,7 +163,7 @@ public static SixPositionSwitch startingPositionDial =
 // ------------------------------------
 public static Encoder leftRearEncoder = new Encoder(0, 1);
 public static Encoder rightRearEncoder = new Encoder(2, 3);
-public static Encoder armEncoder = new Encoder(4, 5);
+//public static Encoder armEncoder = new Encoder(4, 5);
 
 // -----------------------
 // Wiring diagram
@@ -242,6 +239,9 @@ public static RobotPotentiometer transducer = new RobotPotentiometer(2,
 public static RobotPotentiometer armPot =
         new RobotPotentiometer(1, ARM_POT_MAX_VALUE);
 
+public static RobotPotentiometer armPositionPot =
+        new RobotPotentiometer(4, 270);
+
 // -------------------------------------
 // Sonar/Ultrasonic
 // -------------------------------------
@@ -262,7 +262,7 @@ public static USBCamera cam0 = new USBCamera("cam0");
 // Declares the Axis camera
 public static KilroyCamera axisCamera = new KilroyCamera(true);
 
-public static ImageProcessor imageProcessor = new ImageProcessor(
+public static ImageProcessing imageProcessor = new ImageProcessing(
         Hardware.axisCamera);
 // **********************************************************
 // DRIVER STATION CLASSES
@@ -270,8 +270,8 @@ public static ImageProcessor imageProcessor = new ImageProcessor(
 // ------------------------------------
 // DriverStations class
 // ------------------------------------
-public static final DriverStation driverStation =
-        DriverStation.getInstance();
+public static final DriverStation driverStation = DriverStation
+        .getInstance();
 
 public static Guidance arrowDashboard = new Guidance();
 
@@ -312,8 +312,11 @@ public static Drive drive = new Drive(transmission);
 // -------------------
 // Assembly classes (e.g. forklift)
 // -------------------
+//TODO commented out until we have a physical arm to work on.
+
 public static ManipulatorArm pickupArm = new ManipulatorArm(armMotor,
-        starboardArmIntakeMotor, portArmIntakeMotor, armEncoder);
+        armIntakeMotor, armPositionPot);
+
 
 // ------------------------------------
 // Utility classes
@@ -324,16 +327,12 @@ public static final Timer delayTimer = new Timer();
 public static final ErrorMessage errorMessage = new ErrorMessage(
         true /* append timelog */);
 
-public static final MotorSafetyHelper leftRearMotorSafety =
-        new MotorSafetyHelper(
-                leftRearMotor);
-public static final MotorSafetyHelper rightRearMotorSafety =
-        new MotorSafetyHelper(
-                rightRearMotor);
-public static final MotorSafetyHelper leftFrontMotorSafety =
-        new MotorSafetyHelper(
-                leftFrontMotor);
-public static final MotorSafetyHelper rightFrontMotorSafety =
-        new MotorSafetyHelper(
-                rightFrontMotor);
+public static final MotorSafetyHelper leftRearMotorSafety = new MotorSafetyHelper(
+        leftRearMotor);
+public static final MotorSafetyHelper rightRearMotorSafety = new MotorSafetyHelper(
+        rightRearMotor);
+public static final MotorSafetyHelper leftFrontMotorSafety = new MotorSafetyHelper(
+        leftFrontMotor);
+public static final MotorSafetyHelper rightFrontMotorSafety = new MotorSafetyHelper(
+        rightFrontMotor);
 } // end class

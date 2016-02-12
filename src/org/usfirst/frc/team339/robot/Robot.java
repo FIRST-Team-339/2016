@@ -59,7 +59,9 @@
 // ====================================================================
 package org.usfirst.frc.team339.robot;
 
+import com.ni.vision.NIVision.MeasurementType;
 import org.usfirst.frc.team339.Hardware.Hardware;
+import org.usfirst.frc.team339.Utils.ImageProcessing.ObjectRemoval;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.Relay.Direction;
@@ -302,6 +304,22 @@ public void robotInit ()
     // Starts streaming video
     Hardware.cameraServer.startAutomaticCapture(Hardware.cam0);
 
+    // Sets the hue, saturation, and luminance values for the vision
+    // processing.
+    Hardware.imageProcessor.setHSLValues(0, 153, 0, 75, 5, 141);
+    // Has us remove small objects at the intensity of 5. May have to
+    // change those values.
+    Hardware.imageProcessor.setObjectRemoval(ObjectRemoval.SMALL, 5);
+    // Has us convex hull our image so that the goal becomes a rectangle.
+    Hardware.imageProcessor.setUseConvexHull(true);
+    // we could also crop the image to only include blobs in our
+    // good height range, which removes the possibility of
+    // convex hull connecting the two totes when we carry more than one
+    // info on cropping image here:
+    // http://www.chiefdelphi.com/forums/showthread.php?t=134264
+    // Finds the center of the rectangle on the x axis.
+    Hardware.imageProcessor.addCriteria(
+            MeasurementType.MT_CENTER_OF_MASS_X, 65, 85, 0, 0);
 
     // Tells the relay which way is on (kBackward is unable to be used)
     Hardware.ringLightRelay.setDirection(Direction.kForward);
