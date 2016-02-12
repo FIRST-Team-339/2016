@@ -32,7 +32,6 @@
 package org.usfirst.frc.team339.robot;
 
 import org.usfirst.frc.team339.Hardware.Hardware;
-import org.usfirst.frc.team339.Utils.Guidance.Direction;
 import edu.wpi.first.wpilibj.CameraServer;
 import edu.wpi.first.wpilibj.Relay.Value;
 
@@ -64,6 +63,7 @@ public static void init ()
             .setSecondGearPercentage(SECOND_GEAR_PERCENTAGE);
     Hardware.transmission.setGear(1);
 
+    // armEncoder needs to be set to 0
     Hardware.delayTimer.reset();
     Hardware.rightRearEncoder.reset();
     Hardware.leftRearEncoder.reset();
@@ -72,13 +72,15 @@ public static void init ()
     Hardware.rightFrontMotor.set(0.0);
     Hardware.rightRearMotor.set(0.0);
     Hardware.armMotor.set(0.0);
-    Hardware.portArmIntakeMotor.set(0.0);
-    Hardware.starboardArmIntakeMotor.set(0.0);
+    Hardware.armIntakeMotor.set(0.0);
 } // end Init
 
 
 private char[] reports;
 private static boolean done = false;
+private static boolean done2 = false;
+private static edu.wpi.first.wpilibj.DoubleSolenoid.Value Reverse;
+private static edu.wpi.first.wpilibj.DoubleSolenoid.Value Forward;
 
 /**
  * User Periodic code for teleop mode should go here. Will be called
@@ -94,26 +96,6 @@ public static void periodic ()
     //Print statements to test Hardware on the Robot
     printStatements();
 
-    //puts green arrows on smart dashboard, if certain buttons are pushed
-    // Smartdashboard arrow test
-    if (Hardware.rightOperator.getRawButton(8) == false)
-        {
-        //SmartDashboard.putBoolean("Left", true);
-        Hardware.arrowDashboard.setDirection(Direction.left);
-        }
-    else if (Hardware.rightOperator.getRawButton(9) == false)
-        {
-        //SmartDashboard.putBoolean("Right", true);
-        Hardware.arrowDashboard.setDirection(Direction.right);
-        }
-    else
-        {
-        // SmartDashboard.putBoolean("Neutral", false);
-        Hardware.arrowDashboard.setDirection(Direction.neutral);
-        }
-
-
-
     // If we click buttons 6+7 on the left operator joystick, we dim the
     // brightness a lot, turn the ringlight on, and then if we haven't
     // already taken an image then we do and set the boolean to true to
@@ -121,20 +103,21 @@ public static void periodic ()
     // ringlight and we don't take a picture. We added a timer to delay
     // taking the picture for the brightness to dim and for the ring
     // light to turn on.
-    if (Hardware.leftOperator.getRawButton(6) == true &&
-            Hardware.leftOperator.getRawButton(7) == true)
-        {
+    if (Hardware.leftOperator.getRawButton(6) == true
+            && Hardware.leftOperator.getRawButton(7) == true)
+    {
         if (prepPic == false)
-            {
+        {
             Hardware.axisCamera.writeBrightness(
                     Hardware.MINIMUM_AXIS_CAMERA_BRIGHTNESS);
             Hardware.ringLightRelay.set(Value.kOn);
             Hardware.delayTimer.start();
             prepPic = true;
             takingLitImage = true;
-            }
         }
-
+    }
+    //--------------------------------------------------------------------------
+    //---CAMERA TEST------------------------------------------------------------
     // Once the brightness is down and the ring light is on then the
     // picture is taken, the brightness returns to normal, the ringlight
     // is turned off, and the timer is stopped and reset.
@@ -142,36 +125,34 @@ public static void periodic ()
     //Replaced '.25' with Hardware.CAMERA_DELAY_TIME' change back if camera fails
     //FROM JOSEF AND NASEEM 2/10/2K16
     if (Hardware.delayTimer.get() >= Hardware.CAMERA_DELAY_TIME
-            && prepPic == true
-            && takingLitImage == true)
-        {
+            && prepPic == true && takingLitImage == true)
+    {
         Hardware.axisCamera.saveImagesSafely();
         prepPic = false;
         takingLitImage = false;
-        }
+    }
 
     if (takingLitImage == false && Hardware.delayTimer.get() >= 1)
-        {
-        Hardware.axisCamera
-                .writeBrightness(
-                        Hardware.NORMAL_AXIS_CAMERA_BRIGHTNESS);
+    {
+        Hardware.axisCamera.writeBrightness(
+                Hardware.NORMAL_AXIS_CAMERA_BRIGHTNESS);
         Hardware.ringLightRelay.set(Value.kOff);
         Hardware.delayTimer.stop();
         Hardware.delayTimer.reset();
-        }
+    }
 
     // If we click buttons 10+11, we take a picture without the
     // ringlight and set the boolean to true so we don't take a bunch of
     // other pictures.
     if (Hardware.leftOperator.getRawButton(10) == true &&
             Hardware.leftOperator.getRawButton(11) == true)
-        {
+    {
         if (takingUnlitImage == false)
-            {
+        {
             takingUnlitImage = true;
             Hardware.axisCamera.saveImagesSafely();
-            }
         }
+    }
     else
         takingUnlitImage = false;
 
@@ -183,16 +164,16 @@ public static void periodic ()
     // the trigger, then the boolean resets itself to false to take
     // pictures again.
     if (Hardware.leftOperator.getTrigger() == true)
-        {
+    {
         if (processingImage == false)
-            {
-            processImage();
-            }
-        }
-    else
         {
-        processingImage = false;
+            processImage();
         }
+    }
+    else
+    {
+        processingImage = false;
+    }
 
     //Driving the Robot
     // Hand the transmission class the joystick values and motor controllers for
@@ -200,20 +181,35 @@ public static void periodic ()
     //    Hardware.transmission.controls(Hardware.rightDriver.getY(),
     //            Hardware.leftDriver.getY());
     Hardware.transmission.setJoysticksAreReversed(true);
-    if (Hardware.rightDriver.getTrigger() == true)
-        {
-        if (done == false)
-            done = Hardware.drive.turnLeftDegrees(90);
+    if (Hardware.rightDriver.getTrigger() == true && done == false)
+    {
+
+        done = Hardware.drive.turnLeftDegrees(90);
         //done = Hardware.drive.driveForwardInches(48.0);
-        }
+
+    }
     //    If we're pressing the upshift button, shift up.
-    if (Hardware.rightDriver.getRawButton(
-            GEAR_UPSHIFT_JOYSTICK_BUTTON) == true)
+    Hardware.transmission.controls(Hardware.rightDriver.getY(),
+            Hardware.leftDriver.getY());
+    // If we're pressing the upshift button, shift up.
+    if (Hardware.rightDriver
+            .getRawButton(GEAR_UPSHIFT_JOYSTICK_BUTTON) == true)
+    {
         Hardware.transmission.upshift(1);
+    }
     // If we press the downshift button, shift down.
-    if (Hardware.rightDriver.getRawButton(
-            GEAR_DOWNSHIFT_JOYSTICK_BUTTON) == true)
+    if (Hardware.rightDriver
+            .getRawButton(GEAR_DOWNSHIFT_JOYSTICK_BUTTON) == true)
+    {
         Hardware.transmission.downshift(1);
+    }
+
+
+
+    Hardware.leftFrontMotorSafety.feed();
+    Hardware.rightFrontMotorSafety.feed();
+    Hardware.leftRearMotorSafety.feed();
+    Hardware.leftRearMotorSafety.feed();
 } // end Periodic
 
 static boolean hasBegunTurning = true;
@@ -235,7 +231,7 @@ public static void processImage ()
     // taking more pictures and create an image processor to process
     // images.
     processingImage = true;
-    Hardware.imageProcessor.processImage();
+    // Hardware.imageProcessor.processImage();
     // System.out.println("Length: " +
     // Hardware.imageProcessor.reports.length);
     // System.out.println("Center of Mass Y: ");
@@ -271,24 +267,27 @@ public static void printStatements ()
     //   System.out.println("right IR = " + Hardware.rightIR.isOn());
 
     // pots-----------------
-    //    System.out.println("delay pot = " + (int) Hardware.delayPot.get());
-    //prints the value of the transducer- (range in code is 50)
-    //hits psi of 100 accurately
-    //System.out.println("transducer = " + Hardware.transducer.get());
+    // System.out.println("delay pot = " + (int) Hardware.delayPot.get());
+    // prints the value of the transducer- (range in code is 50)
+    // hits psi of 100 accurately
+    // System.out.println("transducer = " + Hardware.transducer.get());
+    //System.out.println("Test Pot = " + Hardware.armPot.get());
 
-    //Motor controllers-----
-    //prints value of the motors
-    //	    System.out.println("RR Motor T = " + Hardware.rightRearMotor.get());
-    //	    System.out.println("LR Motor T = " + Hardware.leftRearMotor.get());
-    //	    System.out.println("RF Motor T = " + Hardware.rightFrontMotor.get());
-    //	    System.out.println("LF Motor T = " + Hardware.leftFrontMotor.get());
-    //          System.out.println("Arm Motor V = " + Hardware.armMotor.get());
-    //    	    System.out.println("Starboard Intake Motor V = " + Hardware.starboardArmIntakeMotor.get());
-    //    	    System.out.println("Port Intake Motor V = " + Hardware.portArmIntakeMotor.get());
+    // Motor controllers-----
+    // prints value of the motors
+    // System.out.println("RR Motor T = " + Hardware.rightRearMotor.get());
+    // System.out.println("LR Motor T = " + Hardware.leftRearMotor.get());
+    // System.out.println("RF Motor T = " + Hardware.rightFrontMotor.get());
+    // System.out.println("LF Motor T = " + Hardware.leftFrontMotor.get());
+    // System.out.println("Arm Motor V = " + Hardware.armMotor.get());
+    // System.out.println("Starboard Intake Motor V = " +
+    // Hardware.starboardArmIntakeMotor.get());
+    // System.out.println("Port Intake Motor V = " +
+    // Hardware.portArmIntakeMotor.get());
 
-    //Solenoids-------------
-    //prints the state of the solenoids 
-    //    System.out.println("cameraSolenoid = " + Hardware.cameraSolenoid.get());
+    // Solenoids-------------
+    // prints the state of the solenoids
+    // System.out.println("cameraSolenoid = " + Hardware.cameraSolenoid.get());
     // System.out.println("catapultSolenoid0 = " +
     // Hardware.catapultSolenoid0.get());
     // System.out.println("catapultSolenoid1 = " +
@@ -297,24 +296,26 @@ public static void printStatements ()
     // Hardware.catapultSolenoid2.get());
 
     // Encoders-------------
-    //System.out.println(
-    //        "RR distance = " + Hardware.rightRearEncoder.getDistance());
-    //System.out.println(
-    //        "LR distance = " + Hardware.leftRearEncoder.getDistance());
-    //    System.out.println("Arm Motor = " + Hardware.armMotor.getDistance());
+    // System.out.println(
+    // "RR distance = " + Hardware.rightRearEncoder.getDistance());
+    // System.out.println(
+    // "LR distance = " + Hardware.leftRearEncoder.getDistance());
+    // System.out.println("Arm Motor = " + Hardware.armMotor.getDistance());
 
-    //Switches--------------
-    //prints state of switches
-    //    System.out.println("Autonomous Enabled Switch: " + Hardware.autonomousEnabled.isOn());
-    //    System.out.println("Shoot High Switch: " + Hardware.shootHigh.isOn());
-    //    System.out.println("Shoot Low Switch: " + Hardware.shootLow.isOn());
+    // Switches--------------
+    // prints state of switches
+    // System.out.println("Autonomous Enabled Switch: " +
+    // Hardware.autonomousEnabled.isOn());
+    // System.out.println("Shoot High Switch: " + Hardware.shootHigh.isOn());
+    // System.out.println("Shoot Low Switch: " + Hardware.shootLow.isOn());
 
-    //print the position of the 6 position switch------------
-    //    System.out.println("Position: " + Hardware.startingPositionDial.getPosition());
+    // print the position of the 6 position switch------------
+    // System.out.println("Position: " +
+    // Hardware.startingPositionDial.getPosition());
 
-    //Relay-----------------
-    //    System.out.println(Hardware.ringLightRelay.get());
-} // end printStatements 
+    // Relay-----------------
+    // System.out.println(Hardware.ringLightRelay.get());
+} // end printStatements
 
 
 /*
@@ -335,20 +336,20 @@ private static final int GEAR_UPSHIFT_JOYSTICK_BUTTON = 3;
 
 private static final int GEAR_DOWNSHIFT_JOYSTICK_BUTTON = 2;
 
-//==========================================
-//TUNEABLES
-//==========================================
+// ==========================================
+// TUNEABLES
+// ==========================================
 
 private static boolean processingImage = false;
 
-//Boolean to check if we're taking a lit picture
+// Boolean to check if we're taking a lit picture
 private static boolean takingLitImage = false;
 
-//Boolean to check if we're taking an unlit picture
+// Boolean to check if we're taking an unlit picture
 private static boolean takingUnlitImage = false;
 
-//this is for preparing to take a picture with the timer; changes
-//brightness, turns on ringlight, starts timer
+// this is for preparing to take a picture with the timer; changes
+// brightness, turns on ringlight, starts timer
 private static boolean prepPic = false;
 
 } // end class

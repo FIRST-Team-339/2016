@@ -199,6 +199,7 @@ public static void init ()
 	Hardware.transmission.setGear(1);
 	Hardware.transmission.setJoysticksAreReversed(false);
 
+
 	// --------------------------------------
 	// Encoder Initialization
 	// --------------------------------------
@@ -206,7 +207,6 @@ public static void init ()
 	Hardware.leftRearEncoder.setDistancePerPulse(0.019706);
 	Hardware.rightRearEncoder.setDistancePerPulse(0.019706);
 	Hardware.rightRearEncoder.reset();
-	Hardware.armEncoder.reset();
 
 	// -------------------------------------
 	// close both of the cameras in case they
@@ -234,8 +234,8 @@ public static void init ()
 	Hardware.rightFrontMotor.set(0.0);
 	Hardware.rightRearMotor.set(0.0);
 	Hardware.armMotor.set(0.0);
-	Hardware.portArmIntakeMotor.set(0.0);
-	Hardware.starboardArmIntakeMotor.set(0.0);
+	Hardware.armIntakeMotor.set(0.0);
+
 
 	Hardware.drive.setMaxSpeed(MAXIMUM_AUTONOMOUS_SPEED);
 } // end Init
@@ -297,6 +297,7 @@ private static void runMainStateMachine ()
 			mainInit();
 			//mainState = MainState.BEGIN_LOWERING_ARM;
 
+
 			if (lane == 1)
 			//lower the arm to pass beneath the bar.
 			{
@@ -311,6 +312,7 @@ private static void runMainStateMachine ()
 			//temporary; for testing. TODO: set back to BEGIN_LOWERING_ARM
 			mainState = MainState.ROTATE_ON_ALIGNMENT_LINE;
 			break;
+
 
 		case BEGIN_LOWERING_ARM:
 			//starts the arm motor
@@ -449,11 +451,11 @@ private static void mainInit ()
  */
 private static void beginLoweringArm ()
 {
-	Hardware.armEncoder.reset();
 	Hardware.armMotor.set(1.0);
 
 }
 
+//TODO move to manipulatorArm class
 /**
  * Checks whether or not the pickup arm has been lowered.
  * TODO: Move to ManipulatorArm class?
@@ -465,7 +467,7 @@ private static boolean armIsLowered ()
 	//false by default.
 	boolean done = false;
 
-	if (Hardware.armEncoder.get() >= ARM_DOWN_TICKS)
+	if (Hardware.armPositionPot.get() >= ARM_DOWN_TICKS)
 	//The arm IS down.
 	{
 	done = true;
@@ -495,6 +497,7 @@ private static MoveWhileLoweringArmReturn hasLoweredArmAndMoved ()
 	}
 
 
+
 	//Go forth.
 	if (Hardware.drive.driveForwardInches(
 	        DriveInformation.DISTANCE_TO_OUTER_WORKS,
@@ -516,6 +519,7 @@ private static MoveWhileLoweringArmReturn hasLoweredArmAndMoved ()
 	returnStatus = MoveWhileLoweringArmReturn.DONE;
 	}
 	}
+
 
 	return returnStatus;
 }
@@ -600,6 +604,7 @@ private static boolean hasDrivenToTapeByDistance ()
 
 	boolean hasReachedDistance = false;
 
+
 	//Drive forwards.
 	if (Hardware.drive.driveForwardInches(
 	        DriveInformation.DISTANCE_TO_TAPE, false))
@@ -607,6 +612,7 @@ private static boolean hasDrivenToTapeByDistance ()
 	{
 	hasReachedDistance = true;
 	}
+
 
 	return hasReachedDistance;
 }
@@ -668,6 +674,7 @@ private static boolean hasRotatedTowardsShootingPosition ()
 {
 	boolean done = false;
 
+
 	done = hasTurnedBasedOnSign(
 	        DriveInformation.ROTATE_ON_ALIGNMENT_LINE_DISTANCE[lane
 	                - 1]);
@@ -684,8 +691,11 @@ private static boolean hasTurnedToFaceGoal ()
 {
 	boolean done = false;
 
+
 	done = hasTurnedBasedOnSign(
 	        DriveInformation.TURN_TO_FACE_GOAL_DEGREES[lane - 1]);
+
+
 
 	return done;
 }
@@ -751,12 +761,10 @@ private static int getLane ()
 {
 	int position = Hardware.startingPositionDial.getPosition();
 
-
 	if (position == -1)
 	{
 	position = 1;
 	}
-
 
 	position = position + 1;
 
