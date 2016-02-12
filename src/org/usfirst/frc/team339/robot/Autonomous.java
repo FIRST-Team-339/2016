@@ -183,7 +183,7 @@ public static void init ()
 
 	debug = DEBUGGING_DEFAULT;
 
-	Hardware.drive.setMaxSpeed(MAXIMUM_AUTONOMOUS_SPEED);
+	//Hardware.drive.setMaxSpeed(MAXIMUM_AUTONOMOUS_SPEED);
 
 
 	// -------------------------------------
@@ -237,7 +237,7 @@ public static void init ()
 	Hardware.armIntakeMotor.set(0.0);
 
 
-	Hardware.drive.setMaxSpeed(MAXIMUM_AUTONOMOUS_SPEED);
+	//Hardware.drive.setMaxSpeed(MAXIMUM_AUTONOMOUS_SPEED);
 } // end Init
 
 /**
@@ -309,8 +309,8 @@ private static void runMainStateMachine ()
 			mainState = MainState.INIT_DELAY;
 			}
 
-			//temporary; for testing. TODO: set back to BEGIN_LOWERING_ARM
-			mainState = MainState.ROTATE_ON_ALIGNMENT_LINE;
+			//temporary; for testing. TODO: remove.
+			//mainState = MainState.ROTATE_ON_ALIGNMENT_LINE;
 			break;
 
 
