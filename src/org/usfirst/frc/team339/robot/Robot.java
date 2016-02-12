@@ -63,6 +63,7 @@ import org.usfirst.frc.team339.Hardware.Hardware;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.Relay.Direction;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -99,23 +100,23 @@ public class Robot extends IterativeRobot
 @Override
 public void autonomousInit ()
 {
-	// ---------------------------------------
-	// start setup - tell the user we are beginning
-	// setup
-	// ---------------------------------------
-	System.out.println("Started AutonousInit().");
+    // ---------------------------------------
+    // start setup - tell the user we are beginning
+    // setup
+    // ---------------------------------------
+    System.out.println("Started AutonousInit().");
 
-	// -------------------------------------
-	// Call the Autonomous class's Init function,
-	// which contains the user code.
-	// -------------------------------------
-	Autonomous.init();
+    // -------------------------------------
+    // Call the Autonomous class's Init function,
+    // which contains the user code.
+    // -------------------------------------
+    Autonomous.init();
 
-	// ---------------------------------------
-	// done setup - tell the user we are complete
-	// setup
-	// ---------------------------------------
-	System.out.println("Completed AutonousInit().");
+    // ---------------------------------------
+    // done setup - tell the user we are complete
+    // setup
+    // ---------------------------------------
+    System.out.println("Completed AutonousInit().");
 } // end autonomousInit
 
 // -------------------------------------------------------
@@ -132,11 +133,11 @@ public void autonomousInit ()
 @Override
 public void autonomousPeriodic ()
 {
-	// -------------------------------------
-	// Call the Autonomous class's Periodic function,
-	// which contains the user code.
-	// -------------------------------------\
-	Autonomous.periodic();
+    // -------------------------------------
+    // Call the Autonomous class's Periodic function,
+    // which contains the user code.
+    // -------------------------------------\
+    Autonomous.periodic();
 
 } // end autonomousPeriodic
 
@@ -152,25 +153,25 @@ public void autonomousPeriodic ()
 @Override
 public void disabledInit ()
 {
-	// ---------------------------------------
-	// start setup - tell the user we are beginning
-	// setup
-	// ---------------------------------------
-	System.out.println("Started DisabledInit().");
+    // ---------------------------------------
+    // start setup - tell the user we are beginning
+    // setup
+    // ---------------------------------------
+    System.out.println("Started DisabledInit().");
 
-	// =========================================================
-	// User code goes below here
-	// =========================================================
+    // =========================================================
+    // User code goes below here
+    // =========================================================
 
-	// =========================================================
-	// User code goes above here
-	// =========================================================
+    // =========================================================
+    // User code goes above here
+    // =========================================================
 
-	// ---------------------------------------
-	// done setup - tell the user we are complete
-	// setup
-	// ---------------------------------------
-	System.out.println("Completed DisabledInit().");
+    // ---------------------------------------
+    // done setup - tell the user we are complete
+    // setup
+    // ---------------------------------------
+    System.out.println("Completed DisabledInit().");
 } // end disabledInit
 
 // -------------------------------------------------------
@@ -187,19 +188,56 @@ public void disabledInit ()
 @Override
 public void disabledPeriodic ()
 {
-	// -------------------------------------
-	// Watch dog code used to go here.
-	// -------------------------------------
-	// =========================================================
-	// User code goes below here
-	// =========================================================
+    // -------------------------------------
+    // Watch dog code used to go here.
+    // -------------------------------------
+    // =========================================================
+    // User code goes below here
+    // =========================================================
+    // Temporary SmartDashboard testing
+    runGuidanceSystem();
 
-
-	// =========================================================
-	// User code goes above here
-	// =========================================================
+    // =========================================================
+    // User code goes above here
+    // =========================================================
 
 } // end disabledPeriodic
+ // Guidance system, need to fix Guidance class!!
+
+public static void runGuidanceSystem ()
+{
+    if (Hardware.rightOperator.getRawButton(8)
+            && !Hardware.rightOperator.getRawButton(9))
+    {
+        //Guidance.setDirection(Guidance.Direction.left);
+        SmartDashboard.putBoolean("Left", true);
+        SmartDashboard.putBoolean("Right", false);
+        SmartDashboard.putBoolean("Straight", false);
+    }
+    else if (Hardware.rightOperator.getRawButton(9)
+            && !Hardware.rightOperator.getRawButton(8))
+    {
+        //Guidance.setDirection(Guidance.Direction.right);
+        SmartDashboard.putBoolean("Right", true);
+        SmartDashboard.putBoolean("Left", false);
+        SmartDashboard.putBoolean("Straight", false);
+    }
+    else if (Hardware.rightOperator.getRawButton(8)
+            && Hardware.rightOperator.getRawButton(9))
+    {
+        //Guidance.setDirection(Guidance.Direction.linedUp);
+        SmartDashboard.putBoolean("Straight", true);
+        SmartDashboard.putBoolean("Right", false);
+        SmartDashboard.putBoolean("Left", false);
+    }
+    else
+    {
+        //Guidance.setDirection(Guidance.Direction.neutral);
+        SmartDashboard.putBoolean("Right", false);
+        SmartDashboard.putBoolean("Left", false);
+        SmartDashboard.putBoolean("Straight", false);
+    }
+}
 
 // -------------------------------------------------------
 /**
@@ -213,96 +251,96 @@ public void disabledPeriodic ()
 @Override
 public void robotInit ()
 {
-	// -------------------------------------
-	// Watch dog code used to go here.
-	// -------------------------------------
-	// =========================================================
-	// User code goes below here
-	// =========================================================
+    // -------------------------------------
+    // Watch dog code used to go here.
+    // -------------------------------------
+    // =========================================================
+    // User code goes below here
+    // =========================================================
 
-	// --------------------------------------
-	// Encoder Initialization
-	// --------------------------------------
-	Hardware.leftRearEncoder
-	        .setDistancePerPulse(distancePerTickForMotorEncoders);
-	Hardware.leftRearEncoder.reset();
-	Hardware.rightRearEncoder
-	        .setDistancePerPulse(distancePerTickForMotorEncoders);
-	Hardware.rightRearEncoder.reset();
+    // --------------------------------------
+    // Encoder Initialization
+    // --------------------------------------
+    Hardware.leftRearEncoder
+            .setDistancePerPulse(distancePerTickForMotorEncoders);
+    Hardware.leftRearEncoder.reset();
+    Hardware.rightRearEncoder
+            .setDistancePerPulse(distancePerTickForMotorEncoders);
+    Hardware.rightRearEncoder.reset();
 
-	//--------------------------------------
-	// initialize all things with the drive system
-	//--------------------------------------
-	Hardware.transmission.setMaxGear(2);
+    //--------------------------------------
+    // initialize all things with the drive system
+    //--------------------------------------
+    Hardware.transmission.setMaxGear(2);
 
-	Hardware.transmission.setJoystickDeadbandRange(.20);
+    Hardware.transmission.setJoystickDeadbandRange(.20);
 
-	// -------------------------------------
-	// USB camera initialization
-	// -------------------------------------
+    // -------------------------------------
+    // USB camera initialization
+    // -------------------------------------
 
-	// -------------------------------------
-	// USB camera initialization
-	// -------------------------------------
-	// Settings for the USB Camera
-	Hardware.cam0.setBrightness(50);
-	Hardware.cam0.setExposureAuto();
-	Hardware.cam0.setSize(160, 120);
-	Hardware.cam0.setFPS(20);
-	Hardware.cam0.setWhiteBalanceAuto();
-	Hardware.cam0.setWhiteBalanceHoldCurrent();
-	Hardware.cam0.updateSettings();
+    // -------------------------------------
+    // USB camera initialization
+    // -------------------------------------
+    // Settings for the USB Camera
+    Hardware.cam0.setBrightness(50);
+    Hardware.cam0.setExposureAuto();
+    Hardware.cam0.setSize(160, 120);
+    Hardware.cam0.setFPS(20);
+    Hardware.cam0.setWhiteBalanceAuto();
+    Hardware.cam0.setWhiteBalanceHoldCurrent();
+    Hardware.cam0.updateSettings();
 
-	// Sets FPS and Resolution of camera
-	Hardware.axisCamera.writeMaxFPS(Hardware.AXIS_FPS);
-	Hardware.axisCamera.writeResolution(Hardware.AXIS_RESOLUTION);
-	Hardware.axisCamera
-	        .writeBrightness(Hardware.NORMAL_AXIS_CAMERA_BRIGHTNESS);
-	        // Hardware.axisCamera
-	        // .writeWhiteBalance(AxisCamera.WhiteBalance.kHold);
+    // Sets FPS and Resolution of camera
+    Hardware.axisCamera.writeMaxFPS(Hardware.AXIS_FPS);
+    Hardware.axisCamera.writeResolution(Hardware.AXIS_RESOLUTION);
+    Hardware.axisCamera
+            .writeBrightness(Hardware.NORMAL_AXIS_CAMERA_BRIGHTNESS);
+            // Hardware.axisCamera
+            // .writeWhiteBalance(AxisCamera.WhiteBalance.kHold);
 
-	// Starts streaming video
-	Hardware.cameraServer.startAutomaticCapture(Hardware.cam0);
+    // Starts streaming video
+    Hardware.cameraServer.startAutomaticCapture(Hardware.cam0);
 
 
-	// Tells the relay which way is on (kBackward is unable to be used)
-	Hardware.ringLightRelay.setDirection(Direction.kForward);
+    // Tells the relay which way is on (kBackward is unable to be used)
+    Hardware.ringLightRelay.setDirection(Direction.kForward);
 
-	// -------------------------------------
-	// motor initialization
-	// -------------------------------------
-	Hardware.leftRearMotorSafety.setSafetyEnabled(true);
-	Hardware.rightRearMotorSafety.setSafetyEnabled(true);
-	Hardware.leftFrontMotorSafety.setSafetyEnabled(true);
-	Hardware.rightFrontMotorSafety.setSafetyEnabled(true);
-	Hardware.rightRearMotor.setInverted(true);
+    // -------------------------------------
+    // motor initialization
+    // -------------------------------------
+    Hardware.leftRearMotorSafety.setSafetyEnabled(true);
+    Hardware.rightRearMotorSafety.setSafetyEnabled(true);
+    Hardware.leftFrontMotorSafety.setSafetyEnabled(true);
+    Hardware.rightFrontMotorSafety.setSafetyEnabled(true);
+    Hardware.rightRearMotor.setInverted(true);
 
-	// --------------------------------------
-	// Compressor Initialization
-	// --------------------------------------
-	Hardware.compressor.setClosedLoopControl(true);
+    // --------------------------------------
+    // Compressor Initialization
+    // --------------------------------------
+    Hardware.compressor.setClosedLoopControl(true);
 
-	// ---------------------------------------
-	// Solenoid Initialization
-	// ---------------------------------------
-	// initializes the solenoids...duh duh duh...
-	Hardware.cameraSolenoid.set(DoubleSolenoid.Value.kForward);
-	Hardware.catapultSolenoid0.set(false);
-	Hardware.catapultSolenoid1.set(false);
-	Hardware.catapultSolenoid2.set(false);
-	Hardware.rightRearEncoder.setReverseDirection(true);
+    // ---------------------------------------
+    // Solenoid Initialization
+    // ---------------------------------------
+    // initializes the solenoids...duh duh duh...
+    Hardware.cameraSolenoid.set(DoubleSolenoid.Value.kForward);
+    Hardware.catapultSolenoid0.set(false);
+    Hardware.catapultSolenoid1.set(false);
+    Hardware.catapultSolenoid2.set(false);
+    Hardware.rightRearEncoder.setReverseDirection(true);
 
-	// =========================================================
-	// User code goes above here
-	// =========================================================
-	// ---------------------------------------
-	// done setup - tell the user we are complete
-	// setup
-	// ---------------------------------------
-	System.out.println(
-	        "Kilroy XVII is started.  All hardware items created.");
-	System.out.println();
-	System.out.println();
+    // =========================================================
+    // User code goes above here
+    // =========================================================
+    // ---------------------------------------
+    // done setup - tell the user we are complete
+    // setup
+    // ---------------------------------------
+    System.out.println(
+            "Kilroy XVII is started.  All hardware items created.");
+    System.out.println();
+    System.out.println();
 } // end robotInit
 
 // -------------------------------------------------------
@@ -318,23 +356,23 @@ public void robotInit ()
 @Override
 public void teleopInit ()
 {
-	// ---------------------------------------
-	// start setup - tell the user we are beginning
-	// setup
-	// ---------------------------------------
-	System.out.println("Started teleopInit().");
+    // ---------------------------------------
+    // start setup - tell the user we are beginning
+    // setup
+    // ---------------------------------------
+    System.out.println("Started teleopInit().");
 
-	// -------------------------------------
-	// Call the Teleop class's Init function,
-	// which contains the user code.
-	// -------------------------------------
-	Teleop.init();
+    // -------------------------------------
+    // Call the Teleop class's Init function,
+    // which contains the user code.
+    // -------------------------------------
+    Teleop.init();
 
-	// ---------------------------------------
-	// done setup - tell the user we are complete
-	// setup
-	// ---------------------------------------
-	System.out.println("Completed TeleopInit().");
+    // ---------------------------------------
+    // done setup - tell the user we are complete
+    // setup
+    // ---------------------------------------
+    System.out.println("Completed TeleopInit().");
 } // end teleopInit
 
 // -------------------------------------------------------
@@ -350,17 +388,17 @@ public void teleopInit ()
 @Override
 public void teleopPeriodic ()
 {
-	// -------------------------------------
-	// Watch dog code used to go here.
-	// -------------------------------------
+    // -------------------------------------
+    // Watch dog code used to go here.
+    // -------------------------------------
 
 
 
-	// -------------------------------------
-	// Call the Teleop class's Periodic function,
-	// which contains the user code.
-	// -------------------------------------
-	Teleop.periodic();
+    // -------------------------------------
+    // Call the Teleop class's Periodic function,
+    // which contains the user code.
+    // -------------------------------------
+    Teleop.periodic();
 
 } // end teleopPeriodic
 
@@ -376,13 +414,13 @@ public void teleopPeriodic ()
 @Override
 public void testInit ()
 {
-	// =========================================================
-	// User code goes below here
-	// =========================================================
+    // =========================================================
+    // User code goes below here
+    // =========================================================
 
-	// =========================================================
-	// User code goes above here
-	// =========================================================
+    // =========================================================
+    // User code goes above here
+    // =========================================================
 
 } // end testInit
 
@@ -398,13 +436,13 @@ public void testInit ()
 @Override
 public void testPeriodic ()
 {
-	// =========================================================
-	// User code goes below here
-	// =========================================================
+    // =========================================================
+    // User code goes below here
+    // =========================================================
 
-	// =========================================================
-	// User code goes above here
-	// =========================================================
+    // =========================================================
+    // User code goes above here
+    // =========================================================
 
 } // end testPeriodic
 

@@ -60,6 +60,7 @@ public class Hardware
 // ------------------------------------
 public static final int DELAY_POT_DEGREES = 270;
 public static final int TRANSDUCER_MAX_VALUE = 50;
+public static final int ARM_POT_MAX_VALUE = 360;//360 is a placeholder
 
 //The amount of time the camera is delayed for picture taking, so the light isn't too bright.
 public static final double CAMERA_DELAY_TIME = .25;
@@ -237,6 +238,9 @@ public static RobotPotentiometer delayPot = new RobotPotentiometer(3,
 // set to 50 to hit 100 psi accurately
 public static RobotPotentiometer transducer = new RobotPotentiometer(2,
         TRANSDUCER_MAX_VALUE);
+//to be used with the manipulator arm
+public static RobotPotentiometer armPot =
+        new RobotPotentiometer(1, ARM_POT_MAX_VALUE);
 
 // -------------------------------------
 // Sonar/Ultrasonic

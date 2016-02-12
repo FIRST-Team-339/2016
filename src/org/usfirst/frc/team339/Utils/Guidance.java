@@ -24,14 +24,23 @@ public void update ()
         case left:
             SmartDashboard.putBoolean("Left", true);
             SmartDashboard.putBoolean("Right", false);
+            SmartDashboard.putBoolean("Straight", false);
             break;
 
         case right:
             SmartDashboard.putBoolean("Right", true);
             SmartDashboard.putBoolean("Left", false);
+            SmartDashboard.putBoolean("Straight", false);
             break;
 
         case neutral:
+            SmartDashboard.putBoolean("Right", false);
+            SmartDashboard.putBoolean("Left", false);
+            SmartDashboard.putBoolean("Straight", false);
+            break;
+
+        case linedUp:
+            SmartDashboard.putBoolean("Straight", true);
             SmartDashboard.putBoolean("Right", false);
             SmartDashboard.putBoolean("Left", false);
             break;
@@ -47,7 +56,7 @@ public static Direction getDirection ()
     return direction;
 }
 
-public void setDirection (Direction direction)
+public static void setDirection (Direction direction)
 {
     Guidance.direction = direction;
 }
@@ -63,6 +72,6 @@ public void setDirection (Direction direction)
  */
 public static enum Direction
 {
-    left, right, neutral
+    left, right, neutral, linedUp
 }
 }
