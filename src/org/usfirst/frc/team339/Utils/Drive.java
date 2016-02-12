@@ -50,14 +50,14 @@ public boolean brake (final double brakeSpeed)
 /**
  * Drives forward forever (almost).
  * (calls driveForwardInches(9999, false,
- * DEFAULT_MAX_SPEED (-1), DEFAULT_MAX_SPEED (-1)))
+ * maxSpeedScalingFactor (-1), maxSpeedScalingFactor (-1)))
  * 
  * @author Robert Brown
  */
 public void driveContinuous ()
 {
     this.driveForwardInches(9999.0, false,
-            this.DEFAULT_MAX_SPEED, this.DEFAULT_MAX_SPEED);
+            this.maxSpeedScalingFactor, this.maxSpeedScalingFactor);
 } // end driveContinuous()
 
 /**
@@ -83,7 +83,7 @@ public void driveContinuous (
 /**
  * Drives forward distance inches with correction.
  * (calls driveForwardInches(distance, true,
- * DEFAULT_MAX_SPEED (-1), DEFAULT_MAX_SPEED (-1)))
+ * maxSpeedScalingFactor (-1), maxSpeedScalingFactor (-1)))
  * 
  * @param distance
  *            The desired distance to be traveled in inches.
@@ -93,13 +93,13 @@ public void driveContinuous (
 public boolean driveForwardInches (final double distance)
 {
     return (this.driveForwardInches(distance, true,
-            this.DEFAULT_MAX_SPEED, this.DEFAULT_MAX_SPEED));
+            this.maxSpeedScalingFactor, this.maxSpeedScalingFactor));
 } // end driveForwardInches()
 
 /**
  * Drives forward distance inches with correction.
  * (calls driveForwardInches(distance, brakeAtEnd,
- * DEFAULT_MAX_SPEED (-1), DEFAULT_MAX_SPEED (-1)))
+ * maxSpeedScalingFactor (-1), maxSpeedScalingFactor (-1)))
  * 
  * @param distance
  *            The desired distance to be traveled in inches.
@@ -113,7 +113,7 @@ public boolean driveForwardInches (final double distance,
         final boolean brakeAtEnd)
 {
     return (this.driveForwardInches(distance, brakeAtEnd,
-            this.DEFAULT_MAX_SPEED, this.DEFAULT_MAX_SPEED));
+            this.maxSpeedScalingFactor, this.maxSpeedScalingFactor));
 } // end driveForwardInches()
 
 /**
@@ -153,6 +153,7 @@ public boolean driveForwardInches (final double distance,
  * @return True if done driving, false otherwise.
  * @author Alex Kneipp
  */
+//TODO make correction progressive.  i.e. the further off we get, the more we correct.  Use encoder differences for delta value
 public boolean driveForwardInches (final double distance,
         final boolean brakeAtEnd,
         final double leftJoystickInputValue,
@@ -175,22 +176,24 @@ public boolean driveForwardInches (final double distance,
             .getRightRearEncoderDistance() == this.transmission
                     .getRightFrontEncoderDistance())
         this.transmission.controls(
-                (leftJoystickInputValue * this.DEFAULT_MAX_SPEED),
-                (rightJoystickInputValue * this.DEFAULT_MAX_SPEED));
+                (leftJoystickInputValue * this.maxSpeedScalingFactor),
+                (rightJoystickInputValue * this.maxSpeedScalingFactor));
     // if the left drive train is ahead of the right drive train (on a
     // four wheel drive)
     else if ((this.transmission
             .getRightRearEncoderDistance()) < (this.transmission
                     .getLeftRearEncoderDistance()))
         this.transmission.controls(
-                leftJoystickInputValue * this.CORRECTION_FACTOR,
-                (rightJoystickInputValue * this.DEFAULT_MAX_SPEED));
+                leftJoystickInputValue * this.maxSpeedScalingFactor
+                        * this.CORRECTION_FACTOR,
+                (rightJoystickInputValue * this.maxSpeedScalingFactor));
     // if the right drive train is ahead of the left drive train (on a
     // four wheel drive)
     else
         this.transmission.controls(
-                (leftJoystickInputValue * this.DEFAULT_MAX_SPEED),
-                rightJoystickInputValue * this.CORRECTION_FACTOR);
+                (leftJoystickInputValue * this.maxSpeedScalingFactor),
+                rightJoystickInputValue * this.maxSpeedScalingFactor
+                        * this.CORRECTION_FACTOR);
     return false;
 } // end driveForwardInches()
 
@@ -332,6 +335,11 @@ public double setBrakeSpeed (final double newBrakeSpeed)
     return (this.BRAKE_SPEED = newBrakeSpeed);
 } // end setBrakeSpeed()
 
+public double getMaxSpeed ()
+{
+    return this.maxSpeedScalingFactor;
+}
+
 /**
  * Sets maximum speed.
  * Used in Autonomous/Teleop Init.
@@ -400,9 +408,9 @@ public boolean turnByDegrees (final turnWhichWay whichWay,
             }
         //drive the robot, right train backwards, left train forwards
         this.transmission.controls(
-                (this.maxTurningSpeedScalingFactor
-                        * leftJoystickInputValue),
                 -(this.maxTurningSpeedScalingFactor
+                        * leftJoystickInputValue),
+                (this.maxTurningSpeedScalingFactor
                         * rightJoystickInputValue));
         }
     //----------------------------------------
@@ -427,9 +435,9 @@ public boolean turnByDegrees (final turnWhichWay whichWay,
             }
         //drive the robot, right train forwards, left train backwards
         this.transmission.controls(
-                -(this.maxTurningSpeedScalingFactor
-                        * leftJoystickInputValue),
                 (this.maxTurningSpeedScalingFactor
+                        * leftJoystickInputValue),
+                -(this.maxTurningSpeedScalingFactor
                         * rightJoystickInputValue));
         }
     //We're not done driving yet!!
@@ -457,7 +465,7 @@ public boolean turnLeftDegrees (final double degrees)
  * from other method controls whether or not we brake at the
  * end.
  * Calls turnLeftDegrees (degrees, brakeAtEnd,
- * DEFAULT_MAX_SPEED (-1), DEFAULT_MAX_SPEED (-1))
+ * maxSpeedScalingFactor (-1), maxSpeedScalingFactor (-1))
  * 
  * @param degrees
  *            The number of degrees to turn. Range is from 0-180.
@@ -471,7 +479,7 @@ public boolean turnLeftDegrees (final double degrees,
         final boolean brakeAtEnd)
 {
     return (this.turnLeftDegrees(degrees, brakeAtEnd,
-            this.DEFAULT_MAX_SPEED, this.DEFAULT_MAX_SPEED));
+            this.maxSpeedScalingFactor, this.maxSpeedScalingFactor));
 } // end turnLeftDegrees()
 
 /**
@@ -548,7 +556,7 @@ public boolean turnRightDegrees (final double degrees)
  * from other method controls whether or not we brake at the
  * end.
  * Calls turnRightDegrees (degrees, brakeAtEnd,
- * DEFAULT_MAX_SPEED (-1), DEFAULT_MAX_SPEED (-1))
+ * maxSpeedScalingFactor (-1), maxSpeedScalingFactor (-1))
  * 
  * @param degrees
  *            The number of degrees to turn. Range is from 0-180.
@@ -562,7 +570,7 @@ public boolean turnRightDegrees (final double degrees,
         final boolean brakeAtEnd)
 {
     return (this.turnRightDegrees(degrees, brakeAtEnd,
-            this.DEFAULT_MAX_SPEED, this.DEFAULT_MAX_SPEED));
+            this.maxSpeedScalingFactor, this.maxSpeedScalingFactor));
 } // end turnRightDegrees()
 
 /**
@@ -629,6 +637,12 @@ public enum turnWhichWay
     TURN_RIGHT, TURN_LEFT;
     }
 
+/*
+ * Constants
+ */
+
+private final double DEFAULT_MAX_SPEED = 1.0;
+
 private final double CORRECTION_FACTOR = -0.75;
 
 // TODO - get Kilroys new turning radius
@@ -645,18 +659,12 @@ private double prevRightDistance = 0.0;
 /**
  * The scaling factor upon which all speeds will be scaled.
  */
-private double maxSpeedScalingFactor = 1.0;
+private double maxSpeedScalingFactor = DEFAULT_MAX_SPEED;
 
 //prevents us from turning uncontrollably
 private double maxTurningSpeedScalingFactor = .5;
 
 //TODO tweak for the most effective brake method
 private double BRAKE_SPEED = .2;
-
-/*
- * Constants
- */
-
-private final double DEFAULT_MAX_SPEED = -1.0;
 
 } // end class

@@ -109,8 +109,7 @@ public static Talon leftFrontMotor = new Talon(4);
 // ------------------------------------
 // TODO: change all Victors to VictorSP's
 public static Victor armMotor = new Victor(0);
-public static Victor starboardArmIntakeMotor = new Victor(6);
-public static Victor portArmIntakeMotor = new Victor(5);
+public static Victor armIntakeMotor = new Victor(5);
 
 // ------------------------------------
 // CAN classes
@@ -165,7 +164,7 @@ public static SixPositionSwitch startingPositionDial =
 // ------------------------------------
 public static Encoder leftRearEncoder = new Encoder(0, 1);
 public static Encoder rightRearEncoder = new Encoder(2, 3);
-public static Encoder armEncoder = new Encoder(4, 5);
+//public static Encoder armEncoder = new Encoder(4, 5);
 
 // -----------------------
 // Wiring diagram
@@ -238,6 +237,9 @@ public static RobotPotentiometer delayPot = new RobotPotentiometer(3,
 public static RobotPotentiometer transducer = new RobotPotentiometer(2,
         TRANSDUCER_MAX_VALUE);
 
+public static RobotPotentiometer armPositionPot =
+        new RobotPotentiometer(4, 270);
+
 // -------------------------------------
 // Sonar/Ultrasonic
 // -------------------------------------
@@ -308,8 +310,11 @@ public static Drive drive = new Drive(transmission);
 // -------------------
 // Assembly classes (e.g. forklift)
 // -------------------
+//TODO commented out until we have a physical arm to work on.
+
 public static ManipulatorArm pickupArm = new ManipulatorArm(armMotor,
-        starboardArmIntakeMotor, portArmIntakeMotor, armEncoder);
+        armIntakeMotor, armPositionPot);
+
 
 // ------------------------------------
 // Utility classes
