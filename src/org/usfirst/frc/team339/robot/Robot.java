@@ -61,11 +61,11 @@ package org.usfirst.frc.team339.robot;
 
 import com.ni.vision.NIVision.MeasurementType;
 import org.usfirst.frc.team339.Hardware.Hardware;
+import org.usfirst.frc.team339.Utils.Guidance;
 import org.usfirst.frc.team339.Utils.ImageProcessing.ObjectRemoval;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.Relay.Direction;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -204,41 +204,49 @@ public void disabledPeriodic ()
     // =========================================================
 
 } // end disabledPeriodic
- // Guidance system, need to fix Guidance class!!
 
+
+/**
+ * Runs the system on the smartDashboard that informs the drivers which way to
+ * align with the goal
+ * AKA arrow system
+ */
 public static void runGuidanceSystem ()
 {
     if (Hardware.rightOperator.getRawButton(8)
             && !Hardware.rightOperator.getRawButton(9))
     {
-        //Guidance.setDirection(Guidance.Direction.left);
-        SmartDashboard.putBoolean("Left", true);
-        SmartDashboard.putBoolean("Right", false);
-        SmartDashboard.putBoolean("Straight", false);
+        Hardware.arrowDashboard.setDirection(Guidance.Direction.left);
+        //        SmartDashboard.putBoolean("Left", true);
+        //        SmartDashboard.putBoolean("Right", false);
+        //        SmartDashboard.putBoolean("Straight", false);
     }
     else if (Hardware.rightOperator.getRawButton(9)
             && !Hardware.rightOperator.getRawButton(8))
     {
-        //Guidance.setDirection(Guidance.Direction.right);
-        SmartDashboard.putBoolean("Right", true);
-        SmartDashboard.putBoolean("Left", false);
-        SmartDashboard.putBoolean("Straight", false);
+        Hardware.arrowDashboard.setDirection(Guidance.Direction.right);
+        //        SmartDashboard.putBoolean("Right", true);
+        //        SmartDashboard.putBoolean("Left", false);
+        //        SmartDashboard.putBoolean("Straight", false);
     }
     else if (Hardware.rightOperator.getRawButton(8)
             && Hardware.rightOperator.getRawButton(9))
     {
-        //Guidance.setDirection(Guidance.Direction.linedUp);
-        SmartDashboard.putBoolean("Straight", true);
-        SmartDashboard.putBoolean("Right", false);
-        SmartDashboard.putBoolean("Left", false);
+        Hardware.arrowDashboard
+                .setDirection(Guidance.Direction.linedUp);
+        //        SmartDashboard.putBoolean("Straight", true);
+        //        SmartDashboard.putBoolean("Right", false);
+        //        SmartDashboard.putBoolean("Left", false);
     }
     else
     {
-        //Guidance.setDirection(Guidance.Direction.neutral);
-        SmartDashboard.putBoolean("Right", false);
-        SmartDashboard.putBoolean("Left", false);
-        SmartDashboard.putBoolean("Straight", false);
+        Hardware.arrowDashboard
+                .setDirection(Guidance.Direction.neutral);
+        //        SmartDashboard.putBoolean("Right", false);
+        //        SmartDashboard.putBoolean("Left", false);
+        //        SmartDashboard.putBoolean("Straight", false);
     }
+    Hardware.arrowDashboard.update();
 }
 
 // -------------------------------------------------------

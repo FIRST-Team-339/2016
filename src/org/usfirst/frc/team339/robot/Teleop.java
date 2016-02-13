@@ -96,13 +96,71 @@ public static void periodic ()
     //Print statements to test Hardware on the Robot
     printStatements();
 
-    // If we click buttons 6+7 on the left operator joystick, we dim the
-    // brightness a lot, turn the ringlight on, and then if we haven't
-    // already taken an image then we do and set the boolean to true to
-    // prevent us taking more images. Otherwise we don't turn on the
-    // ringlight and we don't take a picture. We added a timer to delay
-    // taking the picture for the brightness to dim and for the ring
-    // light to turn on.
+    //Tests the Camera
+    testCamera();
+
+
+    //Driving the Robot
+    driveRobot();
+
+
+
+    Hardware.leftFrontMotorSafety.feed();
+    Hardware.rightFrontMotorSafety.feed();
+    Hardware.leftRearMotorSafety.feed();
+    Hardware.leftRearMotorSafety.feed();
+} // end Periodic
+
+
+
+/**
+ * Hand the transmission class the joystick values and motor controllers for
+ * four wheel drive.
+ * 
+ */
+public static void driveRobot ()
+{
+    // 
+    //    Hardware.transmission.controls(Hardware.rightDriver.getY(),
+    //            Hardware.leftDriver.getY());
+    Hardware.transmission.setJoysticksAreReversed(true);
+    if (Hardware.rightDriver.getTrigger() == true && done == false)
+    {
+
+        done = Hardware.drive.turnLeftDegrees(90);
+        //done = Hardware.drive.driveForwardInches(48.0);
+
+    }
+    //    If we're pressing the upshift button, shift up.
+    Hardware.transmission.controls(Hardware.rightDriver.getY(),
+            Hardware.leftDriver.getY());
+    // If we're pressing the upshift button, shift up.
+    if (Hardware.rightDriver
+            .getRawButton(GEAR_UPSHIFT_JOYSTICK_BUTTON) == true)
+    {
+        Hardware.transmission.upshift(1);
+    }
+    // If we press the downshift button, shift down.
+    if (Hardware.rightDriver
+            .getRawButton(GEAR_DOWNSHIFT_JOYSTICK_BUTTON) == true)
+    {
+        Hardware.transmission.downshift(1);
+    }
+}
+
+
+/**
+ * If we click buttons 6+7 on the left operator joystick, we dim the
+ * brightness a lot, turn the ringlight on, and then if we haven't
+ * already taken an image then we do and set the boolean to true to
+ * prevent us taking more images. Otherwise we don't turn on the
+ * ringlight and we don't take a picture. We added a timer to delay
+ * taking the picture for the brightness to dim and for the ring
+ * light to turn on.
+ */
+public static void testCamera ()
+{
+
     if (Hardware.leftOperator.getRawButton(6) == true
             && Hardware.leftOperator.getRawButton(7) == true)
     {
@@ -175,42 +233,7 @@ public static void periodic ()
         processingImage = false;
     }
 
-    //Driving the Robot
-    // Hand the transmission class the joystick values and motor controllers for
-    // four wheel drive.
-    //    Hardware.transmission.controls(Hardware.rightDriver.getY(),
-    //            Hardware.leftDriver.getY());
-    Hardware.transmission.setJoysticksAreReversed(true);
-    if (Hardware.rightDriver.getTrigger() == true && done == false)
-    {
-
-        done = Hardware.drive.turnLeftDegrees(90);
-        //done = Hardware.drive.driveForwardInches(48.0);
-
-    }
-    //    If we're pressing the upshift button, shift up.
-    Hardware.transmission.controls(Hardware.rightDriver.getY(),
-            Hardware.leftDriver.getY());
-    // If we're pressing the upshift button, shift up.
-    if (Hardware.rightDriver
-            .getRawButton(GEAR_UPSHIFT_JOYSTICK_BUTTON) == true)
-    {
-        Hardware.transmission.upshift(1);
-    }
-    // If we press the downshift button, shift down.
-    if (Hardware.rightDriver
-            .getRawButton(GEAR_DOWNSHIFT_JOYSTICK_BUTTON) == true)
-    {
-        Hardware.transmission.downshift(1);
-    }
-
-
-
-    Hardware.leftFrontMotorSafety.feed();
-    Hardware.rightFrontMotorSafety.feed();
-    Hardware.leftRearMotorSafety.feed();
-    Hardware.leftRearMotorSafety.feed();
-} // end Periodic
+}
 
 static boolean hasBegunTurning = true;
 
