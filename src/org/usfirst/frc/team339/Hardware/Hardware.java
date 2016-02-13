@@ -243,9 +243,6 @@ public static RobotPotentiometer transducer = new RobotPotentiometer(2,
 public static RobotPotentiometer armPot =
         new RobotPotentiometer(1, ARM_POT_MAX_VALUE);
 
-public static RobotPotentiometer armPositionPot =
-        new RobotPotentiometer(4, 270);
-
 
 // -------------------------------------
 // Sonar/Ultrasonic
