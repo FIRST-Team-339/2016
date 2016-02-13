@@ -33,6 +33,7 @@ package org.usfirst.frc.team339.robot;
 
 import org.usfirst.frc.team339.Hardware.Hardware;
 import edu.wpi.first.wpilibj.CameraServer;
+import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.Relay.Value;
 
 /**
@@ -103,7 +104,8 @@ public static void periodic ()
     // Driving the Robot
     driveRobot();
 
-
+    runCameraSolenoid(Hardware.rightOperator.getRawButton(11),
+            Hardware.rightOperator.getRawButton(10), false, true);
 
     Hardware.leftFrontMotorSafety.feed();
     Hardware.rightFrontMotorSafety.feed();
@@ -125,28 +127,77 @@ public static void driveRobot ()
     // Hardware.leftDriver.getY());
     Hardware.transmission.setJoysticksAreReversed(true);
     if (Hardware.rightDriver.getTrigger() == true && done == false)
-        {
+    {
 
         done = Hardware.drive.turnLeftDegrees(90);
         // done = Hardware.drive.driveForwardInches(48.0);
 
-        }
+    }
     // If we're pressing the upshift button, shift up.
     Hardware.transmission.controls(Hardware.rightDriver.getY(),
             Hardware.leftDriver.getY());
     // If we're pressing the upshift button, shift up.
     if (Hardware.rightDriver
             .getRawButton(GEAR_UPSHIFT_JOYSTICK_BUTTON) == true)
-        {
+    {
         Hardware.transmission.upshift(1);
-        }
+    }
     // If we press the downshift button, shift down.
     if (Hardware.rightDriver
             .getRawButton(GEAR_DOWNSHIFT_JOYSTICK_BUTTON) == true)
-        {
+    {
         Hardware.transmission.downshift(1);
-        }
+    }
 }
+
+public static boolean armStatus = false;
+
+/**
+ * ^^^Bring the boolean armStatus
+ * if method is moved to a different class.^^^
+ * 
+ * @param upState
+ * @param downState
+ * @param holdState
+ * @param toggle
+ * 
+ *            When in toggle mode, one boolean raises the arm and one lowers.
+ *            When not in toggle mode, only use boolean holdState. This will
+ *            keep the arm up for the duration that the holdState is true.
+ * 
+ *            NOTE: if a parameter is not applicable, set it to false.
+ * 
+ * 
+ * 
+ * @author Ryan McGee
+ * @written 2/13/16
+ * 
+ */
+public static void runCameraSolenoid (boolean upState,
+        boolean downState, boolean holdState, boolean toggle)
+{
+    if (upState && toggle == true && armStatus == false)
+    {
+        Hardware.cameraSolenoid.set(DoubleSolenoid.Value.kForward);
+        armStatus = true;
+    }
+    else if (downState && toggle == true && armStatus == true)
+    {
+        Hardware.cameraSolenoid.set(DoubleSolenoid.Value.kReverse);
+        armStatus = false;
+    }
+    else if (holdState && toggle == false)
+    {
+        Hardware.cameraSolenoid.set(DoubleSolenoid.Value.kForward);
+    }
+    else
+    {
+        Hardware.cameraSolenoid.set(DoubleSolenoid.Value.kReverse);
+    }
+
+}
+
+
 
 
 /**
@@ -163,17 +214,17 @@ public static void testCamera ()
 
     if (Hardware.leftOperator.getRawButton(6) == true
             && Hardware.leftOperator.getRawButton(7) == true)
-        {
+    {
         if (prepPic == false)
-            {
+        {
             Hardware.axisCamera.writeBrightness(
                     Hardware.MINIMUM_AXIS_CAMERA_BRIGHTNESS);
             Hardware.ringLightRelay.set(Value.kOn);
             Hardware.delayTimer.start();
             prepPic = true;
             takingLitImage = true;
-            }
         }
+    }
     // --------------------------------------------------------------------------
     // ---CAMERA
     // TEST------------------------------------------------------------
@@ -186,33 +237,33 @@ public static void testCamera ()
     // FROM JOSEF AND NASEEM 2/10/2K16
     if (Hardware.delayTimer.get() >= Hardware.CAMERA_DELAY_TIME
             && prepPic == true && takingLitImage == true)
-        {
+    {
         Hardware.axisCamera.saveImagesSafely();
         prepPic = false;
         takingLitImage = false;
-        }
+    }
 
     if (takingLitImage == false && Hardware.delayTimer.get() >= 1)
-        {
+    {
         Hardware.axisCamera.writeBrightness(
                 Hardware.NORMAL_AXIS_CAMERA_BRIGHTNESS);
         Hardware.ringLightRelay.set(Value.kOff);
         Hardware.delayTimer.stop();
         Hardware.delayTimer.reset();
-        }
+    }
 
     // If we click buttons 10+11, we take a picture without the
     // ringlight and set the boolean to true so we don't take a bunch of
     // other pictures.
     if (Hardware.leftOperator.getRawButton(10) == true &&
             Hardware.leftOperator.getRawButton(11) == true)
-        {
+    {
         if (takingUnlitImage == false)
-            {
+        {
             takingUnlitImage = true;
             Hardware.axisCamera.saveImagesSafely();
-            }
         }
+    }
     else
         takingUnlitImage = false;
 
@@ -224,27 +275,27 @@ public static void testCamera ()
     // the trigger, then the boolean resets itself to false to take
     // pictures again.
     if (Hardware.leftOperator.getTrigger() == true)
-        {
+    {
         if (processingImage == false)
-            {
-            processImage();
-            }
-        }
-    else
         {
-        processingImage = false;
+            processImage();
         }
+    }
+    else
+    {
+        processingImage = false;
+    }
     // TESTING CODE. REMOVE ASAP.
     // If we're pressing button 12
     if (Hardware.leftOperator.getRawButton(4) == true)
-        {
+    {
         // process taken images
         Hardware.imageProcessor.updateParticleAnalysisReports();
         // print out the center of mass of the largest blob
         System.out.println("Center of Mass of first blob: "
                 + Hardware.imageProcessor
                         .getParticleAnalysisReports()[0].center_mass_x);
-        }
+    }
 
     Hardware.leftFrontMotorSafety.feed();
     Hardware.rightFrontMotorSafety.feed();
@@ -368,7 +419,8 @@ private static final double MAXIMUM_TELEOP_SPEED = 1.0;
 
 private static final double FIRST_GEAR_PERCENTAGE = 0.5;
 
-private static final double SECOND_GEAR_PERCENTAGE = MAXIMUM_TELEOP_SPEED;
+private static final double SECOND_GEAR_PERCENTAGE =
+        MAXIMUM_TELEOP_SPEED;
 
 // TODO change based on driver request
 private static final int GEAR_UPSHIFT_JOYSTICK_BUTTON = 3;
