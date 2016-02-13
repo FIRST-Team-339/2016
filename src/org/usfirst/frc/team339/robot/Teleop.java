@@ -33,6 +33,7 @@ package org.usfirst.frc.team339.robot;
 
 import org.usfirst.frc.team339.Hardware.Hardware;
 import edu.wpi.first.wpilibj.CameraServer;
+import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.Relay.Value;
 
 /**
@@ -103,6 +104,8 @@ public static void periodic ()
     // Driving the Robot
     driveRobot();
 
+    runCameraSolenoid(Hardware.rightOperator.getRawButton(11),
+            Hardware.rightOperator.getRawButton(10), false, true);
 
     Hardware.leftFrontMotorSafety.feed();
     Hardware.rightFrontMotorSafety.feed();
@@ -146,6 +149,54 @@ public static void driveRobot ()
         Hardware.transmission.downshift(1);
         }
 }
+
+public static boolean armStatus = false;
+
+/**
+ * ^^^Bring the boolean armStatus
+ * if method is moved to a different class.^^^
+ * 
+ * @param upState
+ * @param downState
+ * @param holdState
+ * @param toggle
+ * 
+ *            When in toggle mode, one boolean raises the arm and one lowers.
+ *            When not in toggle mode, only use boolean holdState. This will
+ *            keep the arm up for the duration that the holdState is true.
+ * 
+ *            NOTE: if a parameter is not applicable, set it to false.
+ * 
+ * 
+ * 
+ * @author Ryan McGee
+ * @written 2/13/16
+ * 
+ */
+public static void runCameraSolenoid (boolean upState,
+        boolean downState, boolean holdState, boolean toggle)
+{
+    if (upState && toggle == true && armStatus == false)
+    {
+        Hardware.cameraSolenoid.set(DoubleSolenoid.Value.kForward);
+        armStatus = true;
+    }
+    else if (downState && toggle == true && armStatus == true)
+    {
+        Hardware.cameraSolenoid.set(DoubleSolenoid.Value.kReverse);
+        armStatus = false;
+    }
+    else if (holdState && toggle == false)
+    {
+        Hardware.cameraSolenoid.set(DoubleSolenoid.Value.kForward);
+    }
+    else
+    {
+        Hardware.cameraSolenoid.set(DoubleSolenoid.Value.kReverse);
+    }
+
+}
+
 
 
 /**

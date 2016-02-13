@@ -68,6 +68,9 @@ public void setDirection (Direction direction)
  *         left lights up the left arrow.
  *         right lights up the right arrow.
  *         neutral keeps both off.
+ * 
+ *         NOTE: Remember to add update()
+ *         or else this code will not work!
  *
  */
 public static enum Direction
