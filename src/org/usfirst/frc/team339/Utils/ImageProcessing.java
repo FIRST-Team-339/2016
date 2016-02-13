@@ -51,7 +51,7 @@ public int boundingRectLeft;
 public int boundingRectTop;
 public int boundingRectRight;
 public int boundingRectBottom;
-public int center_mass_x;// TODO: actually initialize these valuse
+public int center_mass_x;// TODO: actually initialize these values
 public int center_mass_y;
 public int imageHeight;
 public int imageWidth;

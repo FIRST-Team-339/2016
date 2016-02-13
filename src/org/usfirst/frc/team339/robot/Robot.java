@@ -204,41 +204,41 @@ public void disabledPeriodic ()
     // =========================================================
 
 } // end disabledPeriodic
- // Guidance system, need to fix Guidance class!!
+  // Guidance system, need to fix Guidance class!!
 
 public static void runGuidanceSystem ()
 {
     if (Hardware.rightOperator.getRawButton(8)
             && !Hardware.rightOperator.getRawButton(9))
-    {
-        //Guidance.setDirection(Guidance.Direction.left);
+        {
+        // Guidance.setDirection(Guidance.Direction.left);
         SmartDashboard.putBoolean("Left", true);
         SmartDashboard.putBoolean("Right", false);
         SmartDashboard.putBoolean("Straight", false);
-    }
+        }
     else if (Hardware.rightOperator.getRawButton(9)
             && !Hardware.rightOperator.getRawButton(8))
-    {
-        //Guidance.setDirection(Guidance.Direction.right);
+        {
+        // Guidance.setDirection(Guidance.Direction.right);
         SmartDashboard.putBoolean("Right", true);
         SmartDashboard.putBoolean("Left", false);
         SmartDashboard.putBoolean("Straight", false);
-    }
+        }
     else if (Hardware.rightOperator.getRawButton(8)
             && Hardware.rightOperator.getRawButton(9))
-    {
-        //Guidance.setDirection(Guidance.Direction.linedUp);
+        {
+        // Guidance.setDirection(Guidance.Direction.linedUp);
         SmartDashboard.putBoolean("Straight", true);
         SmartDashboard.putBoolean("Right", false);
         SmartDashboard.putBoolean("Left", false);
-    }
+        }
     else
-    {
-        //Guidance.setDirection(Guidance.Direction.neutral);
+        {
+        // Guidance.setDirection(Guidance.Direction.neutral);
         SmartDashboard.putBoolean("Right", false);
         SmartDashboard.putBoolean("Left", false);
         SmartDashboard.putBoolean("Straight", false);
-    }
+        }
 }
 
 // -------------------------------------------------------
@@ -270,9 +270,9 @@ public void robotInit ()
             .setDistancePerPulse(distancePerTickForMotorEncoders);
     Hardware.rightRearEncoder.reset();
 
-    //--------------------------------------
+    // --------------------------------------
     // initialize all things with the drive system
-    //--------------------------------------
+    // --------------------------------------
     Hardware.transmission.setMaxGear(2);
 
     Hardware.transmission.setJoystickDeadbandRange(.20);
@@ -327,10 +327,10 @@ public void robotInit ()
     // -------------------------------------
     // motor initialization
     // -------------------------------------
-    Hardware.leftRearMotorSafety.setSafetyEnabled(true);
-    Hardware.rightRearMotorSafety.setSafetyEnabled(true);
-    Hardware.leftFrontMotorSafety.setSafetyEnabled(true);
-    Hardware.rightFrontMotorSafety.setSafetyEnabled(true);
+    Hardware.leftRearMotorSafety.setSafetyEnabled(false);
+    Hardware.rightRearMotorSafety.setSafetyEnabled(false);
+    Hardware.leftFrontMotorSafety.setSafetyEnabled(false);
+    Hardware.rightFrontMotorSafety.setSafetyEnabled(false);
     Hardware.rightRearMotor.setInverted(true);
 
     // --------------------------------------

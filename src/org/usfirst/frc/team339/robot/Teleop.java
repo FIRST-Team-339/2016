@@ -93,7 +93,7 @@ public static void periodic ()
 // we changed this from a static for testing purposes-Heather :)
 {
 
-    //Print statements to test Hardware on the Robot
+    // Print statements to test Hardware on the Robot
     printStatements();
 
     // If we click buttons 6+7 on the left operator joystick, we dim the
@@ -105,54 +105,56 @@ public static void periodic ()
     // light to turn on.
     if (Hardware.leftOperator.getRawButton(6) == true
             && Hardware.leftOperator.getRawButton(7) == true)
-    {
-        if (prepPic == false)
         {
+        if (prepPic == false)
+            {
             Hardware.axisCamera.writeBrightness(
                     Hardware.MINIMUM_AXIS_CAMERA_BRIGHTNESS);
             Hardware.ringLightRelay.set(Value.kOn);
             Hardware.delayTimer.start();
             prepPic = true;
             takingLitImage = true;
+            }
         }
-    }
-    //--------------------------------------------------------------------------
-    //---CAMERA TEST------------------------------------------------------------
+    // --------------------------------------------------------------------------
+    // ---CAMERA
+    // TEST------------------------------------------------------------
     // Once the brightness is down and the ring light is on then the
     // picture is taken, the brightness returns to normal, the ringlight
     // is turned off, and the timer is stopped and reset.
     // @TODO Change .25 to a constant, see line 65 under Hardware
-    //Replaced '.25' with Hardware.CAMERA_DELAY_TIME' change back if camera fails
-    //FROM JOSEF AND NASEEM 2/10/2K16
+    // Replaced '.25' with Hardware.CAMERA_DELAY_TIME' change back if camera
+    // fails
+    // FROM JOSEF AND NASEEM 2/10/2K16
     if (Hardware.delayTimer.get() >= Hardware.CAMERA_DELAY_TIME
             && prepPic == true && takingLitImage == true)
-    {
+        {
         Hardware.axisCamera.saveImagesSafely();
         prepPic = false;
         takingLitImage = false;
-    }
+        }
 
     if (takingLitImage == false && Hardware.delayTimer.get() >= 1)
-    {
+        {
         Hardware.axisCamera.writeBrightness(
                 Hardware.NORMAL_AXIS_CAMERA_BRIGHTNESS);
         Hardware.ringLightRelay.set(Value.kOff);
         Hardware.delayTimer.stop();
         Hardware.delayTimer.reset();
-    }
+        }
 
     // If we click buttons 10+11, we take a picture without the
     // ringlight and set the boolean to true so we don't take a bunch of
     // other pictures.
     if (Hardware.leftOperator.getRawButton(10) == true &&
             Hardware.leftOperator.getRawButton(11) == true)
-    {
-        if (takingUnlitImage == false)
         {
+        if (takingUnlitImage == false)
+            {
             takingUnlitImage = true;
             Hardware.axisCamera.saveImagesSafely();
+            }
         }
-    }
     else
         takingUnlitImage = false;
 
@@ -164,45 +166,56 @@ public static void periodic ()
     // the trigger, then the boolean resets itself to false to take
     // pictures again.
     if (Hardware.leftOperator.getTrigger() == true)
-    {
-        if (processingImage == false)
         {
+        if (processingImage == false)
+            {
             processImage();
+            }
         }
-    }
     else
-    {
+        {
         processingImage = false;
-    }
+        }
+    // TESTING CODE. REMOVE ASAP.
+    // If we're pressing button 12
+    if (Hardware.leftOperator.getRawButton(4) == true)
+        {
+        // process taken images
+        Hardware.imageProcessor.updateParticleAnalysisReports();
+        // print out the center of mass of the largest blob
+        System.out.println("Center of Mass of first blob: "
+                + Hardware.imageProcessor
+                        .getParticleAnalysisReports()[0].center_mass_x);
+        }
 
-    //Driving the Robot
+    // Driving the Robot
     // Hand the transmission class the joystick values and motor controllers for
     // four wheel drive.
-    //    Hardware.transmission.controls(Hardware.rightDriver.getY(),
-    //            Hardware.leftDriver.getY());
+    // Hardware.transmission.controls(Hardware.rightDriver.getY(),
+    // Hardware.leftDriver.getY());
     Hardware.transmission.setJoysticksAreReversed(true);
     if (Hardware.rightDriver.getTrigger() == true && done == false)
-    {
+        {
 
         done = Hardware.drive.turnLeftDegrees(90);
-        //done = Hardware.drive.driveForwardInches(48.0);
+        // done = Hardware.drive.driveForwardInches(48.0);
 
-    }
-    //    If we're pressing the upshift button, shift up.
+        }
+    // If we're pressing the upshift button, shift up.
     Hardware.transmission.controls(Hardware.rightDriver.getY(),
             Hardware.leftDriver.getY());
     // If we're pressing the upshift button, shift up.
     if (Hardware.rightDriver
             .getRawButton(GEAR_UPSHIFT_JOYSTICK_BUTTON) == true)
-    {
+        {
         Hardware.transmission.upshift(1);
-    }
+        }
     // If we press the downshift button, shift down.
     if (Hardware.rightDriver
             .getRawButton(GEAR_DOWNSHIFT_JOYSTICK_BUTTON) == true)
-    {
+        {
         Hardware.transmission.downshift(1);
-    }
+        }
 
 
 
@@ -263,15 +276,15 @@ public static void printStatements ()
     // System.out.println("Right Operator: " + Hardware.rightOperator.getY());
 
     // IR sensors-----------
-    //   System.out.println("left IR = " + Hardware.leftIR.isOn());
-    //   System.out.println("right IR = " + Hardware.rightIR.isOn());
+    // System.out.println("left IR = " + Hardware.leftIR.isOn());
+    // System.out.println("right IR = " + Hardware.rightIR.isOn());
 
     // pots-----------------
     // System.out.println("delay pot = " + (int) Hardware.delayPot.get());
     // prints the value of the transducer- (range in code is 50)
     // hits psi of 100 accurately
     // System.out.println("transducer = " + Hardware.transducer.get());
-    //System.out.println("Test Pot = " + Hardware.armPot.get());
+    // System.out.println("Test Pot = " + Hardware.armPot.get());
 
     // Motor controllers-----
     // prints value of the motors
@@ -328,10 +341,9 @@ private static final double MAXIMUM_TELEOP_SPEED = 1.0;
 
 private static final double FIRST_GEAR_PERCENTAGE = 0.5;
 
-private static final double SECOND_GEAR_PERCENTAGE =
-        MAXIMUM_TELEOP_SPEED;
+private static final double SECOND_GEAR_PERCENTAGE = MAXIMUM_TELEOP_SPEED;
 
-//TODO change based on driver request
+// TODO change based on driver request
 private static final int GEAR_UPSHIFT_JOYSTICK_BUTTON = 3;
 
 private static final int GEAR_DOWNSHIFT_JOYSTICK_BUTTON = 2;
