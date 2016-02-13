@@ -24,7 +24,7 @@ public class Drive
  */
 public Drive (Transmission_old transmission)
 {
-    this.transmission = transmission;
+	this.transmission = transmission;
 }
 
 /**
@@ -38,13 +38,13 @@ public Drive (Transmission_old transmission)
  */
 public boolean brake (final double brakeSpeed)
 {
-    // TODO maybe make argument a constant in the class.
-    // TODO find out ideal brakespeed.
-    if (this.transmission.brake(brakeSpeed))
-        {
-        return true;
-        }
-    return false;
+	// TODO maybe make argument a constant in the class.
+	// TODO find out ideal brakespeed.
+	if (this.transmission.brake(brakeSpeed))
+	{
+	return true;
+	}
+	return false;
 } // end brake()
 
 /**
@@ -56,8 +56,8 @@ public boolean brake (final double brakeSpeed)
  */
 public void driveContinuous ()
 {
-    this.driveForwardInches(9999.0, false,
-            this.maxSpeedScalingFactor, this.maxSpeedScalingFactor);
+	this.driveForwardInches(9999.0, false,
+	        this.maxSpeedScalingFactor, this.maxSpeedScalingFactor);
 } // end driveContinuous()
 
 /**
@@ -76,8 +76,8 @@ public void driveContinuous (
         final double rightJoystickInputValue)
 
 {
-    this.driveForwardInches(9999.0, false,
-            leftJoystickInputValue, rightJoystickInputValue);
+	this.driveForwardInches(9999.0, false,
+	        leftJoystickInputValue, rightJoystickInputValue);
 } // end driveContinuous()
 
 /**
@@ -92,8 +92,8 @@ public void driveContinuous (
  */
 public boolean driveForwardInches (final double distance)
 {
-    return (this.driveForwardInches(distance, true,
-            this.maxSpeedScalingFactor, this.maxSpeedScalingFactor));
+	return (this.driveForwardInches(distance, true,
+	        this.maxSpeedScalingFactor, this.maxSpeedScalingFactor));
 } // end driveForwardInches()
 
 /**
@@ -112,8 +112,8 @@ public boolean driveForwardInches (final double distance)
 public boolean driveForwardInches (final double distance,
         final boolean brakeAtEnd)
 {
-    return (this.driveForwardInches(distance, brakeAtEnd,
-            this.maxSpeedScalingFactor, this.maxSpeedScalingFactor));
+	return (this.driveForwardInches(distance, brakeAtEnd,
+	        this.maxSpeedScalingFactor, this.maxSpeedScalingFactor));
 } // end driveForwardInches()
 
 /**
@@ -134,8 +134,8 @@ public boolean driveForwardInches (final double distance,
         final double leftJoystickInputValue,
         final double rightJoystickInputValue)
 {
-    return (this.driveForwardInches(distance, true,
-            leftJoystickInputValue, rightJoystickInputValue));
+	return (this.driveForwardInches(distance, true,
+	        leftJoystickInputValue, rightJoystickInputValue));
 } // end driveForwardInches()
 
 /**
@@ -159,42 +159,82 @@ public boolean driveForwardInches (final double distance,
         final double leftJoystickInputValue,
         final double rightJoystickInputValue)
 {
-    // stop if the average value of either drive train is greater than
-    // the desired distance traveled.
-    if (this.hasDrivenInches(distance) == true)
-        {
-        // if requested to brake, stop
-        if (brakeAtEnd == true)
-            {
-            return (this.brake(this.BRAKE_SPEED));
-            }
-        return true;
-        }
-    // if we are presently going straight - keep the
-    // speeds equal
-    if (this.transmission
-            .getRightRearEncoderDistance() == this.transmission
-                    .getRightFrontEncoderDistance())
-        this.transmission.controls(
-                (leftJoystickInputValue * this.maxSpeedScalingFactor),
-                (rightJoystickInputValue * this.maxSpeedScalingFactor));
-    // if the left drive train is ahead of the right drive train (on a
-    // four wheel drive)
-    else if ((this.transmission
-            .getRightRearEncoderDistance()) < (this.transmission
-                    .getLeftRearEncoderDistance()))
-        this.transmission.controls(
-                leftJoystickInputValue * this.maxSpeedScalingFactor
-                        * this.CORRECTION_FACTOR,
-                (rightJoystickInputValue * this.maxSpeedScalingFactor));
-    // if the right drive train is ahead of the left drive train (on a
-    // four wheel drive)
-    else
-        this.transmission.controls(
-                (leftJoystickInputValue * this.maxSpeedScalingFactor),
-                rightJoystickInputValue * this.maxSpeedScalingFactor
-                        * this.CORRECTION_FACTOR);
-    return false;
+	// stop if the average value of either drive train is greater than
+	// the desired distance traveled.
+	if (this.hasDrivenInches(distance) == true)
+	{
+	// if requested to brake, stop
+	if (brakeAtEnd == true)
+	{
+	return (this.brake(this.BRAKE_SPEED));
+	}
+	return true;
+	}
+	// if we are presently going straight - keep the
+	// speeds equal
+	if (this.transmission
+	        .getRightRearEncoderDistance() == this.transmission
+	                .getLeftRearEncoderDistance())
+		this.transmission.controls(
+		        (leftJoystickInputValue * this.maxSpeedScalingFactor),
+		        (rightJoystickInputValue * this.maxSpeedScalingFactor));
+	// if the left drive train is ahead of the right drive train (on a
+	// four wheel drive)
+	else if ((this.transmission
+	        .getRightRearEncoderDistance()) < (this.transmission
+	                .getLeftRearEncoderDistance()))
+		this.transmission.controls(
+		        Math.max(MINIMUM_MOTOR_SPEED, leftJoystickInputValue *
+		                this.maxSpeedScalingFactor
+		                * this.DEFAULT_CORRECTION_FACTOR),
+		        (rightJoystickInputValue * this.maxSpeedScalingFactor));
+	// if the right drive train is ahead of the left drive train (on a
+	// four wheel drive)
+	else
+		this.transmission.controls(
+		        (leftJoystickInputValue * this.maxSpeedScalingFactor),
+		        Math.max(MINIMUM_MOTOR_SPEED, rightJoystickInputValue *
+		                this.maxSpeedScalingFactor
+		                * this.DEFAULT_CORRECTION_FACTOR));
+
+	//PRINT STATEMENTS:
+	//TODO: remove
+	//Prints out encoder values and the values we are sending to the motors.
+	System.out.println(
+	        "Left Distance: " + Hardware.leftRearEncoder.getDistance());
+	System.out.println("Right Distance: "
+	        + Hardware.rightRearEncoder.getDistance());
+	if (this.transmission
+	        .getRightRearEncoderDistance() == this.transmission
+	                .getLeftRearEncoderDistance())
+	{
+	System.out.println("Left Joystick: "
+	        + leftJoystickInputValue * this.maxSpeedScalingFactor);
+	System.out.println("Right Joystick: "
+	        + rightJoystickInputValue * this.maxSpeedScalingFactor);
+	}
+	else if ((this.transmission
+	        .getRightRearEncoderDistance()) < (this.transmission
+	                .getLeftRearEncoderDistance()))
+	{
+	System.out.println("Left Joystick: "
+	        + Math.max(MINIMUM_MOTOR_SPEED, leftJoystickInputValue *
+	                this.maxSpeedScalingFactor
+	                * this.DEFAULT_CORRECTION_FACTOR));
+	System.out.println("Right Joystick: "
+	        + rightJoystickInputValue * this.maxSpeedScalingFactor);
+	}
+	else
+	{
+	System.out.println("Left Joystick: "
+	        + leftJoystickInputValue * this.maxSpeedScalingFactor);
+	System.out.println("Right Joystick: "
+	        + Math.max(MINIMUM_MOTOR_SPEED, rightJoystickInputValue *
+	                this.maxSpeedScalingFactor
+	                * this.DEFAULT_CORRECTION_FACTOR));
+	}
+
+	return false;
 } // end driveForwardInches()
 
 /**
@@ -205,7 +245,7 @@ public boolean driveForwardInches (final double distance,
  */
 public double getBrakeSpeed ()
 {
-    return this.BRAKE_SPEED;
+	return this.BRAKE_SPEED;
 } // end getBrakeSpeed()
 
 /**
@@ -217,18 +257,18 @@ public double getBrakeSpeed ()
  */
 public double getForwardVelocity ()
 {
-    double speed = (((this.transmission.getLeftRearEncoderDistance()
-            + this.transmission.getRightRearEncoderDistance()) / 2
-            - (this.prevLeftDistance + this.prevRightDistance) / 2))
-            / (Hardware.kilroyTimer.get() - this.prevTime);
+	double speed = (((this.transmission.getLeftRearEncoderDistance()
+	        + this.transmission.getRightRearEncoderDistance()) / 2
+	        - (this.prevLeftDistance + this.prevRightDistance) / 2))
+	        / (Hardware.kilroyTimer.get() - this.prevTime);
 
-    this.prevLeftDistance =
-            this.transmission.getLeftRearEncoderDistance();
-    this.prevRightDistance =
-            this.transmission.getRightRearEncoderDistance();
-    this.prevTime = Hardware.kilroyTimer.get();
+	this.prevLeftDistance =
+	        this.transmission.getLeftRearEncoderDistance();
+	this.prevRightDistance =
+	        this.transmission.getRightRearEncoderDistance();
+	this.prevTime = Hardware.kilroyTimer.get();
 
-    return speed;
+	return speed;
 } // end getForwardVelocity()
 
 /**
@@ -239,16 +279,16 @@ public double getForwardVelocity ()
  */
 public double getRightMotorVelocity ()
 {
-    // based on the "getForwardVelocity()" method
-    double speed = ((this.transmission.getRightRearEncoderDistance() -
-            this.prevRightDistance) / 2) / (Hardware.kilroyTimer.get() -
-                    this.prevTime);
+	// based on the "getForwardVelocity()" method
+	double speed = ((this.transmission.getRightRearEncoderDistance() -
+	        this.prevRightDistance) / 2) / (Hardware.kilroyTimer.get() -
+	                this.prevTime);
 
-    this.prevRightDistance =
-            this.transmission.getRightRearEncoderDistance();
-    this.prevTime = Hardware.kilroyTimer.get();
+	this.prevRightDistance =
+	        this.transmission.getRightRearEncoderDistance();
+	this.prevTime = Hardware.kilroyTimer.get();
 
-    return speed;
+	return speed;
 } // end getRightMotorVelocity()
 
 /**
@@ -259,16 +299,16 @@ public double getRightMotorVelocity ()
  */
 public double getLeftMotorVelocity ()
 {
-    // based on the "getForwardVelocity()" method
-    double speed = ((this.transmission.getLeftRearEncoderDistance() -
-            this.prevLeftDistance) / 2) / (Hardware.kilroyTimer.get() -
-                    this.prevTime);
+	// based on the "getForwardVelocity()" method
+	double speed = ((this.transmission.getLeftRearEncoderDistance() -
+	        this.prevLeftDistance) / 2) / (Hardware.kilroyTimer.get() -
+	                this.prevTime);
 
-    this.prevLeftDistance =
-            this.transmission.getLeftRearEncoderDistance();
-    this.prevTime = Hardware.kilroyTimer.get();
+	this.prevLeftDistance =
+	        this.transmission.getLeftRearEncoderDistance();
+	this.prevTime = Hardware.kilroyTimer.get();
 
-    return speed;
+	return speed;
 } // end getLeftMotorVelocity()
 
 /**
@@ -280,22 +320,22 @@ public double getLeftMotorVelocity ()
  */
 public double getRotationalVelocity ()
 {
-    double rotationalVelocity = ((Math
-            .abs(this.transmission.getLeftRearEncoderDistance())
-            + Math.abs(
-                    this.transmission.getRightRearEncoderDistance())
-                    / 2
-            - ((Math.abs(this.prevLeftDistance)
-                    + Math.abs(this.prevRightDistance)) / 2)
-                    / (Hardware.kilroyTimer.get() - this.prevTime)));
+	double rotationalVelocity = ((Math
+	        .abs(this.transmission.getLeftRearEncoderDistance())
+	        + Math.abs(
+	                this.transmission.getRightRearEncoderDistance())
+	                / 2
+	        - ((Math.abs(this.prevLeftDistance)
+	                + Math.abs(this.prevRightDistance)) / 2)
+	                / (Hardware.kilroyTimer.get() - this.prevTime)));
 
-    this.prevLeftDistance =
-            this.transmission.getLeftRearEncoderDistance();
-    this.prevRightDistance =
-            this.transmission.getRightRearEncoderDistance();
-    this.prevTime = Hardware.kilroyTimer.get();
+	this.prevLeftDistance =
+	        this.transmission.getLeftRearEncoderDistance();
+	this.prevRightDistance =
+	        this.transmission.getRightRearEncoderDistance();
+	this.prevTime = Hardware.kilroyTimer.get();
 
-    return rotationalVelocity;
+	return rotationalVelocity;
 } // end getRotationalVelocity()
 
 /**
@@ -310,16 +350,16 @@ public double getRotationalVelocity ()
  */
 public boolean hasDrivenInches (final double targetDistance)
 {
-    // if either drive train is beyond the targetDistance
-    if (this.transmission
-            .getRightRearEncoderDistance() >= targetDistance ||
-            this.transmission
-                    .getLeftRearEncoderDistance() >= targetDistance)
-        {
-        //we're done
-        return true;
-        }
-    return false;
+	// if either drive train is beyond the targetDistance
+	if (this.transmission
+	        .getRightRearEncoderDistance() >= targetDistance ||
+	        this.transmission
+	                .getLeftRearEncoderDistance() >= targetDistance)
+	{
+	//we're done
+	return true;
+	}
+	return false;
 } // end hasDrivenInches()
 
 /**
@@ -332,12 +372,12 @@ public boolean hasDrivenInches (final double targetDistance)
  */
 public double setBrakeSpeed (final double newBrakeSpeed)
 {
-    return (this.BRAKE_SPEED = newBrakeSpeed);
+	return (this.BRAKE_SPEED = newBrakeSpeed);
 } // end setBrakeSpeed()
 
 public double getMaxSpeed ()
 {
-    return this.maxSpeedScalingFactor;
+	return this.maxSpeedScalingFactor;
 }
 
 /**
@@ -350,7 +390,7 @@ public double getMaxSpeed ()
  */
 public void setMaxSpeed (final double max)
 {
-    this.maxSpeedScalingFactor = max;
+	this.maxSpeedScalingFactor = max;
 } // end setMaxSpeed()
 
 /**
@@ -379,69 +419,69 @@ public boolean turnByDegrees (final turnWhichWay whichWay,
         final double leftJoystickInputValue,
         final double rightJoystickInputValue)
 {
-    //-----------------------------------------
-    // Make sure that the degrees requested stays
-    // within 0-180
-    //-----------------------------------------
-    double turnDegrees = Math.min(Math.max(degrees, 0.0), 180);
+	//-----------------------------------------
+	// Make sure that the degrees requested stays
+	// within 0-180
+	//-----------------------------------------
+	double turnDegrees = Math.min(Math.max(degrees, 0.0), 180);
 
-    double turnInRadians = Math.toRadians(degrees);
+	double turnInRadians = Math.toRadians(degrees);
 
-    //----------------------------------------
-    // are we turning right
-    //----------------------------------------
-    if (whichWay == turnWhichWay.TURN_RIGHT)
-        {
-        if (this.transmission
-                .getRightRearEncoderDistance() <= -(turnInRadians
-                        * this.ROBOT_TURNING_RADIUS)
-                || this.transmission
-                        .getLeftRearEncoderDistance() >= (turnInRadians
-                                * this.ROBOT_TURNING_RADIUS))
-            {
-            //brake and if we're done braking, tell caller we're done
-            if (brakeAtEnd == true)
-                {
-                return (this.brake(this.BRAKE_SPEED));
-                }
-            return true;
-            }
-        //drive the robot, right train backwards, left train forwards
-        this.transmission.controls(
-                -(this.maxTurningSpeedScalingFactor
-                        * leftJoystickInputValue),
-                (this.maxTurningSpeedScalingFactor
-                        * rightJoystickInputValue));
-        }
-    //----------------------------------------
-    // we are turning left
-    //----------------------------------------
-    else
-        {
-        if (this.transmission
-                .getRightRearEncoderDistance() >= (turnInRadians
-                        * this.ROBOT_TURNING_RADIUS)
-                ||
-                this.transmission
-                        .getLeftRearEncoderDistance() <= -(turnInRadians
-                                * this.ROBOT_TURNING_RADIUS))
-            {
-            //brake and if we're done braking, tell caller we're done
-            if (brakeAtEnd == true)
-                {
-                return (this.brake(this.BRAKE_SPEED));
-                }
-            return true;
-            }
-        //drive the robot, right train forwards, left train backwards
-        this.transmission.controls(
-                (this.maxTurningSpeedScalingFactor
-                        * leftJoystickInputValue),
-                -(this.maxTurningSpeedScalingFactor
-                        * rightJoystickInputValue));
-        }
-    //We're not done driving yet!!
-    return false;
+	//----------------------------------------
+	// are we turning right
+	//----------------------------------------
+	if (whichWay == turnWhichWay.TURN_RIGHT)
+	{
+	if (this.transmission
+	        .getRightRearEncoderDistance() <= -(turnInRadians
+	                * this.ROBOT_TURNING_RADIUS)
+	        || this.transmission
+	                .getLeftRearEncoderDistance() >= (turnInRadians
+	                        * this.ROBOT_TURNING_RADIUS))
+	{
+	//brake and if we're done braking, tell caller we're done
+	if (brakeAtEnd == true)
+	{
+	return (this.brake(this.BRAKE_SPEED));
+	}
+	return true;
+	}
+	//drive the robot, right train backwards, left train forwards
+	this.transmission.controls(
+	        -(this.maxTurningSpeedScalingFactor
+	                * leftJoystickInputValue),
+	        (this.maxTurningSpeedScalingFactor
+	                * rightJoystickInputValue));
+	}
+	//----------------------------------------
+	// we are turning left
+	//----------------------------------------
+	else
+	{
+	if (this.transmission
+	        .getRightRearEncoderDistance() >= (turnInRadians
+	                * this.ROBOT_TURNING_RADIUS)
+	        ||
+	        this.transmission
+	                .getLeftRearEncoderDistance() <= -(turnInRadians
+	                        * this.ROBOT_TURNING_RADIUS))
+	{
+	//brake and if we're done braking, tell caller we're done
+	if (brakeAtEnd == true)
+	{
+	return (this.brake(this.BRAKE_SPEED));
+	}
+	return true;
+	}
+	//drive the robot, right train forwards, left train backwards
+	this.transmission.controls(
+	        (this.maxTurningSpeedScalingFactor
+	                * leftJoystickInputValue),
+	        -(this.maxTurningSpeedScalingFactor
+	                * rightJoystickInputValue));
+	}
+	//We're not done driving yet!!
+	return false;
 } // end turnByDegrees()
 
 /**
@@ -457,7 +497,7 @@ public boolean turnByDegrees (final turnWhichWay whichWay,
  */
 public boolean turnLeftDegrees (final double degrees)
 {
-    return (this.turnLeftDegrees(degrees, true));
+	return (this.turnLeftDegrees(degrees, true));
 } // end turnLeftDegrees()
 
 /**
@@ -478,8 +518,8 @@ public boolean turnLeftDegrees (final double degrees)
 public boolean turnLeftDegrees (final double degrees,
         final boolean brakeAtEnd)
 {
-    return (this.turnLeftDegrees(degrees, brakeAtEnd,
-            this.maxSpeedScalingFactor, this.maxSpeedScalingFactor));
+	return (this.turnLeftDegrees(degrees, brakeAtEnd,
+	        this.maxSpeedScalingFactor, this.maxSpeedScalingFactor));
 } // end turnLeftDegrees()
 
 /**
@@ -502,8 +542,8 @@ public boolean turnLeftDegrees (final double degrees,
         final double leftJoystickInputValue,
         final double rightJoystickInputValue)
 {
-    return (this.turnLeftDegrees(degrees, true,
-            leftJoystickInputValue, rightJoystickInputValue));
+	return (this.turnLeftDegrees(degrees, true,
+	        leftJoystickInputValue, rightJoystickInputValue));
 } // end turnLeftDegrees()
 
 /**
@@ -530,9 +570,9 @@ public boolean turnLeftDegrees (final double degrees,
         final double leftJoystickInputValue,
         final double rightJoystickInputValue)
 {
-    return (this.turnByDegrees(turnWhichWay.TURN_LEFT, degrees,
-            brakeAtEnd, leftJoystickInputValue,
-            rightJoystickInputValue));
+	return (this.turnByDegrees(turnWhichWay.TURN_LEFT, degrees,
+	        brakeAtEnd, leftJoystickInputValue,
+	        rightJoystickInputValue));
 } // end turnLeftDegrees()
 
 /**
@@ -548,7 +588,7 @@ public boolean turnLeftDegrees (final double degrees,
  */
 public boolean turnRightDegrees (final double degrees)
 {
-    return (this.turnRightDegrees(degrees, true));
+	return (this.turnRightDegrees(degrees, true));
 } // end turnLeftDegrees()
 
 /**
@@ -569,8 +609,8 @@ public boolean turnRightDegrees (final double degrees)
 public boolean turnRightDegrees (final double degrees,
         final boolean brakeAtEnd)
 {
-    return (this.turnRightDegrees(degrees, brakeAtEnd,
-            this.maxSpeedScalingFactor, this.maxSpeedScalingFactor));
+	return (this.turnRightDegrees(degrees, brakeAtEnd,
+	        this.maxSpeedScalingFactor, this.maxSpeedScalingFactor));
 } // end turnRightDegrees()
 
 /**
@@ -593,8 +633,8 @@ public boolean turnRightDegrees (final double degrees,
         final double leftJoystickInputValue,
         final double rightJoystickInputValue)
 {
-    return (this.turnRightDegrees(degrees, true,
-            leftJoystickInputValue, rightJoystickInputValue));
+	return (this.turnRightDegrees(degrees, true,
+	        leftJoystickInputValue, rightJoystickInputValue));
 } // end turnLeftDegrees()
 
 /**
@@ -618,9 +658,9 @@ public boolean turnRightDegrees (final double degrees,
         final double leftJoystickInputValue,
         final double rightJoystickInputValue)
 {
-    return (this.turnByDegrees(turnWhichWay.TURN_RIGHT, degrees,
-            brakeAtEnd, leftJoystickInputValue,
-            rightJoystickInputValue));
+	return (this.turnByDegrees(turnWhichWay.TURN_RIGHT, degrees,
+	        brakeAtEnd, leftJoystickInputValue,
+	        rightJoystickInputValue));
 } // end turnRightDegrees()
 
 /**
@@ -633,17 +673,19 @@ public boolean turnRightDegrees (final double degrees,
  *
  */
 public enum turnWhichWay
-    {
-    TURN_RIGHT, TURN_LEFT;
-    }
+	{
+	TURN_RIGHT, TURN_LEFT;
+	}
 
 /*
  * Constants
  */
 
-private final double DEFAULT_MAX_SPEED = 1.0;
+private final double DEFAULT_MAX_SPEED = -1.0;
 
-private final double CORRECTION_FACTOR = -0.75;
+private final double DEFAULT_CORRECTION_FACTOR = -0.75;
+
+private final double MINIMUM_MOTOR_SPEED = -.35;
 
 // TODO - get Kilroys new turning radius
 private final double ROBOT_TURNING_RADIUS = 12.0;
