@@ -56,7 +56,7 @@ public static Direction getDirection ()
     return direction;
 }
 
-public static void setDirection (Direction direction)
+public void setDirection (Direction direction)
 {
     Guidance.direction = direction;
 }

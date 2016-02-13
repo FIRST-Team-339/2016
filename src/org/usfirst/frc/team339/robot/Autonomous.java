@@ -183,7 +183,7 @@ public static void init ()
 
     debug = DEBUGGING_DEFAULT;
 
-    Hardware.drive.setMaxSpeed(MAXIMUM_AUTONOMOUS_SPEED);
+    // Hardware.drive.setMaxSpeed(MAXIMUM_AUTONOMOUS_SPEED);
 
 
     // -------------------------------------
@@ -237,7 +237,7 @@ public static void init ()
     Hardware.armIntakeMotor.set(0.0);
 
 
-    Hardware.drive.setMaxSpeed(MAXIMUM_AUTONOMOUS_SPEED);
+    // Hardware.drive.setMaxSpeed(MAXIMUM_AUTONOMOUS_SPEED);
 } // end Init
 
 /**
@@ -255,7 +255,7 @@ public static void periodic ()
     // moveToShootingPositionStep = MoveToShootingPositionStep.FORWARDS_ONE;
 
     // Checks the "enabled" switch.
-    if (enabled)
+    if (enabled == true)
         {
         // runs the overarching state machine.
         runMainStateMachine();
@@ -294,6 +294,7 @@ private static void runMainStateMachine ()
         {
         case INIT:
             // Doesn't do much.
+            // Just a Platypus.
             mainInit();
             // mainState = MainState.BEGIN_LOWERING_ARM;
 
@@ -309,8 +310,8 @@ private static void runMainStateMachine ()
                 mainState = MainState.INIT_DELAY;
                 }
 
-            // temporary; for testing. TODO: set back to BEGIN_LOWERING_ARM
-            mainState = MainState.ROTATE_ON_ALIGNMENT_LINE;
+            // temporary; for testing. TODO: remove.
+            // mainState = MainState.ROTATE_ON_ALIGNMENT_LINE;
             break;
 
 
@@ -350,7 +351,7 @@ private static void runMainStateMachine ()
 
         case DELAY:
             // check whether done or not until done.
-            if (delayIsDone())
+            if (delayIsDone() == true)
             // go to move forwards while lowering arm when finished.
                 {
                 mainState = MainState.LOWER_ARM_AND_MOVE;
@@ -359,7 +360,7 @@ private static void runMainStateMachine ()
 
         case FORWARDS_BASED_ON_ENCODERS_OR_IR:
             // Check if we are in lane One.
-            if (isInLaneOne())
+            if (isInLaneOne() == true)
             // If so, move forwards the distance to the A-tape.
                 {
                 mainState = MainState.FORWARDS_TO_TAPE_BY_DISTANCE;
@@ -373,7 +374,7 @@ private static void runMainStateMachine ()
 
         case FORWARDS_TO_TAPE_BY_DISTANCE:
             // Drive the distance from outer works to A-Line.
-            if (hasDrivenToTapeByDistance())
+            if (hasDrivenToTapeByDistance() == true)
             // when done, proceed from Alignment line.
                 {
                 resetEncoders();
@@ -383,7 +384,7 @@ private static void runMainStateMachine ()
 
         case FORWARDS_UNTIL_TAPE:
             // Drive until IR sensors pick up tape.
-            if (hasMovedToTape())
+            if (hasMovedToTape() == true)
                 {
                 // When done, possibly rotate.
                 resetEncoders();
@@ -392,7 +393,7 @@ private static void runMainStateMachine ()
             break;
 
         case ROTATE_ON_ALIGNMENT_LINE:
-            if (hasRotatedTowardsShootingPosition())
+            if (hasRotatedTowardsShootingPosition() == true)
                 {
                 resetEncoders();
                 mainState = MainState.FORWARDS_FROM_ALIGNMENT_LINE;
@@ -400,7 +401,7 @@ private static void runMainStateMachine ()
             break;
 
         case FORWARDS_FROM_ALIGNMENT_LINE:
-            if (hasMovedFowardsFromTape())
+            if (hasMovedFowardsFromTape() == true)
                 {
                 resetEncoders();
                 mainState = MainState.TURN_TO_FACE_GOAL;
@@ -408,7 +409,7 @@ private static void runMainStateMachine ()
             break;
 
         case TURN_TO_FACE_GOAL:
-            if (hasTurnedToFaceGoal())
+            if (hasTurnedToFaceGoal() == true)
                 {
                 resetEncoders();
                 mainState = MainState.DRIVE_UP_TO_GOAL;
@@ -416,7 +417,7 @@ private static void runMainStateMachine ()
             break;
 
         case DRIVE_UP_TO_GOAL:
-            if (hasDrivenUpToGoal())
+            if (hasDrivenUpToGoal() == true)
                 {
                 resetEncoders();
                 mainState = MainState.SHOOT;
@@ -428,6 +429,7 @@ private static void runMainStateMachine ()
             mainState = MainState.DONE;
             break;
 
+        default:
         case DONE:
             done();
             break;
@@ -466,7 +468,7 @@ private static boolean armIsLowered ()
     // false by default.
     boolean done = false;
 
-    if (Hardware.armPositionPot.get() >= ARM_DOWN_TICKS)
+    if (Hardware.armPot.get() >= ARM_DOWN_DEGREES)
     // The arm IS down.
         {
         done = true;
@@ -488,7 +490,7 @@ private static MoveWhileLoweringArmReturn hasLoweredArmAndMoved ()
     // the status of the arm being down
     boolean armIsDown = armIsLowered();
 
-    if (armIsDown)
+    if (armIsDown == true)
         {
         // stop the arm.
         Hardware.pickupArm.move(0.0);
@@ -497,11 +499,11 @@ private static MoveWhileLoweringArmReturn hasLoweredArmAndMoved ()
 
 
     // Go forth.
-    if (Hardware.drive.driveForwardInches(
+    if ((Hardware.drive.driveForwardInches(
             DriveInformation.DISTANCE_TO_OUTER_WORKS,
             false,
-            DriveInformation.MOTOR_RATIO_TO_OUTER_WORKS[lane - 1],
-            DriveInformation.MOTOR_RATIO_TO_OUTER_WORKS[lane - 1]))
+            DriveInformation.MOTOR_RATIO_TO_OUTER_WORKS[lane],
+            DriveInformation.MOTOR_RATIO_TO_OUTER_WORKS[lane])) == true)
     // The distance has been reached. Now check the arm's status.
         {
 
@@ -555,7 +557,7 @@ private static boolean delayIsDone ()
         Hardware.delayTimer.reset();
         }
 
-    if (armIsLowered())
+    if (armIsLowered() == true)
         {
         Hardware.pickupArm.move(0.0);
         }
@@ -605,7 +607,7 @@ private static boolean hasDrivenToTapeByDistance ()
 
     // Drive forwards.
     if (Hardware.drive.driveForwardInches(
-            DriveInformation.DISTANCE_TO_TAPE, false))
+            DriveInformation.DISTANCE_TO_TAPE, false) == true)
     // If we have reached the desired distance, return true.
         {
         hasReachedDistance = true;
@@ -653,9 +655,8 @@ private static boolean hasMovedFowardsFromTape ()
     boolean done = false;
 
     if (Hardware.drive.driveForwardInches(
-            DriveInformation.FORWARDS_FROM_ALIGNMENT_LINE_DISTANCE[lane
-                    - 1],
-            true))
+            DriveInformation.FORWARDS_FROM_ALIGNMENT_LINE_DISTANCE[lane],
+            true) == true)
         {
         done = true;
         }
@@ -674,8 +675,7 @@ private static boolean hasRotatedTowardsShootingPosition ()
 
 
     done = hasTurnedBasedOnSign(
-            DriveInformation.ROTATE_ON_ALIGNMENT_LINE_DISTANCE[lane
-                    - 1]);
+            DriveInformation.ROTATE_ON_ALIGNMENT_LINE_DISTANCE[lane]);
 
     return done;
 }
@@ -691,7 +691,7 @@ private static boolean hasTurnedToFaceGoal ()
 
 
     done = hasTurnedBasedOnSign(
-            DriveInformation.TURN_TO_FACE_GOAL_DEGREES[lane - 1]);
+            DriveInformation.TURN_TO_FACE_GOAL_DEGREES[lane]);
 
 
 
@@ -711,7 +711,7 @@ private static boolean hasDrivenUpToGoal ()
 
     // Distance according to drawings.
     // if (Hardware.drive.driveForwardInches(
-    // DriveInformation.DRIVE_UP_TO_GOAL[lane - 1]))
+    // DriveInformation.DRIVE_UP_TO_GOAL[lane ]))
 
     // see if we have reached cleats of the tower.
     if (Hardware.leftIR.isOn() || Hardware.rightIR.isOn())
@@ -761,7 +761,7 @@ private static int getLane ()
 
     if (position == -1)
         {
-        position = 1;
+        position = 0;
         }
 
     position = position + 1;
@@ -815,8 +815,9 @@ private static final class DriveInformation
  */
 static final double[] MOTOR_RATIO_TO_OUTER_WORKS =
     {
-            0.4, // lane 1, should be extra low.
-            0.4, // lane 2
+            0.0, // nothing. Not used. Arbitrary; makes it work.
+            0.3, // lane 1, should be extra low.
+            1.0, // lane 2
             0.4, // lane 3
             0.4, // lane 4
             0.4 // lane 5
@@ -829,6 +830,7 @@ static final double[] MOTOR_RATIO_TO_OUTER_WORKS =
  */
 static final double[] ROTATE_ON_ALIGNMENT_LINE_DISTANCE =
     {
+            0.0, // nothing. Not used. Arbitrary; makes it work.
             0.0, // lane 1 (not neccesary)
             0.0, // lane 2 (not neccesary)
             -20, // lane 3
@@ -842,6 +844,7 @@ static final double[] ROTATE_ON_ALIGNMENT_LINE_DISTANCE =
  */
 static final double[] FORWARDS_FROM_ALIGNMENT_LINE_DISTANCE =
     {
+            0.0, // nothing. Not used. Arbitrary; makes it work.
             74.7,// lane 1
             82.0,// lane 2
             64.0, // lane 3
@@ -854,6 +857,7 @@ static final double[] FORWARDS_FROM_ALIGNMENT_LINE_DISTANCE =
  */
 static final double[] TURN_TO_FACE_GOAL_DEGREES =
     {
+            0.0, // nothing. Not used. Arbitrary; makes it work.
             -60.0,// lane 1
             -60.0,// lane 2
             20.0,// lane 3
@@ -869,6 +873,7 @@ static final double[] TURN_TO_FACE_GOAL_DEGREES =
  */
 static final double[] DRIVE_UP_TO_GOAL =
     {
+            0.0, // nothing. Not used. Arbitrary; makes it work.
             62.7,// lane 1
             52.9,// lane 2
             0.0,// lane 3 (not neccesary)
@@ -901,7 +906,10 @@ private static final double DISTANCE_TO_OUTER_WORKS = 22.75;
  * // ...............................|<!(r% ~@$ #3r3
  */
 
-private static final double MAXIMUM_AUTONOMOUS_SPEED = 0.70;
+/**
+ * Always 1.0. Do not change. The code depends on it.
+ */
+private static final double MAXIMUM_AUTONOMOUS_SPEED = 1.0;
 
 /**
  * The maximum time to wait at the beginning of the match.
@@ -910,10 +918,10 @@ private static final double MAXIMUM_AUTONOMOUS_SPEED = 0.70;
 private static final double MAXIMUM_DELAY = 3.0;
 
 /**
- * Encoder distance for arm.
- * TODO: set
+ * Potentiometer degrees for arm to be down.
+ * TODO: set to empirical value.
  */
-private static final double ARM_DOWN_TICKS = 0.0;
+private static final double ARM_DOWN_DEGREES = 90.0;
 
 /**
  * Set to true to print out print statements.
