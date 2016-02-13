@@ -33,7 +33,9 @@ package org.usfirst.frc.team339.robot;
 
 import org.usfirst.frc.team339.Hardware.Hardware;
 import edu.wpi.first.wpilibj.CameraServer;
+import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.Relay.Value;
+import edu.wpi.first.wpilibj.image.NIVisionException;
 
 /**
  * This class contains all of the user code for the Autonomous
@@ -107,6 +109,8 @@ public static void periodic ()
 	// Driving the Robot
 	driveRobot();
 
+    runCameraSolenoid(Hardware.rightOperator.getRawButton(11),
+            Hardware.rightOperator.getRawButton(10), false, true);
 } // end Periodic
 
 
@@ -146,8 +150,57 @@ public static void driveRobot ()
 	}
 }
 
+public static boolean armStatus = false;
 
 /**
+ * ^^^Bring the boolean armStatus
+ * if method is moved to a different class.^^^
+ * 
+ * @param upState
+ * @param downState
+ * @param holdState
+ * @param toggle
+ * 
+ *            When in toggle mode, one boolean raises the arm and one lowers.
+ *            When not in toggle mode, only use boolean holdState. This will
+ *            keep the arm up for the duration that the holdState is true.
+ * 
+ *            NOTE: if a parameter is not applicable, set it to false.
+ * 
+ * 
+ * 
+ * @author Ryan McGee
+ * @written 2/13/16
+ * 
+ */
+public static void runCameraSolenoid (boolean upState,
+        boolean downState, boolean holdState, boolean toggle)
+{
+    if (upState && toggle == true && armStatus == false)
+    {
+        Hardware.cameraSolenoid.set(DoubleSolenoid.Value.kForward);
+        armStatus = true;
+    }
+    else if (downState && toggle == true && armStatus == true)
+    {
+        Hardware.cameraSolenoid.set(DoubleSolenoid.Value.kReverse);
+        armStatus = false;
+    }
+    else if (holdState && toggle == false)
+    {
+        Hardware.cameraSolenoid.set(DoubleSolenoid.Value.kForward);
+    }
+    else
+    {
+        Hardware.cameraSolenoid.set(DoubleSolenoid.Value.kReverse);
+    }
+
+}
+
+
+
+
+    /**
  * Takes a picture, processes it and saves it with left operator joystick
  * take unlit picture: 6&7
  * take lit picture: 10&11
@@ -183,7 +236,6 @@ public static void takePicture ()
 	// @TODO Change .25 to a constant, see line 65 under Hardware
 	// Replaced '.25' with Hardware.CAMERA_DELAY_TIME' change back if camera
 	// fails
-	// FROM JOSEF AND NASEEM 2/10/2K16
 	if (Hardware.delayTimer.get() >= Hardware.CAMERA_DELAY_TIME
 	        && prepPic == true && takingLitImage == true)
 	{
@@ -225,25 +277,63 @@ public static void takePicture ()
 	// pictures again.
 	if (Hardware.leftOperator.getTrigger() == true)
 	{
-	if (processingImage == false)
+        if (processingImage == true)
 	{
 	processImage();
+            processingImage = false;
 	}
 	}
-	else
+
+    // TODO TESTING CODE. REMOVE ASAP.
+    // If we're pressing button 4
+    if (Hardware.leftOperator.getRawButton(4) == true)
+        {
+
+        if (Hardware.delayTimer.get() == 0)
+            {
+            Hardware.delayTimer.start();
+            Hardware.ringLightRelay.set(Value.kOn);
+            }
+
+
+        // process taken images
+
+        // print out the center of mass of the largest blob
+        // if (Hardware.imageProcessor.getNumBlobs() > 0)
+        // {
+        // System.out.println("Center of Mass of first blob: "
+        // + Hardware.imageProcessor
+        // .getParticleAnalysisReports()[0].center_mass_x);
+        // }
+        }
+    // System.out.println(
+    // "The delay timer is " + Hardware.delayTimer.get());
+    if (Hardware.delayTimer.get() >= 1)
+        {
+        Hardware.axisCamera.writeBrightness(
+                Hardware.NORMAL_AXIS_CAMERA_BRIGHTNESS);
+        Hardware.axisCamera.saveImagesSafely();
+
+        // Updates image when the 4th button is pressed and prints number
+        // of blobs
+        try
 	{
-	processingImage = false;
+            Hardware.imageProcessor
+                    .updateImage(Hardware.axisCamera.getImage());
 	}
-	// TESTING CODE. REMOVE ASAP.
-	// If we're pressing button 12
-	if (Hardware.leftOperator.getRawButton(4) == true)
+        catch (NIVisionException e)
 	{
-	// process taken images
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+            }
 	Hardware.imageProcessor.updateParticleAnalysisReports();
-	// print out the center of mass of the largest blob
-	System.out.println("Center of Mass of first blob: "
-	        + Hardware.imageProcessor
-	                .getParticleAnalysisReports()[0].center_mass_x);
+        System.out.println("Number of blobs equals: "
+                + Hardware.imageProcessor.getNumBlobs());
+
+        Hardware.ringLightRelay.set(Value.kOff);
+        Hardware.delayTimer.stop();
+        Hardware.delayTimer.reset();
+
 	}
 } // end Periodic
 
@@ -265,7 +355,7 @@ public static void processImage ()
 	// If we took a picture, we set the boolean to true to prevent
 	// taking more pictures and create an image processor to process
 	// images.
-	processingImage = true;
+    // processingImage = true;
 	// Hardware.imageProcessor.processImage();
 	// System.out.println("Length: " +
 	// Hardware.imageProcessor.reports.length);
@@ -377,7 +467,7 @@ private static final int GEAR_DOWNSHIFT_JOYSTICK_BUTTON = 2;
 // TUNEABLES
 // ==========================================
 
-private static boolean processingImage = false;
+private static boolean processingImage = true;
 
 // Boolean to check if we're taking a lit picture
 private static boolean takingLitImage = false;

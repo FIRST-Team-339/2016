@@ -61,7 +61,6 @@ package org.usfirst.frc.team339.robot;
 
 import com.ni.vision.NIVision.MeasurementType;
 import org.usfirst.frc.team339.Hardware.Hardware;
-import org.usfirst.frc.team339.Utils.Guidance;
 import org.usfirst.frc.team339.Utils.ImageProcessing.ObjectRemoval;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.IterativeRobot;
@@ -203,58 +202,11 @@ public void disabledPeriodic ()
 	// =========================================================
 	// User code goes below here
 	// =========================================================
-	// Temporary SmartDashboard testing
-	runGuidanceSystem();
-
 	// =========================================================
 	// User code goes above here
 	// =========================================================
 
 } // end disabledPeriodic
-
-
-/**
- * Runs the system on the smartDashboard that informs the drivers which way to
- * align with the goal
- * AKA arrow system
- */
-public static void runGuidanceSystem ()
-{
-	if (Hardware.rightOperator.getRawButton(8)
-	        && !Hardware.rightOperator.getRawButton(9))
-	{
-	Hardware.arrowDashboard.setDirection(Guidance.Direction.left);
-	//        SmartDashboard.putBoolean("Left", true);
-	//        SmartDashboard.putBoolean("Right", false);
-	//        SmartDashboard.putBoolean("Straight", false);
-	}
-	else if (Hardware.rightOperator.getRawButton(9)
-	        && !Hardware.rightOperator.getRawButton(8))
-	{
-	Hardware.arrowDashboard.setDirection(Guidance.Direction.right);
-	//        SmartDashboard.putBoolean("Right", true);
-	//        SmartDashboard.putBoolean("Left", false);
-	//        SmartDashboard.putBoolean("Straight", false);
-	}
-	else if (Hardware.rightOperator.getRawButton(8)
-	        && Hardware.rightOperator.getRawButton(9))
-	{
-	Hardware.arrowDashboard
-	        .setDirection(Guidance.Direction.linedUp);
-	//        SmartDashboard.putBoolean("Straight", true);
-	//        SmartDashboard.putBoolean("Right", false);
-	//        SmartDashboard.putBoolean("Left", false);
-	}
-	else
-	{
-	Hardware.arrowDashboard
-	        .setDirection(Guidance.Direction.neutral);
-	//        SmartDashboard.putBoolean("Right", false);
-	//        SmartDashboard.putBoolean("Left", false);
-	//        SmartDashboard.putBoolean("Straight", false);
-	}
-	Hardware.arrowDashboard.update();
-}
 
 // -------------------------------------------------------
 /**
@@ -318,13 +270,14 @@ public void robotInit ()
 
 	// Starts streaming video
 	Hardware.cameraServer.startAutomaticCapture(Hardware.cam0);
-
+    // TODO
 	// Sets the hue, saturation, and luminance values for the vision
 	// processing.
 	Hardware.imageProcessor.setHSLValues(0, 153, 0, 75, 5, 141);
 	// Has us remove small objects at the intensity of 5. May have to
 	// change those values.
-	Hardware.imageProcessor.setObjectRemoval(ObjectRemoval.SMALL, 5);
+    // Hardware.imageProcessor.setObjectRemoval(ObjectRemoval.BORDER);
+    Hardware.imageProcessor.setObjectRemoval(ObjectRemoval.SMALL, 3);
 	// Has us convex hull our image so that the goal becomes a rectangle.
 	Hardware.imageProcessor.setUseConvexHull(true);
 	// we could also crop the image to only include blobs in our
