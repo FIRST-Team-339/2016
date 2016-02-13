@@ -217,34 +217,34 @@ public static void runGuidanceSystem ()
             && !Hardware.rightOperator.getRawButton(9))
         {
         Hardware.arrowDashboard.setDirection(Guidance.Direction.left);
-        //        SmartDashboard.putBoolean("Left", true);
-        //        SmartDashboard.putBoolean("Right", false);
-        //        SmartDashboard.putBoolean("Straight", false);
+        // SmartDashboard.putBoolean("Left", true);
+        // SmartDashboard.putBoolean("Right", false);
+        // SmartDashboard.putBoolean("Straight", false);
         }
     else if (Hardware.rightOperator.getRawButton(9)
             && !Hardware.rightOperator.getRawButton(8))
         {
         Hardware.arrowDashboard.setDirection(Guidance.Direction.right);
-        //        SmartDashboard.putBoolean("Right", true);
-        //        SmartDashboard.putBoolean("Left", false);
-        //        SmartDashboard.putBoolean("Straight", false);
+        // SmartDashboard.putBoolean("Right", true);
+        // SmartDashboard.putBoolean("Left", false);
+        // SmartDashboard.putBoolean("Straight", false);
         }
     else if (Hardware.rightOperator.getRawButton(8)
             && Hardware.rightOperator.getRawButton(9))
         {
         Hardware.arrowDashboard
                 .setDirection(Guidance.Direction.linedUp);
-        //        SmartDashboard.putBoolean("Straight", true);
-        //        SmartDashboard.putBoolean("Right", false);
-        //        SmartDashboard.putBoolean("Left", false);
+        // SmartDashboard.putBoolean("Straight", true);
+        // SmartDashboard.putBoolean("Right", false);
+        // SmartDashboard.putBoolean("Left", false);
         }
     else
         {
         Hardware.arrowDashboard
                 .setDirection(Guidance.Direction.neutral);
-        //        SmartDashboard.putBoolean("Right", false);
-        //        SmartDashboard.putBoolean("Left", false);
-        //        SmartDashboard.putBoolean("Straight", false);
+        // SmartDashboard.putBoolean("Right", false);
+        // SmartDashboard.putBoolean("Left", false);
+        // SmartDashboard.putBoolean("Straight", false);
         }
     Hardware.arrowDashboard.update();
 }
@@ -306,20 +306,25 @@ public void robotInit ()
     Hardware.axisCamera.writeResolution(Hardware.AXIS_RESOLUTION);
     Hardware.axisCamera
             .writeBrightness(Hardware.NORMAL_AXIS_CAMERA_BRIGHTNESS);
-            // Hardware.axisCamera
-            // .writeWhiteBalance(AxisCamera.WhiteBalance.kHold);
+
+    // Hardware.axisCamera
+    // .writeWhiteBalance(AxisCamera.WhiteBalance.kHold);
 
     // Starts streaming video
     Hardware.cameraServer.startAutomaticCapture(Hardware.cam0);
-
+    // TODO
     // Sets the hue, saturation, and luminance values for the vision
     // processing.
     Hardware.imageProcessor.setHSLValues(0, 153, 0, 75, 5, 141);
     // Has us remove small objects at the intensity of 5. May have to
     // change those values.
-    Hardware.imageProcessor.setObjectRemoval(ObjectRemoval.SMALL, 5);
+    // Hardware.imageProcessor.setObjectRemoval(ObjectRemoval.BORDER);
+    Hardware.imageProcessor.setObjectRemoval(ObjectRemoval.SMALL, 3);
     // Has us convex hull our image so that the goal becomes a rectangle.
     Hardware.imageProcessor.setUseConvexHull(true);
+
+
+
     // we could also crop the image to only include blobs in our
     // good height range, which removes the possibility of
     // convex hull connecting the two totes when we carry more than one

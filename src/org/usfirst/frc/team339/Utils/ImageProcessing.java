@@ -823,7 +823,6 @@ public boolean updateParticleAnalysisReports ()
         this.reports = new ParticleReport[particles.size()];
         particles.copyInto(this.reports);
         // this.reports = (ParticleReport[]) particles.toArray();
-
         this.image.free();
         this.image = null;
         thresholdImage.free();

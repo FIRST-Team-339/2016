@@ -34,6 +34,7 @@ package org.usfirst.frc.team339.robot;
 import org.usfirst.frc.team339.Hardware.Hardware;
 import edu.wpi.first.wpilibj.CameraServer;
 import edu.wpi.first.wpilibj.Relay.Value;
+import edu.wpi.first.wpilibj.image.NIVisionException;
 
 /**
  * This class contains all of the user code for the Autonomous
@@ -149,17 +150,18 @@ public static void driveRobot ()
 }
 
 
-/**
- * If we click buttons 6+7 on the left operator joystick, we dim the
- * brightness a lot, turn the ringlight on, and then if we haven't
- * already taken an image then we do and set the boolean to true to
- * prevent us taking more images. Otherwise we don't turn on the
- * ringlight and we don't take a picture. We added a timer to delay
- * taking the picture for the brightness to dim and for the ring
- * light to turn on.
- */
+
 public static void testCamera ()
 {
+    /**
+     * If we click buttons 6+7 on the left operator joystick, we dim the
+     * brightness a lot, turn the ringlight on, and then if we haven't
+     * already taken an image then we do and set the boolean to true to
+     * prevent us taking more images. Otherwise we don't turn on the
+     * ringlight and we don't take a picture. We added a timer to delay
+     * taking the picture for the brightness to dim and for the ring
+     * light to turn on.
+     */
 
     if (Hardware.leftOperator.getRawButton(6) == true
             && Hardware.leftOperator.getRawButton(7) == true)
@@ -183,7 +185,7 @@ public static void testCamera ()
     // @TODO Change .25 to a constant, see line 65 under Hardware
     // Replaced '.25' with Hardware.CAMERA_DELAY_TIME' change back if camera
     // fails
-    // FROM JOSEF AND NASEEM 2/10/2K16
+    // FROM JOSEF AND NASEEM 2/10/2016
     if (Hardware.delayTimer.get() >= Hardware.CAMERA_DELAY_TIME
             && prepPic == true && takingLitImage == true)
         {
@@ -225,32 +227,74 @@ public static void testCamera ()
     // pictures again.
     if (Hardware.leftOperator.getTrigger() == true)
         {
-        if (processingImage == false)
+        if (processingImage == true)
             {
             processImage();
+            processingImage = false;
             }
         }
-    else
-        {
-        processingImage = false;
-        }
-    // TESTING CODE. REMOVE ASAP.
-    // If we're pressing button 12
+
+    // TODO TESTING CODE. REMOVE ASAP.
+    // If we're pressing button 4
     if (Hardware.leftOperator.getRawButton(4) == true)
         {
+
+        if (Hardware.delayTimer.get() == 0)
+            {
+            Hardware.delayTimer.start();
+            Hardware.ringLightRelay.set(Value.kOn);
+            }
+
+
         // process taken images
-        Hardware.imageProcessor.updateParticleAnalysisReports();
+
         // print out the center of mass of the largest blob
-        System.out.println("Center of Mass of first blob: "
-                + Hardware.imageProcessor
-                        .getParticleAnalysisReports()[0].center_mass_x);
+        // if (Hardware.imageProcessor.getNumBlobs() > 0)
+        // {
+        // System.out.println("Center of Mass of first blob: "
+        // + Hardware.imageProcessor
+        // .getParticleAnalysisReports()[0].center_mass_x);
+        // }
+        }
+    // System.out.println(
+    // "The delay timer is " + Hardware.delayTimer.get());
+    if (Hardware.delayTimer.get() >= 1)
+        {
+        Hardware.axisCamera.writeBrightness(
+                Hardware.NORMAL_AXIS_CAMERA_BRIGHTNESS);
+        Hardware.axisCamera.saveImagesSafely();
+
+        // Updates image when the 4th button is pressed and prints number
+        // of blobs
+        try
+            {
+            Hardware.imageProcessor
+                    .updateImage(Hardware.axisCamera.getImage());
+            }
+        catch (NIVisionException e)
+            {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+            }
+        Hardware.imageProcessor.updateParticleAnalysisReports();
+        System.out.println("Number of blobs equals: "
+                + Hardware.imageProcessor.getNumBlobs());
+
+        Hardware.ringLightRelay.set(Value.kOff);
+        Hardware.delayTimer.stop();
+        Hardware.delayTimer.reset();
+
         }
 
     Hardware.leftFrontMotorSafety.feed();
     Hardware.rightFrontMotorSafety.feed();
     Hardware.leftRearMotorSafety.feed();
     Hardware.leftRearMotorSafety.feed();
-} // end Periodic
+
+
+
+} // end
+  // Periodic
 
 static boolean hasBegunTurning = true;
 
@@ -270,7 +314,7 @@ public static void processImage ()
     // If we took a picture, we set the boolean to true to prevent
     // taking more pictures and create an image processor to process
     // images.
-    processingImage = true;
+    // processingImage = true;
     // Hardware.imageProcessor.processImage();
     // System.out.println("Length: " +
     // Hardware.imageProcessor.reports.length);
@@ -379,7 +423,7 @@ private static final int GEAR_DOWNSHIFT_JOYSTICK_BUTTON = 2;
 // TUNEABLES
 // ==========================================
 
-private static boolean processingImage = false;
+private static boolean processingImage = true;
 
 // Boolean to check if we're taking a lit picture
 private static boolean takingLitImage = false;
