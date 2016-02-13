@@ -269,9 +269,10 @@ public static KilroyCamera axisCamera = new KilroyCamera(true);
 
 public static ImageProcessing imageProcessor = new ImageProcessing(
         Hardware.axisCamera);
-// **********************************************************
-// DRIVER STATION CLASSES
-// **********************************************************
+        // **********************************************************
+        // DRIVER STATION CLASSES
+        // **********************************************************
+
 // ------------------------------------
 // DriverStations class
 // ------------------------------------
