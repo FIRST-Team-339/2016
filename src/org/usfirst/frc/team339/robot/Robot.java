@@ -59,7 +59,6 @@
 // ====================================================================
 package org.usfirst.frc.team339.robot;
 
-import com.ni.vision.NIVision.MeasurementType;
 import org.usfirst.frc.team339.Hardware.Hardware;
 import org.usfirst.frc.team339.Utils.ImageProcessing.ObjectRemoval;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
@@ -286,9 +285,6 @@ public void robotInit ()
 	// convex hull connecting the two totes when we carry more than one
 	// info on cropping image here:
 	// http://www.chiefdelphi.com/forums/showthread.php?t=134264
-	// Finds the center of the rectangle on the x axis.
-	Hardware.imageProcessor.addCriteria(
-	        MeasurementType.MT_CENTER_OF_MASS_X, 65, 85, 0, 0);
 
 	// Tells the relay which way is on (kBackward is unable to be used)
 	Hardware.ringLightRelay.setDirection(Direction.kForward);

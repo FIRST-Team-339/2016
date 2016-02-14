@@ -96,11 +96,53 @@ private static edu.wpi.first.wpilibj.DoubleSolenoid.Value Forward;
 public static void periodic ()
 // we changed this from a static for testing purposes-Heather :)
 {
-
-
-
-
-
+    // commented out until it doesn't look awful.
+    // // take an image
+    // if (tempFlag == false
+    // && Hardware.rightOperator.getRawButton(5) == true)
+    // {
+    // tempFlag = true;
+    // if (Hardware.delayTimer.get() == 0.0)
+    // {
+    // Hardware.axisCamera.writeBrightness(
+    // Hardware.MINIMUM_AXIS_CAMERA_BRIGHTNESS);
+    // Hardware.delayTimer.start();
+    // Hardware.ringLightRelay.set(Value.kOn);
+    // }
+    // }
+    // if (tempFlag == true && Hardware.delayTimer.get() >= 1.0)
+    // {
+    // try
+    // {
+    // Hardware.imageProcessor
+    // .updateImage(Hardware.axisCamera.getImage());
+    // }
+    // catch (NIVisionException e)
+    // {
+    // // TODO Auto-generated catch block
+    // e.printStackTrace();
+    // }
+    // // process the image
+    // Hardware.imageProcessor.updateParticleAnalysisReports();
+    // System.out.println("CenterOfMass: " + Hardware.imageProcessor
+    // .getParticleAnalysisReports()[0].center_mass_x);
+    // if (Hardware.imageProcessor
+    // .getParticleAnalysisReports()[0].center_mass_x <= 155)
+    // {
+    // Hardware.drive.turnLeftDegrees(1);
+    // }
+    // else if (Hardware.imageProcessor
+    // .getParticleAnalysisReports()[0].center_mass_x >= 165)
+    // {
+    // Hardware.drive.turnRightDegrees(1);
+    // }
+    // else
+    // {
+    // tempFlag = false;
+    // }
+    // }
+    // Hardware.axisCamera.writeBrightness(
+    // Hardware.MINIMUM_AXIS_CAMERA_BRIGHTNESS);
 	// Print statements to test Hardware on the Robot
 	printStatements();
 
@@ -115,6 +157,7 @@ public static void periodic ()
 	        Hardware.rightOperator.getRawButton(10), false, true);
 } // end Periodic
 
+static boolean tempFlag = false;
 
 
 /**
@@ -152,6 +195,8 @@ public static void driveRobot ()
 	}
 }
 
+// Really poor boolean name. Needs to be non arbitrary.
+// What does it mean if the armStatus is true?
 public static boolean armStatus = false;
 
 /**
@@ -238,22 +283,22 @@ public static void takePicture ()
 	// @TODO Change .25 to a constant, see line 65 under Hardware
 	// Replaced '.25' with Hardware.CAMERA_DELAY_TIME' change back if camera
 	// fails
-	if (Hardware.delayTimer.get() >= Hardware.CAMERA_DELAY_TIME
-	        && prepPic == true && takingLitImage == true)
-	{
-	Hardware.axisCamera.saveImagesSafely();
-	prepPic = false;
-	takingLitImage = false;
-	}
-
-	if (takingLitImage == false && Hardware.delayTimer.get() >= 1)
-	{
-	Hardware.axisCamera.writeBrightness(
-	        Hardware.NORMAL_AXIS_CAMERA_BRIGHTNESS);
-	Hardware.ringLightRelay.set(Value.kOff);
-	Hardware.delayTimer.stop();
-	Hardware.delayTimer.reset();
-	}
+    // if (Hardware.delayTimer.get() >= Hardware.CAMERA_DELAY_TIME
+    // && prepPic == true && takingLitImage == true)
+    // {
+    // Hardware.axisCamera.saveImagesSafely();
+    // prepPic = false;
+    // takingLitImage = false;
+    // }
+    //
+    // if (takingLitImage == false && Hardware.delayTimer.get() >= 1)
+    // {
+    // Hardware.axisCamera.writeBrightness(
+    // Hardware.NORMAL_AXIS_CAMERA_BRIGHTNESS);
+    // Hardware.ringLightRelay.set(Value.kOff);
+    // Hardware.delayTimer.stop();
+    // Hardware.delayTimer.reset();
+    // }
 
 	// If we click buttons 10+11, we take a picture without the
 	// ringlight and set the boolean to true so we don't take a bunch of
@@ -293,6 +338,8 @@ public static void takePicture ()
 
 	if (Hardware.delayTimer.get() == 0)
 	{
+            Hardware.axisCamera.writeBrightness(
+                    Hardware.MINIMUM_AXIS_CAMERA_BRIGHTNESS);
 	Hardware.delayTimer.start();
 	Hardware.ringLightRelay.set(Value.kOn);
 	}
@@ -303,17 +350,15 @@ public static void takePicture ()
 	// print out the center of mass of the largest blob
 	// if (Hardware.imageProcessor.getNumBlobs() > 0)
 	// {
-	// System.out.println("Center of Mass of first blob: "
-	// + Hardware.imageProcessor
-	// .getParticleAnalysisReports()[0].center_mass_x);
+
 	// }
 	}
 	// System.out.println(
 	// "The delay timer is " + Hardware.delayTimer.get());
-	if (Hardware.delayTimer.get() >= 1)
+    if (Hardware.delayTimer.get() >= 1.0)
 	{
-	Hardware.axisCamera.writeBrightness(
-	        Hardware.NORMAL_AXIS_CAMERA_BRIGHTNESS);
+        // Hardware.axisCamera.writeBrightness(
+        // Hardware.NORMAL_AXIS_CAMERA_BRIGHTNESS);
 	Hardware.axisCamera.saveImagesSafely();
 
 	// Updates image when the 4th button is pressed and prints number
@@ -425,10 +470,10 @@ public static void printStatements ()
 	// Hardware.catapultSolenoid2.get());
 
 	// Encoders-------------
-	System.out.println(
-	        "RR distance = " + Hardware.rightRearEncoder.getDistance());
-	System.out.println(
-	        "LR distance = " + Hardware.leftRearEncoder.getDistance());
+	//System.out.println(
+	//        "RR distance = " + Hardware.rightRearEncoder.getDistance());
+	//System.out.println(
+	//        "LR distance = " + Hardware.leftRearEncoder.getDistance());
 	        // System.out.println("Arm Motor = " + Hardware.armMotor.getDistance());
 
 	// Switches--------------
