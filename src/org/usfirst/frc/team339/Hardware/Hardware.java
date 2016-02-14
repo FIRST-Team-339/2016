@@ -75,7 +75,8 @@ public static final int MINIMUM_AXIS_CAMERA_BRIGHTNESS = 6;
 public static final int AXIS_FPS = 15;
 
 
-public static final Resolution AXIS_RESOLUTION = AxisCamera.Resolution.k320x240;
+public static final Resolution AXIS_RESOLUTION =
+        AxisCamera.Resolution.k320x240;
 
 // -------------------------------------
 // Private Constants
@@ -140,8 +141,9 @@ public static Compressor compressor = new Compressor();
 /**
  * A physical switch that decides whether or not to run autonomous.
  */
-public static SingleThrowSwitch autonomousEnabled = new SingleThrowSwitch(
-        19);
+public static SingleThrowSwitch autonomousEnabled =
+        new SingleThrowSwitch(
+                19);
 public static SingleThrowSwitch shootHigh = new SingleThrowSwitch(8);
 public static SingleThrowSwitch shootLow = new SingleThrowSwitch(7);
 // Shoot high/low switch
@@ -152,8 +154,9 @@ public static DoubleThrowSwitch noShoot = new DoubleThrowSwitch(
  * Displays the starting position.
  * Position 0 on the switch corresponds to position 1, 1 to 2, etc.
  */
-public static SixPositionSwitch startingPositionDial = new SixPositionSwitch(
-        14, 15, 16, 17, 18, 21);
+public static SixPositionSwitch startingPositionDial =
+        new SixPositionSwitch(
+                14, 15, 16, 17, 18, 21);
 
 // ------------------------------------
 // Gear Tooth Sensors
@@ -162,7 +165,7 @@ public static SixPositionSwitch startingPositionDial = new SixPositionSwitch(
 // ------------------------------------
 // Encoders
 // ------------------------------------
-public static Encoder leftRearEncoder = new Encoder(0, 1);
+public static Encoder leftRearEncoder = new Encoder(4, 5);
 public static Encoder rightRearEncoder = new Encoder(2, 3);
 // public static Encoder armEncoder = new Encoder(4, 5);
 
@@ -185,8 +188,8 @@ public static Encoder rightRearEncoder = new Encoder(2, 3);
 // -------------------------------------
 // Red Light/IR Sensor class
 // -------------------------------------
-public static IRSensor rightIR = new IRSensor(6);
-public static IRSensor leftIR = new IRSensor(22);
+public static IRSensor rightIR = new IRSensor(0);
+public static IRSensor leftIR = new IRSensor(1);
 
 // ====================================
 // I2C Classes
@@ -327,12 +330,16 @@ public static final Timer delayTimer = new Timer();
 public static final ErrorMessage errorMessage = new ErrorMessage(
         true /* append timelog */);
 
-public static final MotorSafetyHelper leftRearMotorSafety = new MotorSafetyHelper(
-        leftRearMotor);
-public static final MotorSafetyHelper rightRearMotorSafety = new MotorSafetyHelper(
-        rightRearMotor);
-public static final MotorSafetyHelper leftFrontMotorSafety = new MotorSafetyHelper(
-        leftFrontMotor);
-public static final MotorSafetyHelper rightFrontMotorSafety = new MotorSafetyHelper(
-        rightFrontMotor);
+public static final MotorSafetyHelper leftRearMotorSafety =
+        new MotorSafetyHelper(
+                leftRearMotor);
+public static final MotorSafetyHelper rightRearMotorSafety =
+        new MotorSafetyHelper(
+                rightRearMotor);
+public static final MotorSafetyHelper leftFrontMotorSafety =
+        new MotorSafetyHelper(
+                leftFrontMotor);
+public static final MotorSafetyHelper rightFrontMotorSafety =
+        new MotorSafetyHelper(
+                rightFrontMotor);
 } // end class
