@@ -870,46 +870,34 @@ public boolean brake (final double brakeVoltage)
     // previous measurement, indicating we go backwards...
     //
     // then we're done and we stop the motors.
-    if (((Math.abs(this.leftMotorEncoder
-            .getDistance()) >= (this.brakePreviousDistanceL
-                    - this.AUTO_ENCODER_THRESHOLD_INCHES))
-            &&
-            (Math.abs(this.leftMotorEncoder
-                    .getDistance()) <= (this.brakePreviousDistanceL
-                            + this.AUTO_ENCODER_THRESHOLD_INCHES))
-            &&
-            (Math.abs(this.leftMotorEncoder
-                    .getDistance()) >= (this.brakePreviousPreviousDistanceL
-                            - this.AUTO_ENCODER_THRESHOLD_INCHES))
-            &&
-            (Math.abs(this.leftMotorEncoder
-                    .getDistance()) <= (this.brakePreviousPreviousDistanceL
-                            + this.AUTO_ENCODER_THRESHOLD_INCHES))
-            &&
-            (Math.abs(this.oneOrRightMotorEncoder
-                    .getDistance()) >= (this.brakePreviousDistanceR
-                            - this.AUTO_ENCODER_THRESHOLD_INCHES))
-            &&
-            (Math.abs(this.oneOrRightMotorEncoder
-                    .getDistance()) <= (this.brakePreviousDistanceR
-                            + this.AUTO_ENCODER_THRESHOLD_INCHES))
-            &&
-            (Math.abs(this.oneOrRightMotorEncoder
-                    .getDistance()) >= (this.brakePreviousPreviousDistanceR
-                            - this.AUTO_ENCODER_THRESHOLD_INCHES))
-            && (Math
-                    .abs(this.oneOrRightMotorEncoder
-                            .getDistance()) <= (this.brakePreviousPreviousDistanceR
-                                    + this.AUTO_ENCODER_THRESHOLD_INCHES)))
-            ||
-            ((this.brakePreviousPreviousDistanceL >= this.brakePreviousDistanceL)
-                    &&
-                    (this.brakePreviousPreviousDistanceR >= this.brakePreviousDistanceR)
-                    &&
-                    (this.brakePreviousDistanceL >= this.leftMotorEncoder
-                            .getDistance())
-                    && (this.brakePreviousDistanceR >= this.oneOrRightMotorEncoder
-                            .getDistance())))
+    if (((Math.abs(
+            this.leftMotorEncoder.getDistance()) >= (this.brakePreviousDistanceL -
+                    this.AUTO_ENCODER_THRESHOLD_INCHES)) &&
+            (Math.abs(
+                    this.leftMotorEncoder.getDistance()) <= (this.brakePreviousDistanceL +
+                            this.AUTO_ENCODER_THRESHOLD_INCHES)) &&
+            (Math.abs(
+                    this.leftMotorEncoder.getDistance()) >= (this.brakePreviousPreviousDistanceL -
+                            this.AUTO_ENCODER_THRESHOLD_INCHES)) &&
+            (Math.abs(
+                    this.leftMotorEncoder.getDistance()) <= (this.brakePreviousPreviousDistanceL +
+                            this.AUTO_ENCODER_THRESHOLD_INCHES)) &&
+            (Math.abs(
+                    this.oneOrRightMotorEncoder.getDistance()) >= (this.brakePreviousDistanceR -
+                            this.AUTO_ENCODER_THRESHOLD_INCHES)) &&
+            (Math.abs(
+                    this.oneOrRightMotorEncoder.getDistance()) <= (this.brakePreviousDistanceR +
+                            this.AUTO_ENCODER_THRESHOLD_INCHES)) &&
+            (Math.abs(
+                    this.oneOrRightMotorEncoder.getDistance()) >= (this.brakePreviousPreviousDistanceR -
+                            this.AUTO_ENCODER_THRESHOLD_INCHES)) &&
+            (Math.abs(
+                    this.oneOrRightMotorEncoder.getDistance()) <= (this.brakePreviousPreviousDistanceR +
+                            this.AUTO_ENCODER_THRESHOLD_INCHES))) ||
+            ((this.brakePreviousPreviousDistanceL >= this.brakePreviousDistanceL) &&
+                    (this.brakePreviousPreviousDistanceR >= this.brakePreviousDistanceR) &&
+                    (this.brakePreviousDistanceL >= this.leftMotorEncoder.getDistance()) &&
+                    (this.brakePreviousDistanceR >= this.oneOrRightMotorEncoder.getDistance())))
         {
         // System.out.println("DONE!");
         this.brakePreviousDistanceL = 0.0;
@@ -918,31 +906,28 @@ public boolean brake (final double brakeVoltage)
         this.brakePreviousPreviousDistanceR = 0.0;
         return true;
         } // if
+    this.brakePreviousPreviousDistanceR =
+            this.brakePreviousDistanceR;
+    this.brakePreviousPreviousDistanceL =
+            this.brakePreviousDistanceL;
+    this.brakePreviousDistanceR = Math.abs(
+            this.oneOrRightMotorEncoder.getDistance());
+    this.brakePreviousDistanceL = Math.abs(
+            this.leftMotorEncoder.getDistance());
+    // continue braking
+    // if we are in mecanum, call the appropriate method to
+    // send the braking voltage backwards.
+    if (this.isMecanumDrive() == true)
+        {
+        this.controls(brakeVoltage, 180.0, //
+                0.0);
+        }
     else
         {
-        this.brakePreviousPreviousDistanceR =
-                this.brakePreviousDistanceR;
-        this.brakePreviousPreviousDistanceL =
-                this.brakePreviousDistanceL;
-        this.brakePreviousDistanceR = Math
-                .abs(this.oneOrRightMotorEncoder.getDistance());
-        this.brakePreviousDistanceL = Math
-                .abs(this.leftMotorEncoder.getDistance());
-        // continue braking
-        // if we are in mecanum, call the appropriate method to
-        // send the braking voltage backwards.
-        if (this.isMecanumDrive() == true)
-            {
-            this.controls(brakeVoltage, 180.0, //
-                    0.0);
-            }
-        else
-            {
-            // otherwise, use our 2 or 4 wheel braking method.
-            this.controls(brakeVoltage, brakeVoltage);
-            }
-        return false;
+        // otherwise, use our 2 or 4 wheel braking method.
+        this.controls(brakeVoltage, brakeVoltage);
         }
+    return false;
 } // end brake
 
 // -------------------------------------------------------
@@ -1252,22 +1237,22 @@ public void controls (final double magnitude, final double direction,
         {
         tempDirection = 0.0;
         }
-    else if ((tempDirection <= (-180.0
-            + this.directionalXOrthagonalZone)) &&
-            (tempDirection >= (180.0
-                    - this.directionalXOrthagonalZone)))
+    else if ((tempDirection <= (-180.0 +
+            this.directionalXOrthagonalZone)) &&
+            (tempDirection >= (180.0 -
+                    this.directionalXOrthagonalZone)))
         {
         tempDirection = 180.0;
         }
-    else if ((tempDirection >= (-90.0
-            - this.directionalYOrthagonalZone)) &&
-            (tempDirection <= (-90.0
-                    + this.directionalYOrthagonalZone)))
+    else if ((tempDirection >= (-90.0 -
+            this.directionalYOrthagonalZone)) &&
+            (tempDirection <= (-90.0 +
+                    this.directionalYOrthagonalZone)))
         {
         tempDirection = -90.0;
         }
-    else if ((tempDirection <= (90.0 - this.directionalYOrthagonalZone))
-            &&
+    else if ((tempDirection <= (90.0 -
+            this.directionalYOrthagonalZone)) &&
             (tempDirection >= (90.0 + this.directionalYOrthagonalZone)))
         {
         tempDirection = 90.0;
@@ -1297,8 +1282,7 @@ public void controls (final double magnitude, final double direction,
         this.enablePID();
         }
 
-    if ((this.getDebugState() == debugStateValues.DEBUG_ONLY_PID_DATA)
-            ||
+    if ((this.getDebugState() == debugStateValues.DEBUG_ONLY_PID_DATA) ||
             (this.getDebugState() == debugStateValues.DEBUG_ALL))
         {
         System.out.println("counter: " + this.integralUseCounter);
@@ -1367,32 +1351,30 @@ public void controls (final double magnitude, final double direction,
         else
             {
             this.pidLeftController.setSetpoint(leftFrontSpeed *
-                    this.maxEncoderRate
-                    * this.leftMotorDirection.get());
+                    this.maxEncoderRate *
+                    this.leftMotorDirection.get());
 
             this.pidRightController.setSetpoint(rightFrontSpeed *
-                    this.maxEncoderRate
-                    * this.rightMotorDirection.get());
+                    this.maxEncoderRate *
+                    this.rightMotorDirection.get());
 
             this.pidRightRearController.setSetpoint(rightRearSpeed *
-                    this.maxEncoderRate
-                    * this.rightRearMotorDirection.get());
+                    this.maxEncoderRate *
+                    this.rightRearMotorDirection.get());
 
             this.pidLeftRearController.setSetpoint(leftRearSpeed *
-                    this.maxEncoderRate
-                    * this.leftRearMotorDirection.get());
+                    this.maxEncoderRate *
+                    this.leftRearMotorDirection.get());
 
             // If we need to, debug the PID data
-            if ((this
-                    .getDebugState() == debugStateValues.DEBUG_ONLY_PID_DATA)
-                    ||
+            if ((this.getDebugState() == debugStateValues.DEBUG_ONLY_PID_DATA) ||
                     (this.getDebugState() == debugStateValues.DEBUG_ALL))
                 {
                 System.out.println("[PID] SETPOINTS");
                 System.out.println("[PID] " +
                         this.pidLeftController.getSetpoint() + " / " +
-                        this.pidLeftRearController.getSetpoint() + " / "
-                        +
+                        this.pidLeftRearController.getSetpoint() +
+                        " / " +
                         this.pidRightController.getSetpoint() + " / " +
                         this.pidRightRearController.getSetpoint());
 
@@ -1450,14 +1432,12 @@ public void controls (double magnitude, double direction,
     if (driveStraight == true)
         {
 
-        final double encoderSidesDelta = (Math
-                .abs(this.leftMotorEncoder.getDistance()) + Math
-                        .abs(this.leftRearMotorEncoder.getDistance()))
-                -
-                (Math.abs(this.oneOrRightMotorEncoder
-                        .getDistance()) + Math
-                                .abs(this.rightRearMotorEncoder
-                                        .getDistance()));
+        final double encoderSidesDelta = (Math.abs(
+                this.leftMotorEncoder.getDistance()) + Math.abs(
+                        this.leftRearMotorEncoder.getDistance())) -
+                (Math.abs(this.oneOrRightMotorEncoder.getDistance()) +
+                        Math.abs(
+                                this.rightRearMotorEncoder.getDistance()));
 
         // final double diagonalEncoderPairDelta =
         // (this.oneOrRightMotorEncoder.getDistance() -
@@ -1479,8 +1459,8 @@ public void controls (double magnitude, double direction,
         // encoderPairDelta = otherDiagonalEncoderPairDelta;
         // }
 
-        this.rotationCorrection = encoderSidesDelta
-                * this.mecanumRotationCorrection;
+        this.rotationCorrection = encoderSidesDelta *
+                this.mecanumRotationCorrection;
 
         if (this.getDebugState() == debugStateValues.DEBUG_ALL)
             {
@@ -1491,28 +1471,25 @@ public void controls (double magnitude, double direction,
 
         // Solve for magnitude of resultant vector of the encoders
         // get the sum of the vectors' x components, then y components...
-        final double resultantY = ((this.leftMotorEncoder.getDistance()
-                + this.leftRearMotorEncoder
-                        .getDistance())
-                + this.oneOrRightMotorEncoder.getDistance()
-                + this.rightRearMotorEncoder
-                        .getDistance());
+        final double resultantY =
+                ((this.leftMotorEncoder.getDistance() +
+                        this.leftRearMotorEncoder.getDistance()) +
+                        this.oneOrRightMotorEncoder.getDistance() +
+                        this.rightRearMotorEncoder.getDistance());
 
-        final double resultantX = (((this.leftMotorEncoder.getDistance()
-                - this.leftRearMotorEncoder
-                        .getDistance())
-                - this.oneOrRightMotorEncoder.getDistance())
-                + this.rightRearMotorEncoder
-                        .getDistance());
+        final double resultantX =
+                (((this.leftMotorEncoder.getDistance() -
+                        this.leftRearMotorEncoder.getDistance()) -
+                        this.oneOrRightMotorEncoder.getDistance()) +
+                        this.rightRearMotorEncoder.getDistance());
 
         // Calculate the resultant vector's direction with arctan
         // Math.atan returns in radians, so we have to convert to degrees
         // subtract it from 90.0 to account for how the location of our
         // calculated
         // is along the unit circle.
-        final double resultantThetaInDegrees = 90.0
-                - ((Math.atan2(resultantY, resultantX) * 180.0)
-                        / 3.1415);
+        final double resultantThetaInDegrees = 90.0 - ((Math.atan2(
+                resultantY, resultantX) * 180.0) / 3.1415);
 
         double deltaTheta = (direction - resultantThetaInDegrees);
 
@@ -1576,26 +1553,23 @@ public void controls (double leftJoystickValue,
     if ((this.isPIDEnabled() == true) &&
             (this.pidRightController != null) &&
             (this.pidLeftController != null))
-        if ((this
-                .getDebugState() == debugStateValues.DEBUG_ONLY_PID_DATA)
-                ||
+        if ((this.getDebugState() == debugStateValues.DEBUG_ONLY_PID_DATA) ||
                 (this.getDebugState() == debugStateValues.DEBUG_ALL))
             {
             System.out.println("[PID] RIGHT S" +
                     this.pidRightController.getSetpoint() + "/" + "P" +
-                    this.pidRightController.getPIDController().getP()
-                    + "/" +
-                    "I"
-                    + this.pidRightController.getPIDController().getI()
-                    +
+                    this.pidRightController.getPIDController().getP() +
+                    "/" +
+                    "I" +
+                    this.pidRightController.getPIDController().getI() +
                     "/" + "D" +
                     this.pidRightController.getPIDController().getD());
             System.out.println("[PID] LEFT S" +
                     this.pidLeftController.getSetpoint() + "/" + "P" +
-                    this.pidLeftController.getPIDController().getP()
-                    + "/" +
-                    "I"
-                    + this.pidLeftController.getPIDController().getI() +
+                    this.pidLeftController.getPIDController().getP() +
+                    "/" +
+                    "I" +
+                    this.pidLeftController.getPIDController().getI() +
                     "/" + "D" +
                     this.pidLeftController.getPIDController().getD());
 
@@ -1777,8 +1751,7 @@ private void controlSpeedController (final double joystickInputValue,
                 controllerInput = this.mapSoftwareJoystickValues(
                         joystickInputValue,
                         this.getFifthGearPercentage(
-                                whichJoystick))
-                        *
+                                whichJoystick)) *
                         motorDirection;
                 oneSpeedController.set(controllerInput);
                 break;
@@ -1787,8 +1760,7 @@ private void controlSpeedController (final double joystickInputValue,
                 controllerInput = this.mapSoftwareJoystickValues(
                         joystickInputValue,
                         this.getFourthGearPercentage(
-                                whichJoystick))
-                        *
+                                whichJoystick)) *
                         motorDirection;
                 oneSpeedController.set(controllerInput);
                 break;
@@ -1797,8 +1769,7 @@ private void controlSpeedController (final double joystickInputValue,
                 controllerInput = this.mapSoftwareJoystickValues(
                         joystickInputValue,
                         this.getThirdGearPercentage(
-                                whichJoystick))
-                        *
+                                whichJoystick)) *
                         motorDirection;
                 oneSpeedController.set(controllerInput);
                 break;
@@ -1807,8 +1778,7 @@ private void controlSpeedController (final double joystickInputValue,
                 controllerInput = this.mapSoftwareJoystickValues(
                         joystickInputValue,
                         this.getSecondGearPercentage(
-                                whichJoystick))
-                        *
+                                whichJoystick)) *
                         motorDirection;
                 oneSpeedController.set(controllerInput);
                 break;
@@ -1817,8 +1787,7 @@ private void controlSpeedController (final double joystickInputValue,
                 controllerInput = this.mapSoftwareJoystickValues(
                         joystickInputValue,
                         this.getFirstGearPercentage(
-                                whichJoystick))
-                        *
+                                whichJoystick)) *
                         motorDirection;
 
                 oneSpeedController.set(controllerInput);
@@ -1827,9 +1796,9 @@ private void controlSpeedController (final double joystickInputValue,
             } // switch
         }
     if ((this.getDebugState() == debugStateValues.DEBUG_ALL) ||
-            ((this.getDebugState() == debugStateValues.DEBUG_ONLY_NON_ZERO)
-                    && (Math
-                            .abs(joystickInputValue) >= this.deadbandPercentageZone)))
+            ((this.getDebugState() == debugStateValues.DEBUG_ONLY_NON_ZERO) &&
+                    (Math.abs(
+                            joystickInputValue) >= this.deadbandPercentageZone)))
         {
         char joystickSide = ' ';
         char controllerSide = ' ';
@@ -1843,22 +1812,22 @@ private void controlSpeedController (final double joystickInputValue,
             }
 
         if (oneSpeedController.equals(this.leftSpeedController) ||
-                oneSpeedController
-                        .equals(this.oneOrRightSpeedController))
+                oneSpeedController.equals(
+                        this.oneOrRightSpeedController))
             {
             controllerSide = 'F';
             }
         if (oneSpeedController.equals(this.leftRearSpeedController) ||
-                oneSpeedController
-                        .equals(this.rightRearSpeedController))
+                oneSpeedController.equals(
+                        this.rightRearSpeedController))
             {
             controllerSide = 'R';
             }
         System.out.println(joystickSide + controllerSide + " Joy = " +
                 joystickInputValue);
-        System.out
-                .println(joystickSide + controllerSide + " Contrs = " +
-                        controllerInput);
+        System.out.println(joystickSide + controllerSide +
+                " Contrs = " +
+                controllerInput);
         } // if
 
 } // end controlSpeedController
@@ -1878,8 +1847,7 @@ public void disablePID ()
 
     this.integralUseCounter = 0;
 
-    if ((this.getDebugState() == debugStateValues.DEBUG_ONLY_PID_DATA)
-            ||
+    if ((this.getDebugState() == debugStateValues.DEBUG_ONLY_PID_DATA) ||
             (this.getDebugState() == debugStateValues.DEBUG_ALL))
         {
         System.out.println("[PID] Disabled PID.");
@@ -1893,7 +1861,7 @@ public void disablePID ()
  * @method downshift
  * @param gearsToShift
  *            - what gear do we want to go to
- * @return gear shifted into
+ * @return int - gear shifted into
  * @author Bob Brown
  * @written Sep 20, 2009
  *          -------------------------------------------------------
@@ -1933,8 +1901,7 @@ public void enablePID ()
             this.pidTolerance);
     this.integralUseCounter = 0;
 
-    if ((this.getDebugState() == debugStateValues.DEBUG_ONLY_PID_DATA)
-            ||
+    if ((this.getDebugState() == debugStateValues.DEBUG_ONLY_PID_DATA) ||
             (this.getDebugState() == debugStateValues.DEBUG_ALL))
         {
         System.out.println("[PID] Enabled PID.");
@@ -1959,7 +1926,7 @@ public debugStateValues getDebugState ()
 /*
  * getting the value for the x deadband on the 3D joystick
  * 
- * @return the value
+ * @return double - the value
  */
 public double getDirectionalXOrthagonalZone ()
 {
@@ -1969,7 +1936,7 @@ public double getDirectionalXOrthagonalZone ()
 /*
  * getting the value for the y deadband on the 3D joystick
  * 
- * @return the value
+ * @return double - the value
  */
 public double getDirectionalYOrthagonalZone ()
 {
@@ -1982,7 +1949,7 @@ public double getDirectionalYOrthagonalZone ()
  * only joystick/motor pair or the right motor
  *
  * @method getFifthGearPercentage
- * @return int - the Fifth gear percentage
+ * @return double - the Fifth gear percentage
  * @author Bob Brown
  * @written 17 January 2010
  *          -------------------------------------------------------
@@ -2002,7 +1969,7 @@ public double getFifthGearPercentage ()
  *            either there is only one joystick of there are two
  *            joysticks and this is either the right or left
  *            joystick
- * @return int - the Fifth gear percentage
+ * @return double - the Fifth gear percentage
  * @author Bob Brown
  * @written 15 February 2013
  *          -------------------------------------------------------
@@ -2024,7 +1991,7 @@ public double getFifthGearPercentage (int whichJoystick)
  * only joystick/motor pair or the right motor
  *
  * @method getFirstGearPercentage
- * @return int - the first gear percentage
+ * @return double - the first gear percentage
  * @author Bob Brown
  * @written 17 January 2010
  *          -------------------------------------------------------
@@ -2046,7 +2013,7 @@ public double getFirstGearPercentage ()
  *            either there is only one joystick of there are two
  *            joysticks and this is either the right or left
  *            joystick
- * @return int - the first gear percentage
+ * @return double - the first gear percentage
  * @author Bob Brown
  * @written 15 February 2013
  *          -------------------------------------------------------
@@ -2057,8 +2024,7 @@ public double getFirstGearPercentage (int whichJoystick)
             (whichJoystick == WhichJoystick.RIGHT_JOYSTICK) ||
             (whichJoystick == WhichJoystick.ONE_JOYSTICK))
         return (this.getFirstGearPercentage());
-    else
-        return (this.leftFirstGearPercentage);
+    return (this.leftFirstGearPercentage);
 } // end getFirstGearPercentage
 
 // -------------------------------------------------------
@@ -2068,7 +2034,7 @@ public double getFirstGearPercentage (int whichJoystick)
  * only joystick/motor pair or the right motor
  *
  * @method getFourthGearPercentage
- * @return int - the Fourth gear percentage
+ * @return double - the Fourth gear percentage
  * @author Bob Brown
  * @written 17 January 2010
  *          -------------------------------------------------------
@@ -2091,7 +2057,7 @@ public double getFourthGearPercentage ()
  *            either there is only one joystick of there are two
  *            joysticks and this is either the right or left
  *            joystick
- * @return int - the Fourth gear percentage
+ * @return double - the Fourth gear percentage
  * @author Bob Brown
  * @written 15 February 2013
  *          -------------------------------------------------------
@@ -2102,8 +2068,7 @@ public double getFourthGearPercentage (int whichJoystick)
             (whichJoystick == WhichJoystick.RIGHT_JOYSTICK) ||
             (whichJoystick == WhichJoystick.ONE_JOYSTICK))
         return (this.getFourthGearPercentage());
-    else
-        return (this.leftFourthGearPercentage);
+    return (this.leftFourthGearPercentage);
 } // end getFourthGearPercentage
 
 // -------------------------------------------------------
@@ -2111,7 +2076,7 @@ public double getFourthGearPercentage (int whichJoystick)
  * This function returns the current gear number.
  *
  * @method getGear
- * @return gear number
+ * @return int - gear number
  * @author Bob Brown
  * @written Sep 20, 2009
  *          -------------------------------------------------------
@@ -2159,7 +2124,7 @@ public SpeedController getLeftSpeedController ()
  * Determined by distance per pulse of the encoder.
  * Used to convert joystick input to a PID setpoint w/kRate.
  *
- * @return max rate of the encoder in in/second.
+ * @return double - max rate of the encoder in in/second.
  * @author Noah Golmant
  * @written 16 Feb 2014
  */
@@ -2225,7 +2190,7 @@ public SpeedController getPrimarySpeedController ()
 /**
  * Returns the total distance on the right rear motor encoder.
  * 
- * @return
+ * @return double - the distance traveled from the Right Rear encoder
  * @author Alex Kneipp
  */
 public double getRightRearEncoderDistance ()
@@ -2236,7 +2201,7 @@ public double getRightRearEncoderDistance ()
 /**
  * Returns the total distance on the right front motor encoder.
  * 
- * @return
+ * @return double - the distance traveled on the Right Front encoder
  * @author Alex Kneipp
  */
 public double getRightFrontEncoderDistance ()
@@ -2247,7 +2212,7 @@ public double getRightFrontEncoderDistance ()
 /**
  * Returns the total distance on the left rear motor encoder.
  * 
- * @return
+ * @return double - the distance traveled on the Left Rear Encoder
  * @author Alex Kneipp
  */
 public double getLeftRearEncoderDistance ()
@@ -2258,7 +2223,7 @@ public double getLeftRearEncoderDistance ()
 /**
  * Returns the total distance on the left front motor encoder.
  * 
- * @return
+ * @return double - the distance traveled on the Left Front encoder
  * @author Alex Kneipp
  */
 public double getLeftFrontEncoderDistance ()
@@ -2302,7 +2267,7 @@ public SpeedController getRightSpeedController ()
  * only joystick/motor pair or the right motor
  *
  * @method getSecondGearPercentage
- * @return int - the Second gear percentage
+ * @return double - the Second gear percentage
  * @author Bob Brown
  * @written 17 January 2010
  *          -------------------------------------------------------
@@ -2324,7 +2289,7 @@ public double getSecondGearPercentage ()
  *            either there is only one joystick of there are two
  *            joysticks and this is either the right or left
  *            joystick
- * @return int - the Second gear percentage
+ * @return double - the Second gear percentage
  * @author Bob Brown
  * @written 15 February 2013
  *          -------------------------------------------------------
@@ -2335,8 +2300,7 @@ public double getSecondGearPercentage (int whichJoystick)
             (whichJoystick == WhichJoystick.RIGHT_JOYSTICK) ||
             (whichJoystick == WhichJoystick.ONE_JOYSTICK))
         return (this.getSecondGearPercentage());
-    else
-        return (this.leftSecondGearPercentage);
+    return (this.leftSecondGearPercentage);
 } // end getSecondGearPercentage
 
 // -------------------------------------------------------
@@ -2347,7 +2311,7 @@ public double getSecondGearPercentage (int whichJoystick)
  * only joystick/motor pair or the right motor
  *
  * @method getThirdGearPercentage
- * @return int - the Third gear percentage
+ * @return double - the Third gear percentage
  * @author Bob Brown
  * @written 17 January 2010
  *          -------------------------------------------------------
@@ -2368,7 +2332,7 @@ public double getThirdGearPercentage ()
  *            either there is only one joystick of there are two
  *            joysticks and this is either the right or left
  *            joystick
- * @return int - the Third gear percentage
+ * @return double - the Third gear percentage
  * @author Bob Brown
  * @written 15 February 2013
  *          -------------------------------------------------------
@@ -2504,8 +2468,7 @@ public void initPIDControllers ()
     this.pidRightController.setPercentTolerance(this.pidTolerance);
     this.pidRightRearController.setPercentTolerance(this.pidTolerance);
 
-    if ((this.getDebugState() == debugStateValues.DEBUG_ONLY_PID_DATA)
-            ||
+    if ((this.getDebugState() == debugStateValues.DEBUG_ONLY_PID_DATA) ||
             (this.getDebugState() == debugStateValues.DEBUG_ALL))
         {
         System.out.println("[PID] Initialized PID.");
@@ -2519,7 +2482,7 @@ public void initPIDControllers ()
  * of the gearing strength.
  *
  * @method isHardwareGearsOnlyOn
- * @return is hardware gears only on
+ * @return boolean - is hardware gears only on
  * @author Bob Brown
  * @written Sep 20, 2009
  *          -------------------------------------------------------
@@ -2531,7 +2494,7 @@ public boolean isHardwareGearsOnlyOn ()
 
 // ------------------------------------------------
 /**
- * @return whether or not we are using mecanum
+ * @return boolean - whether or not we are using mecanum
  * @author Noah Golmant
  * @written Feb 6, 2014
  *          ------------------------------------------------
@@ -2539,11 +2502,11 @@ public boolean isHardwareGearsOnlyOn ()
 public boolean isMecanumDrive ()
 {
     return this.isMecanum;
-}
+} // end isMecanumDrive()
 
 // -----------------------------------------------------------------
 /**
- * @return whether or not we are currently using all PID controllers.
+ * @return boolean - whether or not we are currently using all PID controllers.
  *         Does not refer to whether PID is used on the robot in general.
  * @author Noah Golmant
  * @written Feb 8, 2014
@@ -2554,10 +2517,55 @@ public boolean isPIDEnabled ()
 {
     return (this.pidLeftController.getPIDController().isEnable() &&
             this.pidRightController.getPIDController().isEnable() &&
-            this.pidLeftRearController.getPIDController().isEnable()
-            && this.pidRightRearController
-                    .getPIDController().isEnable());
-}
+            this.pidLeftRearController.getPIDController().isEnable() &&
+            this.pidRightRearController.getPIDController().isEnable());
+} // end isPIDEnabled()
+
+//-------------------------------------------------------
+/**
+ * This function returns whether or not the left joystick responds
+ * correctly in their inputs. WPI wants the joystick
+ * to go from 1.0, which is full reverse, to -1.0, which
+ * is full forward. This method allows us to set that
+ * the left joystick is reversed or not and if reversed,
+ * goes from -1.0, denoting full reverse, to 1.0 denoting
+ * full forward
+ *
+ * @method isLeftJoystickReversed
+ * @return boolean - Left Joystick is presently reversed or not
+ * @author Bob Brown
+ * @written 13 February 2016
+ *          -------------------------------------------------------
+ */
+public boolean isLeftJoystickReversed ()
+{
+    if (this.leftJoystickIsReversed.get() == JoystickDirection.REVERSED)
+        return (true);
+    return (false);
+} // end isLeftJoystickReversed()
+
+//-------------------------------------------------------
+/**
+ * This function returns whether or not the right joystick responds
+ * correctly in their inputs. WPI wants the joystick
+ * to go from 1.0, which is full reverse, to -1.0, which
+ * is full forward. This method allows us to set that
+ * the left joystick is reversed or not and if reversed,
+ * goes from -1.0, denoting full reverse, to 1.0 denoting
+ * full forward
+ *
+ * @method isRightJoystickReversed
+ * @return boolean - Right Joystick is presently reversed or not
+ * @author Bob Brown
+ * @written 13 February 2016
+ *          -------------------------------------------------------
+ */
+public boolean isRightJoystickReversed ()
+{
+    if (this.rightJoystickIsReversed.get() == JoystickDirection.REVERSED)
+        return (true);
+    return (false);
+} // end isRightJoystickReversed()
 
 // -------------------------------------------------------
 /**
@@ -2568,7 +2576,7 @@ public boolean isPIDEnabled ()
  * @method leftMotorIsReversed
  * @param reversed
  *            - the left motor is reversed or not
- * @return left motor is reversed or not
+ * @return boolean - left motor is reversed or not
  * @author Bob Brown
  * @written Sep 20, 2009
  *          -------------------------------------------------------
@@ -2599,7 +2607,7 @@ public boolean leftMotorIsReversed (final boolean reversed)
  * @method leftRearMotorIsReversed
  * @param reversed
  *            - tells us whether or not the left rear motor is reversed
- * @return left rear motor is reversed or not
+ * @return boolean - left rear motor is reversed or not
  * @author Noah Golmant
  * @written Jan. 9, 2014
  *          -------------------------------------------------------
@@ -2619,14 +2627,14 @@ public boolean leftRearMotorIsReversed (final boolean reversed)
         this.pidLeftRearController.setMotorReversed(reversed);
         }
     return (reversed);
-}
+} // end leftRearMotorIsReversed()
 
 /**
  * A mini function to limit motor values to a range of -1.0..1.0
  *
  * @param input
  *            number to limit
- * @return number between -1.0 and 1.0
+ * @return double - number between -1.0 and 1.0
  */
 private double limit (double input)
 {
@@ -2635,7 +2643,7 @@ private double limit (double input)
     else if (input < -1.0)
         return -1.0;
     return input;
-}
+} // end limit()
 
 // -------------------------------------------------------
 /**
@@ -2667,9 +2675,9 @@ private double mapSoftwareJoystickValues (
     // to make the math easier. Absolutize the
     // value and remove the deadband range
     // --------------------------------------
-    final double absJoystickInputValue = java.lang.Math.max(
-            (Math.abs(joystickInputValue)
-                    - this.deadbandPercentageZone),
+    final double absJoystickInputValue = Math.max(
+            (Math.abs(joystickInputValue) -
+                    this.deadbandPercentageZone),
             0.0);
     // --------------------------------------
     // compute the range of the joysticks. This
@@ -2679,8 +2687,8 @@ private double mapSoftwareJoystickValues (
     // --------------------------------------
     // computed mapped value
     // --------------------------------------
-    final double mappedValue = absJoystickInputValue
-            * (gearPercentage / deadbandRange);
+    final double mappedValue = absJoystickInputValue * (gearPercentage /
+            deadbandRange);
     // --------------------------------------
     // return the correct value - if the original
     // input was negative, return negative, else positive
@@ -2703,13 +2711,12 @@ public void resetPID ()
     this.pidRightController.reset();
     this.pidRightRearController.reset();
 
-    if ((this.getDebugState() == debugStateValues.DEBUG_ONLY_PID_DATA)
-            ||
+    if ((this.getDebugState() == debugStateValues.DEBUG_ONLY_PID_DATA) ||
             (this.getDebugState() == debugStateValues.DEBUG_ALL))
         {
         System.out.println("[PID] Reset PID.");
         }
-}
+} // end resetPID()
 
 // -------------------------------------------------------
 /**
@@ -2720,7 +2727,7 @@ public void resetPID ()
  * @method rightMotorIsReversed
  * @param reversed
  *            - tells us whether or not the right motor is reversed
- * @return right motor is reversed or not
+ * @return boolean - right motor is reversed or not
  * @author Bob Brown
  * @written Sep 20, 2009
  *          -------------------------------------------------------
@@ -2751,7 +2758,7 @@ public boolean rightMotorIsReversed (final boolean reversed)
  * @method rightRearMotorIsReversed
  * @param reversed
  *            - tells us whether or not the right rear motor is reversed
- * @return right rear motor is reversed or not
+ * @return boolean - right rear motor is reversed or not
  * @author Noah Golmant
  * @written Jan 9, 2014
  *          -------------------------------------------------------
@@ -2771,7 +2778,7 @@ public boolean rightRearMotorIsReversed (final boolean reversed)
         this.pidRightRearController.setMotorReversed(reversed);
         }
     return (reversed);
-}
+} // end rightRearMotorIsReversed()
 
 // -------------------------------------------------------
 /**
@@ -2828,7 +2835,7 @@ public debugStateValues
         } // switch
 
     return (this.getDebugState());
-}
+} // end debugStateValues()
 
 /*
  * Sets the Directional X Orthagonal. This value determines the tolerance,
@@ -2846,7 +2853,7 @@ public debugStateValues
 public void setDirectionalXOrthagonalZone (double xPercentage)
 {
     this.directionalXOrthagonalZone = xPercentage;
-}
+} // end setDirectionalXOrthagonalZone()
 
 /*
  * Sets the Directional Y Orthagonal. This value determines the tolerance,
@@ -2881,8 +2888,8 @@ public void setEncodersDistancePerPulse (double distancePerTick)
 {
     if (this.oneOrRightMotorEncoder != null)
         {
-        this.oneOrRightMotorEncoder
-                .setDistancePerPulse(distancePerTick);
+        this.oneOrRightMotorEncoder.setDistancePerPulse(
+                distancePerTick);
         }
     if (this.rightRearMotorEncoder != null)
         {
@@ -2912,7 +2919,7 @@ public void setEncodersDistancePerPulse (double distancePerTick)
  * @param gearPercentage
  *            - the percentage you would like
  *            Fifth gear to be set to
- * @return int - the percentage that Fifth gear was set to
+ * @return double - the percentage that Fifth gear was set to
  * @author Bob Brown
  * @written 17 January 2010
  *          -------------------------------------------------------
@@ -2977,21 +2984,14 @@ public void setFifthGearPercentage (final double leftGearPercentage,
  * @param gearPercentage
  *            - the percentage you would like
  *            first gear to be set to
- * @return int - the percentage that first gear was set to
+ * @return double - the percentage that first gear was set to
  * @author Bob Brown
  * @written 17 January 2010
  *          -------------------------------------------------------
  */
 public double setFirstGearPercentage (final double gearPercentage)
 {
-    if ((gearPercentage > 1.00) || (gearPercentage < 0.0))
-        {
-        this.oneOrRightFirstGearPercentage = 1.00;
-        }
-    else
-        {
-        this.oneOrRightFirstGearPercentage = gearPercentage;
-        }
+    this.setFirstGearPercentage(gearPercentage, gearPercentage);
     return (this.getFirstGearPercentage());
 } // end setFirstGearPercentage
 
@@ -3041,21 +3041,14 @@ public void setFirstGearPercentage (final double leftGearPercentage,
  * @param gearPercentage
  *            - the percentage you would like
  *            Fourth gear to be set to
- * @return int - the percentage that Fourth gear was set to
+ * @return double - the percentage that Fourth gear was set to
  * @author Bob Brown
  * @written 17 January 2010
  *          -------------------------------------------------------
  */
 public double setFourthGearPercentage (final double gearPercentage)
 {
-    if ((gearPercentage > 1.00) || (gearPercentage < 0.0))
-        {
-        this.oneOrRightFourthGearPercentage = 1.00;
-        }
-    else
-        {
-        this.oneOrRightFourthGearPercentage = gearPercentage;
-        }
+    this.setFourthGearPercentage(gearPercentage, gearPercentage);
     return (this.getFourthGearPercentage());
 } // end setFourthGearPercentage
 
@@ -3077,7 +3070,7 @@ public double setFourthGearPercentage (final double gearPercentage)
  *          -------------------------------------------------------
  */
 public void setFourthGearPercentage (final double leftGearPercentage,
-        final int rightGearPercentage)
+        final double rightGearPercentage)
 {
     if ((leftGearPercentage > 1.00) || (leftGearPercentage < 0.0))
         {
@@ -3108,7 +3101,7 @@ public void setFourthGearPercentage (final double leftGearPercentage,
  * @param gear
  *            - gear number you would like to set the transmission to
  *            - Starts at one, not zero.
- * @return newly adjusted gear number
+ * @return int - newly adjusted gear number
  * @author Bob Brown
  * @written 15 February 2013
  *          -------------------------------------------------------
@@ -3142,13 +3135,13 @@ public int setGear (final int gear)
             // --------------------------------------
             if (gear > this.getPhysicalGearToChange())
                 {
-                this.transmissionSolenoids
-                        .set(DoubleSolenoid.Value.kForward);
+                this.transmissionSolenoids.set(
+                        DoubleSolenoid.Value.kForward);
                 }
             else if (gear <= this.getPhysicalGearToChange())
                 {
-                this.transmissionSolenoids
-                        .set(DoubleSolenoid.Value.kReverse);
+                this.transmissionSolenoids.set(
+                        DoubleSolenoid.Value.kReverse);
                 }
             } // if
         // -------------------------------------
@@ -3201,7 +3194,7 @@ public int setGear (final int gear)
  * @method setHardwareGearsOnlyOn
  * @param on
  *            - sets the status of hardware only
- * @return the status of the hardware gears only
+ * @return boolean - the status of the hardware gears only
  * @author Bob Brown
  * @written Sep 20, 2009
  *          -------------------------------------------------------
@@ -3505,8 +3498,8 @@ public void setNotificationLights (final int firstGearDigitalLight,
         if ((this.maxGears >= 2) && (secondGearDigitalLight >= 1) &&
                 (secondGearDigitalLight <= 8))
             {
-            this.digitalChannelNumberForGearLight
-                    .addElement(new Integer(
+            this.digitalChannelNumberForGearLight.addElement(
+                    new Integer(
                             secondGearDigitalLight));
             // -------------------------------------
             // check to make sure that we have at least
@@ -3517,20 +3510,20 @@ public void setNotificationLights (final int firstGearDigitalLight,
             if ((this.maxGears >= 3) && (thirdGearDigitalLight >= 1) &&
                     (thirdGearDigitalLight <= 8))
                 {
-                this.digitalChannelNumberForGearLight
-                        .addElement(new Integer(thirdGearDigitalLight));
+                this.digitalChannelNumberForGearLight.addElement(
+                        new Integer(thirdGearDigitalLight));
                 // -------------------------------------
                 // check to make sure that we have at least
                 // 4 gears and that the light number passed
                 // in is good, then save it and check for
                 // others
                 // -------------------------------------
-                if ((this.maxGears >= 4)
-                        && (fourthGearDigitalLight >= 1) &&
+                if ((this.maxGears >= 4) &&
+                        (fourthGearDigitalLight >= 1) &&
                         (fourthGearDigitalLight <= 8))
                     {
-                    this.digitalChannelNumberForGearLight
-                            .addElement(new Integer(
+                    this.digitalChannelNumberForGearLight.addElement(
+                            new Integer(
                                     fourthGearDigitalLight));
                     // -------------------------------------
                     // we have at least 5 gears so check
@@ -3541,8 +3534,8 @@ public void setNotificationLights (final int firstGearDigitalLight,
                     if ((fifthGearDigitalLight >= 1) &&
                             (fifthGearDigitalLight <= 8))
                         {
-                        this.digitalChannelNumberForGearLight
-                                .addElement(new Integer(
+                        this.digitalChannelNumberForGearLight.addElement(
+                                new Integer(
                                         fifthGearDigitalLight));
                         }
                     } // if - fourth
@@ -3565,7 +3558,7 @@ public void setNotificationLights (final int firstGearDigitalLight,
  *            either there is only one joystick of there are two
  *            joysticks and this is either the right or left
  *            joystick
- * @return int - the percentage that Fifth gear was set to
+ * @return double - the percentage that Fifth gear was set to
  * @author Bob Brown
  * @written 17 January 2010
  *          -------------------------------------------------------
@@ -3611,7 +3604,7 @@ public double setOneFifthGearPercentage (final double gearPercentage,
  *            either there is only one joystick of there are two
  *            joysticks and this is either the right or left
  *            joystick
- * @return int - the percentage that first gear was set to
+ * @return double - the percentage that first gear was set to
  * @author Bob Brown
  * @written 17 January 2010
  *          -------------------------------------------------------
@@ -3642,7 +3635,7 @@ public double setOneFirstGearPercentage (final double gearPercentage,
         this.leftFirstGearPercentage = gearPercentage;
         }
     return (this.getFirstGearPercentage(whichJoystick));
-} // end setFirstGearPercentage
+} // end setOneFirstGearPercentage
 
 // -------------------------------------------------------
 /**
@@ -3658,7 +3651,7 @@ public double setOneFirstGearPercentage (final double gearPercentage,
  *            either there is only one joystick of there are two
  *            joysticks and this is either the right or left
  *            joystick
- * @return int - the percentage that Fourth gear was set to
+ * @return double - the percentage that Fourth gear was set to
  * @author Bob Brown
  * @written 17 January 2010
  *          -------------------------------------------------------
@@ -3703,7 +3696,7 @@ public double setOneFourthGearPercentage (final double gearPercentage,
  *            either there is only one joystick of there are two
  *            joysticks and this is either the right or left
  *            joystick
- * @return int - the percentage that Second gear was set to
+ * @return double - the percentage that Second gear was set to
  * @author Bob Brown
  * @written 17 January 2010
  *          -------------------------------------------------------
@@ -3733,7 +3726,7 @@ public double setOneSecondGearPercentage (final double gearPercentage,
         this.leftSecondGearPercentage = gearPercentage;
         }
     return (this.getSecondGearPercentage(whichJoystick));
-} // end setSecondGearPercentage
+} // end setOneSecondGearPercentage
 
 // -------------------------------------------------------
 
@@ -3750,7 +3743,7 @@ public double setOneSecondGearPercentage (final double gearPercentage,
  *            either there is only one joystick of there are two
  *            joysticks and this is either the right or left
  *            joystick
- * @return int - the percentage that Third gear was set to
+ * @return double - the percentage that Third gear was set to
  * @author Bob Brown
  * @written 17 January 2010
  *          -------------------------------------------------------
@@ -3780,7 +3773,7 @@ public double setOneThirdGearPercentage (final double gearPercentage,
         this.leftThirdGearPercentage = gearPercentage;
         }
     return (this.getThirdGearPercentage(whichJoystick));
-} // end setThirdGearPercentage
+} // end setOneThirdGearPercentage
 
 // -------------------------------------------------------
 
@@ -3951,13 +3944,12 @@ public void setPIDValues (double proportional, double integral,
     this.pidRightController.setPercentTolerance(tolerance);
     this.pidRightRearController.setPercentTolerance(tolerance);
 
-    if ((this.getDebugState() == debugStateValues.DEBUG_ONLY_PID_DATA)
-            ||
+    if ((this.getDebugState() == debugStateValues.DEBUG_ONLY_PID_DATA) ||
             (this.getDebugState() == debugStateValues.DEBUG_ALL))
         {
         System.out.println("[PID] Set PID values.\n" + "P: " +
-                proportional + "\nI: " + integral + "\nD: " + derivative
-                +
+                proportional + "\nI: " + integral + "\nD: " +
+                derivative +
                 "\nF: " + feedForward);
         System.out.println("[PID] Set PID tolerance: " + tolerance);
         }
@@ -4066,21 +4058,14 @@ public void setRotationCorrection (double rotationCorrection)
  * @param gearPercentage
  *            - the percentage you would like
  *            Second gear to be set to
- * @return int - the percentage that Second gear was set to
+ * @return double - the percentage that Second gear was set to
  * @author Bob Brown
  * @written 17 January 2010
  *          -------------------------------------------------------
  */
 public double setSecondGearPercentage (final double gearPercentage)
 {
-    if ((gearPercentage > 1.00) || (gearPercentage < 0.0))
-        {
-        this.oneOrRightSecondGearPercentage = 1.00;
-        }
-    else
-        {
-        this.oneOrRightSecondGearPercentage = gearPercentage;
-        }
+    this.setSecondGearPercentage(gearPercentage, gearPercentage);
     return (this.getSecondGearPercentage());
 } // end setSecondGearPercentage
 
@@ -4131,21 +4116,14 @@ public void setSecondGearPercentage (final double leftGearPercentage,
  * @param gearPercentage
  *            - the percentage you would like
  *            Third gear to be set to
- * @return int - the percentage that Third gear was set to
+ * @return double - the percentage that Third gear was set to
  * @author Bob Brown
  * @written 17 January 2010
  *          -------------------------------------------------------
  */
 public double setThirdGearPercentage (final double gearPercentage)
 {
-    if ((gearPercentage > 1.00) || (gearPercentage < 0.0))
-        {
-        this.oneOrRightThirdGearPercentage = 1.00;
-        }
-    else
-        {
-        this.oneOrRightThirdGearPercentage = gearPercentage;
-        }
+    this.setThirdGearPercentage(gearPercentage, gearPercentage);
     return (this.getThirdGearPercentage());
 } // end setThirdGearPercentage
 
@@ -4156,10 +4134,10 @@ public double setThirdGearPercentage (final double gearPercentage)
  *
  * @method setThirdGearPercentage
  * @param leftGearPercentage
- *            - the percentage you would like
+ *            the percentage you would like
  *            Third gear left motor to be set to
  * @param rightGearPercentage
- *            - the percentage you would like
+ *            the percentage you would like
  *            Third gear right motor to be set to
  * @author Bob Brown
  * @written 15 February 2013
@@ -4193,7 +4171,7 @@ public void setThirdGearPercentage (final double leftGearPercentage,
  * @method upshift
  * @param gearsToShift
  *            - number of gears to go up
- * @return gear we are now in
+ * @return int - gear we are now in
  * @author Bob Brown
  * @written Sep 20, 2009
  *          -------------------------------------------------------
@@ -4210,7 +4188,7 @@ public int upshift (final int gearsToShift)
 /**
  * Returns whether or not we are planning to use PID.
  *
- * @return if PID can be enabled by enablePID().
+ * @return boolean - if PID can be enabled by enablePID().
  * @author Noah Golmant
  * @written 16 Feb 2014
  */
