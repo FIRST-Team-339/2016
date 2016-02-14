@@ -64,6 +64,8 @@ public static void init ()
 	Hardware.transmission
 	        .setSecondGearPercentage(SECOND_GEAR_PERCENTAGE);
 	Hardware.transmission.setGear(1);
+	Hardware.transmission.setJoystickDeadbandRange(.20);
+	Hardware.transmission.setJoysticksAreReversed(false);
 
 	// armEncoder needs to be set to 0
 	Hardware.delayTimer.reset();
@@ -109,8 +111,8 @@ public static void periodic ()
 	// Driving the Robot
 	driveRobot();
 
-    runCameraSolenoid(Hardware.rightOperator.getRawButton(11),
-            Hardware.rightOperator.getRawButton(10), false, true);
+	runCameraSolenoid(Hardware.rightOperator.getRawButton(11),
+	        Hardware.rightOperator.getRawButton(10), false, true);
 } // end Periodic
 
 
@@ -176,31 +178,31 @@ public static boolean armStatus = false;
 public static void runCameraSolenoid (boolean upState,
         boolean downState, boolean holdState, boolean toggle)
 {
-    if (upState && toggle == true && armStatus == false)
-    {
-        Hardware.cameraSolenoid.set(DoubleSolenoid.Value.kForward);
-        armStatus = true;
-    }
-    else if (downState && toggle == true && armStatus == true)
-    {
-        Hardware.cameraSolenoid.set(DoubleSolenoid.Value.kReverse);
-        armStatus = false;
-    }
-    else if (holdState && toggle == false)
-    {
-        Hardware.cameraSolenoid.set(DoubleSolenoid.Value.kForward);
-    }
-    else
-    {
-        Hardware.cameraSolenoid.set(DoubleSolenoid.Value.kReverse);
-    }
+	if (upState && toggle == true && armStatus == false)
+	{
+	Hardware.cameraSolenoid.set(DoubleSolenoid.Value.kForward);
+	armStatus = true;
+	}
+	else if (downState && toggle == true && armStatus == true)
+	{
+	Hardware.cameraSolenoid.set(DoubleSolenoid.Value.kReverse);
+	armStatus = false;
+	}
+	else if (holdState && toggle == false)
+	{
+	Hardware.cameraSolenoid.set(DoubleSolenoid.Value.kForward);
+	}
+	else
+	{
+	Hardware.cameraSolenoid.set(DoubleSolenoid.Value.kReverse);
+	}
 
 }
 
 
 
 
-    /**
+/**
  * Takes a picture, processes it and saves it with left operator joystick
  * take unlit picture: 6&7
  * take lit picture: 10&11
@@ -277,62 +279,62 @@ public static void takePicture ()
 	// pictures again.
 	if (Hardware.leftOperator.getTrigger() == true)
 	{
-        if (processingImage == true)
+	if (processingImage == true)
 	{
 	processImage();
-            processingImage = false;
+	processingImage = false;
 	}
 	}
 
-    // TODO TESTING CODE. REMOVE ASAP.
-    // If we're pressing button 4
-    if (Hardware.leftOperator.getRawButton(4) == true)
-        {
-
-        if (Hardware.delayTimer.get() == 0)
-            {
-            Hardware.delayTimer.start();
-            Hardware.ringLightRelay.set(Value.kOn);
-            }
-
-
-        // process taken images
-
-        // print out the center of mass of the largest blob
-        // if (Hardware.imageProcessor.getNumBlobs() > 0)
-        // {
-        // System.out.println("Center of Mass of first blob: "
-        // + Hardware.imageProcessor
-        // .getParticleAnalysisReports()[0].center_mass_x);
-        // }
-        }
-    // System.out.println(
-    // "The delay timer is " + Hardware.delayTimer.get());
-    if (Hardware.delayTimer.get() >= 1)
-        {
-        Hardware.axisCamera.writeBrightness(
-                Hardware.NORMAL_AXIS_CAMERA_BRIGHTNESS);
-        Hardware.axisCamera.saveImagesSafely();
-
-        // Updates image when the 4th button is pressed and prints number
-        // of blobs
-        try
+	// TODO TESTING CODE. REMOVE ASAP.
+	// If we're pressing button 4
+	if (Hardware.leftOperator.getRawButton(4) == true)
 	{
-            Hardware.imageProcessor
-                    .updateImage(Hardware.axisCamera.getImage());
-	}
-        catch (NIVisionException e)
+
+	if (Hardware.delayTimer.get() == 0)
 	{
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-            }
+	Hardware.delayTimer.start();
+	Hardware.ringLightRelay.set(Value.kOn);
+	}
+
+
+	// process taken images
+
+	// print out the center of mass of the largest blob
+	// if (Hardware.imageProcessor.getNumBlobs() > 0)
+	// {
+	// System.out.println("Center of Mass of first blob: "
+	// + Hardware.imageProcessor
+	// .getParticleAnalysisReports()[0].center_mass_x);
+	// }
+	}
+	// System.out.println(
+	// "The delay timer is " + Hardware.delayTimer.get());
+	if (Hardware.delayTimer.get() >= 1)
+	{
+	Hardware.axisCamera.writeBrightness(
+	        Hardware.NORMAL_AXIS_CAMERA_BRIGHTNESS);
+	Hardware.axisCamera.saveImagesSafely();
+
+	// Updates image when the 4th button is pressed and prints number
+	// of blobs
+	try
+	{
+	Hardware.imageProcessor
+	        .updateImage(Hardware.axisCamera.getImage());
+	}
+	catch (NIVisionException e)
+	{
+	// TODO Auto-generated catch block
+	e.printStackTrace();
+	}
 	Hardware.imageProcessor.updateParticleAnalysisReports();
-        System.out.println("Number of blobs equals: "
-                + Hardware.imageProcessor.getNumBlobs());
+	System.out.println("Number of blobs equals: "
+	        + Hardware.imageProcessor.getNumBlobs());
 
-        Hardware.ringLightRelay.set(Value.kOff);
-        Hardware.delayTimer.stop();
-        Hardware.delayTimer.reset();
+	Hardware.ringLightRelay.set(Value.kOff);
+	Hardware.delayTimer.stop();
+	Hardware.delayTimer.reset();
 
 	}
 } // end Periodic
@@ -355,7 +357,7 @@ public static void processImage ()
 	// If we took a picture, we set the boolean to true to prevent
 	// taking more pictures and create an image processor to process
 	// images.
-    // processingImage = true;
+	// processingImage = true;
 	// Hardware.imageProcessor.processImage();
 	// System.out.println("Length: " +
 	// Hardware.imageProcessor.reports.length);
@@ -423,11 +425,11 @@ public static void printStatements ()
 	// Hardware.catapultSolenoid2.get());
 
 	// Encoders-------------
-	// System.out.println(
-	// "RR distance = " + Hardware.rightRearEncoder.getDistance());
-	// System.out.println(
-	// "LR distance = " + Hardware.leftRearEncoder.getDistance());
-	// System.out.println("Arm Motor = " + Hardware.armMotor.getDistance());
+	System.out.println(
+	        "RR distance = " + Hardware.rightRearEncoder.getDistance());
+	System.out.println(
+	        "LR distance = " + Hardware.leftRearEncoder.getDistance());
+	        // System.out.println("Arm Motor = " + Hardware.armMotor.getDistance());
 
 	// Switches--------------
 	// prints state of switches

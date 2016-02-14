@@ -237,6 +237,7 @@ public void robotInit ()
 	        .setDistancePerPulse(distancePerTickForMotorEncoders);
 	Hardware.rightRearEncoder.reset();
 
+	Hardware.rightRearMotor.setInverted(true);
 	// --------------------------------------
 	// initialize all things with the drive system
 	// --------------------------------------
@@ -270,14 +271,14 @@ public void robotInit ()
 
 	// Starts streaming video
 	Hardware.cameraServer.startAutomaticCapture(Hardware.cam0);
-    // TODO
+	// TODO
 	// Sets the hue, saturation, and luminance values for the vision
 	// processing.
 	Hardware.imageProcessor.setHSLValues(0, 153, 0, 75, 5, 141);
 	// Has us remove small objects at the intensity of 5. May have to
 	// change those values.
-    // Hardware.imageProcessor.setObjectRemoval(ObjectRemoval.BORDER);
-    Hardware.imageProcessor.setObjectRemoval(ObjectRemoval.SMALL, 3);
+	// Hardware.imageProcessor.setObjectRemoval(ObjectRemoval.BORDER);
+	Hardware.imageProcessor.setObjectRemoval(ObjectRemoval.SMALL, 3);
 	// Has us convex hull our image so that the goal becomes a rectangle.
 	Hardware.imageProcessor.setUseConvexHull(true);
 	// we could also crop the image to only include blobs in our
@@ -304,10 +305,6 @@ public void robotInit ()
 	Hardware.rightRearMotorSafety.setExpiration(.25);
 	Hardware.leftFrontMotorSafety.setExpiration(.25);
 	Hardware.rightFrontMotorSafety.setExpiration(.25);
-
-
-
-	Hardware.rightRearMotor.setInverted(true);
 
 	// --------------------------------------
 	// Compressor Initialization

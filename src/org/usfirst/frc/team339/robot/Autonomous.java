@@ -32,6 +32,7 @@
 package org.usfirst.frc.team339.robot;
 
 import org.usfirst.frc.team339.Hardware.Hardware;
+import org.usfirst.frc.team339.Utils.ErrorMessage;
 import edu.wpi.first.wpilibj.vision.AxisCamera.Resolution;
 
 /**
@@ -185,15 +186,14 @@ public static void init ()
 
 	// Hardware.drive.setMaxSpeed(MAXIMUM_AUTONOMOUS_SPEED);
 
-
 	// -------------------------------------
 	// motor initialization
 	// -------------------------------------
 
-	Hardware.transmission
-	        .setFirstGearPercentage(1);
+	Hardware.transmission.setFirstGearPercentage(1.0);
 	Hardware.transmission.setGear(1);
 	Hardware.transmission.setJoysticksAreReversed(true);
+	Hardware.transmission.setJoystickDeadbandRange(0.0);
 
 
 	// --------------------------------------
@@ -232,9 +232,10 @@ public static void init ()
 	Hardware.rightRearMotor.set(0.0);
 	Hardware.armMotor.set(0.0);
 	Hardware.armIntakeMotor.set(0.0);
-
-
 	// Hardware.drive.setMaxSpeed(MAXIMUM_AUTONOMOUS_SPEED);
+
+	Hardware.errorMessage.clearErrorlog();
+
 } // end Init
 
 /**
@@ -282,11 +283,21 @@ private static void runMainStateMachine ()
 	// print out states.
 	{
 	System.out.println("Main State: " + mainState);
+	Teleop.printStatements();
+	Hardware.errorMessage.printError(
+	        "Main State: " + mainState,
+	        ErrorMessage.PrintsTo.roboRIO);
+	Hardware.errorMessage.printError(
+	        "Left:" + Hardware.leftRearEncoder.getDistance(),
+	        ErrorMessage.PrintsTo.roboRIO);
+	Hardware.errorMessage.printError(
+	        "Right:" + Hardware.rightRearEncoder.getDistance(),
+	        ErrorMessage.PrintsTo.roboRIO);
 	}
 
 	//Temporary. Print gear percentage. TODO: Remove.
-	System.out.println("First gear percentage = "
-	        + Hardware.transmission.getFirstGearPercentage());
+	//System.out.println("First gear percentage = "
+	//        + Hardware.transmission.getFirstGearPercentage());
 
 	switch (mainState)
 	{
@@ -402,9 +413,7 @@ private static void runMainStateMachine ()
 			if (hasMovedFowardsFromTape() == true)
 			{
 			resetEncoders();
-			mainState = //MainState.TURN_TO_FACE_GOAL;
-			        //TEMPORARY TEST STOP
-			        MainState.DONE;
+			mainState = MainState.TURN_TO_FACE_GOAL;
 			}
 			break;
 
@@ -613,7 +622,8 @@ private static boolean hasDrivenToTapeByDistance ()
 	// Drive forwards.
 	if (Hardware.drive.driveForwardInches(
 	        DriveInformation.DISTANCE_TO_TAPE * LAB_SCALING_FACTOR,
-	        false) == true)
+	        false, DriveInformation.MOTOR_RATIO_TO_A_LINE[lane],
+	        DriveInformation.MOTOR_RATIO_TO_A_LINE[lane]) == true)
 	// If we have reached the desired distance, return true.
 	{
 	hasReachedDistance = true;
@@ -660,10 +670,13 @@ private static boolean hasMovedFowardsFromTape ()
 {
 	boolean done = false;
 
+	//Drive the distance from the tape to the line normal to the goal.
 	if (Hardware.drive.driveForwardInches(
 	        DriveInformation.FORWARDS_FROM_ALIGNMENT_LINE_DISTANCE[lane]
 	                * LAB_SCALING_FACTOR,
-	        true) == true)
+	        true,
+	        DriveInformation.FORWARDS_FROM_ALIGNMENT_LINE_MOTOR_RATIO[lane],
+	        DriveInformation.FORWARDS_FROM_ALIGNMENT_LINE_MOTOR_RATIO[lane]) == true)
 	{
 	done = true;
 	}
@@ -680,7 +693,8 @@ private static boolean hasRotatedTowardsShootingPosition ()
 {
 	boolean done = false;
 
-
+	//Turn the degrees specified.
+	//TODO: Add more parameters to this method.
 	done = hasTurnedBasedOnSign(
 	        DriveInformation.ROTATE_ON_ALIGNMENT_LINE_DISTANCE[lane]
 	                * LAB_SCALING_FACTOR);
@@ -697,7 +711,8 @@ private static boolean hasTurnedToFaceGoal ()
 {
 	boolean done = false;
 
-
+	//Turn the degrees specified.
+	//TODO: Add more parameters to this method.
 	done = hasTurnedBasedOnSign(
 	        DriveInformation.TURN_TO_FACE_GOAL_DEGREES[lane]
 	                * LAB_SCALING_FACTOR);
@@ -716,17 +731,31 @@ private static boolean hasDrivenUpToGoal ()
 {
 	boolean done = false;
 
-	Hardware.drive.driveContinuous();
-
-	// Distance according to drawings.
-	// if (Hardware.drive.driveForwardInches(
-	// DriveInformation.DRIVE_UP_TO_GOAL[lane ]))
-
-	// see if we have reached cleats of the tower.
-	if (Hardware.leftIR.isOn() || Hardware.rightIR.isOn())
-	// Return true, proceed.
+	// Have we reached the distance according to drawings.
+	//OR
+	// Have we seen if we have reached cleats of the tower according to IR?
+	if ((Hardware.drive.driveForwardInches(
+	        DriveInformation.DRIVE_UP_TO_GOAL[lane]
+	                * LAB_SCALING_FACTOR,
+	        true, DriveInformation.DRIVE_UP_TO_GOAL_MOTOR_RATIO[lane],
+	        DriveInformation.DRIVE_UP_TO_GOAL_MOTOR_RATIO[lane]) == true)
+	        ||
+	        (Hardware.leftIR.isOn() || Hardware.rightIR.isOn()))
+	//We are done here.
 	{
 	done = true;
+	}
+
+	//TEMPORARY PRINTS.
+	// see if we have stopped based on IR or Encoders.
+	if (done == true
+	        && (Hardware.leftIR.isOn() || Hardware.rightIR.isOn()))
+	{
+	System.out.println("Stopped by Sensors");
+	}
+	else
+	{
+	System.out.println("Stopped by distance.");
 	}
 	return done;
 }
@@ -734,7 +763,6 @@ private static boolean hasDrivenUpToGoal ()
 /**
  * Shoots the ball. May want to add states/methods to align.
  * 
- * @return
  */
 private static void shoot ()
 {
@@ -795,24 +823,28 @@ private static void resetEncoders ()
  * COUNTERCLOCKWISE.
  * Kilroy must turn along different paths.
  * You must use this to be versatile.
+ * TODO: add parameters for break and speeds.
  */
 private static boolean hasTurnedBasedOnSign (double degrees)
 {
 	boolean done = false;
 
 	if (degrees < 0)
+	//Turn right. Make degrees positive.
 	{
-	done = Hardware.drive.turnRightDegrees(degrees, true, .3, .3);
+	done = Hardware.drive.turnRightDegrees(-degrees, false, -0.28,
+	        0.28);
 	}
 	else
+	//Turn left the given number of degrees.
 	{
-	done = Hardware.drive.turnLeftDegrees(degrees, true, .3, .3);
+	done = Hardware.drive.turnLeftDegrees(degrees, false, 0.28, -0.28);
 	}
 	return done;
 }
 
 /**
- * Contains distances to drive.
+ * Contains distances and speeds at which to drive.
  *
  */
 private static final class DriveInformation
@@ -826,11 +858,24 @@ private static final class DriveInformation
 static final double[] MOTOR_RATIO_TO_OUTER_WORKS =
         {
                 0.0, // nothing. Not used. Arbitrary; makes it work.
-                0.4, // lane 1, should be extra low.
+                0.25, // lane 1, should be extra low.
                 1.0, // lane 2
                 0.4, // lane 3
                 0.4, // lane 4
                 0.4 // lane 5
+        };
+
+/**
+ * "Speeds" at which to drive from the Outer Works to the Alignment Line.
+ */
+static final double[] MOTOR_RATIO_TO_A_LINE =
+        {
+                0.0,
+                0.5,
+                0.6,
+                0.4,
+                0.4,
+                0.6
         };
 
 /**
@@ -863,6 +908,20 @@ static final double[] FORWARDS_FROM_ALIGNMENT_LINE_DISTANCE =
         };
 
 /**
+ * "Speeds" at which to drive from the A-Line to the imaginary line normal to
+ * the goal.
+ */
+static final double[] FORWARDS_FROM_ALIGNMENT_LINE_MOTOR_RATIO =
+        {
+                0.0,
+                0.4,
+                0.4,
+                0.3,
+                0.3,
+                0.4
+        };
+
+/**
  * Distances to rotate to face goal.
  */
 static final double[] TURN_TO_FACE_GOAL_DEGREES =
@@ -874,6 +933,7 @@ static final double[] TURN_TO_FACE_GOAL_DEGREES =
                 -24.85,// lane 4
                 60 // lane 5
         };
+
 
 /**
  * Distances to travel once facing the goal.
@@ -889,6 +949,19 @@ static final double[] DRIVE_UP_TO_GOAL =
                 0.0,// lane 3 (not neccesary)
                 0.0,// lane 4 (not neccesary)
                 12.0 // lane 5
+        };
+
+/**
+ * "Speeds" at which to drive to the Batter.
+ */
+static final double[] DRIVE_UP_TO_GOAL_MOTOR_RATIO =
+        {
+                0.0,
+                0.35,
+                0.4,
+                0.4,
+                0.4,
+                0.4
         };
 
 /**

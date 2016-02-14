@@ -29,9 +29,9 @@ public class ErrorMessage
  * roboRIO prints the error to only the RoboRIO
  */
 public static enum PrintsTo
-    {
-    driverStation, roboRIO, driverStationAndRoboRIO
-    }
+	{
+	driverStation, roboRIO, driverStationAndRoboRIO
+	}
 
 /**
  * The time, according to the RIO. <br>
@@ -79,48 +79,48 @@ private PrintsTo defaultPrintDevice = PrintsTo.driverStationAndRoboRIO;
  */
 public ErrorMessage ()
 {
-    this.errorlogLocation = "/home/lvuser/errors/errorlog.txt";
+	this.errorlogLocation = "/home/lvuser/errors/errorlog.txt";
 
-    this.appendTimeStamp = true;
+	this.appendTimeStamp = true;
 
-    this.defaultPrintDevice = PrintsTo.driverStationAndRoboRIO;
+	this.defaultPrintDevice = PrintsTo.driverStationAndRoboRIO;
 
-    /*
-     * if this directory does not exist, this should create it.
-     * 
-     * (This may encounter problems if directory may not be modified)
-     */
-    final File location = new File(this.errorlogLocation);
+	/*
+	 * if this directory does not exist, this should create it.
+	 * 
+	 * (This may encounter problems if directory may not be modified)
+	 */
+	final File location = new File(this.errorlogLocation);
 
-    if (location.exists() == false)
-        {
-        final int lastSlash = this.errorlogLocation.lastIndexOf('/');
-        final String errorlogDirectory =
-                this.errorlogLocation.substring(0, lastSlash);
+	if (location.exists() == false)
+	{
+	final int lastSlash = this.errorlogLocation.lastIndexOf('/');
+	final String errorlogDirectory =
+	        this.errorlogLocation.substring(0, lastSlash);
 
 
-        try
-            {
-            Runtime.getRuntime()
-                    .exec("/bin/mkdir " + errorlogDirectory);
-            Runtime.getRuntime().exec(
-                    "/bin/touch \"" + this.errorlogLocation + "\"");
-            }
-        catch (final IOException e)
-            {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-            }
-        try
-            {
-            location.createNewFile();
-            }
-        catch (final IOException e1)
-            {
-            // TODO Auto-generated catch block
-            e1.printStackTrace();
-            }
-        }
+	try
+	{
+	Runtime.getRuntime()
+	        .exec("/bin/mkdir " + errorlogDirectory);
+	Runtime.getRuntime().exec(
+	        "/bin/touch \"" + this.errorlogLocation + "\"");
+	}
+	catch (final IOException e)
+	{
+	// TODO Auto-generated catch block
+	e.printStackTrace();
+	}
+	try
+	{
+	location.createNewFile();
+	}
+	catch (final IOException e1)
+	{
+	// TODO Auto-generated catch block
+	e1.printStackTrace();
+	}
+	}
 }
 
 /**
@@ -135,47 +135,47 @@ public ErrorMessage ()
  */
 public ErrorMessage (PrintsTo PrintsTo)
 {
-    this.errorlogLocation = "/home/lvuser/errors/errorlog.txt";
+	this.errorlogLocation = "/home/lvuser/errors/errorlog.txt";
 
-    this.appendTimeStamp = true;
+	this.appendTimeStamp = true;
 
-    this.defaultPrintDevice = PrintsTo;
+	this.defaultPrintDevice = PrintsTo;
 
-    /*
-     * if this directory does not exist, this should create it.
-     * 
-     * (This may encounter problems if directory may not be modified)
-     */
-    final File location = new File(this.errorlogLocation);
+	/*
+	 * if this directory does not exist, this should create it.
+	 * 
+	 * (This may encounter problems if directory may not be modified)
+	 */
+	final File location = new File(this.errorlogLocation);
 
-    if (location.exists() == false)
-        {
-        final int lastSlash = this.errorlogLocation.lastIndexOf('/');
-        final String errorlogDirectory =
-                this.errorlogLocation.substring(0, lastSlash);
+	if (location.exists() == false)
+	{
+	final int lastSlash = this.errorlogLocation.lastIndexOf('/');
+	final String errorlogDirectory =
+	        this.errorlogLocation.substring(0, lastSlash);
 
-        try
-            {
-            Runtime.getRuntime()
-                    .exec("/bin/mkdir " + errorlogDirectory);
-            Runtime.getRuntime().exec(
-                    "/bin/touch \"" + this.errorlogLocation + "\"");
-            }
-        catch (final IOException e)
-            {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-            }
-        try
-            {
-            location.createNewFile();
-            }
-        catch (final IOException e1)
-            {
-            // TODO Auto-generated catch block
-            e1.printStackTrace();
-            }
-        }
+	try
+	{
+	Runtime.getRuntime()
+	        .exec("/bin/mkdir " + errorlogDirectory);
+	Runtime.getRuntime().exec(
+	        "/bin/touch \"" + this.errorlogLocation + "\"");
+	}
+	catch (final IOException e)
+	{
+	// TODO Auto-generated catch block
+	e.printStackTrace();
+	}
+	try
+	{
+	location.createNewFile();
+	}
+	catch (final IOException e1)
+	{
+	// TODO Auto-generated catch block
+	e1.printStackTrace();
+	}
+	}
 }
 
 
@@ -191,47 +191,47 @@ public ErrorMessage (PrintsTo PrintsTo)
  */
 public ErrorMessage (boolean appendTimeStampByDefault)
 {
-    errorlogLocation = "/home/lvuser/errors/errorlog.txt";
+	errorlogLocation = "/home/lvuser/errors/errorlog.txt";
 
-    appendTimeStamp = appendTimeStampByDefault;
+	appendTimeStamp = appendTimeStampByDefault;
 
-    defaultPrintDevice = PrintsTo.driverStationAndRoboRIO;
+	defaultPrintDevice = PrintsTo.driverStationAndRoboRIO;
 
-    /*
-     * if this directory does not exist, this should create it.
-     * 
-     * (This may encounter problems if directory may not be modified)
-     */
-    final File location = new File(errorlogLocation);
+	/*
+	 * if this directory does not exist, this should create it.
+	 * 
+	 * (This may encounter problems if directory may not be modified)
+	 */
+	final File location = new File(errorlogLocation);
 
-    if (location.exists() == false)
-        {
-        final int lastSlash = errorlogLocation.lastIndexOf('/');
-        final String errorlogDirectory = errorlogLocation.substring(0,
-                lastSlash);
+	if (location.exists() == false)
+	{
+	final int lastSlash = errorlogLocation.lastIndexOf('/');
+	final String errorlogDirectory = errorlogLocation.substring(0,
+	        lastSlash);
 
-        try
-            {
-            Runtime.getRuntime()
-                    .exec("/bin/mkdir " + errorlogDirectory);
-            Runtime.getRuntime().exec(
-                    "/bin/touch \"" + errorlogLocation + "\"");
-            }
-        catch (final IOException e)
-            {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-            }
-        try
-            {
-            location.createNewFile();
-            }
-        catch (final IOException e1)
-            {
-            // TODO Auto-generated catch block
-            e1.printStackTrace();
-            }
-        }
+	try
+	{
+	Runtime.getRuntime()
+	        .exec("/bin/mkdir " + errorlogDirectory);
+	Runtime.getRuntime().exec(
+	        "/bin/touch \"" + errorlogLocation + "\"");
+	}
+	catch (final IOException e)
+	{
+	// TODO Auto-generated catch block
+	e.printStackTrace();
+	}
+	try
+	{
+	location.createNewFile();
+	}
+	catch (final IOException e1)
+	{
+	// TODO Auto-generated catch block
+	e1.printStackTrace();
+	}
+	}
 }
 
 /**
@@ -249,70 +249,70 @@ public ErrorMessage (boolean appendTimeStampByDefault)
 public ErrorMessage (PrintsTo PrintsTo,
         boolean appendTimeStampByDefault)
 {
-    errorlogLocation = "/home/lvuser/errors/errorlog.txt";
+	errorlogLocation = "/home/lvuser/errors/errorlog.txt";
 
-    defaultPrintDevice = PrintsTo;
-    appendTimeStamp = appendTimeStampByDefault;
+	defaultPrintDevice = PrintsTo;
+	appendTimeStamp = appendTimeStampByDefault;
 
-    /* if this directory does not exist, this should create it. */
-    final File location = new File(errorlogLocation);
+	/* if this directory does not exist, this should create it. */
+	final File location = new File(errorlogLocation);
 
-    try
-        {
+	try
+	{
 
-        final boolean created = location.createNewFile();
-        System.out.println("Created? " + created + "!");
-        }
-    catch (final IOException e)
-        {
-        e.printStackTrace();
+	final boolean created = location.createNewFile();
+	System.out.println("Created? " + created + "!");
+	}
+	catch (final IOException e)
+	{
+	e.printStackTrace();
 
-        }
-    if (location.exists() == false)
-        {
-        try
-            {
-            location.createNewFile();
-            }
-        catch (final IOException e1)
-            {
-            // TODO Auto-generated catch block
-            e1.printStackTrace();
-            }
-        final int lastSlash = errorlogLocation.lastIndexOf('/');
-        final String errorlogDirectory = errorlogLocation.substring(0,
-                lastSlash);
-        try
-            {
-            Runtime.getRuntime()
-                    .exec("/bin/mkdir " + errorlogDirectory);
-            Runtime.getRuntime()
-                    .exec("/bin/touch " + errorlogLocation);
+	}
+	if (location.exists() == false)
+	{
+	try
+	{
+	location.createNewFile();
+	}
+	catch (final IOException e1)
+	{
+	// TODO Auto-generated catch block
+	e1.printStackTrace();
+	}
+	final int lastSlash = errorlogLocation.lastIndexOf('/');
+	final String errorlogDirectory = errorlogLocation.substring(0,
+	        lastSlash);
+	try
+	{
+	Runtime.getRuntime()
+	        .exec("/bin/mkdir " + errorlogDirectory);
+	Runtime.getRuntime()
+	        .exec("/bin/touch " + errorlogLocation);
 
-            }
-        catch (final IOException e)
-            {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-            }
-        PrintWriter newFile;
-        try
-            {
-            newFile = new PrintWriter(errorlogLocation, "UTF-8");
-            newFile.close();
-            }
-        catch (final FileNotFoundException e)
-            {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-            }
-        catch (final UnsupportedEncodingException e)
-            {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-            }
+	}
+	catch (final IOException e)
+	{
+	// TODO Auto-generated catch block
+	e.printStackTrace();
+	}
+	PrintWriter newFile;
+	try
+	{
+	newFile = new PrintWriter(errorlogLocation, "UTF-8");
+	newFile.close();
+	}
+	catch (final FileNotFoundException e)
+	{
+	// TODO Auto-generated catch block
+	e.printStackTrace();
+	}
+	catch (final UnsupportedEncodingException e)
+	{
+	// TODO Auto-generated catch block
+	e.printStackTrace();
+	}
 
-        }
+	}
 
 }
 
@@ -328,69 +328,69 @@ public ErrorMessage (PrintsTo PrintsTo,
 public ErrorMessage (String errorlogLocation)
 {
 
-    defaultPrintDevice = PrintsTo.driverStationAndRoboRIO;
-    appendTimeStamp = true;
+	defaultPrintDevice = PrintsTo.driverStationAndRoboRIO;
+	appendTimeStamp = true;
 
-    /* if this directory does not exist, this should create it. */
-    final File location = new File(errorlogLocation);
+	/* if this directory does not exist, this should create it. */
+	final File location = new File(errorlogLocation);
 
-    try
-        {
+	try
+	{
 
-        final boolean created = location.createNewFile();
-        System.out.println("Created? " + created + "!");
-        }
-    catch (final IOException e)
-        {
-        e.printStackTrace();
+	final boolean created = location.createNewFile();
+	System.out.println("Created? " + created + "!");
+	}
+	catch (final IOException e)
+	{
+	e.printStackTrace();
 
-        }
-    if (location.exists() == false)
-        {
-        try
-            {
-            location.createNewFile();
-            }
-        catch (final IOException e1)
-            {
-            // TODO Auto-generated catch block
-            e1.printStackTrace();
-            }
-        final int lastSlash = errorlogLocation.lastIndexOf('/');
-        final String errorlogDirectory = errorlogLocation.substring(0,
-                lastSlash);
-        try
-            {
-            Runtime.getRuntime()
-                    .exec("/bin/mkdir " + errorlogDirectory);
-            Runtime.getRuntime().exec("/bin/touch " + errorlogLocation);
+	}
+	if (location.exists() == false)
+	{
+	try
+	{
+	location.createNewFile();
+	}
+	catch (final IOException e1)
+	{
+	// TODO Auto-generated catch block
+	e1.printStackTrace();
+	}
+	final int lastSlash = errorlogLocation.lastIndexOf('/');
+	final String errorlogDirectory = errorlogLocation.substring(0,
+	        lastSlash);
+	try
+	{
+	Runtime.getRuntime()
+	        .exec("/bin/mkdir " + errorlogDirectory);
+	Runtime.getRuntime().exec("/bin/touch " + errorlogLocation);
 
-            }
-        catch (final IOException e)
-            {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-            }
-        PrintWriter newFile;
-        try
-            {
-            newFile = new PrintWriter(errorlogLocation, "UTF-8");
-            newFile.close();
-            }
-        catch (final FileNotFoundException e)
-            {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-            }
-        catch (final UnsupportedEncodingException e)
-            {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-            }
+	}
+	catch (final IOException e)
+	{
+	// TODO Auto-generated catch block
+	e.printStackTrace();
+	}
+	PrintWriter newFile;
+	try
+	{
+	newFile = new PrintWriter(errorlogLocation, "UTF-8");
+	newFile.close();
+	}
+	catch (final FileNotFoundException e)
+	{
+	// TODO Auto-generated catch block
+	e.printStackTrace();
+	}
+	catch (final UnsupportedEncodingException e)
+	{
+	// TODO Auto-generated catch block
+	e.printStackTrace();
+	}
 
-        }
+	}
 
-    this.errorlogLocation = errorlogLocation;
+	this.errorlogLocation = errorlogLocation;
 }
 
 /**
@@ -410,68 +410,68 @@ public ErrorMessage (String errorlogLocation,
         boolean appendTimeStampByDefault)
 {
 
-    defaultPrintDevice = PrintsTo.driverStationAndRoboRIO;
-    appendTimeStamp = appendTimeStampByDefault;
+	defaultPrintDevice = PrintsTo.driverStationAndRoboRIO;
+	appendTimeStamp = appendTimeStampByDefault;
 
-    /* if this directory does not exist, this should create it. */
-    final File location = new File(errorlogLocation);
+	/* if this directory does not exist, this should create it. */
+	final File location = new File(errorlogLocation);
 
-    try
-        {
+	try
+	{
 
-        final boolean created = location.createNewFile();
-        System.out.println("Created? " + created + "!");
-        }
-    catch (final IOException e)
-        {
-        e.printStackTrace();
+	final boolean created = location.createNewFile();
+	System.out.println("Created? " + created + "!");
+	}
+	catch (final IOException e)
+	{
+	e.printStackTrace();
 
-        }
-    if (location.exists() == false)
-        {
-        try
-            {
-            location.createNewFile();
-            }
-        catch (final IOException e1)
-            {
-            // TODO Auto-generated catch block
-            e1.printStackTrace();
-            }
-        final int lastSlash = errorlogLocation.lastIndexOf('/');
-        final String errorlogDirectory = errorlogLocation.substring(0,
-                lastSlash);
-        try
-            {
-            Runtime.getRuntime()
-                    .exec("/bin/mkdir " + errorlogDirectory);
-            Runtime.getRuntime().exec("/bin/touch " + errorlogLocation);
+	}
+	if (location.exists() == false)
+	{
+	try
+	{
+	location.createNewFile();
+	}
+	catch (final IOException e1)
+	{
+	// TODO Auto-generated catch block
+	e1.printStackTrace();
+	}
+	final int lastSlash = errorlogLocation.lastIndexOf('/');
+	final String errorlogDirectory = errorlogLocation.substring(0,
+	        lastSlash);
+	try
+	{
+	Runtime.getRuntime()
+	        .exec("/bin/mkdir " + errorlogDirectory);
+	Runtime.getRuntime().exec("/bin/touch " + errorlogLocation);
 
-            }
-        catch (final IOException e)
-            {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-            }
-        PrintWriter newFile;
-        try
-            {
-            newFile = new PrintWriter(errorlogLocation, "UTF-8");
-            newFile.close();
-            }
-        catch (final FileNotFoundException e)
-            {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-            }
-        catch (final UnsupportedEncodingException e)
-            {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-            }
-        }
+	}
+	catch (final IOException e)
+	{
+	// TODO Auto-generated catch block
+	e.printStackTrace();
+	}
+	PrintWriter newFile;
+	try
+	{
+	newFile = new PrintWriter(errorlogLocation, "UTF-8");
+	newFile.close();
+	}
+	catch (final FileNotFoundException e)
+	{
+	// TODO Auto-generated catch block
+	e.printStackTrace();
+	}
+	catch (final UnsupportedEncodingException e)
+	{
+	// TODO Auto-generated catch block
+	e.printStackTrace();
+	}
+	}
 
-    this.errorlogLocation = errorlogLocation;
+	this.errorlogLocation = errorlogLocation;
 }
 
 /**
@@ -489,68 +489,68 @@ public ErrorMessage (String errorlogLocation,
 public ErrorMessage (String errorlogLocation, PrintsTo PrintsTo)
 {
 
-    defaultPrintDevice = PrintsTo;
-    appendTimeStamp = true;
+	defaultPrintDevice = PrintsTo;
+	appendTimeStamp = true;
 
-    /* if this directory does not exist, this should create it. */
-    final File location = new File(errorlogLocation);
+	/* if this directory does not exist, this should create it. */
+	final File location = new File(errorlogLocation);
 
-    try
-        {
+	try
+	{
 
-        final boolean created = location.createNewFile();
-        System.out.println("Created? " + created + "!");
-        }
-    catch (final IOException e)
-        {
-        e.printStackTrace();
+	final boolean created = location.createNewFile();
+	System.out.println("Created? " + created + "!");
+	}
+	catch (final IOException e)
+	{
+	e.printStackTrace();
 
-        }
-    if (location.exists() == false)
-        {
-        try
-            {
-            location.createNewFile();
-            }
-        catch (final IOException e1)
-            {
-            // TODO Auto-generated catch block
-            e1.printStackTrace();
-            }
-        final int lastSlash = errorlogLocation.lastIndexOf('/');
-        final String errorlogDirectory = errorlogLocation.substring(0,
-                lastSlash);
-        try
-            {
-            Runtime.getRuntime()
-                    .exec("/bin/mkdir " + errorlogDirectory);
-            Runtime.getRuntime().exec("/bin/touch " + errorlogLocation);
+	}
+	if (location.exists() == false)
+	{
+	try
+	{
+	location.createNewFile();
+	}
+	catch (final IOException e1)
+	{
+	// TODO Auto-generated catch block
+	e1.printStackTrace();
+	}
+	final int lastSlash = errorlogLocation.lastIndexOf('/');
+	final String errorlogDirectory = errorlogLocation.substring(0,
+	        lastSlash);
+	try
+	{
+	Runtime.getRuntime()
+	        .exec("/bin/mkdir " + errorlogDirectory);
+	Runtime.getRuntime().exec("/bin/touch " + errorlogLocation);
 
-            }
-        catch (final IOException e)
-            {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-            }
-        PrintWriter newFile;
-        try
-            {
-            newFile = new PrintWriter(errorlogLocation, "UTF-8");
-            newFile.close();
-            }
-        catch (final FileNotFoundException e)
-            {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-            }
-        catch (final UnsupportedEncodingException e)
-            {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-            }
+	}
+	catch (final IOException e)
+	{
+	// TODO Auto-generated catch block
+	e.printStackTrace();
+	}
+	PrintWriter newFile;
+	try
+	{
+	newFile = new PrintWriter(errorlogLocation, "UTF-8");
+	newFile.close();
+	}
+	catch (final FileNotFoundException e)
+	{
+	// TODO Auto-generated catch block
+	e.printStackTrace();
+	}
+	catch (final UnsupportedEncodingException e)
+	{
+	// TODO Auto-generated catch block
+	e.printStackTrace();
+	}
 
-        }
-    this.errorlogLocation = errorlogLocation;
+	}
+	this.errorlogLocation = errorlogLocation;
 }
 
 /**
@@ -573,67 +573,67 @@ public ErrorMessage (String errorlogLocation, PrintsTo PrintsTo,
         boolean appendTimeStampByDefault)
 {
 
-    defaultPrintDevice = PrintsTo;
-    appendTimeStamp = appendTimeStampByDefault;
+	defaultPrintDevice = PrintsTo;
+	appendTimeStamp = appendTimeStampByDefault;
 
-    /* if this directory does not exist, this should create it. */
-    final File location = new File(errorlogLocation);
+	/* if this directory does not exist, this should create it. */
+	final File location = new File(errorlogLocation);
 
-    try
-        {
+	try
+	{
 
-        final boolean created = location.createNewFile();
-        System.out.println("Created? " + created + "!");
-        }
-    catch (final IOException e)
-        {
-        e.printStackTrace();
+	final boolean created = location.createNewFile();
+	System.out.println("Created? " + created + "!");
+	}
+	catch (final IOException e)
+	{
+	e.printStackTrace();
 
-        }
-    if (location.exists() == false)
-        {
-        try
-            {
-            location.createNewFile();
-            }
-        catch (final IOException e1)
-            {
-            // TODO Auto-generated catch block
-            e1.printStackTrace();
-            }
-        final int lastSlash = errorlogLocation.lastIndexOf('/');
-        final String errorlogDirectory = errorlogLocation.substring(0,
-                lastSlash);
-        try
-            {
-            Runtime.getRuntime()
-                    .exec("/bin/mkdir " + errorlogDirectory);
-            Runtime.getRuntime().exec("/bin/touch " + errorlogLocation);
+	}
+	if (location.exists() == false)
+	{
+	try
+	{
+	location.createNewFile();
+	}
+	catch (final IOException e1)
+	{
+	// TODO Auto-generated catch block
+	e1.printStackTrace();
+	}
+	final int lastSlash = errorlogLocation.lastIndexOf('/');
+	final String errorlogDirectory = errorlogLocation.substring(0,
+	        lastSlash);
+	try
+	{
+	Runtime.getRuntime()
+	        .exec("/bin/mkdir " + errorlogDirectory);
+	Runtime.getRuntime().exec("/bin/touch " + errorlogLocation);
 
-            }
-        catch (final IOException e)
-            {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-            }
-        PrintWriter newFile;
-        try
-            {
-            newFile = new PrintWriter(errorlogLocation, "UTF-8");
-            newFile.close();
-            }
-        catch (final FileNotFoundException e)
-            {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-            }
-        catch (final UnsupportedEncodingException e)
-            {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-            }
-        }
-    this.errorlogLocation = errorlogLocation;
+	}
+	catch (final IOException e)
+	{
+	// TODO Auto-generated catch block
+	e.printStackTrace();
+	}
+	PrintWriter newFile;
+	try
+	{
+	newFile = new PrintWriter(errorlogLocation, "UTF-8");
+	newFile.close();
+	}
+	catch (final FileNotFoundException e)
+	{
+	// TODO Auto-generated catch block
+	e.printStackTrace();
+	}
+	catch (final UnsupportedEncodingException e)
+	{
+	// TODO Auto-generated catch block
+	e.printStackTrace();
+	}
+	}
+	this.errorlogLocation = errorlogLocation;
 }
 
 /**
@@ -646,44 +646,44 @@ public ErrorMessage (String errorlogLocation, PrintsTo PrintsTo,
  */
 private String appendErrorMessage (String errorMessage)
 {
-    final String dsMessage = "\nRIOtime: " + rioTime // adds time
-    // according to
-    // the RIO
-            + "\nMatch: " + matchTime // adds match time
-            + "\n" + errorMessage;
-    return dsMessage;
+	final String dsMessage = "\nRIOtime: " + rioTime // adds time
+	// according to
+	// the RIO
+	        + "\nMatch: " + matchTime // adds match time
+	        + "\n" + errorMessage;
+	return dsMessage;
 }
 
 /** Overwrites the current log. */
 public void clearErrorlog ()
 {
-    try
-        {
-        final PrintWriter log = new PrintWriter(
-                new BufferedWriter(new FileWriter(
-                        errorlogLocation, false)));
-        log.print("\n");
-        log.close();
-        }
-    catch (final IOException e)
-        {
-        // TODO Auto-generated catch block
-        e.printStackTrace();
-        }
+	try
+	{
+	final PrintWriter log = new PrintWriter(
+	        new BufferedWriter(new FileWriter(
+	                errorlogLocation, false)));
+	log.print("\n");
+	log.close();
+	}
+	catch (final IOException e)
+	{
+	// TODO Auto-generated catch block
+	e.printStackTrace();
+	}
 }
 
 /** deletes the error log from the file system. */
 public void deleteErrorLog ()
 {
-    try
-        {
-        Runtime.getRuntime().exec("/bin/rm -f " + errorlogLocation);
-        }
-    catch (final IOException e)
-        {
-        // TODO Auto-generated catch block
-        e.printStackTrace();
-        }
+	try
+	{
+	Runtime.getRuntime().exec("/bin/rm -f " + errorlogLocation);
+	}
+	catch (final IOException e)
+	{
+	// TODO Auto-generated catch block
+	e.printStackTrace();
+	}
 }
 
 /**
@@ -693,77 +693,77 @@ public void deleteErrorLog ()
  */
 private String getDate ()
 {
-    String retTime = "Unknown Time...";
-    String errorMessage = null;
-    try
-        {
+	String retTime = "Unknown Time...";
+	String errorMessage = null;
+	try
+	{
 
-        this.rioTime = this.getDate();
-        this.matchTime = Hardware.driverStation.getMatchTime();
-        final Process p = Runtime.getRuntime().exec("date");
+	this.rioTime = this.getDate();
+	this.matchTime = Hardware.driverStation.getMatchTime();
+	final Process p = Runtime.getRuntime().exec("date");
 
-        if (this.appendTimeStamp == true)
-            {
-            errorMessage = this.appendErrorMessage(errorMessage);
-            }
-        final BufferedReader stdInput = new BufferedReader(
-                new InputStreamReader(p.getInputStream()));
-        // if the error must print to the Drivers' Station
-        if ((this.defaultPrintDevice == PrintsTo.driverStation) ||
-                (this.defaultPrintDevice == PrintsTo.driverStationAndRoboRIO))
-            {
-            final String dsReport =
-                    this.appendErrorMessage(errorMessage);
-            DriverStation.reportError(dsReport, false);
-            }
-        // if the error must print to the errorlog on the rio.
-        if ((this.defaultPrintDevice == PrintsTo.roboRIO) ||
-                (this.defaultPrintDevice == PrintsTo.driverStationAndRoboRIO))
-            {
-            this.PrintsToRIO(errorMessage);
-            }
-        String s = null;
-        // read the output from the command
-        while ((s = stdInput.readLine()) != null)
-            retTime = s;
-        }
-    catch (final IOException e)
-        {
-        String appendedErrorMessage;
+	if (this.appendTimeStamp == true)
+	{
+	errorMessage = this.appendErrorMessage(errorMessage);
+	}
+	final BufferedReader stdInput = new BufferedReader(
+	        new InputStreamReader(p.getInputStream()));
+	// if the error must print to the Drivers' Station
+	if ((this.defaultPrintDevice == PrintsTo.driverStation) ||
+	        (this.defaultPrintDevice == PrintsTo.driverStationAndRoboRIO))
+	{
+	final String dsReport =
+	        this.appendErrorMessage(errorMessage);
+	DriverStation.reportError(dsReport, false);
+	}
+	// if the error must print to the errorlog on the rio.
+	if ((this.defaultPrintDevice == PrintsTo.roboRIO) ||
+	        (this.defaultPrintDevice == PrintsTo.driverStationAndRoboRIO))
+	{
+	this.PrintsToRIO(errorMessage);
+	}
+	String s = null;
+	// read the output from the command
+	while ((s = stdInput.readLine()) != null)
+		retTime = s;
+	}
+	catch (final IOException e)
+	{
+	String appendedErrorMessage;
 
-        this.rioTime = this.getDate();
-        this.matchTime = Hardware.driverStation.getMatchTime();
+	this.rioTime = this.getDate();
+	this.matchTime = Hardware.driverStation.getMatchTime();
 
-        if (this.appendTimeStamp == true)
-            {
-            appendedErrorMessage =
-                    this.appendErrorMessage(errorMessage);
-            }
-        else
-            {
-            appendedErrorMessage = errorMessage;
-            }
+	if (this.appendTimeStamp == true)
+	{
+	appendedErrorMessage =
+	        this.appendErrorMessage(errorMessage);
+	}
+	else
+	{
+	appendedErrorMessage = errorMessage;
+	}
 
-        // if the error must print to the Drivers' Station
-        if ((this.defaultPrintDevice == PrintsTo.driverStation) ||
-                (this.defaultPrintDevice == PrintsTo.driverStationAndRoboRIO))
-            {
-            final String dsReport =
-                    this.appendErrorMessage(errorMessage);
-            DriverStation.reportError(dsReport, false);
-            }
-        // if the error must print to the errorlog on the rio.
-        if ((this.defaultPrintDevice == PrintsTo.roboRIO) ||
-                (this.defaultPrintDevice == PrintsTo.driverStationAndRoboRIO))
-            {
-            this.PrintsToRIO(appendedErrorMessage);
-            }
-        // TODO Auto-generated catch block
-        e.printStackTrace();
-        System.out.println(
-                "Something went wrong with fetching the date.");
-        }
-    return retTime;
+	// if the error must print to the Drivers' Station
+	if ((this.defaultPrintDevice == PrintsTo.driverStation) ||
+	        (this.defaultPrintDevice == PrintsTo.driverStationAndRoboRIO))
+	{
+	final String dsReport =
+	        this.appendErrorMessage(errorMessage);
+	DriverStation.reportError(dsReport, false);
+	}
+	// if the error must print to the errorlog on the rio.
+	if ((this.defaultPrintDevice == PrintsTo.roboRIO) ||
+	        (this.defaultPrintDevice == PrintsTo.driverStationAndRoboRIO))
+	{
+	this.PrintsToRIO(appendedErrorMessage);
+	}
+	// TODO Auto-generated catch block
+	e.printStackTrace();
+	System.out.println(
+	        "Something went wrong with fetching the date.");
+	}
+	return retTime;
 }
 
 /**
@@ -773,7 +773,7 @@ private String getDate ()
  */
 public String getLocation ()
 {
-    return errorlogLocation;
+	return errorlogLocation;
 }
 
 /**
@@ -784,26 +784,26 @@ public String getLocation ()
  */
 public void printError (String errorMessage)
 {
-    String appendedErrorMessage;
-    rioTime = getDate();
-    matchTime = Hardware.driverStation.getMatchTime();
+	String appendedErrorMessage;
+	rioTime = getDate();
+	matchTime = Hardware.driverStation.getMatchTime();
 
-    if (appendTimeStamp == true)
-        appendedErrorMessage = appendErrorMessage(errorMessage);
-    else
-        appendedErrorMessage = errorMessage;
+	if (appendTimeStamp == true)
+		appendedErrorMessage = appendErrorMessage(errorMessage);
+	else
+		appendedErrorMessage = errorMessage;
 
-    // if the error must print to the Drivers' Station
-    if (defaultPrintDevice == PrintsTo.driverStation ||
-            defaultPrintDevice == PrintsTo.driverStationAndRoboRIO)
-        {
-        final String dsReport = appendErrorMessage(errorMessage);
-        DriverStation.reportError(dsReport, false);
-        }
-    // if the error must print to the errorlog on the rio.
-    if (defaultPrintDevice == PrintsTo.roboRIO ||
-            defaultPrintDevice == PrintsTo.driverStationAndRoboRIO)
-        PrintsToRIO(appendedErrorMessage);
+	// if the error must print to the Drivers' Station
+	if (defaultPrintDevice == PrintsTo.driverStation ||
+	        defaultPrintDevice == PrintsTo.driverStationAndRoboRIO)
+	{
+	final String dsReport = appendErrorMessage(errorMessage);
+	DriverStation.reportError(dsReport, false);
+	}
+	// if the error must print to the errorlog on the rio.
+	if (defaultPrintDevice == PrintsTo.roboRIO ||
+	        defaultPrintDevice == PrintsTo.driverStationAndRoboRIO)
+		PrintsToRIO(appendedErrorMessage);
 }
 
 /**
@@ -816,26 +816,26 @@ public void printError (String errorMessage)
  */
 public void printError (String errorMessage, boolean attatchTimeStamp)
 {
-    String appendedErrorMessage;
-    rioTime = getDate();
-    matchTime = Hardware.driverStation.getMatchTime();
+	String appendedErrorMessage;
+	rioTime = getDate();
+	matchTime = Hardware.driverStation.getMatchTime();
 
-    if (appendTimeStamp == true)
-        appendedErrorMessage = appendErrorMessage(errorMessage);
-    else
-        appendedErrorMessage = errorMessage;
+	if (appendTimeStamp == true)
+		appendedErrorMessage = appendErrorMessage(errorMessage);
+	else
+		appendedErrorMessage = errorMessage;
 
-    // if the error must print to the Drivers' Station
-    if (defaultPrintDevice == PrintsTo.driverStation ||
-            defaultPrintDevice == PrintsTo.driverStationAndRoboRIO)
-        {
-        final String dsReport = appendErrorMessage(errorMessage);
-        DriverStation.reportError(dsReport, false);
-        }
-    // if the error must print to the errorlog on the rio.
-    if (defaultPrintDevice == PrintsTo.roboRIO ||
-            defaultPrintDevice == PrintsTo.driverStationAndRoboRIO)
-        PrintsToRIO(appendedErrorMessage);
+	// if the error must print to the Drivers' Station
+	if (defaultPrintDevice == PrintsTo.driverStation ||
+	        defaultPrintDevice == PrintsTo.driverStationAndRoboRIO)
+	{
+	final String dsReport = appendErrorMessage(errorMessage);
+	DriverStation.reportError(dsReport, false);
+	}
+	// if the error must print to the errorlog on the rio.
+	if (defaultPrintDevice == PrintsTo.roboRIO ||
+	        defaultPrintDevice == PrintsTo.driverStationAndRoboRIO)
+		PrintsToRIO(appendedErrorMessage);
 }
 
 /**
@@ -848,20 +848,20 @@ public void printError (String errorMessage, boolean attatchTimeStamp)
  */
 public void printError (String errorMessage, PrintsTo PrintsTo)
 {
-    rioTime = getDate();
-    matchTime = Hardware.driverStation.getMatchTime();
+	rioTime = "";//getDate();
+	matchTime = Hardware.driverStation.getMatchTime();
 
-    // if the error must print to the Drivers' Station
-    if (PrintsTo == ErrorMessage.PrintsTo.driverStation ||
-            PrintsTo == ErrorMessage.PrintsTo.driverStationAndRoboRIO)
-        {
-        final String dsReport = appendErrorMessage(errorMessage);
-        DriverStation.reportError(dsReport, false);
-        }
-    // if the error must print to the errorlog on the rio.
-    if (PrintsTo == ErrorMessage.PrintsTo.roboRIO ||
-            PrintsTo == ErrorMessage.PrintsTo.driverStationAndRoboRIO)
-        PrintsToRIO(errorMessage);
+	// if the error must print to the Drivers' Station
+	if (PrintsTo == ErrorMessage.PrintsTo.driverStation ||
+	        PrintsTo == ErrorMessage.PrintsTo.driverStationAndRoboRIO)
+	{
+	final String dsReport = appendErrorMessage(errorMessage);
+	DriverStation.reportError(dsReport, false);
+	}
+	// if the error must print to the errorlog on the rio.
+	if (PrintsTo == ErrorMessage.PrintsTo.roboRIO ||
+	        PrintsTo == ErrorMessage.PrintsTo.driverStationAndRoboRIO)
+		PrintsToRIO(errorMessage);
 }
 
 /**
@@ -877,40 +877,40 @@ public void printError (String errorMessage, PrintsTo PrintsTo)
 public void printError (String errorMessage, PrintsTo PrintsTo,
         boolean attatchTimeStamp)
 {
-    String appendedErrorMessage;
-    rioTime = getDate();
-    matchTime = Hardware.driverStation.getMatchTime();
+	String appendedErrorMessage;
+	rioTime = getDate();
+	matchTime = Hardware.driverStation.getMatchTime();
 
-    if (attatchTimeStamp == true)
-        appendedErrorMessage = appendErrorMessage(errorMessage);
-    else
-        appendedErrorMessage = errorMessage;
+	if (attatchTimeStamp == true)
+		appendedErrorMessage = appendErrorMessage(errorMessage);
+	else
+		appendedErrorMessage = errorMessage;
 
-    // if the error must print to the Drivers' Station
-    if (PrintsTo == ErrorMessage.PrintsTo.driverStation ||
-            PrintsTo == ErrorMessage.PrintsTo.driverStationAndRoboRIO)
-        {
+	// if the error must print to the Drivers' Station
+	if (PrintsTo == ErrorMessage.PrintsTo.driverStation ||
+	        PrintsTo == ErrorMessage.PrintsTo.driverStationAndRoboRIO)
+	{
 
-        this.rioTime = this.getDate();
-        this.matchTime = Hardware.driverStation.getMatchTime();
-        final String dsReport = appendErrorMessage(errorMessage);
-        DriverStation.reportError(dsReport, false);
-        }
-    // if the error must print to the errorlog on the rio.
-    if (PrintsTo == ErrorMessage.PrintsTo.roboRIO ||
-            PrintsTo == ErrorMessage.PrintsTo.driverStationAndRoboRIO)
-        PrintsToRIO(appendedErrorMessage);
+	this.rioTime = this.getDate();
+	this.matchTime = Hardware.driverStation.getMatchTime();
+	final String dsReport = appendErrorMessage(errorMessage);
+	DriverStation.reportError(dsReport, false);
+	}
+	// if the error must print to the errorlog on the rio.
+	if (PrintsTo == ErrorMessage.PrintsTo.roboRIO ||
+	        PrintsTo == ErrorMessage.PrintsTo.driverStationAndRoboRIO)
+		PrintsToRIO(appendedErrorMessage);
 
-    if (attatchTimeStamp == true)
+	if (attatchTimeStamp == true)
 
-        {
-        appendedErrorMessage = this.appendErrorMessage(errorMessage);
-        }
-    else
+	{
+	appendedErrorMessage = this.appendErrorMessage(errorMessage);
+	}
+	else
 
-        {
-        appendedErrorMessage = errorMessage;
-        }
+	{
+	appendedErrorMessage = errorMessage;
+	}
 }
 
 /**
@@ -920,36 +920,36 @@ public void printError (String errorMessage, PrintsTo PrintsTo,
  */
 private void PrintsToRIO (String errorMessage)
 {
-    // if the error must print to the Drivers' Station
-    if ((defaultPrintDevice == ErrorMessage.PrintsTo.driverStation) ||
-            (defaultPrintDevice == ErrorMessage.PrintsTo.driverStationAndRoboRIO))
-        {
-        final String dsReport = this.appendErrorMessage(errorMessage);
-        DriverStation.reportError(dsReport, false);
-        }
-    // if the error must print to the errorlog on the rio.
-    if ((defaultPrintDevice == ErrorMessage.PrintsTo.roboRIO) ||
-            (defaultPrintDevice == ErrorMessage.PrintsTo.driverStationAndRoboRIO))
-        {
-        this.PrintsToRIO(errorMessage);
-        }
-    // final String modifiedErrorMessage =
-    // appendedErrorMessage.replace('\n', ' '); // removes all
-    // newlines.
-    try
-        {
-        final PrintWriter log = new PrintWriter(
-                new BufferedWriter(new FileWriter(
-                        errorlogLocation, true)));
-        log.print(errorMessage + "\n");
-        log.close();
-        }
-    catch (final IOException e)
-        {
-        // TODO Auto-generated catch block
-        e.printStackTrace();
-        System.out.println("More errors with your error?");
-        }
+	//    // if the error must print to the Drivers' Station
+	//    if ((defaultPrintDevice == ErrorMessage.PrintsTo.driverStation) ||
+	//            (defaultPrintDevice == ErrorMessage.PrintsTo.driverStationAndRoboRIO))
+	//        {
+	//        final String dsReport = this.appendErrorMessage(errorMessage);
+	//        DriverStation.reportError(dsReport, false);
+	//        }
+	//    // if the error must print to the errorlog on the rio.
+	//    if ((defaultPrintDevice == ErrorMessage.PrintsTo.roboRIO) ||
+	//            (defaultPrintDevice == ErrorMessage.PrintsTo.driverStationAndRoboRIO))
+	//        {
+	//        this.PrintsToRIO(errorMessage);
+	//        }
+	// final String modifiedErrorMessage =
+	// appendedErrorMessage.replace('\n', ' '); // removes all
+	// newlines.
+	try
+	{
+	final PrintWriter log = new PrintWriter(
+	        new BufferedWriter(new FileWriter(
+	                errorlogLocation, true)));
+	log.print(errorMessage + "\n");
+	log.close();
+	}
+	catch (final IOException e)
+	{
+	// TODO Auto-generated catch block
+	e.printStackTrace();
+	System.out.println("More errors with your error?");
+	}
 
 }
 
@@ -962,38 +962,38 @@ private void PrintsToRIO (String errorMessage)
  */
 public void setLocation (String filepath)
 {
-    errorlogLocation = filepath;
+	errorlogLocation = filepath;
 
-    final File location = new File(errorlogLocation);
+	final File location = new File(errorlogLocation);
 
-    if (location.exists() == false)
-        {
-        final int lastSlash = errorlogLocation.lastIndexOf('/');
-        final String errorlogDirectory = errorlogLocation.substring(0,
-                lastSlash);
+	if (location.exists() == false)
+	{
+	final int lastSlash = errorlogLocation.lastIndexOf('/');
+	final String errorlogDirectory = errorlogLocation.substring(0,
+	        lastSlash);
 
-        try
-            {
-            Runtime.getRuntime()
-                    .exec("/bin/mkdir " + errorlogDirectory);
-            Runtime.getRuntime().exec(
-                    "/bin/touch \"" + errorlogLocation + "\"");
-            }
-        catch (final IOException e)
-            {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-            }
-        try
-            {
-            location.createNewFile();
-            }
-        catch (final IOException e1)
-            {
-            // TODO Auto-generated catch block
-            e1.printStackTrace();
-            }
-        }
+	try
+	{
+	Runtime.getRuntime()
+	        .exec("/bin/mkdir " + errorlogDirectory);
+	Runtime.getRuntime().exec(
+	        "/bin/touch \"" + errorlogLocation + "\"");
+	}
+	catch (final IOException e)
+	{
+	// TODO Auto-generated catch block
+	e.printStackTrace();
+	}
+	try
+	{
+	location.createNewFile();
+	}
+	catch (final IOException e1)
+	{
+	// TODO Auto-generated catch block
+	e1.printStackTrace();
+	}
+	}
 }
 
 //
@@ -1080,7 +1080,7 @@ public void setLocation (String filepath)
  */
 public void turnOnAppendTime (boolean append)
 {
-    appendTimeStamp = append;
+	appendTimeStamp = append;
 }
 
 }
