@@ -5,44 +5,42 @@ package org.usfirst.frc.team339.HardwareInterfaces.transmission;
  * sets the percentage of the joysticks range for the
  * Third gear for either only one motor configuration or
  * for the right motor only
- *
- * @meth
- *       // ====================================================================
- *       // FILE NAME: Transmission.java (Team 339 - Kilroy)
- *       //
- *       // CREATED ON: Sep 19, 2009
- *       // CREATED BY: Bob Brown
- *       // Converted from C++ code written by Josh Shields - 2009 season
- *       // MODIFIED ON:
- *       // MODIFIED BY:
- *       // ABSTRACT:
- *       // This class represents a transmission object. A transmission
- *       // object keeps track of a software gear number and can alter the
- *       // speed of a motor based on the current gear number. A hardware
- *       // piston is also supported and will change state between gears
- *       // one and two.
- *       //
- *       // NOTE: Please do not release this code without permission from
- *       // Team 339.
- *       // ====================================================================
+ * // ====================================================================
+ * // FILE NAME: Transmission.java (Team 339 - Kilroy)
+ * //
+ * // CREATED ON: Sep 19, 2009
+ * // CREATED BY: Bob Brown
+ * // Converted from C++ code written by Josh Shields - 2009 season
+ * // MODIFIED ON:
+ * // MODIFIED BY:
+ * // ABSTRACT:
+ * // This class represents a transmission object. A transmission
+ * // object keeps track of a software gear number and can alter the
+ * // speed of a motor based on the current gear number. A hardware
+ * // piston is also supported and will change state between gears
+ * // one and two.
+ * //
+ * // NOTE: Please do not release this code without permission from
+ * // Team 339.
+ * // ====================================================================
  * 
- *       package org.usfirst.frc.team339.HardwareInterfaces.transmission;
+ * package org.usfirst.frc.team339.HardwareInterfaces.transmission;
  * 
- *       import java.util.Vector;
- *       import
- *       org.usfirst.frc.team339.HardwareInterfaces.PIDVelocityController;
- *       import edu.wpi.first.wpilibj.DoubleSolenoid;
- *       import edu.wpi.first.wpilibj.Encoder;
- *       import edu.wpi.first.wpilibj.Relay;
- *       import edu.wpi.first.wpilibj.SpeedController;
+ * import java.util.Vector;
+ * import
+ * org.usfirst.frc.team339.HardwareInterfaces.PIDVelocityController;
+ * import edu.wpi.first.wpilibj.DoubleSolenoid;
+ * import edu.wpi.first.wpilibj.Encoder;
+ * import edu.wpi.first.wpilibj.Relay;
+ * import edu.wpi.first.wpilibj.SpeedController;
  * 
- *       // -------------------------------------------------------
- *       /**
- *       This class represents a transmission object. A transmission
- *       object keeps track of a software gear number and can alter the
- *       speed of a motor based on the current gear number. A hardware
- *       piston is also supported and will change state between gears
- *       one and two.
+ * // -------------------------------------------------------
+ * /**
+ * This class represents a transmission object. A transmission
+ * object keeps track of a software gear number and can alter the
+ * speed of a motor based on the current gear number. A hardware
+ * piston is also supported and will change state between gears
+ * one and two.
  *
  * @class Transmission
  * @author Bob Brown
@@ -1397,21 +1395,20 @@ public void controls (final double magnitude, final double direction,
                 this.leftMotorDirection.get(),
                 WhichJoystick.ONE_JOYSTICK);
 
-        final double LREAR_SCALE_FACTOR = 1.08;// 1.1;
         this.controlSpeedController(leftRearSpeed *
-                this.leftJoystickIsReversed.get() * LREAR_SCALE_FACTOR,
+                this.leftJoystickIsReversed.get(),
                 this.leftRearSpeedController,
                 this.leftRearMotorDirection.get(),
                 WhichJoystick.ONE_JOYSTICK);
 
         this.controlSpeedController(rightRearSpeed *
-                this.leftJoystickIsReversed.get(),
+                this.rightJoystickIsReversed.get(),
                 this.rightRearSpeedController,
                 this.rightRearMotorDirection.get(),
                 WhichJoystick.ONE_JOYSTICK);
 
         this.controlSpeedController(rightFrontSpeed *
-                this.leftJoystickIsReversed.get(),
+                this.rightJoystickIsReversed.get(),
                 this.oneOrRightSpeedController,
                 this.rightMotorDirection.get(),
                 WhichJoystick.ONE_JOYSTICK);
@@ -1789,7 +1786,6 @@ private void controlSpeedController (final double joystickInputValue,
                         this.getFirstGearPercentage(
                                 whichJoystick)) *
                         motorDirection;
-
                 oneSpeedController.set(controllerInput);
                 break;
 
