@@ -95,7 +95,6 @@ private static edu.wpi.first.wpilibj.DoubleSolenoid.Value Forward;
  */
 public static void periodic ()
 {
-    //commented out until it doesn't look awful.
     //If we haven't already started and we've been told to start
     if (isDrivingByCamera == false
             && Hardware.rightOperator.getRawButton(5) == true)
@@ -529,7 +528,6 @@ private static final double FIRST_GEAR_PERCENTAGE = 0.5;
 private static final double SECOND_GEAR_PERCENTAGE =
         MAXIMUM_TELEOP_SPEED;
 
-// TODO change based on driver request
 private static final int GEAR_UPSHIFT_JOYSTICK_BUTTON = 3;
 
 private static final int GEAR_DOWNSHIFT_JOYSTICK_BUTTON = 2;
