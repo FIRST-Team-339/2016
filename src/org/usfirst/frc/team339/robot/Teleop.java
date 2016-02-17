@@ -66,6 +66,7 @@ public static void init ()
     Hardware.transmission.setGear(1);
     Hardware.transmission.setJoystickDeadbandRange(.20);
     Hardware.transmission.setJoysticksAreReversed(false);
+    Hardware.ringLightRelay.set(Value.kOff);
 
     // armEncoder needs to be set to 0
     Hardware.delayTimer.reset();
@@ -111,14 +112,14 @@ public static void periodic ()
         }
     //If we claim to be driving by camera and we've waitied long enough 
     //for someone to brighten up the darness with the ringlight
-    if (isDrivingByCamera == true && Hardware.delayTimer.get() >= .5)
+    if (isDrivingByCamera == true && Hardware.delayTimer.get() >= .75)
         {
-        //try to take a picture and save it in memory, but not on the 
-        //"Hard disk"
+        //try to take a picture and save it in memory and on the "hard disk"
         try
             {
             Hardware.imageProcessor
                     .updateImage(Hardware.axisCamera.getImage());
+            Hardware.axisCamera.saveImagesSafely();
             }
         //This is NI yelling at us for something being wrong
         catch (NIVisionException e)
@@ -137,32 +138,35 @@ public static void periodic ()
         //if the center of the largest blob is to the left of our 
         //acceptable zone around the center
         if (Hardware.imageProcessor
-                .getParticleAnalysisReports()[0].center_mass_x <= 155)
+                .getParticleAnalysisReports()[0].center_mass_x <= 145)
             {
             //turn left until it is in the zone (will be called over and
             //over again until the blob is within the acceptable zone)
-            Hardware.drive.turnLeftDegrees(1);
+            Hardware.transmission.controls(-.5, .5);
             }
         //if the center of the largest blob is to the right of our 
         //acceptable zone around the center
         else if (Hardware.imageProcessor
-                .getParticleAnalysisReports()[0].center_mass_x >= 165)
+                .getParticleAnalysisReports()[0].center_mass_x >= 175)
             {
             //turn left until it is in the zone (will be called over and
             //over again until the blob is within the acceptable zone)
-            Hardware.drive.turnRightDegrees(1);
+            Hardware.transmission.controls(.5, -.5);
             }
         //If the center of the blob is nestled happily in our deadzone
         else
             {
             //We're done, no need to go again.
             isDrivingByCamera = false;
+            //Stop moving
+            Hardware.transmission.controls(0.0, 0.0);
             }
         }
-    else
+    if (isDrivingByCamera == false)
         {
         //We only want to write the brightness high if we're not driving
         //by camera.
+        Hardware.ringLightRelay.set(Value.kOff);
         Hardware.axisCamera.writeBrightness(
                 Hardware.NORMAL_AXIS_CAMERA_BRIGHTNESS);
         }
@@ -170,11 +174,11 @@ public static void periodic ()
     printStatements();
 
     // Tests the Camera
-    takePicture();
+    //takePicture();
 
 
     // Driving the Robot
-    driveRobot();
+    //driveRobot();
 
     runCameraSolenoid(Hardware.rightOperator.getRawButton(11),
             Hardware.rightOperator.getRawButton(10), false, true);
