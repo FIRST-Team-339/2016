@@ -33,6 +33,7 @@ package org.usfirst.frc.team339.robot;
 
 import org.usfirst.frc.team339.Hardware.Hardware;
 import org.usfirst.frc.team339.Utils.ErrorMessage;
+import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.vision.AxisCamera.Resolution;
 
 /**
@@ -97,6 +98,11 @@ private static enum MainState
 	FORWARDS_BASED_ON_ENCODERS_OR_IR, // decides based on lane whether to move
 										// to tape based on encoders or IR
 	/**
+	 * Go the distance over the outer works.
+	 */
+	FORWARDS_OVER_OUTER_WORKS,
+
+	/**
 	 * Goes forward until it reaches the set distance to the Alignment tape.
 	 */
 	FORWARDS_TO_TAPE_BY_DISTANCE, // drives the distance required to the tape.
@@ -139,11 +145,61 @@ private static enum MoveWhileLoweringArmReturn
 	NOT_DONE, DONE, FAILED
 	}
 
+/**
+ * 
+ * States to run arm movements in parallel.
+ *
+ */
+private static enum ArmState
+	{
+	/**
+	 * Begins moving the arm in a downwards/down-to-the-floor action fashion.
+	 */
+	INIT_DOWN,
+	/**
+	 * Czecks to see if the arm is all the way down.
+	 */
+	CHECK_DOWN,
+	/**
+	 * Begins moving the arm in a upwards/up-to-the-shooter action fashion.
+	 */
+	INIT_UP,
+	/**
+	 * Czecks to see if the arm is all the way up.
+	 */
+	CHECK_UP,
+	/**
+	 * Begins moving up, with full intention of releasing the ball.
+	 */
+	INIT_UP_AND_DEPOSIT,
+	/**
+	 * Czecks to see if the arm is all the way up, so that we may deposit.
+	 */
+	CHECK_UP_TO_DEPOSIT,
+	/**
+	 * Begins spinning its wheels so as to spit out the cannon ball.
+	 */
+	INIT_DEPOSIT,
+	/**
+	 * Have we spit out the cannon ball? If so, INIT_DOWN.
+	 */
+	DEPOSIT,
+	/**
+	 * Do nothing, but set armStatesOn to false.
+	 */
+	DONE
+	}
+
 
 // ==========================================
 // AUTO STATES
 // ==========================================
 private static MainState mainState = MainState.INIT;
+
+/**
+ * Used to run arm movements in parallel to the main state machine.
+ */
+private static ArmState armState = ArmState.DONE;
 
 // ==================================
 // VARIABLES
@@ -155,8 +211,18 @@ private static boolean enabled;
  */
 private static double delay; // time to delay before beginning.
 
+/**
+ * Number of our starting position, and path further on.
+ */
 private static int lane;
 
+/**
+ * Run the arm state machine only when necessary (when true).
+ */
+private static boolean runArmStates = false;
+/**
+ * Prints print that it prints prints while it prints true.
+ */
 private static boolean debug;
 
 // ==========================================
@@ -251,13 +317,20 @@ public static void periodic ()
 	// test
 	// TransmissionFourWheel debugTrans = Hardware.transmissionFourWheel;
 	// moveToShootingPositionStep = MoveToShootingPositionStep.FORWARDS_ONE;
-	//System.out.println("Time: " + Hardware.kilroyTimer.get());
+	// System.out.println("Time: " + Hardware.kilroyTimer.get());
 
 	// Checks the "enabled" switch.
 	if (enabled == true)
 	{
 	// runs the overarching state machine.
 	runMainStateMachine();
+	}
+
+	// Czecks if we are running any arm functions.
+	if (runArmStates == true)
+	//run the arm state machine.
+	{
+	runArmStates();
 	}
 
 } // end Periodic
@@ -295,9 +368,9 @@ private static void runMainStateMachine ()
 	        ErrorMessage.PrintsTo.roboRIO);
 	}
 
-	//Temporary. Print gear percentage. TODO: Remove.
-	//System.out.println("First gear percentage = "
-	//        + Hardware.transmission.getFirstGearPercentage());
+	// Temporary. Print gear percentage. TODO: Remove.
+	// System.out.println("First gear percentage = "
+	// + Hardware.transmission.getFirstGearPercentage());
 
 	switch (mainState)
 	{
@@ -333,20 +406,23 @@ private static void runMainStateMachine ()
 			// goes forwards to outer works.
 			switch (hasLoweredArmAndMoved())
 			{
-				case NOT_DONE:
-					// continue
-					mainState = MainState.LOWER_ARM_AND_MOVE;
-					break;
+
 				case DONE:
 					// Goes to Accelerate when done
 					mainState =
-					        MainState.FORWARDS_BASED_ON_ENCODERS_OR_IR;
+					        MainState.FORWARDS_OVER_OUTER_WORKS;
 					resetEncoders();
 					Hardware.kilroyTimer.stop();
 					break;
 				case FAILED:
 					// Unless arm is not down. In that case, stop everything.
 					mainState = MainState.DONE;
+					break;
+
+				default:
+				case NOT_DONE:
+					// continue
+					mainState = MainState.LOWER_ARM_AND_MOVE;
 					break;
 			}
 			break;
@@ -364,6 +440,27 @@ private static void runMainStateMachine ()
 			// go to move forwards while lowering arm when finished.
 			{
 			mainState = MainState.LOWER_ARM_AND_MOVE;
+			}
+			break;
+
+		case FORWARDS_OVER_OUTER_WORKS:
+			//Drive over Outer Works.
+			if (Hardware.drive.driveForwardInches(
+			        DriveInformation.DISTANCE_OVER_OUTER_WORKS, false,
+			        DriveInformation.OUTER_WORKS_MOTOR_RATIO,
+			        DriveInformation.OUTER_WORKS_MOTOR_RATIO) == true)
+			//put up all the things we had to put down under the low bar.
+			//begin loading the catapult.
+			{
+
+			//put up camera.
+			Hardware.cameraSolenoid.set(Value.kForward);
+
+			//initiate the arm motion.
+			runArmStates = true;
+			armState = ArmState.INIT_UP_AND_DEPOSIT;
+
+			mainState = MainState.FORWARDS_BASED_ON_ENCODERS_OR_IR;
 			}
 			break;
 
@@ -386,17 +483,25 @@ private static void runMainStateMachine ()
 			if (hasDrivenToTapeByDistance() == true)
 			// when done, proceed from Alignment line.
 			{
+			//reset Encoders to prepare for next state.
 			resetEncoders();
+
+
+
+			//We definitely don't need to rotate.
 			mainState = MainState.FORWARDS_FROM_ALIGNMENT_LINE;
 			}
 			break;
+
 
 		case FORWARDS_UNTIL_TAPE:
 			// Drive until IR sensors pick up tape.
 			if (hasMovedToTape() == true)
 			{
-			// When done, possibly rotate.
+			//reset Encoders to prepare for next state.
 			resetEncoders();
+
+			// When done, possibly rotate.
 			mainState = MainState.ROTATE_ON_ALIGNMENT_LINE;
 			}
 			break;
@@ -509,7 +614,7 @@ private static MoveWhileLoweringArmReturn hasLoweredArmAndMoved ()
 	}
 
 
-	//We can do cat D and B no problem. C is out. A may require extra arm code.
+	// We can do cat D and B no problem. C is out. A may require extra arm code.
 
 	// Go forth.
 	if ((Hardware.drive.driveForwardInches(
@@ -537,8 +642,6 @@ private static MoveWhileLoweringArmReturn hasLoweredArmAndMoved ()
 
 	return returnStatus;
 }
-
-
 
 
 /**
@@ -670,7 +773,7 @@ private static boolean hasMovedFowardsFromTape ()
 {
 	boolean done = false;
 
-	//Drive the distance from the tape to the line normal to the goal.
+	// Drive the distance from the tape to the line normal to the goal.
 	if (Hardware.drive.driveForwardInches(
 	        DriveInformation.FORWARDS_FROM_ALIGNMENT_LINE_DISTANCE[lane]
 	                * LAB_SCALING_FACTOR,
@@ -693,8 +796,8 @@ private static boolean hasRotatedTowardsShootingPosition ()
 {
 	boolean done = false;
 
-	//Turn the degrees specified.
-	//TODO: Add more parameters to this method.
+	// Turn the degrees specified.
+	// TODO: Add more parameters to this method.
 	done = hasTurnedBasedOnSign(
 	        DriveInformation.ROTATE_ON_ALIGNMENT_LINE_DISTANCE[lane]
 	                * LAB_SCALING_FACTOR);
@@ -711,13 +814,11 @@ private static boolean hasTurnedToFaceGoal ()
 {
 	boolean done = false;
 
-	//Turn the degrees specified.
-	//TODO: Add more parameters to this method.
+	// Turn the degrees specified.
+	// TODO: Add more parameters to this method.
 	done = hasTurnedBasedOnSign(
 	        DriveInformation.TURN_TO_FACE_GOAL_DEGREES[lane]
 	                * LAB_SCALING_FACTOR);
-
-
 
 	return done;
 }
@@ -732,7 +833,7 @@ private static boolean hasDrivenUpToGoal ()
 	boolean done = false;
 
 	// Have we reached the distance according to drawings.
-	//OR
+	// OR
 	// Have we seen if we have reached cleats of the tower according to IR?
 	if ((Hardware.drive.driveForwardInches(
 	        DriveInformation.DRIVE_UP_TO_GOAL[lane]
@@ -741,12 +842,12 @@ private static boolean hasDrivenUpToGoal ()
 	        DriveInformation.DRIVE_UP_TO_GOAL_MOTOR_RATIO[lane]) == true)
 	        ||
 	        (Hardware.leftIR.isOn() || Hardware.rightIR.isOn()))
-	//We are done here.
+	// We are done here.
 	{
 	done = true;
 	}
 
-	//TEMPORARY PRINTS.
+	// TEMPORARY PRINTS.
 	// see if we have stopped based on IR or Encoders.
 	if (done == true
 	        && (Hardware.leftIR.isOn() || Hardware.rightIR.isOn()))
@@ -776,6 +877,7 @@ private static void shoot ()
  */
 private static void done ()
 {
+	enabled = false;
 	debug = false;
 	Hardware.transmission.controls(0.0, 0.0);
 	Hardware.armMotor.set(0.0);
@@ -787,6 +889,84 @@ private static void done ()
  * END OF MAIN AUTONOMOUS STATE METHODS
  * =========================================
  */
+
+/**
+ * A separate state machine, used to run arm movements in parallel.
+ */
+private static void runArmStates ()
+{
+	switch (armState)
+	{
+		case INIT_DOWN:
+			//begin moving arm down
+			Hardware.pickupArm.move(1.0);
+			//go to periodically check.
+			armState = ArmState.CHECK_DOWN;
+			break;
+		case CHECK_DOWN:
+			//check if down.
+			if (Hardware.pickupArm.isDown() == true)
+			//stop.
+			{
+			Hardware.pickupArm.move(0.0);
+			armState = ArmState.DONE;
+			}
+			break;
+		case INIT_UP:
+			//begin moving arm up.
+			Hardware.pickupArm.move(-1.0);
+			//go to periotically check.
+			armState = ArmState.CHECK_UP;
+			break;
+		case CHECK_UP:
+			//check if up.
+			if (Hardware.pickupArm.isUp() == true)
+			{
+			//stop.
+			Hardware.pickupArm.move(0.0);
+			armState = ArmState.DONE;
+			}
+			break;
+		case INIT_UP_AND_DEPOSIT:
+			//begin moving arm to depositing position.
+			Hardware.pickupArm.move(-1.0);
+			armState = ArmState.CHECK_UP_TO_DEPOSIT;
+			break;
+		case CHECK_UP_TO_DEPOSIT:
+			//check is in up position so that we may deposit the ball.
+			if (Hardware.pickupArm.isUp() == true)
+			//stop, and go to deposit.
+			{
+			Hardware.pickupArm.move(0.0);
+			armState = ArmState.INIT_DEPOSIT;
+			}
+			break;
+		case INIT_DEPOSIT:
+			//spin wheels to release ball.
+			Hardware.pickupArm.pushOutBall();
+			armState = ArmState.DEPOSIT;
+			break;
+		case DEPOSIT:
+			//check if the ball is out.
+			if (Hardware.pickupArm.ballIsOut())
+			//stop rollers, and move down.
+			{
+			Hardware.pickupArm.stopIntakeArms();
+			//get out of the way.
+			armState = ArmState.INIT_DOWN;
+			}
+			break;
+		default:
+		case DONE:
+			//stop running state machine.
+			runArmStates = false;
+			break;
+
+
+	}
+}
+
+
 
 /**
  * Return the starting position based on 6-position switch on the robot.
@@ -832,15 +1012,16 @@ private static boolean hasTurnedBasedOnSign (double degrees)
 	if (degrees < 0)
 	//Turn right. Make degrees positive.
 	{
-	done = Hardware.drive.turnRightDegrees(-degrees, false, -0.28,
-	        0.28);
+	done = Hardware.drive.turnRightDegrees(-degrees, false, 0.28,
+	        -0.28);
 	}
 	else
 	//Turn left the given number of degrees.
 	{
-	done = Hardware.drive.turnLeftDegrees(degrees, false, 0.28, -0.28);
+	done = Hardware.drive.turnLeftDegrees(degrees, false, -0.28, 0.28);
 	}
 	return done;
+
 }
 
 /**
@@ -967,12 +1148,20 @@ static final double[] DRIVE_UP_TO_GOAL_MOTOR_RATIO =
 /**
  * Distance from Outer Works checkpoint to Alignment Line
  */
-private static final double DISTANCE_TO_TAPE = 180.0;
+private static final double DISTANCE_TO_TAPE = 83.75;
+
 
 /**
- * Distance between the front of the robot to the Outer Works.
+ * Distance to get the front of the robot to the Outer Works.
  */
 private static final double DISTANCE_TO_OUTER_WORKS = 22.75;
+
+/**
+ * Distance to travel to get over the Outer Works.
+ */
+private static final double DISTANCE_OVER_OUTER_WORKS = 96.25;
+
+private static final double OUTER_WORKS_MOTOR_RATIO = 0.4;
 
 }
 
