@@ -98,6 +98,11 @@ private static enum MainState
 	FORWARDS_BASED_ON_ENCODERS_OR_IR, // decides based on lane whether to move
 										// to tape based on encoders or IR
 	/**
+	 * Go the distance over the outer works.
+	 */
+	FORWARDS_OVER_OUTER_WORKS,
+
+	/**
 	 * Goes forward until it reaches the set distance to the Alignment tape.
 	 */
 	FORWARDS_TO_TAPE_BY_DISTANCE, // drives the distance required to the tape.
@@ -154,7 +159,7 @@ private static enum ArmState
 	/**
 	 * Czecks to see if the arm is all the way down.
 	 */
-	CZECK_DOWN,
+	CHECK_DOWN,
 	/**
 	 * Begins moving the arm in a upwards/up-to-the-shooter action fashion.
 	 */
@@ -162,7 +167,7 @@ private static enum ArmState
 	/**
 	 * Czecks to see if the arm is all the way up.
 	 */
-	CZECK_UP,
+	CHECK_UP,
 	/**
 	 * Begins moving up, with full intention of releasing the ball.
 	 */
@@ -170,7 +175,7 @@ private static enum ArmState
 	/**
 	 * Czecks to see if the arm is all the way up, so that we may deposit.
 	 */
-	CZECK_UP_TO_DEPOSIT,
+	CHECK_UP_TO_DEPOSIT,
 	/**
 	 * Begins spinning its wheels so as to spit out the cannon ball.
 	 */
@@ -321,7 +326,9 @@ public static void periodic ()
 	runMainStateMachine();
 	}
 
+	// Czecks if we are running any arm functions.
 	if (runArmStates == true)
+	//run the arm state machine.
 	{
 	runArmStates();
 	}
@@ -403,7 +410,7 @@ private static void runMainStateMachine ()
 				case DONE:
 					// Goes to Accelerate when done
 					mainState =
-					        MainState.FORWARDS_BASED_ON_ENCODERS_OR_IR;
+					        MainState.FORWARDS_OVER_OUTER_WORKS;
 					resetEncoders();
 					Hardware.kilroyTimer.stop();
 					break;
@@ -436,6 +443,27 @@ private static void runMainStateMachine ()
 			}
 			break;
 
+		case FORWARDS_OVER_OUTER_WORKS:
+			//Drive over Outer Works.
+			if (Hardware.drive.driveForwardInches(
+			        DriveInformation.DISTANCE_OVER_OUTER_WORKS, false,
+			        DriveInformation.OUTER_WORKS_MOTOR_RATIO,
+			        DriveInformation.OUTER_WORKS_MOTOR_RATIO) == true)
+			//put up all the things we had to put down under the low bar.
+			//begin loading the catapult.
+			{
+
+			//put up camera.
+			Hardware.cameraSolenoid.set(Value.kForward);
+
+			//initiate the arm motion.
+			runArmStates = true;
+			armState = ArmState.INIT_UP_AND_DEPOSIT;
+
+			mainState = MainState.FORWARDS_BASED_ON_ENCODERS_OR_IR;
+			}
+			break;
+
 		case FORWARDS_BASED_ON_ENCODERS_OR_IR:
 			// Check if we are in lane One.
 			if (isInLaneOne() == true)
@@ -457,12 +485,8 @@ private static void runMainStateMachine ()
 			{
 			//reset Encoders to prepare for next state.
 			resetEncoders();
-			//put up camera.
-			Hardware.cameraSolenoid.set(Value.kForward);
 
-			//initiate the arm motion.
-			runArmStates = true;
-			armState = ArmState.INIT_UP_AND_DEPOSIT;
+
 
 			//We definitely don't need to rotate.
 			mainState = MainState.FORWARDS_FROM_ALIGNMENT_LINE;
@@ -476,12 +500,6 @@ private static void runMainStateMachine ()
 			{
 			//reset Encoders to prepare for next state.
 			resetEncoders();
-			//put up camera.
-			Hardware.cameraSolenoid.set(Value.kForward);
-
-			//initiate the arm motion.
-			runArmStates = true;
-			armState = ArmState.INIT_UP_AND_DEPOSIT;
 
 			// When done, possibly rotate.
 			mainState = MainState.ROTATE_ON_ALIGNMENT_LINE;
@@ -883,9 +901,9 @@ private static void runArmStates ()
 			//begin moving arm down
 			Hardware.pickupArm.move(1.0);
 			//go to periodically check.
-			armState = ArmState.CZECK_DOWN;
+			armState = ArmState.CHECK_DOWN;
 			break;
-		case CZECK_DOWN:
+		case CHECK_DOWN:
 			//check if down.
 			if (Hardware.pickupArm.isDown() == true)
 			//stop.
@@ -898,9 +916,9 @@ private static void runArmStates ()
 			//begin moving arm up.
 			Hardware.pickupArm.move(-1.0);
 			//go to periotically check.
-			armState = ArmState.CZECK_UP;
+			armState = ArmState.CHECK_UP;
 			break;
-		case CZECK_UP:
+		case CHECK_UP:
 			//check if up.
 			if (Hardware.pickupArm.isUp() == true)
 			{
@@ -912,9 +930,9 @@ private static void runArmStates ()
 		case INIT_UP_AND_DEPOSIT:
 			//begin moving arm to depositing position.
 			Hardware.pickupArm.move(-1.0);
-			armState = ArmState.CZECK_UP_TO_DEPOSIT;
+			armState = ArmState.CHECK_UP_TO_DEPOSIT;
 			break;
-		case CZECK_UP_TO_DEPOSIT:
+		case CHECK_UP_TO_DEPOSIT:
 			//check is in up position so that we may deposit the ball.
 			if (Hardware.pickupArm.isUp() == true)
 			//stop, and go to deposit.
@@ -1130,12 +1148,20 @@ static final double[] DRIVE_UP_TO_GOAL_MOTOR_RATIO =
 /**
  * Distance from Outer Works checkpoint to Alignment Line
  */
-private static final double DISTANCE_TO_TAPE = 180.0;
+private static final double DISTANCE_TO_TAPE = 83.75;
+
 
 /**
- * Distance between the front of the robot to the Outer Works.
+ * Distance to get the front of the robot to the Outer Works.
  */
 private static final double DISTANCE_TO_OUTER_WORKS = 22.75;
+
+/**
+ * Distance to travel to get over the Outer Works.
+ */
+private static final double DISTANCE_OVER_OUTER_WORKS = 96.25;
+
+private static final double OUTER_WORKS_MOTOR_RATIO = 0.4;
 
 }
 
