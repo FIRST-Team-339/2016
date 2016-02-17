@@ -33,6 +33,7 @@ package org.usfirst.frc.team339.robot;
 
 import org.usfirst.frc.team339.Hardware.Hardware;
 import org.usfirst.frc.team339.Utils.ErrorMessage;
+import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.vision.AxisCamera.Resolution;
 
 /**
@@ -139,11 +140,61 @@ private static enum MoveWhileLoweringArmReturn
 	NOT_DONE, DONE, FAILED
 	}
 
+/**
+ * 
+ * States to run arm movements in parallel.
+ *
+ */
+private static enum ArmState
+	{
+	/**
+	 * Begins moving the arm in a downwards/down-to-the-floor action fashion.
+	 */
+	INIT_DOWN,
+	/**
+	 * Czecks to see if the arm is all the way down.
+	 */
+	CZECK_DOWN,
+	/**
+	 * Begins moving the arm in a upwards/up-to-the-shooter action fashion.
+	 */
+	INIT_UP,
+	/**
+	 * Czecks to see if the arm is all the way up.
+	 */
+	CZECK_UP,
+	/**
+	 * Begins moving up, with full intention of releasing the ball.
+	 */
+	INIT_UP_AND_DEPOSIT,
+	/**
+	 * Czecks to see if the arm is all the way up, so that we may deposit.
+	 */
+	CZECK_UP_TO_DEPOSIT,
+	/**
+	 * Begins spinning its wheels so as to spit out the cannon ball.
+	 */
+	INIT_DEPOSIT,
+	/**
+	 * Have we spit out the cannon ball? If so, INIT_DOWN.
+	 */
+	DEPOSIT,
+	/**
+	 * Do nothing, but set armStatesOn to false.
+	 */
+	DONE
+	}
+
 
 // ==========================================
 // AUTO STATES
 // ==========================================
 private static MainState mainState = MainState.INIT;
+
+/**
+ * Used to run arm movements in parallel to the main state machine.
+ */
+private static ArmState armState = ArmState.DONE;
 
 // ==================================
 // VARIABLES
@@ -155,8 +206,18 @@ private static boolean enabled;
  */
 private static double delay; // time to delay before beginning.
 
+/**
+ * Number of our starting position, and path further on.
+ */
 private static int lane;
 
+/**
+ * Run the arm state machine only when necessary (when true).
+ */
+private static boolean runArmStates = false;
+/**
+ * Prints print that it prints prints while it prints true.
+ */
 private static boolean debug;
 
 // ==========================================
@@ -260,6 +321,11 @@ public static void periodic ()
 	runMainStateMachine();
 	}
 
+	if (runArmStates == true)
+	{
+	runArmStates();
+	}
+
 } // end Periodic
 
 
@@ -333,10 +399,7 @@ private static void runMainStateMachine ()
 			// goes forwards to outer works.
 			switch (hasLoweredArmAndMoved())
 			{
-				case NOT_DONE:
-					// continue
-					mainState = MainState.LOWER_ARM_AND_MOVE;
-					break;
+
 				case DONE:
 					// Goes to Accelerate when done
 					mainState =
@@ -347,6 +410,12 @@ private static void runMainStateMachine ()
 				case FAILED:
 					// Unless arm is not down. In that case, stop everything.
 					mainState = MainState.DONE;
+					break;
+
+				default:
+				case NOT_DONE:
+					// continue
+					mainState = MainState.LOWER_ARM_AND_MOVE;
 					break;
 			}
 			break;
@@ -386,7 +455,16 @@ private static void runMainStateMachine ()
 			if (hasDrivenToTapeByDistance() == true)
 			// when done, proceed from Alignment line.
 			{
+			//reset Encoders to prepare for next state.
 			resetEncoders();
+			//put up camera.
+			Hardware.cameraSolenoid.set(Value.kForward);
+
+			//initiate the arm motion.
+			runArmStates = true;
+			armState = ArmState.INIT_UP_AND_DEPOSIT;
+
+			//We definitely don't need to rotate.
 			mainState = MainState.FORWARDS_FROM_ALIGNMENT_LINE;
 			}
 			break;
@@ -395,8 +473,16 @@ private static void runMainStateMachine ()
 			// Drive until IR sensors pick up tape.
 			if (hasMovedToTape() == true)
 			{
-			// When done, possibly rotate.
+			//reset Encoders to prepare for next state.
 			resetEncoders();
+			//put up camera.
+			Hardware.cameraSolenoid.set(Value.kForward);
+
+			//initiate the arm motion.
+			runArmStates = true;
+			armState = ArmState.INIT_UP_AND_DEPOSIT;
+
+			// When done, possibly rotate.
 			mainState = MainState.ROTATE_ON_ALIGNMENT_LINE;
 			}
 			break;
@@ -776,6 +862,7 @@ private static void shoot ()
  */
 private static void done ()
 {
+	enabled = false;
 	debug = false;
 	Hardware.transmission.controls(0.0, 0.0);
 	Hardware.armMotor.set(0.0);
@@ -787,6 +874,84 @@ private static void done ()
  * END OF MAIN AUTONOMOUS STATE METHODS
  * =========================================
  */
+
+/**
+ * A separate state machine, used to run arm movements in parallel.
+ */
+private static void runArmStates ()
+{
+	switch (armState)
+	{
+		case INIT_DOWN:
+			//begin moving arm down
+			Hardware.pickupArm.move(1.0);
+			//go to periodically check.
+			armState = ArmState.CZECK_DOWN;
+			break;
+		case CZECK_DOWN:
+			//check if down.
+			if (Hardware.pickupArm.isDown() == true)
+			//stop.
+			{
+			Hardware.pickupArm.move(0.0);
+			armState = ArmState.DONE;
+			}
+			break;
+		case INIT_UP:
+			//begin moving arm up.
+			Hardware.pickupArm.move(-1.0);
+			//go to periotically check.
+			armState = ArmState.CZECK_UP;
+			break;
+		case CZECK_UP:
+			//check if up.
+			if (Hardware.pickupArm.isUp() == true)
+			{
+			//stop.
+			Hardware.pickupArm.move(0.0);
+			armState = ArmState.DONE;
+			}
+			break;
+		case INIT_UP_AND_DEPOSIT:
+			//begin moving arm to depositing position.
+			Hardware.pickupArm.move(-1.0);
+			armState = ArmState.CZECK_UP_TO_DEPOSIT;
+			break;
+		case CZECK_UP_TO_DEPOSIT:
+			//check is in up position so that we may deposit the ball.
+			if (Hardware.pickupArm.isUp() == true)
+			//stop, and go to deposit.
+			{
+			Hardware.pickupArm.move(0.0);
+			armState = ArmState.INIT_DEPOSIT;
+			}
+			break;
+		case INIT_DEPOSIT:
+			//spin wheels to release ball.
+			Hardware.pickupArm.pushOutBall();
+			armState = ArmState.DEPOSIT;
+			break;
+		case DEPOSIT:
+			//check if the ball is out.
+			if (Hardware.pickupArm.ballIsOut())
+			//stop rollers, and move down.
+			{
+			Hardware.pickupArm.stopIntakeArms();
+			//get out of the way.
+			armState = ArmState.INIT_DOWN;
+			}
+			break;
+		default:
+		case DONE:
+			//stop running state machine.
+			runArmStates = false;
+			break;
+
+
+	}
+}
+
+
 
 /**
  * Return the starting position based on 6-position switch on the robot.
@@ -832,13 +997,13 @@ private static boolean hasTurnedBasedOnSign (double degrees)
 	if (degrees < 0)
 	//Turn right. Make degrees positive.
 	{
-	done = Hardware.drive.turnRightDegrees(-degrees, false, -0.28,
-	        0.28);
+	done = Hardware.drive.turnRightDegrees(-degrees, false, 0.28,
+	        -0.28);
 	}
 	else
 	//Turn left the given number of degrees.
 	{
-	done = Hardware.drive.turnLeftDegrees(degrees, false, 0.28, -0.28);
+	done = Hardware.drive.turnLeftDegrees(degrees, false, -0.28, 0.28);
 	}
 	return done;
 }
