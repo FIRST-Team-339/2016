@@ -312,7 +312,7 @@ public static void periodic ()
 	// test
 	// TransmissionFourWheel debugTrans = Hardware.transmissionFourWheel;
 	// moveToShootingPositionStep = MoveToShootingPositionStep.FORWARDS_ONE;
-	//System.out.println("Time: " + Hardware.kilroyTimer.get());
+	// System.out.println("Time: " + Hardware.kilroyTimer.get());
 
 	// Checks the "enabled" switch.
 	if (enabled == true)
@@ -361,9 +361,9 @@ private static void runMainStateMachine ()
 	        ErrorMessage.PrintsTo.roboRIO);
 	}
 
-	//Temporary. Print gear percentage. TODO: Remove.
-	//System.out.println("First gear percentage = "
-	//        + Hardware.transmission.getFirstGearPercentage());
+	// Temporary. Print gear percentage. TODO: Remove.
+	// System.out.println("First gear percentage = "
+	// + Hardware.transmission.getFirstGearPercentage());
 
 	switch (mainState)
 	{
@@ -468,6 +468,7 @@ private static void runMainStateMachine ()
 			mainState = MainState.FORWARDS_FROM_ALIGNMENT_LINE;
 			}
 			break;
+
 
 		case FORWARDS_UNTIL_TAPE:
 			// Drive until IR sensors pick up tape.
@@ -595,7 +596,7 @@ private static MoveWhileLoweringArmReturn hasLoweredArmAndMoved ()
 	}
 
 
-	//We can do cat D and B no problem. C is out. A may require extra arm code.
+	// We can do cat D and B no problem. C is out. A may require extra arm code.
 
 	// Go forth.
 	if ((Hardware.drive.driveForwardInches(
@@ -623,8 +624,6 @@ private static MoveWhileLoweringArmReturn hasLoweredArmAndMoved ()
 
 	return returnStatus;
 }
-
-
 
 
 /**
@@ -756,7 +755,7 @@ private static boolean hasMovedFowardsFromTape ()
 {
 	boolean done = false;
 
-	//Drive the distance from the tape to the line normal to the goal.
+	// Drive the distance from the tape to the line normal to the goal.
 	if (Hardware.drive.driveForwardInches(
 	        DriveInformation.FORWARDS_FROM_ALIGNMENT_LINE_DISTANCE[lane]
 	                * LAB_SCALING_FACTOR,
@@ -779,8 +778,8 @@ private static boolean hasRotatedTowardsShootingPosition ()
 {
 	boolean done = false;
 
-	//Turn the degrees specified.
-	//TODO: Add more parameters to this method.
+	// Turn the degrees specified.
+	// TODO: Add more parameters to this method.
 	done = hasTurnedBasedOnSign(
 	        DriveInformation.ROTATE_ON_ALIGNMENT_LINE_DISTANCE[lane]
 	                * LAB_SCALING_FACTOR);
@@ -797,13 +796,11 @@ private static boolean hasTurnedToFaceGoal ()
 {
 	boolean done = false;
 
-	//Turn the degrees specified.
-	//TODO: Add more parameters to this method.
+	// Turn the degrees specified.
+	// TODO: Add more parameters to this method.
 	done = hasTurnedBasedOnSign(
 	        DriveInformation.TURN_TO_FACE_GOAL_DEGREES[lane]
 	                * LAB_SCALING_FACTOR);
-
-
 
 	return done;
 }
@@ -818,7 +815,7 @@ private static boolean hasDrivenUpToGoal ()
 	boolean done = false;
 
 	// Have we reached the distance according to drawings.
-	//OR
+	// OR
 	// Have we seen if we have reached cleats of the tower according to IR?
 	if ((Hardware.drive.driveForwardInches(
 	        DriveInformation.DRIVE_UP_TO_GOAL[lane]
@@ -827,12 +824,12 @@ private static boolean hasDrivenUpToGoal ()
 	        DriveInformation.DRIVE_UP_TO_GOAL_MOTOR_RATIO[lane]) == true)
 	        ||
 	        (Hardware.leftIR.isOn() || Hardware.rightIR.isOn()))
-	//We are done here.
+	// We are done here.
 	{
 	done = true;
 	}
 
-	//TEMPORARY PRINTS.
+	// TEMPORARY PRINTS.
 	// see if we have stopped based on IR or Encoders.
 	if (done == true
 	        && (Hardware.leftIR.isOn() || Hardware.rightIR.isOn()))
@@ -1006,6 +1003,7 @@ private static boolean hasTurnedBasedOnSign (double degrees)
 	done = Hardware.drive.turnLeftDegrees(degrees, false, -0.28, 0.28);
 	}
 	return done;
+
 }
 
 /**
