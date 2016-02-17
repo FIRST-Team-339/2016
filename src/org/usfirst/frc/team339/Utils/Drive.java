@@ -15,7 +15,7 @@ public class Drive
  */
 public Drive (Transmission_old transmission)
 {
-	this.transmission = transmission;
+    this.transmission = transmission;
 }
 
 /**
@@ -29,10 +29,50 @@ public Drive (Transmission_old transmission)
  */
 private boolean brake (final double brakeSpeed)
 {
-	// TODO maybe make argument a constant in the class.
-	// TODO find out ideal brakespeed.
-	return (this.transmission.brake(brakeSpeed));
+    // TODO maybe make argument a constant in the class.
+    // TODO find out ideal brakespeed.
+    return (this.transmission.brake(brakeSpeed));
 } // end brake()
+
+/**
+ * determines whether or not we need to compensate for the fact that
+ * the Left Joystick is reversed. If it is, return the joystick input
+ * value as negated. Otherwise, return exactly what we got sent in
+ * 
+ * @method compensateForReversedLeftJoystick
+ * @author Robert Brown
+ * @date 16 February 2016
+ * @param joystickInput
+ *            - joystick value as sent in from the caller
+ * @return - double - modified joystick input value
+ */
+private double
+        compensateForReversedLeftJoystick (final double joystickInput)
+{
+    if (this.transmission.isLeftJoystickReversed() == true)
+        return (-joystickInput);
+    return joystickInput;
+} // end compensateForReversedLeftJoystick
+
+/**
+ * determines whether or not we need to compensate for the fact that
+ * the Right Joystick is reversed. If it is, return the joystick input
+ * value as negated. Otherwise, return exactly what we got sent in
+ * 
+ * @method compensateForReversedRightJoystick
+ * @author Robert Brown
+ * @date 16 February 2016
+ * @param joystickInput
+ *            - joystick value as sent in from the caller
+ * @return - double - modified joystick input value
+ */
+private double
+        compensateForReversedRightJoystick (final double joystickInput)
+{
+    if (this.transmission.isRightJoystickReversed() == true)
+        return (-joystickInput);
+    return joystickInput;
+} // end compensateForReversedRightJoystick
 
 /**
  * Determines the correct Joystick value. We get the value of the
@@ -47,7 +87,7 @@ private boolean brake (final double brakeSpeed)
  * corrected speed.
  * 
  * @method - determineCorrectedJoystickValue
- * @param rawValue
+ * @param rawJoystickValue
  *            - contains the joystick value as we received it
  *            from the joystick before it is reduced and made sure it is
  *            meeting a minimum speed
@@ -56,27 +96,28 @@ private boolean brake (final double brakeSpeed)
  * @author Robert Brown
  * @date 13 February 2016
  */
-private double determineCorrectedJoystickValue (final double rawValue)
+private double
+        determineCorrectedJoystickValue (final double rawJoystickValue)
 {
-	//------------------------------------
-	// Since we are correcting the speed on this particular
-	// joystick (it means that this side of the robot is
-	// ahead of the other side), then we need to multiple
-	// the speed by a correction factor and then make
-	// sure that the resulting value is more than the
-	// minimum speed that the motors need to actually
-	// move.  that we get from the getMinMotorSpeed()
-	// that the user can actually specify.  Also, take
-	// into account the if the joystick is reversed
-	// (as denoted in the transmission class), then
-	// we use the minimum speed and not the negative
-	// minimum speed.
-	//-------------------------------------
-	if (this.transmission.isLeftJoystickReversed() == true)
-		return (Math.max(this.getMinMotorSpeed(),
-		        rawValue * this.getDrivingCorrectionFactor()));
-	return (Math.min(-this.getMinMotorSpeed(), rawValue *
-	        this.getDrivingCorrectionFactor()));
+    // ------------------------------------
+    // Since we are correcting the speed on this particular
+    // joystick (it means that this side of the robot is
+    // ahead of the other side), then we need to multiple
+    // the speed by a correction factor and then make
+    // sure that the resulting value is more than the
+    // minimum speed that the motors need to actually
+    // move. that we get from the getMinMotorSpeed()
+    // that the user can actually specify. Also, take
+    // into account the if the joystick is reversed
+    // (as denoted in the transmission class), then
+    // we use the minimum speed and not the negative
+    // minimum speed.
+    // -------------------------------------
+    if (this.transmission.isLeftJoystickReversed() == true)
+        return (Math.max(this.getMinMotorSpeed(),
+                rawJoystickValue * this.getDrivingCorrectionFactor()));
+    return (Math.min(-this.getMinMotorSpeed(), rawJoystickValue *
+            this.getDrivingCorrectionFactor()));
 } // end determineCorrectJoystickValue
 
 /**
@@ -88,9 +129,9 @@ private double determineCorrectedJoystickValue (final double rawValue)
  */
 public void driveContinuous ()
 {
-	this.driveForwardInches(9999.0, false,
-	        this.getNormalizedDefaultMaxSpeed(),
-	        this.getNormalizedDefaultMaxSpeed());
+    this.driveForwardInches(9999.0, false,
+            this.getNormalizedDefaultMaxSpeed(),
+            this.getNormalizedDefaultMaxSpeed());
 } // end driveContinuous()
 
 /**
@@ -108,8 +149,8 @@ public void driveContinuous (final double leftJoystickInputValue,
         final double rightJoystickInputValue)
 
 {
-	this.driveForwardInches(9999.0, false, leftJoystickInputValue,
-	        rightJoystickInputValue);
+    this.driveForwardInches(9999.0, false, leftJoystickInputValue,
+            rightJoystickInputValue);
 } // end driveContinuous()
 
 /**
@@ -125,9 +166,9 @@ public void driveContinuous (final double leftJoystickInputValue,
  */
 public boolean driveForwardInches (final double distance)
 {
-	return (this.driveForwardInches(distance, true,
-	        this.getNormalizedDefaultMaxSpeed(),
-	        this.getNormalizedDefaultMaxSpeed()));
+    return (this.driveForwardInches(distance, true,
+            this.getNormalizedDefaultMaxSpeed(),
+            this.getNormalizedDefaultMaxSpeed()));
 } // end driveForwardInches()
 
 /**
@@ -146,9 +187,9 @@ public boolean driveForwardInches (final double distance)
 public boolean driveForwardInches (final double distance,
         final boolean brakeAtEnd)
 {
-	return (this.driveForwardInches(distance, brakeAtEnd,
-	        this.getNormalizedDefaultMaxSpeed(),
-	        this.getNormalizedDefaultMaxSpeed()));
+    return (this.driveForwardInches(distance, brakeAtEnd,
+            this.getNormalizedDefaultMaxSpeed(),
+            this.getNormalizedDefaultMaxSpeed()));
 } // end driveForwardInches()
 
 /**
@@ -170,8 +211,8 @@ public boolean driveForwardInches (final double distance,
         final double leftJoystickInputValue,
         final double rightJoystickInputValue)
 {
-	return (this.driveForwardInches(distance, true,
-	        leftJoystickInputValue, rightJoystickInputValue));
+    return (this.driveForwardInches(distance, true,
+            leftJoystickInputValue, rightJoystickInputValue));
 } // end driveForwardInches()
 
 /**
@@ -196,78 +237,84 @@ public boolean driveForwardInches (final double distance,
         final double leftJoystickInputValue,
         final double rightJoystickInputValue)
 {
-	//-----------------------------------
-	// stop if the average value of either drive train 
-	// is greater than the desired distance traveled.
-	if (this.hasDrivenInches(distance) == true)
-	{
-	// if requested to brake, stop
-	if (brakeAtEnd == true)
-	{
-	return (this.brake(this.brakeSpeed));
-	}
-	//-----------------------------------
-	// otherwise we are not braking, but we
-	// are now finished driving
-	//-----------------------------------
-	return true;
-	}
-	// if we are presently going straight - keep the
-	// speeds equal
-	if (this.transmission
-	        .getRightRearEncoderDistance() == this.transmission
-	                .getLeftRearEncoderDistance())
-		this.transmission.controls(-leftJoystickInputValue,
-		        -rightJoystickInputValue);
-	// if the left drive train is ahead of the right drive train
-	else if ((this.transmission
-	        .getRightRearEncoderDistance()) < (this.transmission
-	                .getLeftRearEncoderDistance()))
-		this.transmission.controls(
-		        -determineCorrectedJoystickValue(
-		                leftJoystickInputValue),
-		        -rightJoystickInputValue);
-	// if the right drive train is ahead of the left drive train
-	else
-		this.transmission.controls(-leftJoystickInputValue,
-		        -determineCorrectedJoystickValue(
-		                rightJoystickInputValue));
+    // -----------------------------------
+    // stop if the average value of either drive train
+    // is greater than the desired distance traveled.
+    if (this.hasDrivenInches(distance) == true)
+        {
+        // if requested to brake, stop
+        if (brakeAtEnd == true)
+            {
+            return (this.brake(this.brakeSpeed));
+            }
+        // -----------------------------------
+        // otherwise we are not braking, but we
+        // are now finished driving
+        // -----------------------------------
+        return true;
+        }
+    // if we are presently going straight - keep the
+    // speeds equal
+    if (this.transmission
+            .getRightRearEncoderDistance() == this.transmission
+                    .getLeftRearEncoderDistance())
+        this.transmission.controls(compensateForReversedLeftJoystick(
+                leftJoystickInputValue),
+                compensateForReversedRightJoystick(
+                        rightJoystickInputValue));
+    // if the left drive train is ahead of the right drive train
+    else if ((this.transmission
+            .getRightRearEncoderDistance()) < (this.transmission
+                    .getLeftRearEncoderDistance()))
+        this.transmission.controls(
+                compensateForReversedLeftJoystick(
+                        determineCorrectedJoystickValue(
+                                leftJoystickInputValue)),
+                compensateForReversedRightJoystick(
+                        rightJoystickInputValue));
+    // if the right drive train is ahead of the left drive train
+    else
+        this.transmission.controls(compensateForReversedLeftJoystick(
+                leftJoystickInputValue),
+                compensateForReversedRightJoystick(
+                        determineCorrectedJoystickValue(
+                                rightJoystickInputValue)));
 
-	// PRINT STATEMENTS:
-	// TODO: remove
-	// Prints out encoder values and the values we are sending to the
-	// motors.
-	//	System.out.println("Left Distance: " +
-	//	        Hardware.leftRearEncoder.getDistance());
-	//	System.out.println("Right Distance: " +
-	//	        Hardware.rightRearEncoder.getDistance());
+    // PRINT STATEMENTS:
+    // TODO: remove
+    // Prints out encoder values and the values we are sending to the
+    // motors.
+    // System.out.println("Left Distance: " +
+    // Hardware.leftRearEncoder.getDistance());
+    // System.out.println("Right Distance: " +
+    // Hardware.rightRearEncoder.getDistance());
 
-	//	if (this.transmission
-	//	        .getRightRearEncoderDistance() == this.transmission
-	//	                .getLeftRearEncoderDistance())
-	//	{
-	//	System.out.println("Left Joystick: " + -leftJoystickInputValue);
-	//	System.out.println("Right Joystick: " + -rightJoystickInputValue);
-	//	}
-	//	else if ((this.transmission
-	//	        .getRightRearEncoderDistance()) < (this.transmission
-	//	                .getLeftRearEncoderDistance()))
-	//	{
-	//	System.out.println("Left Joystick: " +
-	//	        determineCorrectedJoystickValue(-leftJoystickInputValue));
-	//	System.out.println("Right Joystick: " + -rightJoystickInputValue);
-	//	}
-	//	else
-	//	{
-	//	System.out.println("Left Joystick: " + -leftJoystickInputValue);
-	//	System.out.println("Right Joystick: " +
-	//	        determineCorrectedJoystickValue(-rightJoystickInputValue));
-	//	}
+    // if (this.transmission
+    // .getRightRearEncoderDistance() == this.transmission
+    // .getLeftRearEncoderDistance())
+    // {
+    // System.out.println("Left Joystick: " + -leftJoystickInputValue);
+    // System.out.println("Right Joystick: " + -rightJoystickInputValue);
+    // }
+    // else if ((this.transmission
+    // .getRightRearEncoderDistance()) < (this.transmission
+    // .getLeftRearEncoderDistance()))
+    // {
+    // System.out.println("Left Joystick: " +
+    // determineCorrectedJoystickValue(-leftJoystickInputValue));
+    // System.out.println("Right Joystick: " + -rightJoystickInputValue);
+    // }
+    // else
+    // {
+    // System.out.println("Left Joystick: " + -leftJoystickInputValue);
+    // System.out.println("Right Joystick: " +
+    // determineCorrectedJoystickValue(-rightJoystickInputValue));
+    // }
 
-	//------------------------------------
-	// still have more driving to do
-	//------------------------------------
-	return false;
+    // ------------------------------------
+    // still have more driving to do
+    // ------------------------------------
+    return false;
 } // end driveForwardInches()
 
 /**
@@ -279,7 +326,7 @@ public boolean driveForwardInches (final double distance,
  */
 public double getBrakeSpeed ()
 {
-	return (this.brakeSpeed);
+    return (this.brakeSpeed);
 } // end getBrakeSpeed()
 
 /**
@@ -293,7 +340,7 @@ public double getBrakeSpeed ()
  */
 public double getDrivingCorrectionFactor ()
 {
-	return this.drivingCorrectionFactor;
+    return this.drivingCorrectionFactor;
 } // end getDrivingCorrectionFactor()
 
 /**
@@ -305,18 +352,18 @@ public double getDrivingCorrectionFactor ()
  */
 public double getForwardVelocity ()
 {
-	double speed = (((this.transmission.getLeftRearEncoderDistance() +
-	        this.transmission.getRightRearEncoderDistance()) / 2 -
-	        (this.prevLeftDistance + this.prevRightDistance) / 2)) /
-	        (Hardware.kilroyTimer.get() - this.prevTime);
+    double speed = (((this.transmission.getLeftRearEncoderDistance() +
+            this.transmission.getRightRearEncoderDistance()) / 2 -
+            (this.prevLeftDistance + this.prevRightDistance) / 2)) /
+            (Hardware.kilroyTimer.get() - this.prevTime);
 
-	this.prevLeftDistance =
-	        this.transmission.getLeftRearEncoderDistance();
-	this.prevRightDistance =
-	        this.transmission.getRightRearEncoderDistance();
-	this.prevTime = Hardware.kilroyTimer.get();
+    this.prevLeftDistance = this.transmission
+            .getLeftRearEncoderDistance();
+    this.prevRightDistance = this.transmission
+            .getRightRearEncoderDistance();
+    this.prevTime = Hardware.kilroyTimer.get();
 
-	return speed;
+    return speed;
 } // end getForwardVelocity()
 
 /**
@@ -327,16 +374,16 @@ public double getForwardVelocity ()
  */
 public double getRightMotorVelocity ()
 {
-	// based on the "getForwardVelocity()" method
-	double speed = ((this.transmission.getRightRearEncoderDistance() -
-	        this.prevRightDistance) / 2) / (Hardware.kilroyTimer.get() -
-	                this.prevTime);
+    // based on the "getForwardVelocity()" method
+    double speed = ((this.transmission.getRightRearEncoderDistance() -
+            this.prevRightDistance) / 2) / (Hardware.kilroyTimer.get() -
+                    this.prevTime);
 
-	this.prevRightDistance =
-	        this.transmission.getRightRearEncoderDistance();
-	this.prevTime = Hardware.kilroyTimer.get();
+    this.prevRightDistance = this.transmission
+            .getRightRearEncoderDistance();
+    this.prevTime = Hardware.kilroyTimer.get();
 
-	return speed;
+    return speed;
 } // end getRightMotorVelocity()
 
 /**
@@ -347,16 +394,16 @@ public double getRightMotorVelocity ()
  */
 public double getLeftMotorVelocity ()
 {
-	// based on the "getForwardVelocity()" method
-	double speed = ((this.transmission.getLeftRearEncoderDistance() -
-	        this.prevLeftDistance) / 2) / (Hardware.kilroyTimer.get() -
-	                this.prevTime);
+    // based on the "getForwardVelocity()" method
+    double speed = ((this.transmission.getLeftRearEncoderDistance() -
+            this.prevLeftDistance) / 2) / (Hardware.kilroyTimer.get() -
+                    this.prevTime);
 
-	this.prevLeftDistance =
-	        this.transmission.getLeftRearEncoderDistance();
-	this.prevTime = Hardware.kilroyTimer.get();
+    this.prevLeftDistance = this.transmission
+            .getLeftRearEncoderDistance();
+    this.prevTime = Hardware.kilroyTimer.get();
 
-	return speed;
+    return speed;
 } // end getLeftMotorVelocity()
 
 /**
@@ -369,7 +416,7 @@ public double getLeftMotorVelocity ()
  */
 public double getDefaultMaxSpeed ()
 {
-	return this.defaultMaxSpeed;
+    return this.defaultMaxSpeed;
 } // end getDefaultMaxSpeed()
 
 /**
@@ -386,7 +433,7 @@ public double getDefaultMaxSpeed ()
  */
 public double getDefaultTurnSpeed ()
 {
-	return this.defaultTurnSpeed;
+    return this.defaultTurnSpeed;
 } // end getDefaultTurnSpeed()
 
 /**
@@ -404,7 +451,7 @@ public double getDefaultTurnSpeed ()
  */
 public double getMinMotorSpeed ()
 {
-	return this.minimumMotorSpeed;
+    return this.minimumMotorSpeed;
 } // end getMinMotorSpeed()
 
 /**
@@ -420,16 +467,16 @@ public double getMinMotorSpeed ()
  */
 public double getNormalizedDefaultMaxSpeed ()
 {
-	//----------------------------------------
-	// if the joysticks have been declared to be
-	// be reversed in the transmission class, then
-	// return the default Max speed.  Otherwise,
-	// we need to return a negative max speed to
-	// match the joystick values
-	//----------------------------------------
-	if (this.transmission.isLeftJoystickReversed() == true)
-		return this.getDefaultMaxSpeed();
-	return (-this.getDefaultMaxSpeed());
+    // ----------------------------------------
+    // if the joysticks have been declared to be
+    // be reversed in the transmission class, then
+    // return the default Max speed. Otherwise,
+    // we need to return a negative max speed to
+    // match the joystick values
+    // ----------------------------------------
+    if (this.transmission.isLeftJoystickReversed() == true)
+        return this.getDefaultMaxSpeed();
+    return (-this.getDefaultMaxSpeed());
 } // end getNormalizedDefaultMaxSpeed()
 
 /**
@@ -449,16 +496,16 @@ public double getNormalizedDefaultMaxSpeed ()
  */
 public double getNormalizedTurnSpeed (final double joystickValue)
 {
-	//----------------------------------------
-	// if the joysticks have been declared to be
-	// be reversed in the transmission class, then
-	// return the turn speed.  Otherwise,
-	// we need to return a negative turn speed to
-	// match the joystick values
-	//----------------------------------------
-	if (this.transmission.isLeftJoystickReversed() == true)
-		return -joystickValue;
-	return joystickValue;
+    // ----------------------------------------
+    // if the joysticks have been declared to be
+    // be reversed in the transmission class, then
+    // return the turn speed. Otherwise,
+    // we need to return a negative turn speed to
+    // match the joystick values
+    // ----------------------------------------
+    if (this.transmission.isLeftJoystickReversed() == true)
+        return -joystickValue;
+    return joystickValue;
 } // end getNormalizedTurnSpeed()
 
 /**
@@ -470,25 +517,25 @@ public double getNormalizedTurnSpeed (final double joystickValue)
  */
 public double getRotationalVelocity ()
 {
-	double rotationalVelocity =
-	        ((Math.abs(this.transmission.getLeftRearEncoderDistance()) +
-	                Math.abs(
-	                        this.transmission
-	                                .getRightRearEncoderDistance())
-	                        /
-	                        2
-	                - ((Math.abs(this.prevLeftDistance) +
-	                        Math.abs(this.prevRightDistance)) /
-	                        2) / (Hardware.kilroyTimer.get() -
-	                                this.prevTime)));
+    double rotationalVelocity = ((Math
+            .abs(this.transmission.getLeftRearEncoderDistance()) +
+            Math.abs(
+                    this.transmission
+                            .getRightRearEncoderDistance())
+                    /
+                    2
+            - ((Math.abs(this.prevLeftDistance) +
+                    Math.abs(this.prevRightDistance)) /
+                    2) / (Hardware.kilroyTimer.get() -
+                            this.prevTime)));
 
-	this.prevLeftDistance =
-	        this.transmission.getLeftRearEncoderDistance();
-	this.prevRightDistance =
-	        this.transmission.getRightRearEncoderDistance();
-	this.prevTime = Hardware.kilroyTimer.get();
+    this.prevLeftDistance = this.transmission
+            .getLeftRearEncoderDistance();
+    this.prevRightDistance = this.transmission
+            .getRightRearEncoderDistance();
+    this.prevTime = Hardware.kilroyTimer.get();
 
-	return rotationalVelocity;
+    return rotationalVelocity;
 } // end getRotationalVelocity()
 
 /**
@@ -503,16 +550,16 @@ public double getRotationalVelocity ()
  */
 public boolean hasDrivenInches (final double targetDistance)
 {
-	// if either drive train is beyond the targetDistance
-	if (this.transmission
-	        .getRightRearEncoderDistance() >= targetDistance ||
-	        this.transmission
-	                .getLeftRearEncoderDistance() >= targetDistance)
-	{
-	// we're done
-	return true;
-	}
-	return false;
+    // if either drive train is beyond the targetDistance
+    if (this.transmission
+            .getRightRearEncoderDistance() >= targetDistance ||
+            this.transmission
+                    .getLeftRearEncoderDistance() >= targetDistance)
+        {
+        // we're done
+        return true;
+        }
+    return false;
 } // end hasDrivenInches()
 
 /**
@@ -527,7 +574,7 @@ public boolean hasDrivenInches (final double targetDistance)
  */
 public double setBrakeSpeed (final double newBrakeSpeed)
 {
-	return (this.brakeSpeed = newBrakeSpeed);
+    return (this.brakeSpeed = newBrakeSpeed);
 } // end setBrakeSpeed()
 
 /**
@@ -546,12 +593,12 @@ public double setBrakeSpeed (final double newBrakeSpeed)
  */
 public double setDefaultTurnSpeed (final double newTurnSpeed)
 {
-	//-----------------------------
-	// make sure that the new default turn speed
-	// is between 0 and 1.0
-	//-----------------------------
-	this.defaultTurnSpeed = Math.min(1.0, Math.max(0.0, newTurnSpeed));
-	return (this.getDefaultTurnSpeed());
+    // -----------------------------
+    // make sure that the new default turn speed
+    // is between 0 and 1.0
+    // -----------------------------
+    this.defaultTurnSpeed = Math.min(1.0, Math.max(0.0, newTurnSpeed));
+    return (this.getDefaultTurnSpeed());
 } // end setDefaultTurnSpeed()
 
 /**
@@ -568,13 +615,13 @@ public double setDefaultTurnSpeed (final double newTurnSpeed)
 public double
         setDrivingCorrectionFactor (final double newCorrectionFactor)
 {
-	//-----------------------------
-	// make sure that the new correction factor for
-	// normal forward driving is between 0 and 1.0
-	//-----------------------------
-	this.drivingCorrectionFactor =
-	        Math.min(1.0, Math.max(0.0, newCorrectionFactor));
-	return (this.getDrivingCorrectionFactor());
+    // -----------------------------
+    // make sure that the new correction factor for
+    // normal forward driving is between 0 and 1.0
+    // -----------------------------
+    this.drivingCorrectionFactor = Math.min(1.0,
+            Math.max(0.0, newCorrectionFactor));
+    return (this.getDrivingCorrectionFactor());
 } // end setDrivingCorrectionFactor()
 
 /**
@@ -593,12 +640,12 @@ public double
  */
 public double setMaxSpeed (final double max)
 {
-	//-----------------------------
-	// make sure that the new default max forward speed
-	// is between 0 and 1.0
-	//-----------------------------
-	this.defaultMaxSpeed = Math.min(1.0, Math.max(0.0, max));
-	return (this.getDefaultMaxSpeed());
+    // -----------------------------
+    // make sure that the new default max forward speed
+    // is between 0 and 1.0
+    // -----------------------------
+    this.defaultMaxSpeed = Math.min(1.0, Math.max(0.0, max));
+    return (this.getDefaultMaxSpeed());
 } // end setMaxSpeed()
 
 /**
@@ -617,12 +664,12 @@ public double setMaxSpeed (final double max)
  */
 public double setMinMotorSpeed (final double min)
 {
-	//-----------------------------
-	// make sure that the new minimum speed
-	// for the drive motors is between 0 and 1.0
-	//-----------------------------
-	this.minimumMotorSpeed = Math.min(1.0, Math.max(0.0, min));
-	return (this.getMinMotorSpeed());
+    // -----------------------------
+    // make sure that the new minimum speed
+    // for the drive motors is between 0 and 1.0
+    // -----------------------------
+    this.minimumMotorSpeed = Math.min(1.0, Math.max(0.0, min));
+    return (this.getMinMotorSpeed());
 } // end setMinMotorSpeed()
 
 /**
@@ -650,61 +697,65 @@ public boolean turnByDegrees (final turnWhichWay whichWay,
         final double leftJoystickInputValue,
         final double rightJoystickInputValue)
 {
-	// -----------------------------------------
-	// Make sure that the degrees requested stays
-	// within 0-180
-	// -----------------------------------------
-	double turnDegrees = Math.min(180, Math.max(0.0, degrees));
+    // -----------------------------------------
+    // Make sure that the degrees requested stays
+    // within 0-180
+    // -----------------------------------------
+    double turnDegrees = Math.min(180, Math.max(0.0, degrees));
 
-	double turnInRadians = Math.toRadians(turnDegrees);
+    double turnInRadians = Math.toRadians(turnDegrees);
 
-	// ----------------------------------------
-	// are we turning right
-	// ----------------------------------------
-	if (whichWay == turnWhichWay.TURN_RIGHT)
-	{
-	if (this.transmission
-	        .getRightRearEncoderDistance() <= -(turnInRadians *
-	                this.ROBOT_TURNING_RADIUS)
-	        ||
-	        this.transmission
-	                .getLeftRearEncoderDistance() >= (turnInRadians *
-	                        this.ROBOT_TURNING_RADIUS))
-	{
-	// brake and if we're done braking, tell caller we're done
-	if (brakeAtEnd == true)
-	{
-	return (this.brake(this.brakeSpeed));
-	}
-	return true;
-	}
-	}
-	// ----------------------------------------
-	// we are turning left
-	// ----------------------------------------
-	else
-	{
-	if (this.transmission
-	        .getRightRearEncoderDistance() >= (turnInRadians *
-	                this.ROBOT_TURNING_RADIUS)
-	        ||
-	        this.transmission
-	                .getLeftRearEncoderDistance() <= -(turnInRadians *
-	                        this.ROBOT_TURNING_RADIUS))
-	{
-	// brake and if we're done braking, tell caller we're done
-	if (brakeAtEnd == true)
-	{
-	return (this.brake(this.brakeSpeed));
-	}
-	return true;
-	}
-	}
-	// turn the robot
-	this.transmission.controls(leftJoystickInputValue,
-	        rightJoystickInputValue);
-	// We're not done driving yet!!
-	return false;
+    // ----------------------------------------
+    // are we turning right
+    // ----------------------------------------
+    if (whichWay == turnWhichWay.TURN_RIGHT)
+        {
+        if (this.transmission
+                .getRightRearEncoderDistance() <= -(turnInRadians *
+                        this.ROBOT_TURNING_RADIUS)
+                ||
+                this.transmission
+                        .getLeftRearEncoderDistance() >= (turnInRadians
+                                *
+                                this.ROBOT_TURNING_RADIUS))
+            {
+            // brake and if we're done braking, tell caller we're done
+            if (brakeAtEnd == true)
+                {
+                return (this.brake(this.brakeSpeed));
+                }
+            return true;
+            }
+        }
+    // ----------------------------------------
+    // we are turning left
+    // ----------------------------------------
+    else
+        {
+        if (this.transmission
+                .getRightRearEncoderDistance() >= (turnInRadians *
+                        this.ROBOT_TURNING_RADIUS)
+                ||
+                this.transmission
+                        .getLeftRearEncoderDistance() <= -(turnInRadians
+                                *
+                                this.ROBOT_TURNING_RADIUS))
+            {
+            // brake and if we're done braking, tell caller we're done
+            if (brakeAtEnd == true)
+                {
+                return (this.brake(this.brakeSpeed));
+                }
+            return true;
+            }
+        }
+    // turn the robot
+    this.transmission.controls(
+            compensateForReversedLeftJoystick(leftJoystickInputValue),
+            compensateForReversedRightJoystick(
+                    rightJoystickInputValue));
+    // We're not done driving yet!!
+    return false;
 } // end turnByDegrees()
 
 /**
@@ -720,7 +771,7 @@ public boolean turnByDegrees (final turnWhichWay whichWay,
  */
 public boolean turnLeftDegrees (final double degrees)
 {
-	return (this.turnLeftDegrees(degrees, true));
+    return (this.turnLeftDegrees(degrees, true));
 } // end turnLeftDegrees()
 
 /**
@@ -740,9 +791,9 @@ public boolean turnLeftDegrees (final double degrees)
 public boolean turnLeftDegrees (final double degrees,
         final boolean brakeAtEnd)
 {
-	return (this.turnLeftDegrees(degrees, brakeAtEnd,
-	        this.getNormalizedTurnSpeed(-this.getDefaultTurnSpeed()),
-	        this.getNormalizedTurnSpeed(this.getDefaultTurnSpeed())));
+    return (this.turnLeftDegrees(degrees, brakeAtEnd,
+            this.getNormalizedTurnSpeed(-this.getDefaultTurnSpeed()),
+            this.getNormalizedTurnSpeed(this.getDefaultTurnSpeed())));
 } // end turnLeftDegrees()
 
 /**
@@ -765,8 +816,8 @@ public boolean turnLeftDegrees (final double degrees,
         final double leftJoystickInputValue,
         final double rightJoystickInputValue)
 {
-	return (this.turnLeftDegrees(degrees, true, leftJoystickInputValue,
-	        rightJoystickInputValue));
+    return (this.turnLeftDegrees(degrees, true, leftJoystickInputValue,
+            rightJoystickInputValue));
 } // end turnLeftDegrees()
 
 /**
@@ -792,9 +843,9 @@ public boolean turnLeftDegrees (final double degrees,
         final boolean brakeAtEnd, final double leftJoystickInputValue,
         final double rightJoystickInputValue)
 {
-	return (this.turnByDegrees(turnWhichWay.TURN_LEFT, degrees,
-	        brakeAtEnd, leftJoystickInputValue,
-	        rightJoystickInputValue));
+    return (this.turnByDegrees(turnWhichWay.TURN_LEFT, degrees,
+            brakeAtEnd, leftJoystickInputValue,
+            rightJoystickInputValue));
 } // end turnLeftDegrees()
 
 /**
@@ -810,7 +861,7 @@ public boolean turnLeftDegrees (final double degrees,
  */
 public boolean turnRightDegrees (final double degrees)
 {
-	return (this.turnRightDegrees(degrees, true));
+    return (this.turnRightDegrees(degrees, true));
 } // end turnLeftDegrees()
 
 /**
@@ -831,9 +882,9 @@ public boolean turnRightDegrees (final double degrees)
 public boolean turnRightDegrees (final double degrees,
         final boolean brakeAtEnd)
 {
-	return (this.turnRightDegrees(degrees, brakeAtEnd,
-	        this.getNormalizedTurnSpeed(this.getDefaultTurnSpeed()),
-	        this.getNormalizedTurnSpeed(-this.getDefaultTurnSpeed())));
+    return (this.turnRightDegrees(degrees, brakeAtEnd,
+            this.getNormalizedTurnSpeed(this.getDefaultTurnSpeed()),
+            this.getNormalizedTurnSpeed(-this.getDefaultTurnSpeed())));
 } // end turnRightDegrees()
 
 /**
@@ -856,8 +907,8 @@ public boolean turnRightDegrees (final double degrees,
         final double leftJoystickInputValue,
         final double rightJoystickInputValue)
 {
-	return (this.turnRightDegrees(degrees, true, leftJoystickInputValue,
-	        rightJoystickInputValue));
+    return (this.turnRightDegrees(degrees, true, leftJoystickInputValue,
+            rightJoystickInputValue));
 } // end turnLeftDegrees()
 
 /**
@@ -883,9 +934,9 @@ public boolean turnRightDegrees (final double degrees,
         final boolean brakeAtEnd, final double leftJoystickInputValue,
         final double rightJoystickInputValue)
 {
-	return (this.turnByDegrees(turnWhichWay.TURN_RIGHT, degrees,
-	        brakeAtEnd, leftJoystickInputValue,
-	        rightJoystickInputValue));
+    return (this.turnByDegrees(turnWhichWay.TURN_RIGHT, degrees,
+            brakeAtEnd, leftJoystickInputValue,
+            rightJoystickInputValue));
 } // end turnRightDegrees()
 
 /**
@@ -898,9 +949,9 @@ public boolean turnRightDegrees (final double degrees,
  *
  */
 public enum turnWhichWay
-	{
-	TURN_RIGHT, TURN_LEFT;
-	}
+    {
+    TURN_RIGHT, TURN_LEFT;
+    }
 
 /*
  * Constants
@@ -918,40 +969,40 @@ private double prevRightDistance = 0.0;
 // TODO tweak for the most effective brake method
 private double brakeSpeed = .1;
 
-//-------------------------------------
-// default max motor speed allowed.  This represents
+// -------------------------------------
+// default max motor speed allowed. This represents
 // the forward values from the joysticks and
 // ranges from 0.0 to 1.0 (100%) and will be
 // calculated based on whether or not the transmission
 // has reversed joysticks
-//------------------------------------
+// ------------------------------------
 private double defaultMaxSpeed = 1.0;
 
-//-------------------------------------
-//default max motor speed allowed during a turn.  This represents
-//the forward values from the joysticks and
-//ranges from 0.0 to 1.0 (100%) and will be
-//calculated based on whether or not the transmission
-//has reversed joysticks
-//------------------------------------
-private double defaultTurnSpeed = .5;
-
-//------------------------------------
-// correction factor used to slow the drive
-// motor that is ahead of the other drive motor
-// This represents a percentage of the 
-// driving speed passed in from the joysticks
-// and ranges from 0 to 1.0 (100%)
-//------------------------------------
-private double drivingCorrectionFactor = 0.75;
-
-//-------------------------------------
-// minimum motor speed allowed.  This represents
+// -------------------------------------
+// default max motor speed allowed during a turn. This represents
 // the forward values from the joysticks and
 // ranges from 0.0 to 1.0 (100%) and will be
 // calculated based on whether or not the transmission
 // has reversed joysticks
-//------------------------------------
+// ------------------------------------
+private double defaultTurnSpeed = .5;
+
+// ------------------------------------
+// correction factor used to slow the drive
+// motor that is ahead of the other drive motor
+// This represents a percentage of the
+// driving speed passed in from the joysticks
+// and ranges from 0 to 1.0 (100%)
+// ------------------------------------
+private double drivingCorrectionFactor = 0.75;
+
+// -------------------------------------
+// minimum motor speed allowed. This represents
+// the forward values from the joysticks and
+// ranges from 0.0 to 1.0 (100%) and will be
+// calculated based on whether or not the transmission
+// has reversed joysticks
+// ------------------------------------
 private double minimumMotorSpeed = .20;
 
 } // end class
