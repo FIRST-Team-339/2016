@@ -373,10 +373,6 @@ private static void runMainStateMachine ()
 	        ErrorMessage.PrintsTo.roboRIO);
 	}
 
-	// Temporary. Print gear percentage. TODO: Remove.
-	// System.out.println("First gear percentage = "
-	// + Hardware.transmission.getFirstGearPercentage());
-
 	switch (mainState)
 	{
 		case INIT:
@@ -395,8 +391,6 @@ private static void runMainStateMachine ()
 			mainState = MainState.INIT_DELAY;
 			}
 
-			// temporary; for testing. TODO: remove.
-			// mainState = MainState.ROTATE_ON_ALIGNMENT_LINE;
 			break;
 
 
@@ -600,7 +594,6 @@ private static void beginLoweringArm ()
 
 }
 
-// TODO move to manipulatorArm class
 /**
  * Checks whether or not the pickup arm has been lowered.
  * TODO: Move to ManipulatorArm class?
@@ -776,8 +769,6 @@ private static boolean hasMovedToTape ()
 	boolean tapeness = false;
 
 	// Move forwards.
-	// TODO: make/use method to drive continuously.
-	// TODO: set a good speed.
 	Hardware.drive.driveContinuous();
 
 	// simply check if we have detected the tape on either side.
