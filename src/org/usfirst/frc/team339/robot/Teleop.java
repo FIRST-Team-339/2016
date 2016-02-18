@@ -78,6 +78,34 @@ public static void init ()
     Hardware.rightRearMotor.set(0.0);
     Hardware.armMotor.set(0.0);
     Hardware.armIntakeMotor.set(0.0);
+    switch (Hardware.axisCamera.getResolution())
+        {
+        case k640x480:
+            cameraXResolution = 640;
+            cameraYResolution = 480;
+            break;
+        case k480x360:
+            cameraXResolution = 480;
+            cameraYResolution = 360;
+            break;
+        case k320x240:
+            cameraXResolution = 320;
+            cameraYResolution = 240;
+            break;
+        case k240x180:
+            cameraXResolution = 240;
+            cameraYResolution = 180;
+            break;
+        case k176x144:
+            cameraXResolution = 176;
+            cameraYResolution = 144;
+            break;
+        default:
+        case k160x120:
+            cameraXResolution = 160;
+            cameraYResolution = 120;
+            break;
+        }
 } // end Init
 
 
@@ -111,7 +139,7 @@ public static void periodic ()
         Hardware.ringLightRelay.set(Value.kOn);
         }
     //If we claim to be driving by camera and we've waitied long enough 
-    //for someone to brighten up the darness with the ringlight
+    //for someone to brighten up the darkness with the ringlight
     if (isDrivingByCamera == true && Hardware.delayTimer.get() >= .75)
         {
         //try to take a picture and save it in memory and on the "hard disk"
@@ -133,12 +161,15 @@ public static void periodic ()
         Hardware.imageProcessor.updateParticleAnalysisReports();
         //tell the programmers where the X coordinate of the center of 
         //mass of the largest blob
-        System.out.println("CenterOfMass: " + Hardware.imageProcessor
-                .getParticleAnalysisReports()[0].center_mass_x);
+        //        System.out.println("CenterOfMass: " + Hardware.imageProcessor
+        //                .getParticleAnalysisReports()[0].center_mass_x);
         //if the center of the largest blob is to the left of our 
         //acceptable zone around the center
         if (Hardware.imageProcessor
-                .getParticleAnalysisReports()[0].center_mass_x <= 145)
+                .getParticleAnalysisReports().length > 0
+                && getRelativeCameraCoordinate(Hardware.imageProcessor
+                        .getParticleAnalysisReports()[0].center_mass_x,
+                        true) <= -.1)
             {
             //turn left until it is in the zone (will be called over and
             //over again until the blob is within the acceptable zone)
@@ -147,7 +178,10 @@ public static void periodic ()
         //if the center of the largest blob is to the right of our 
         //acceptable zone around the center
         else if (Hardware.imageProcessor
-                .getParticleAnalysisReports()[0].center_mass_x >= 175)
+                .getParticleAnalysisReports().length > 0
+                && getRelativeCameraCoordinate(Hardware.imageProcessor
+                        .getParticleAnalysisReports()[0].center_mass_x,
+                        true) >= .1)
             {
             //turn left until it is in the zone (will be called over and
             //over again until the blob is within the acceptable zone)
@@ -518,6 +552,16 @@ public static void printStatements ()
     // System.out.println(Hardware.ringLightRelay.get());
 } // end printStatements
 
+public static double getRelativeCameraCoordinate (
+        double absoluteCoordinate,
+        boolean isXCoordinate)
+{
+    if (isXCoordinate == true)
+        return (absoluteCoordinate - (cameraXResolution / 2))
+                / (cameraXResolution / 2);
+    return (absoluteCoordinate - (cameraYResolution / 2))
+            / (cameraYResolution / 2);
+}
 
 /*
  * ===============================================
@@ -539,6 +583,10 @@ private static final int GEAR_DOWNSHIFT_JOYSTICK_BUTTON = 2;
 // ==========================================
 // TUNEABLES
 // ==========================================
+
+private static double cameraXResolution = 160.0;
+
+private static double cameraYResolution = 120.0;
 
 private static boolean processingImage = true;
 
