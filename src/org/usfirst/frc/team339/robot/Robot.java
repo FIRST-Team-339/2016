@@ -320,6 +320,7 @@ public void robotInit ()
     Hardware.catapultSolenoid2.set(false);
     Hardware.rightRearEncoder.setReverseDirection(true);
 
+
     switch (Hardware.axisCamera.getResolution())
         {
         case k640x480:

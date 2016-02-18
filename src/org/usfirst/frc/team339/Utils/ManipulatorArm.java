@@ -1,5 +1,6 @@
 package org.usfirst.frc.team339.Utils;
 
+import org.usfirst.frc.team339.Hardware.Hardware;
 import org.usfirst.frc.team339.HardwareInterfaces.IRSensor;
 import org.usfirst.frc.team339.HardwareInterfaces.RobotPotentiometer;
 import edu.wpi.first.wpilibj.SpeedController;
@@ -147,7 +148,7 @@ public boolean isUp ()
 private SpeedController intakeMotor = null;
 private SpeedController motor = null;
 private RobotPotentiometer armPot = null;
-private IRSensor hasBallSensor = null;
+private IRSensor hasBallSensor = Hardware.armIR;
 //default maximum arm turn speed proportion
 private double maxArmSpeed = .75;
 //default slow arm turn speed proportion

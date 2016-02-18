@@ -149,9 +149,8 @@ public static void driveRobot ()
         }
 }
 
-// Really poor boolean name. Needs to be non arbitrary.
-// What does it mean if the armStatus is true?
-public static boolean armStatus = false;
+
+public static boolean armIsUp = false;
 
 /**
  * ^^^Bring the boolean armStatus
@@ -177,15 +176,15 @@ public static boolean armStatus = false;
 public static void runCameraSolenoid (boolean upState,
         boolean downState, boolean holdState, boolean toggle)
 {
-    if (upState && toggle == true && armStatus == false)
+    if (upState && toggle == true && armIsUp == false)
         {
         Hardware.cameraSolenoid.set(DoubleSolenoid.Value.kForward);
-        armStatus = true;
+        armIsUp = true;
         }
-    else if (downState && toggle == true && armStatus == true)
+    else if (downState && toggle == true && armIsUp == true)
         {
         Hardware.cameraSolenoid.set(DoubleSolenoid.Value.kReverse);
-        armStatus = false;
+        armIsUp = false;
         }
     else if (holdState && toggle == false)
         {
@@ -468,9 +467,6 @@ private static final int GEAR_DOWNSHIFT_JOYSTICK_BUTTON = 2;
 // TUNEABLES
 // ==========================================
 
-private static double cameraXResolution = 160.0;
-
-private static double cameraYResolution = 120.0;
 
 private static boolean processingImage = true;
 

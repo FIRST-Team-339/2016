@@ -36,9 +36,9 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.MotorSafetyHelper;
 import edu.wpi.first.wpilibj.Relay;
 import edu.wpi.first.wpilibj.Solenoid;
-import edu.wpi.first.wpilibj.Talon;
+import edu.wpi.first.wpilibj.TalonSRX;
 import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj.Victor;
+import edu.wpi.first.wpilibj.VictorSP;
 import edu.wpi.first.wpilibj.vision.AxisCamera;
 import edu.wpi.first.wpilibj.vision.AxisCamera.Resolution;
 import edu.wpi.first.wpilibj.vision.USBCamera;
@@ -101,18 +101,16 @@ public static final Resolution AXIS_RESOLUTION =
 // Talon classes
 // ------------------------------------
 
-// TODO: change all Talon's to TalonSRX's
-public static Talon rightRearMotor = new Talon(2);
-public static Talon leftRearMotor = new Talon(3);
-public static Talon rightFrontMotor = new Talon(1);
-public static Talon leftFrontMotor = new Talon(4);
+public static TalonSRX rightRearMotor = new TalonSRX(2);
+public static TalonSRX leftRearMotor = new TalonSRX(3);
+public static TalonSRX rightFrontMotor = new TalonSRX(1);
+public static TalonSRX leftFrontMotor = new TalonSRX(4);
 
 // ------------------------------------
 // Victor classes
 // ------------------------------------
-// TODO: change all Victors to VictorSP's
-public static Victor armMotor = new Victor(0);
-public static Victor armIntakeMotor = new Victor(5);
+public static VictorSP armMotor = new VictorSP(0);
+public static VictorSP armIntakeMotor = new VictorSP(5);
 
 // ------------------------------------
 // CAN classes
@@ -190,6 +188,8 @@ public static Encoder rightRearEncoder = new Encoder(3, 4);
 // -------------------------------------
 public static IRSensor rightIR = new IRSensor(0);
 public static IRSensor leftIR = new IRSensor(1);
+
+public static IRSensor armIR = new IRSensor(2);
 
 // ====================================
 // I2C Classes
@@ -315,7 +315,6 @@ public static Drive drive = new Drive(transmission);
 // -------------------
 // Assembly classes (e.g. forklift)
 // -------------------
-// TODO commented out until we have a physical arm to work on.
 
 public static ManipulatorArm pickupArm = new ManipulatorArm(armMotor,
         armIntakeMotor, armPot);
