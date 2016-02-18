@@ -96,76 +96,76 @@ private static edu.wpi.first.wpilibj.DoubleSolenoid.Value Forward;
  */
 public static void periodic ()
 {
-    //If we haven't already started and we've been told to start
+    // If we haven't already started and we've been told to start
     if (isDrivingByCamera == false
             && Hardware.rightOperator.getRawButton(5) == true)
         {
-        //say we've started
+        // say we've started
         isDrivingByCamera = true;
-        //actually start
+        // actually start
         Hardware.delayTimer.start();
-        //turn down the lights
+        // turn down the lights
         Hardware.axisCamera.writeBrightness(
                 Hardware.MINIMUM_AXIS_CAMERA_BRIGHTNESS);
-        //Woah, that's too dark! Turn on the ringlight someone!
+        // Woah, that's too dark! Turn on the ringlight someone!
         Hardware.ringLightRelay.set(Value.kOn);
         }
-    //If we claim to be driving by camera and we've waitied long enough 
-    //for someone to brighten up the darness with the ringlight
+    // If we claim to be driving by camera and we've waited long enough
+    // for someone to brighten up the darkness with the ringlight
     if (isDrivingByCamera == true && Hardware.delayTimer.get() >= .75)
         {
-        //try to take a picture and save it in memory and on the "hard disk"
+        // try to take a picture and save it in memory and on the "hard disk"
         try
             {
             Hardware.imageProcessor
                     .updateImage(Hardware.axisCamera.getImage());
             Hardware.axisCamera.saveImagesSafely();
             }
-        //This is NI yelling at us for something being wrong
+        // This is NI yelling at us for something being wrong
         catch (NIVisionException e)
             {
-            //if something wrong happens, tell the stupid programmers 
-            //who let it happen more information about where it came from
+            // if something wrong happens, tell the stupid programmers
+            // who let it happen more information about where it came from.
             e.printStackTrace();
             }
-        //tell imageProcessor to use the image we just took to look for 
-        //blobs
+        // tell imageProcessor to use the image we just took to look for
+        // blobs
         Hardware.imageProcessor.updateParticleAnalysisReports();
-        //tell the programmers where the X coordinate of the center of 
-        //mass of the largest blob
+        // tell the programmers where the X coordinate of the center of
+        // mass of the largest blob
         System.out.println("CenterOfMass: " + Hardware.imageProcessor
                 .getParticleAnalysisReports()[0].center_mass_x);
-        //if the center of the largest blob is to the left of our 
-        //acceptable zone around the center
+        // if the center of the largest blob is to the left of our
+        // acceptable zone around the center
         if (Hardware.imageProcessor
                 .getParticleAnalysisReports()[0].center_mass_x <= 145)
             {
-            //turn left until it is in the zone (will be called over and
-            //over again until the blob is within the acceptable zone)
+            // turn left until it is in the zone (will be called over and
+            // over again until the blob is within the acceptable zone)
             Hardware.transmission.controls(-.5, .5);
             }
-        //if the center of the largest blob is to the right of our 
-        //acceptable zone around the center
+        // if the center of the largest blob is to the right of our
+        // acceptable zone around the center
         else if (Hardware.imageProcessor
                 .getParticleAnalysisReports()[0].center_mass_x >= 175)
             {
-            //turn left until it is in the zone (will be called over and
-            //over again until the blob is within the acceptable zone)
+            // turn left until it is in the zone (will be called over and
+            // over again until the blob is within the acceptable zone)
             Hardware.transmission.controls(.5, -.5);
             }
-        //If the center of the blob is nestled happily in our deadzone
+        // If the center of the blob is nestled happily in our deadzone
         else
             {
-            //We're done, no need to go again.
+            // We're done, no need to go again.
             isDrivingByCamera = false;
-            //Stop moving
+            // Stop moving
             Hardware.transmission.controls(0.0, 0.0);
             }
         }
     if (isDrivingByCamera == false)
         {
-        //We only want to write the brightness high if we're not driving
-        //by camera.
+        // We only want to write the brightness high if we're not driving
+        // by camera.
         Hardware.ringLightRelay.set(Value.kOff);
         Hardware.axisCamera.writeBrightness(
                 Hardware.NORMAL_AXIS_CAMERA_BRIGHTNESS);
@@ -174,11 +174,11 @@ public static void periodic ()
     printStatements();
 
     // Tests the Camera
-    //takePicture();
+    // takePicture();
 
 
     // Driving the Robot
-    //driveRobot();
+    driveRobot();
 
     runCameraSolenoid(Hardware.rightOperator.getRawButton(11),
             Hardware.rightOperator.getRawButton(10), false, true);
@@ -281,13 +281,13 @@ public static void runCameraSolenoid (boolean upState,
  */
 public static void takePicture ()
 {
-    //If we click buttons 6+7 on the left operator joystick, we dim the
-    //	  brightness a lot, turn the ringlight on, and then if we haven't
-    //	  already taken an image then we do and set the boolean to true to
-    //	  prevent us taking more images. Otherwise we don't turn on the
-    //	  ringlight and we don't take a picture. We added a timer to delay
-    //	  taking the picture for the brightness to dim and for the ring
-    //	 light to turn on.
+    // If we click buttons 6+7 on the left operator joystick, we dim the
+    // brightness a lot, turn the ringlight on, and then if we haven't
+    // already taken an image then we do and set the boolean to true to
+    // prevent us taking more images. Otherwise we don't turn on the
+    // ringlight and we don't take a picture. We added a timer to delay
+    // taking the picture for the brightness to dim and for the ring
+    // light to turn on.
     if (Hardware.leftOperator.getRawButton(6) == true
             && Hardware.leftOperator.getRawButton(7) == true)
         {
@@ -497,10 +497,10 @@ public static void printStatements ()
     // Hardware.catapultSolenoid2.get());
 
     // Encoders-------------
-    //System.out.println(
-    //        "RR distance = " + Hardware.rightRearEncoder.getDistance());
-    //System.out.println(
-    //        "LR distance = " + Hardware.leftRearEncoder.getDistance());
+    // System.out.println(
+    // "RR distance = " + Hardware.rightRearEncoder.getDistance());
+    // System.out.println(
+    // "LR distance = " + Hardware.leftRearEncoder.getDistance());
     // System.out.println("Arm Motor = " + Hardware.armMotor.getDistance());
 
     // Switches--------------
@@ -529,8 +529,7 @@ private static final double MAXIMUM_TELEOP_SPEED = 1.0;
 
 private static final double FIRST_GEAR_PERCENTAGE = 0.5;
 
-private static final double SECOND_GEAR_PERCENTAGE =
-        MAXIMUM_TELEOP_SPEED;
+private static final double SECOND_GEAR_PERCENTAGE = MAXIMUM_TELEOP_SPEED;
 
 private static final int GEAR_UPSHIFT_JOYSTICK_BUTTON = 3;
 
