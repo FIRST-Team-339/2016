@@ -129,6 +129,10 @@ private static enum MainState
 	 */
 	DRIVE_UP_TO_GOAL, // drives up the goal.
 	/**
+	 * Once we are in the shooting position, we align based on the chimera.
+	 */
+	ALIGN_IN_FRONT_OF_GOAL,
+	/**
 	 * We shoot the cannon ball.
 	 */
 	SHOOT, // adjusts its self (?) and fires the cannon ball.
@@ -333,6 +337,7 @@ public static void periodic ()
 	runArmStates();
 	}
 
+
 } // end Periodic
 
 
@@ -368,10 +373,6 @@ private static void runMainStateMachine ()
 	        ErrorMessage.PrintsTo.roboRIO);
 	}
 
-	// Temporary. Print gear percentage. TODO: Remove.
-	// System.out.println("First gear percentage = "
-	// + Hardware.transmission.getFirstGearPercentage());
-
 	switch (mainState)
 	{
 		case INIT:
@@ -390,8 +391,6 @@ private static void runMainStateMachine ()
 			mainState = MainState.INIT_DELAY;
 			}
 
-			// temporary; for testing. TODO: remove.
-			// mainState = MainState.ROTATE_ON_ALIGNMENT_LINE;
 			break;
 
 
@@ -507,9 +506,12 @@ private static void runMainStateMachine ()
 			break;
 
 		case ROTATE_ON_ALIGNMENT_LINE:
+			//Rotates until]l we are pointed at the place where we want to shoot.
 			if (hasRotatedTowardsShootingPosition() == true)
 			{
+			//reset Encoders to prepare for next state.
 			resetEncoders();
+			//then move.
 			mainState = MainState.FORWARDS_FROM_ALIGNMENT_LINE;
 			}
 			break;
@@ -517,28 +519,48 @@ private static void runMainStateMachine ()
 		case FORWARDS_FROM_ALIGNMENT_LINE:
 			if (hasMovedFowardsFromTape() == true)
 			{
+			//reset Encoders to prepare for next state.
 			resetEncoders();
 			mainState = MainState.TURN_TO_FACE_GOAL;
 			}
 			break;
 
 		case TURN_TO_FACE_GOAL:
+			//Turns until we are facing the goal.
 			if (hasTurnedToFaceGoal() == true)
+			//when done move up to the batter.
 			{
+			//reset Encoders to prepare for next state
 			resetEncoders();
+			//then drive.
 			mainState = MainState.DRIVE_UP_TO_GOAL;
 			}
 			break;
 
 		case DRIVE_UP_TO_GOAL:
+			//Moves to goal. Stops to align.
 			if (hasDrivenUpToGoal() == true)
+			//Go to align.
 			{
+			//reset Encoders to prepare for next state.
 			resetEncoders();
+			//go to align.
+			mainState = MainState.ALIGN_IN_FRONT_OF_GOAL;
+			}
+			break;
+
+		case ALIGN_IN_FRONT_OF_GOAL:
+		//align based on the camera until we are facing the goal. head-on.
+		//TODO: uncomment once this method exists.
+		//	if (Hardware.drive.alignByCamera())
+		//Once we are in position, we shoot!
+			{
 			mainState = MainState.SHOOT;
 			}
 			break;
 
 		case SHOOT:
+			//FIRE!!!
 			shoot();
 			mainState = MainState.DONE;
 			break;
@@ -572,7 +594,6 @@ private static void beginLoweringArm ()
 
 }
 
-// TODO move to manipulatorArm class
 /**
  * Checks whether or not the pickup arm has been lowered.
  * TODO: Move to ManipulatorArm class?
@@ -748,8 +769,6 @@ private static boolean hasMovedToTape ()
 	boolean tapeness = false;
 
 	// Move forwards.
-	// TODO: make/use method to drive continuously.
-	// TODO: set a good speed.
 	Hardware.drive.driveContinuous();
 
 	// simply check if we have detected the tape on either side.
