@@ -165,8 +165,8 @@ public static SixPositionSwitch startingPositionDial =
 // ------------------------------------
 // Encoders
 // ------------------------------------
-public static Encoder leftRearEncoder = new Encoder(4, 5);
-public static Encoder rightRearEncoder = new Encoder(2, 3);
+public static Encoder leftRearEncoder = new Encoder(5, 6);
+public static Encoder rightRearEncoder = new Encoder(3, 4);
 // public static Encoder armEncoder = new Encoder(4, 5);
 
 // -----------------------
@@ -190,6 +190,8 @@ public static Encoder rightRearEncoder = new Encoder(2, 3);
 // -------------------------------------
 public static IRSensor rightIR = new IRSensor(0);
 public static IRSensor leftIR = new IRSensor(1);
+
+public static IRSensor armIR = new IRSensor(2);
 
 // ====================================
 // I2C Classes
