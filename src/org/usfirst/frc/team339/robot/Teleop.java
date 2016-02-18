@@ -58,12 +58,11 @@ public static void init ()
     CameraServer.getInstance().setSize(1);
     Hardware.axisCamera
             .writeBrightness(Hardware.NORMAL_AXIS_CAMERA_BRIGHTNESS);
-    // set max speed. change by gear?
-    Hardware.drive.setMaxSpeed(MAXIMUM_TELEOP_SPEED);
     Hardware.transmission.setFirstGearPercentage(FIRST_GEAR_PERCENTAGE);
     Hardware.transmission
             .setSecondGearPercentage(SECOND_GEAR_PERCENTAGE);
     Hardware.transmission.setGear(1);
+    Hardware.transmission.setMaxGear(2);
     Hardware.transmission.setJoystickDeadbandRange(.20);
     Hardware.transmission.setJoysticksAreReversed(false);
     Hardware.ringLightRelay.set(Value.kOff);
@@ -96,72 +95,12 @@ private static edu.wpi.first.wpilibj.DoubleSolenoid.Value Forward;
  */
 public static void periodic ()
 {
-    //If we haven't already started and we've been told to start
-    if (isDrivingByCamera == false
-            && Hardware.rightOperator.getRawButton(5) == true)
+
+    if(Hardware.rightOperator.getRawButton(5) || isDrivingByCamera == true)
         {
-        //say we've started
-        isDrivingByCamera = true;
-        //actually start
-        Hardware.delayTimer.start();
-        //turn down the lights
-        Hardware.axisCamera.writeBrightness(
-                Hardware.MINIMUM_AXIS_CAMERA_BRIGHTNESS);
-        //Woah, that's too dark! Turn on the ringlight someone!
-        Hardware.ringLightRelay.set(Value.kOn);
+            alignToGoal();
         }
-    //If we claim to be driving by camera and we've waitied long enough 
-    //for someone to brighten up the darness with the ringlight
-    if (isDrivingByCamera == true && Hardware.delayTimer.get() >= .75)
-        {
-        //try to take a picture and save it in memory and on the "hard disk"
-        try
-            {
-            Hardware.imageProcessor
-                    .updateImage(Hardware.axisCamera.getImage());
-            Hardware.axisCamera.saveImagesSafely();
-            }
-        //This is NI yelling at us for something being wrong
-        catch (NIVisionException e)
-            {
-            //if something wrong happens, tell the stupid programmers 
-            //who let it happen more information about where it came from
-            e.printStackTrace();
-            }
-        //tell imageProcessor to use the image we just took to look for 
-        //blobs
-        Hardware.imageProcessor.updateParticleAnalysisReports();
-        //tell the programmers where the X coordinate of the center of 
-        //mass of the largest blob
-        System.out.println("CenterOfMass: " + Hardware.imageProcessor
-                .getParticleAnalysisReports()[0].center_mass_x);
-        //if the center of the largest blob is to the left of our 
-        //acceptable zone around the center
-        if (Hardware.imageProcessor
-                .getParticleAnalysisReports()[0].center_mass_x <= 145)
-            {
-            //turn left until it is in the zone (will be called over and
-            //over again until the blob is within the acceptable zone)
-            Hardware.transmission.controls(-.5, .5);
-            }
-        //if the center of the largest blob is to the right of our 
-        //acceptable zone around the center
-        else if (Hardware.imageProcessor
-                .getParticleAnalysisReports()[0].center_mass_x >= 175)
-            {
-            //turn left until it is in the zone (will be called over and
-            //over again until the blob is within the acceptable zone)
-            Hardware.transmission.controls(.5, -.5);
-            }
-        //If the center of the blob is nestled happily in our deadzone
-        else
-            {
-            //We're done, no need to go again.
-            isDrivingByCamera = false;
-            //Stop moving
-            Hardware.transmission.controls(0.0, 0.0);
-            }
-        }
+    //If we're not driving by camera, turn off the ring light and write the brightness high
     if (isDrivingByCamera == false)
         {
         //We only want to write the brightness high if we're not driving
@@ -178,14 +117,11 @@ public static void periodic ()
 
 
     // Driving the Robot
-    //driveRobot();
+    driveRobot();
 
     runCameraSolenoid(Hardware.rightOperator.getRawButton(11),
             Hardware.rightOperator.getRawButton(10), false, true);
 } // end Periodic
-
-static boolean isDrivingByCamera = false;
-
 
 /**
  * Hand the transmission class the joystick values and motor controllers for
@@ -221,10 +157,6 @@ public static void driveRobot ()
         Hardware.transmission.downshift(1);
         }
 }
-
-// Really poor boolean name. Needs to be non arbitrary.
-// What does it mean if the armStatus is true?
-public static boolean armStatus = false;
 
 /**
  * ^^^Bring the boolean armStatus
@@ -411,7 +343,82 @@ public static void takePicture ()
         }
 } // end Periodic
 
-static boolean hasBegunTurning = true;
+public static boolean alignToGoal()
+{
+//If we haven't already started and we've been told to start
+if (isDrivingByCamera == false)
+    {
+    //say we've started
+    isDrivingByCamera = true;
+    //actually start
+    Hardware.delayTimer.start();
+    //turn down the lights
+    Hardware.axisCamera.writeBrightness(
+            Hardware.MINIMUM_AXIS_CAMERA_BRIGHTNESS);
+    //Woah, that's too dark! Turn on the ringlight someone!
+    Hardware.ringLightRelay.set(Value.kOn);
+    return false;
+    }
+//If we claim to be driving by camera and we've waitied long enough 
+//for someone to brighten up the darness with the ringlight
+if (isDrivingByCamera == true && Hardware.delayTimer.get() >= .75)
+    {
+    //try to take a picture and save it in memory and on the "hard disk"
+    try
+        {
+        Hardware.imageProcessor
+                .updateImage(Hardware.axisCamera.getImage());
+        Hardware.axisCamera.saveImagesSafely();
+        }
+    //This is NI yelling at us for something being wrong
+    catch (NIVisionException e)
+        {
+        //if something wrong happens, tell the stupid programmers 
+        //who let it happen more information about where it came from
+        e.printStackTrace();
+        }
+    //tell imageProcessor to use the image we just took to look for 
+    //blobs
+    Hardware.imageProcessor.updateParticleAnalysisReports();
+    //tell the programmers where the X coordinate of the center of 
+    //mass of the largest blob
+    System.out.println("CenterOfMass: " + Hardware.imageProcessor
+            .getParticleAnalysisReports()[0].center_mass_x);
+    //if the center of the largest blob is to the left of our 
+    //acceptable zone around the center
+    if (Hardware.imageProcessor
+            .getParticleAnalysisReports()[0].center_mass_x <= 145)
+        {
+        //turn left until it is in the zone (will be called over and
+        //over again until the blob is within the acceptable zone)
+        Hardware.transmission.controls(-.5, .5);
+        return false;
+        }
+    //if the center of the largest blob is to the right of our 
+    //acceptable zone around the center
+    else if (Hardware.imageProcessor
+            .getParticleAnalysisReports()[0].center_mass_x >= 175)
+        {
+        //turn left until it is in the zone (will be called over and
+        //over again until the blob is within the acceptable zone)
+        Hardware.transmission.controls(.5, -.5);
+        return false;
+        }
+    //If the center of the blob is nestled happily in our deadzone
+    else
+        {
+        //We're done, no need to go again.
+        isDrivingByCamera = false;
+        //Stop moving
+        Hardware.transmission.controls(0.0, 0.0);
+        return true;
+        }
+    }
+    return false;
+}
+
+
+
 
 /**
  * 
@@ -539,6 +546,14 @@ private static final int GEAR_DOWNSHIFT_JOYSTICK_BUTTON = 2;
 // ==========================================
 // TUNEABLES
 // ==========================================
+
+//Really poor boolean name. Needs to be non arbitrary.
+//What does it mean if the armStatus is true?
+public static boolean armStatus = false;
+
+static boolean isDrivingByCamera = false;
+
+static boolean hasBegunTurning = true;
 
 private static boolean processingImage = true;
 
