@@ -78,34 +78,7 @@ public static void init ()
     Hardware.rightRearMotor.set(0.0);
     Hardware.armMotor.set(0.0);
     Hardware.armIntakeMotor.set(0.0);
-    switch (Hardware.axisCamera.getResolution())
-        {
-        case k640x480:
-            cameraXResolution = 640;
-            cameraYResolution = 480;
-            break;
-        case k480x360:
-            cameraXResolution = 480;
-            cameraYResolution = 360;
-            break;
-        case k320x240:
-            cameraXResolution = 320;
-            cameraYResolution = 240;
-            break;
-        case k240x180:
-            cameraXResolution = 240;
-            cameraYResolution = 180;
-            break;
-        case k176x144:
-            cameraXResolution = 176;
-            cameraYResolution = 144;
-            break;
-        default:
-        case k160x120:
-            cameraXResolution = 160;
-            cameraYResolution = 120;
-            break;
-        }
+
 } // end Init
 
 
@@ -124,86 +97,6 @@ private static edu.wpi.first.wpilibj.DoubleSolenoid.Value Forward;
  */
 public static void periodic ()
 {
-    //If we haven't already started and we've been told to start
-    if (isDrivingByCamera == false
-            && Hardware.rightOperator.getRawButton(5) == true)
-        {
-        //say we've started
-        isDrivingByCamera = true;
-        //actually start
-        Hardware.delayTimer.start();
-        //turn down the lights
-        Hardware.axisCamera.writeBrightness(
-                Hardware.MINIMUM_AXIS_CAMERA_BRIGHTNESS);
-        //Woah, that's too dark! Turn on the ringlight someone!
-        Hardware.ringLightRelay.set(Value.kOn);
-        }
-    //If we claim to be driving by camera and we've waitied long enough 
-    //for someone to brighten up the darkness with the ringlight
-    if (isDrivingByCamera == true && Hardware.delayTimer.get() >= .75)
-        {
-        //try to take a picture and save it in memory and on the "hard disk"
-        try
-            {
-            Hardware.imageProcessor
-                    .updateImage(Hardware.axisCamera.getImage());
-            Hardware.axisCamera.saveImagesSafely();
-            }
-        //This is NI yelling at us for something being wrong
-        catch (NIVisionException e)
-            {
-            //if something wrong happens, tell the stupid programmers 
-            //who let it happen more information about where it came from
-            e.printStackTrace();
-            }
-        //tell imageProcessor to use the image we just took to look for 
-        //blobs
-        Hardware.imageProcessor.updateParticleAnalysisReports();
-        //tell the programmers where the X coordinate of the center of 
-        //mass of the largest blob
-        //        System.out.println("CenterOfMass: " + Hardware.imageProcessor
-        //                .getParticleAnalysisReports()[0].center_mass_x);
-        //if the center of the largest blob is to the left of our 
-        //acceptable zone around the center
-        if (Hardware.imageProcessor
-                .getParticleAnalysisReports().length > 0
-                && getRelativeCameraCoordinate(Hardware.imageProcessor
-                        .getParticleAnalysisReports()[0].center_mass_x,
-                        true) <= -.1)
-            {
-            //turn left until it is in the zone (will be called over and
-            //over again until the blob is within the acceptable zone)
-            Hardware.transmission.controls(-.5, .5);
-            }
-        //if the center of the largest blob is to the right of our 
-        //acceptable zone around the center
-        else if (Hardware.imageProcessor
-                .getParticleAnalysisReports().length > 0
-                && getRelativeCameraCoordinate(Hardware.imageProcessor
-                        .getParticleAnalysisReports()[0].center_mass_x,
-                        true) >= .1)
-            {
-            //turn left until it is in the zone (will be called over and
-            //over again until the blob is within the acceptable zone)
-            Hardware.transmission.controls(.5, -.5);
-            }
-        //If the center of the blob is nestled happily in our deadzone
-        else
-            {
-            //We're done, no need to go again.
-            isDrivingByCamera = false;
-            //Stop moving
-            Hardware.transmission.controls(0.0, 0.0);
-            }
-        }
-    if (isDrivingByCamera == false)
-        {
-        //We only want to write the brightness high if we're not driving
-        //by camera.
-        Hardware.ringLightRelay.set(Value.kOff);
-        Hardware.axisCamera.writeBrightness(
-                Hardware.NORMAL_AXIS_CAMERA_BRIGHTNESS);
-        }
     // Print statements to test Hardware on the Robot
     printStatements();
 
@@ -552,16 +445,7 @@ public static void printStatements ()
     // System.out.println(Hardware.ringLightRelay.get());
 } // end printStatements
 
-public static double getRelativeCameraCoordinate (
-        double absoluteCoordinate,
-        boolean isXCoordinate)
-{
-    if (isXCoordinate == true)
-        return (absoluteCoordinate - (cameraXResolution / 2))
-                / (cameraXResolution / 2);
-    return (absoluteCoordinate - (cameraYResolution / 2))
-            / (cameraYResolution / 2);
-}
+
 
 /*
  * ===============================================

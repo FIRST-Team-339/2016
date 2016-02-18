@@ -320,6 +320,34 @@ public void robotInit ()
     Hardware.catapultSolenoid2.set(false);
     Hardware.rightRearEncoder.setReverseDirection(true);
 
+    switch (Hardware.axisCamera.getResolution())
+        {
+        case k640x480:
+            Hardware.drive.setXResolution(640.0);
+            Hardware.drive.setYResolution(480.0);
+            break;
+        case k480x360:
+            Hardware.drive.setXResolution(480.0);
+            Hardware.drive.setYResolution(360.0);
+            break;
+        case k320x240:
+            Hardware.drive.setXResolution(320.0);
+            Hardware.drive.setYResolution(240.0);
+            break;
+        case k240x180:
+            Hardware.drive.setXResolution(240.0);
+            Hardware.drive.setYResolution(180.0);
+            break;
+        case k176x144:
+            Hardware.drive.setXResolution(176.0);
+            Hardware.drive.setYResolution(144.0);
+            break;
+        default:
+        case k160x120:
+            Hardware.drive.setXResolution(160.0);
+            Hardware.drive.setYResolution(120.0);
+            break;
+        }
     // =========================================================
     // User code goes above here
     // =========================================================

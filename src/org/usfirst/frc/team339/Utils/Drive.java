@@ -2,10 +2,17 @@
 package org.usfirst.frc.team339.Utils;
 
 import org.usfirst.frc.team339.Hardware.Hardware;
+import org.usfirst.frc.team339.HardwareInterfaces.KilroyCamera;
 import org.usfirst.frc.team339.HardwareInterfaces.transmission.Transmission_old;
+import edu.wpi.first.wpilibj.Relay;
+import edu.wpi.first.wpilibj.Relay.Value;
+import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.image.NIVisionException;
 
 public class Drive
 {
+
+
 /**
  * Constructor for a Drive object. Should only be called once.
  * 
@@ -16,6 +23,19 @@ public class Drive
 public Drive (Transmission_old transmission)
 {
     this.transmission = transmission;
+}
+
+public Drive (Transmission_old transmission, KilroyCamera camera)
+{
+    this(transmission);
+    this.camera = camera;
+}
+
+public Drive (Transmission_old transmission, KilroyCamera camera,
+        Relay ringLightRelay)
+{
+    this(transmission, camera);
+    this.ringLightRelay = ringLightRelay;
 }
 
 /**
@@ -152,6 +172,114 @@ public void driveContinuous (final double leftJoystickInputValue,
     this.driveForwardInches(9999.0, false, leftJoystickInputValue,
             rightJoystickInputValue);
 } // end driveContinuous()
+
+//TODO work on at home -Alex Kneipp
+public boolean alignByCamera (double percentageDeadBand,
+        double correctionSpeed)
+{
+    if (isAligningByCamera == false)
+        {
+        //say we've started
+        isAligningByCamera = true;
+        //actually start
+        this.cameraTimer.reset();
+        this.cameraTimer.start();
+        //turn down the lights
+        Hardware.axisCamera.writeBrightness(
+                Hardware.MINIMUM_AXIS_CAMERA_BRIGHTNESS);
+        //Woah, that's too dark! Turn on the ringlight someone!
+        Hardware.ringLightRelay.set(Value.kOn);
+        return false;
+        }
+    //If we claim to be driving by camera and we've waitied long enough 
+    //for someone to brighten up the darkness with the ringlight
+    if (isAligningByCamera == true && Hardware.delayTimer.get() >= .75)
+        {
+        //try to take a picture and save it in memory and on the "hard disk"
+        try
+            {
+            Hardware.imageProcessor
+                    .updateImage(Hardware.axisCamera.getImage());
+            Hardware.axisCamera.saveImagesSafely();
+            }
+        //This is NI yelling at us for something being wrong
+        catch (NIVisionException e)
+            {
+            //if something wrong happens, tell the stupid programmers 
+            //who let it happen more information about where it came from
+            e.printStackTrace();
+            }
+        //tell imageProcessor to use the image we just took to look for 
+        //blobs
+        Hardware.imageProcessor.updateParticleAnalysisReports();
+        //tell the programmers where the X coordinate of the center of 
+        //mass of the largest blob
+        //        System.out.println("CenterOfMass: " + Hardware.imageProcessor
+        //                .getParticleAnalysisReports()[0].center_mass_x);
+        //if the center of the largest blob is to the left of our 
+        //acceptable zone around the center
+        if (Hardware.imageProcessor
+                .getParticleAnalysisReports().length > 0
+                && getRelativeCameraCoordinate(Hardware.imageProcessor
+                        .getParticleAnalysisReports()[0].center_mass_x,
+                        true) <= -percentageDeadBand)
+            {
+            //turn left until it is in the zone (will be called over and
+            //over again until the blob is within the acceptable zone)
+            Hardware.transmission.controls(-correctionSpeed,
+                    correctionSpeed);
+            }
+        //if the center of the largest blob is to the right of our 
+        //acceptable zone around the center
+        else if (Hardware.imageProcessor
+                .getParticleAnalysisReports().length > 0
+                && getRelativeCameraCoordinate(Hardware.imageProcessor
+                        .getParticleAnalysisReports()[0].center_mass_x,
+                        true) >= percentageDeadBand)
+            {
+            //turn left until it is in the zone (will be called over and
+            //over again until the blob is within the acceptable zone)
+            Hardware.transmission.controls(correctionSpeed,
+                    -correctionSpeed);
+            }
+        //If the center of the blob is nestled happily in our deadzone
+        else
+            {
+            //We're done, no need to go again.
+            isAligningByCamera = false;
+            //Stop moving
+            Hardware.transmission.controls(0.0, 0.0);
+            return true;
+            }
+        }
+    else
+        {
+        return false;
+        }
+    return false;
+
+}
+
+public double getRelativeCameraCoordinate (
+        double absoluteCoordinate,
+        boolean isXCoordinate)
+{
+    if (isXCoordinate == true)
+        return (absoluteCoordinate - (cameraXResolution / 2))
+                / (cameraXResolution / 2);
+    return (absoluteCoordinate - (cameraYResolution / 2))
+            / (cameraYResolution / 2);
+}
+
+public void setXResolution (double res)
+{
+    this.cameraXResolution = res;
+}
+
+public void setYResolution (double res)
+{
+    this.cameraYResolution = res;
+}
 
 /**
  * Drives forward distance inches with correction. (calls
@@ -957,10 +1085,22 @@ public enum turnWhichWay
  * Constants
  */
 
-// TODO - get Kilroys new turning radius
+// TODO - get Kilroy's new turning radius
 private final double ROBOT_TURNING_RADIUS = 12.0;
 
 private Transmission_old transmission = null;
+
+private KilroyCamera camera = null;
+
+private Relay ringLightRelay = null;
+
+private final Timer cameraTimer = new Timer();
+
+private boolean isAligningByCamera = false;
+
+private double cameraXResolution;
+
+private double cameraYResolution;
 
 private double prevTime = 0.0;
 private double prevLeftDistance = 0.0;
