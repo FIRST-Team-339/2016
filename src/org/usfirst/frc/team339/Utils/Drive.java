@@ -173,114 +173,6 @@ public void driveContinuous (final double leftJoystickInputValue,
             rightJoystickInputValue);
 } // end driveContinuous()
 
-//TODO work on at home -Alex Kneipp
-public boolean alignByCamera (double percentageDeadBand,
-        double correctionSpeed)
-{
-    if (isAligningByCamera == false)
-        {
-        //say we've started
-        isAligningByCamera = true;
-        //actually start
-        this.cameraTimer.reset();
-        this.cameraTimer.start();
-        //turn down the lights
-        Hardware.axisCamera.writeBrightness(
-                Hardware.MINIMUM_AXIS_CAMERA_BRIGHTNESS);
-        //Woah, that's too dark! Turn on the ringlight someone!
-        Hardware.ringLightRelay.set(Value.kOn);
-        return false;
-        }
-    //If we claim to be driving by camera and we've waitied long enough 
-    //for someone to brighten up the darkness with the ringlight
-    if (isAligningByCamera == true && Hardware.delayTimer.get() >= .75)
-        {
-        //try to take a picture and save it in memory and on the "hard disk"
-        try
-            {
-            Hardware.imageProcessor
-                    .updateImage(Hardware.axisCamera.getImage());
-            Hardware.axisCamera.saveImagesSafely();
-            }
-        //This is NI yelling at us for something being wrong
-        catch (NIVisionException e)
-            {
-            //if something wrong happens, tell the stupid programmers 
-            //who let it happen more information about where it came from
-            e.printStackTrace();
-            }
-        //tell imageProcessor to use the image we just took to look for 
-        //blobs
-        Hardware.imageProcessor.updateParticleAnalysisReports();
-        //tell the programmers where the X coordinate of the center of 
-        //mass of the largest blob
-        //        System.out.println("CenterOfMass: " + Hardware.imageProcessor
-        //                .getParticleAnalysisReports()[0].center_mass_x);
-        //if the center of the largest blob is to the left of our 
-        //acceptable zone around the center
-        if (Hardware.imageProcessor
-                .getParticleAnalysisReports().length > 0
-                && getRelativeCameraCoordinate(Hardware.imageProcessor
-                        .getParticleAnalysisReports()[0].center_mass_x,
-                        true) <= -percentageDeadBand)
-            {
-            //turn left until it is in the zone (will be called over and
-            //over again until the blob is within the acceptable zone)
-            Hardware.transmission.controls(-correctionSpeed,
-                    correctionSpeed);
-            }
-        //if the center of the largest blob is to the right of our 
-        //acceptable zone around the center
-        else if (Hardware.imageProcessor
-                .getParticleAnalysisReports().length > 0
-                && getRelativeCameraCoordinate(Hardware.imageProcessor
-                        .getParticleAnalysisReports()[0].center_mass_x,
-                        true) >= percentageDeadBand)
-            {
-            //turn left until it is in the zone (will be called over and
-            //over again until the blob is within the acceptable zone)
-            Hardware.transmission.controls(correctionSpeed,
-                    -correctionSpeed);
-            }
-        //If the center of the blob is nestled happily in our deadzone
-        else
-            {
-            //We're done, no need to go again.
-            isAligningByCamera = false;
-            //Stop moving
-            Hardware.transmission.controls(0.0, 0.0);
-            return true;
-            }
-        }
-    else
-        {
-        return false;
-        }
-    return false;
-
-}
-
-public double getRelativeCameraCoordinate (
-        double absoluteCoordinate,
-        boolean isXCoordinate)
-{
-    if (isXCoordinate == true)
-        return (absoluteCoordinate - (cameraXResolution / 2))
-                / (cameraXResolution / 2);
-    return (absoluteCoordinate - (cameraYResolution / 2))
-            / (cameraYResolution / 2);
-}
-
-public void setXResolution (double res)
-{
-    this.cameraXResolution = res;
-}
-
-public void setYResolution (double res)
-{
-    this.cameraYResolution = res;
-}
-
 /**
  * Drives forward distance inches with correction. (calls
  * driveForwardInches(distance, true, defaultMaxSpeed (1.0),
@@ -1066,6 +958,126 @@ public boolean turnRightDegrees (final double degrees,
             brakeAtEnd, leftJoystickInputValue,
             rightJoystickInputValue));
 } // end turnRightDegrees()
+
+public boolean alignByCamera (double percentageDeadBand,
+        double correctionSpeed)
+{
+    if (isAligningByCamera == false)
+        {
+        //say we've started
+        isAligningByCamera = true;
+        //actually start
+        this.cameraTimer.reset();
+        this.cameraTimer.start();
+        //turn down the lights
+        Hardware.axisCamera.writeBrightness(
+                Hardware.MINIMUM_AXIS_CAMERA_BRIGHTNESS);
+        //Woah, that's too dark! Turn on the ringlight someone!
+        Hardware.ringLightRelay.set(Value.kOn);
+        return false;
+        }
+    //If we claim to be driving by camera and we've waitied long enough 
+    //for someone to brighten up the darkness with the ringlight
+    if (isAligningByCamera == true && Hardware.delayTimer.get() >= .75)
+        {
+        //try to take a picture and save it in memory and on the "hard disk"
+        try
+            {
+            Hardware.imageProcessor
+                    .updateImage(Hardware.axisCamera.getImage());
+            Hardware.axisCamera.saveImagesSafely();
+            }
+        //This is NI yelling at us for something being wrong
+        catch (NIVisionException e)
+            {
+            //if something wrong happens, tell the stupid programmers 
+            //who let it happen more information about where it came from
+            e.printStackTrace();
+            }
+        //tell imageProcessor to use the image we just took to look for 
+        //blobs
+        Hardware.imageProcessor.updateParticleAnalysisReports();
+        //tell the programmers where the X coordinate of the center of 
+        //mass of the largest blob
+        //        System.out.println("CenterOfMass: " + Hardware.imageProcessor
+        //                .getParticleAnalysisReports()[0].center_mass_x);
+        //if the center of the largest blob is to the left of our 
+        //acceptable zone around the center
+        if (Hardware.imageProcessor
+                .getParticleAnalysisReports().length > 0
+                && getRelativeCameraCoordinate(Hardware.imageProcessor
+                        .getParticleAnalysisReports()[0].center_mass_x,
+                        true) <= -percentageDeadBand)
+            {
+            //turn left until it is in the zone (will be called over and
+            //over again until the blob is within the acceptable zone)
+            Hardware.transmission.controls(-correctionSpeed,
+                    correctionSpeed);
+            }
+        //if the center of the largest blob is to the right of our 
+        //acceptable zone around the center
+        else if (Hardware.imageProcessor
+                .getParticleAnalysisReports().length > 0
+                && getRelativeCameraCoordinate(Hardware.imageProcessor
+                        .getParticleAnalysisReports()[0].center_mass_x,
+                        true) >= percentageDeadBand)
+            {
+            //turn left until it is in the zone (will be called over and
+            //over again until the blob is within the acceptable zone)
+            Hardware.transmission.controls(correctionSpeed,
+                    -correctionSpeed);
+            }
+        //If the center of the blob is nestled happily in our deadzone
+        else
+            {
+            //We're done, no need to go again.
+            isAligningByCamera = false;
+            //Stop moving
+            Hardware.transmission.controls(0.0, 0.0);
+            return true;
+            }
+        }
+    else
+        {
+        return false;
+        }
+    return false;
+
+}//end alignByCamera()
+
+public boolean alignByCamera (double percentageDeadBand)
+{
+    //I've decided .45 is a fair correction speed, can tweak later if need be.
+    return alignByCamera(percentageDeadBand, .45);
+}
+
+public boolean alignByCamera ()
+{
+    //I've decided 10% is a fair deadband range for general alignment, can tweak later if need be.
+    return alignByCamera(.1, .45);
+}
+
+
+public double getRelativeCameraCoordinate (
+        double absoluteCoordinate,
+        boolean isXCoordinate)
+{
+    if (isXCoordinate == true)
+        return (absoluteCoordinate - (cameraXResolution / 2))
+                / (cameraXResolution / 2);
+    return (absoluteCoordinate - (cameraYResolution / 2))
+            / (cameraYResolution / 2);
+}
+
+public void setXResolution (double res)
+{
+    this.cameraXResolution = res;
+}
+
+public void setYResolution (double res)
+{
+    this.cameraYResolution = res;
+}
 
 /**
  * enum which describes which way to turn
