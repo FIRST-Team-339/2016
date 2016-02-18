@@ -1,6 +1,5 @@
 package org.usfirst.frc.team339.Utils;
 
-import org.usfirst.frc.team339.Hardware.Hardware;
 import org.usfirst.frc.team339.HardwareInterfaces.IRSensor;
 import org.usfirst.frc.team339.HardwareInterfaces.RobotPotentiometer;
 import edu.wpi.first.wpilibj.SpeedController;
@@ -10,11 +9,12 @@ public class ManipulatorArm
 {
 public ManipulatorArm (SpeedController armMotorController,
         SpeedController intakeMotor,
-        RobotPotentiometer armPot)
+        RobotPotentiometer armPot, IRSensor ballIsInArmSensor)
 {
-	this.motor = armMotorController;
-	this.armPot = armPot;
-	this.intakeMotor = intakeMotor;
+    this.motor = armMotorController;
+    this.armPot = armPot;
+    this.intakeMotor = intakeMotor;
+    this.hasBallSensor = ballIsInArmSensor;
 }
 
 //TODO change so it doens't move beyond soft limit from encoder.
@@ -26,7 +26,7 @@ public ManipulatorArm (SpeedController armMotorController,
  */
 public void moveSlow (int direction)
 {
-	this.move(direction * this.slowSpeed);
+    this.move(direction * this.slowSpeed);
 }
 
 /**
@@ -37,7 +37,7 @@ public void moveSlow (int direction)
  */
 public void moveFast (int direction)
 {
-	this.move(direction * this.maxArmSpeed);
+    this.move(direction * this.maxArmSpeed);
 }
 
 /**
@@ -48,16 +48,16 @@ public void moveFast (int direction)
  */
 public void move (double speed)
 {
-	//If we're currently beyond our soft limits, don't do anything.  Otherwise do what the user wants.
-	if (this.armPot.get() >= this.ARM_SOFT_MAX_DEGREES
-	        || this.armPot.get() <= this.ARM_SOFT_MIN_DEGREES)
-	{
-	this.motor.set(0.0);
-	}
-	else
-	{
-	this.motor.set(speed);
-	}
+    //If we're currently beyond our soft limits, don't do anything.  Otherwise do what the user wants.
+    if (this.armPot.get() >= this.ARM_SOFT_MAX_DEGREES
+            || this.armPot.get() <= this.ARM_SOFT_MIN_DEGREES)
+        {
+        this.motor.set(0.0);
+        }
+    else
+        {
+        this.motor.set(speed);
+        }
 }
 
 /**
@@ -66,16 +66,16 @@ public void move (double speed)
  */
 public void pullInBall ()
 {
-	//If we already have a ball, no need to pull one in.
-	if (this.hasBallSensor.get() != true)
-	{
-	//TODO check to make sure -1 pulls in and not the reverse.
-	this.intakeMotor.set(-1.0);
-	}
-	else
-	{
-	this.stopIntakeArms();
-	}
+    //If we already have a ball, no need to pull one in.
+    if (this.hasBallSensor.get() != true)
+        {
+        //TODO check to make sure -1 pulls in and not the reverse.
+        this.intakeMotor.set(-1.0);
+        }
+    else
+        {
+        this.stopIntakeArms();
+        }
 }
 
 /**
@@ -84,16 +84,16 @@ public void pullInBall ()
  */
 public void pushOutBall ()
 {
-	//Only bother pushing the ball out if we have a ball
-	if (this.hasBallSensor.get() == true)
-	{
-	//TODO check to make sure 1 pushes out and not the reverse.
-	this.intakeMotor.set(1.0);
-	}
-	else
-	{
-	this.stopIntakeArms();
-	}
+    //Only bother pushing the ball out if we have a ball
+    if (this.hasBallSensor.get() == true)
+        {
+        //TODO check to make sure 1 pushes out and not the reverse.
+        this.intakeMotor.set(1.0);
+        }
+    else
+        {
+        this.stopIntakeArms();
+        }
 }
 
 /**
@@ -102,7 +102,7 @@ public void pushOutBall ()
  */
 public boolean ballIsOut ()
 {
-	return !this.hasBallSensor.get();
+    return !this.hasBallSensor.get();
 }
 
 /**
@@ -110,7 +110,12 @@ public boolean ballIsOut ()
  */
 public void stopIntakeArms ()
 {
-	this.intakeMotor.set(0.0);
+    this.intakeMotor.set(0.0);
+}
+
+public void setIntakeArmsSpeed (double speed)
+{
+    this.intakeMotor.set(speed);
 }
 
 /**
@@ -119,14 +124,14 @@ public void stopIntakeArms ()
  */
 public boolean isDown ()
 {
-	if (this.armPot.get() >= this.ARM_SOFT_MAX_DEGREES)
-	{
-	return true;
-	}
-	else
-	{
-	return false;
-	}
+    if (this.armPot.get() >= this.ARM_SOFT_MAX_DEGREES)
+        {
+        return true;
+        }
+    else
+        {
+        return false;
+        }
 }
 
 /**
@@ -135,20 +140,30 @@ public boolean isDown ()
  */
 public boolean isUp ()
 {
-	if (this.armPot.get() <= this.ARM_SOFT_MIN_DEGREES)
-	{
-	return true;
-	}
-	else
-	{
-	return false;
-	}
+    if (this.armPot.get() <= this.ARM_SOFT_MIN_DEGREES)
+        {
+        return true;
+        }
+    else
+        {
+        return false;
+        }
 }
+
+public boolean moveToPosition (armPosition position)
+{
+    return false;
+}
+
+public static enum armPosition
+    {
+    FULL_BACK, FULL_UP, CLEAR_OF_FIRING_ARM;
+    }
 
 private SpeedController intakeMotor = null;
 private SpeedController motor = null;
 private RobotPotentiometer armPot = null;
-private IRSensor hasBallSensor = Hardware.armIR;
+private IRSensor hasBallSensor = null;
 //default maximum arm turn speed proportion
 private double maxArmSpeed = .75;
 //default slow arm turn speed proportion

@@ -46,6 +46,8 @@ import edu.wpi.first.wpilibj.image.NIVisionException;
  */
 public class Teleop
 {
+
+
 /**
  * User Initialization code for teleop mode should go here. Will be
  * called once when the robot enters teleop mode.
@@ -96,79 +98,30 @@ private static edu.wpi.first.wpilibj.DoubleSolenoid.Value Forward;
  */
 public static void periodic ()
 {
-    // If we haven't already started and we've been told to start
-    if (isDrivingByCamera == false
-            && Hardware.rightOperator.getRawButton(5) == true)
+    //block of code to move the arm
+    //TODO set deadzone to variable
+    //TODO ask operators about stuff
+    //TODO change <> stuff and soft max and min
+    if (Math.abs(Hardware.rightOperator.getY()) >= .2
+            && Hardware.armPot.get(270) <= MAX_SOFT_ARM_STOP
+            && Hardware.armPot.get(270) >= MIN_SOFT_ARM_STOP)
         {
-        // say we've started
-        isDrivingByCamera = true;
-        // actually start
-        Hardware.delayTimer.start();
-        // turn down the lights
-        Hardware.axisCamera.writeBrightness(
-                Hardware.MINIMUM_AXIS_CAMERA_BRIGHTNESS);
-        // Woah, that's too dark! Turn on the ringlight someone!
-        Hardware.ringLightRelay.set(Value.kOn);
+        //TODO tweak.
+        Hardware.armMotor.set(Hardware.rightOperator.getY());
         }
-    // If we claim to be driving by camera and we've waited long enough
-    // for someone to brighten up the darkness with the ringlight
-    if (isDrivingByCamera == true && Hardware.delayTimer.get() >= .75)
+
+    //Block of code to pick up ball or push it out
+    if (Hardware.rightOperator.getRawButton(3) == true)
         {
-        // try to take a picture and save it in memory and on the "hard disk"
-        try
-            {
-            Hardware.imageProcessor
-                    .updateImage(Hardware.axisCamera.getImage());
-            Hardware.axisCamera.saveImagesSafely();
-            }
-        // This is NI yelling at us for something being wrong
-        catch (NIVisionException e)
-            {
-            // if something wrong happens, tell the stupid programmers
-            // who let it happen more information about where it came from.
-            e.printStackTrace();
-            }
-        // tell imageProcessor to use the image we just took to look for
-        // blobs
-        Hardware.imageProcessor.updateParticleAnalysisReports();
-        // tell the programmers where the X coordinate of the center of
-        // mass of the largest blob
-        System.out.println("CenterOfMass: " + Hardware.imageProcessor
-                .getParticleAnalysisReports()[0].center_mass_x);
-        // if the center of the largest blob is to the left of our
-        // acceptable zone around the center
-        if (Hardware.imageProcessor
-                .getParticleAnalysisReports()[0].center_mass_x <= 145)
-            {
-            // turn left until it is in the zone (will be called over and
-            // over again until the blob is within the acceptable zone)
-            Hardware.transmission.controls(-.5, .5);
-            }
-        // if the center of the largest blob is to the right of our
-        // acceptable zone around the center
-        else if (Hardware.imageProcessor
-                .getParticleAnalysisReports()[0].center_mass_x >= 175)
-            {
-            // turn left until it is in the zone (will be called over and
-            // over again until the blob is within the acceptable zone)
-            Hardware.transmission.controls(.5, -.5);
-            }
-        // If the center of the blob is nestled happily in our deadzone
-        else
-            {
-            // We're done, no need to go again.
-            isDrivingByCamera = false;
-            // Stop moving
-            Hardware.transmission.controls(0.0, 0.0);
-            }
+        Hardware.pickupArm.pullInBall();
         }
-    if (isDrivingByCamera == false)
+    else if (Hardware.rightOperator.getRawButton(4) == true)
         {
-        // We only want to write the brightness high if we're not driving
-        // by camera.
-        Hardware.ringLightRelay.set(Value.kOff);
-        Hardware.axisCamera.writeBrightness(
-                Hardware.NORMAL_AXIS_CAMERA_BRIGHTNESS);
+        Hardware.pickupArm.pushOutBall();
+        }
+    else
+        {
+        Hardware.pickupArm.stopIntakeArms();
         }
     // Print statements to test Hardware on the Robot
     printStatements();
@@ -184,7 +137,7 @@ public static void periodic ()
             Hardware.rightOperator.getRawButton(10), false, true);
 } // end Periodic
 
-static boolean isDrivingByCamera = false;
+
 
 
 /**
@@ -226,7 +179,7 @@ public static void driveRobot ()
 public static boolean armIsUp = false;
 
 /**
- * ^^^Bring the boolean armStatus
+ * ^^^Bring the boolean armIsUp
  * if method is moved to a different class.^^^
  * 
  * @param upState
@@ -270,8 +223,10 @@ public static void runCameraSolenoid (boolean upState,
 
 }
 
+public boolean fire (int power)
+{
 
-
+}
 
 /**
  * Takes a picture, processes it and saves it with left operator joystick
@@ -528,15 +483,22 @@ private static final double MAXIMUM_TELEOP_SPEED = 1.0;
 
 private static final double FIRST_GEAR_PERCENTAGE = 0.5;
 
-private static final double SECOND_GEAR_PERCENTAGE = MAXIMUM_TELEOP_SPEED;
+private static final double SECOND_GEAR_PERCENTAGE =
+        MAXIMUM_TELEOP_SPEED;
 
 private static final int GEAR_UPSHIFT_JOYSTICK_BUTTON = 3;
 
 private static final int GEAR_DOWNSHIFT_JOYSTICK_BUTTON = 2;
 
+//TODO completely arbitrary and move to manipulator arm class
+private static final double MAX_SOFT_ARM_STOP = 200;
+private static final int MIN_SOFT_ARM_STOP = 0;
+
 // ==========================================
 // TUNEABLES
 // ==========================================
+
+static boolean isDrivingByCamera = false;
 
 private static boolean processingImage = true;
 
