@@ -99,7 +99,7 @@ public static void periodic ()
     //If we haven't already started and we've been told to start
     if (isDrivingByCamera == false
             && Hardware.rightOperator.getRawButton(5) == true)
-        {
+    {
         //say we've started
         isDrivingByCamera = true;
         //actually start
@@ -109,25 +109,25 @@ public static void periodic ()
                 Hardware.MINIMUM_AXIS_CAMERA_BRIGHTNESS);
         //Woah, that's too dark! Turn on the ringlight someone!
         Hardware.ringLightRelay.set(Value.kOn);
-        }
+    }
     //If we claim to be driving by camera and we've waitied long enough 
     //for someone to brighten up the darness with the ringlight
     if (isDrivingByCamera == true && Hardware.delayTimer.get() >= .75)
-        {
+    {
         //try to take a picture and save it in memory and on the "hard disk"
         try
-            {
+        {
             Hardware.imageProcessor
                     .updateImage(Hardware.axisCamera.getImage());
             Hardware.axisCamera.saveImagesSafely();
-            }
+        }
         //This is NI yelling at us for something being wrong
         catch (NIVisionException e)
-            {
+        {
             //if something wrong happens, tell the stupid programmers 
             //who let it happen more information about where it came from
             e.printStackTrace();
-            }
+        }
         //tell imageProcessor to use the image we just took to look for 
         //blobs
         Hardware.imageProcessor.updateParticleAnalysisReports();
@@ -139,37 +139,37 @@ public static void periodic ()
         //acceptable zone around the center
         if (Hardware.imageProcessor
                 .getParticleAnalysisReports()[0].center_mass_x <= 145)
-            {
+        {
             //turn left until it is in the zone (will be called over and
             //over again until the blob is within the acceptable zone)
             Hardware.transmission.controls(-.5, .5);
-            }
+        }
         //if the center of the largest blob is to the right of our 
         //acceptable zone around the center
         else if (Hardware.imageProcessor
                 .getParticleAnalysisReports()[0].center_mass_x >= 175)
-            {
+        {
             //turn left until it is in the zone (will be called over and
             //over again until the blob is within the acceptable zone)
             Hardware.transmission.controls(.5, -.5);
-            }
+        }
         //If the center of the blob is nestled happily in our deadzone
         else
-            {
+        {
             //We're done, no need to go again.
             isDrivingByCamera = false;
             //Stop moving
             Hardware.transmission.controls(0.0, 0.0);
-            }
         }
+    }
     if (isDrivingByCamera == false)
-        {
+    {
         //We only want to write the brightness high if we're not driving
         //by camera.
         Hardware.ringLightRelay.set(Value.kOff);
         Hardware.axisCamera.writeBrightness(
                 Hardware.NORMAL_AXIS_CAMERA_BRIGHTNESS);
-        }
+    }
     // Print statements to test Hardware on the Robot
     printStatements();
 
@@ -199,32 +199,31 @@ public static void driveRobot ()
     // Hardware.leftDriver.getY());
     Hardware.transmission.setJoysticksAreReversed(true);
     if (Hardware.rightDriver.getTrigger() == true && done == false)
-        {
+    {
 
         done = Hardware.drive.turnLeftDegrees(90);
         // done = Hardware.drive.driveForwardInches(48.0);
 
-        }
+    }
     // If we're pressing the upshift button, shift up.
     Hardware.transmission.controls(Hardware.rightDriver.getY(),
             Hardware.leftDriver.getY());
     // If we're pressing the upshift button, shift up.
     if (Hardware.rightDriver
             .getRawButton(GEAR_UPSHIFT_JOYSTICK_BUTTON) == true)
-        {
+    {
         Hardware.transmission.upshift(1);
-        }
+    }
     // If we press the downshift button, shift down.
     if (Hardware.rightDriver
             .getRawButton(GEAR_DOWNSHIFT_JOYSTICK_BUTTON) == true)
-        {
+    {
         Hardware.transmission.downshift(1);
-        }
+    }
 }
 
-// Really poor boolean name. Needs to be non arbitrary.
-// What does it mean if the armStatus is true?
-public static boolean armStatus = false;
+
+public static boolean armIsUp = false;
 
 /**
  * ^^^Bring the boolean armStatus
@@ -250,24 +249,24 @@ public static boolean armStatus = false;
 public static void runCameraSolenoid (boolean upState,
         boolean downState, boolean holdState, boolean toggle)
 {
-    if (upState && toggle == true && armStatus == false)
-        {
+    if (upState && toggle == true && armIsUp == false)
+    {
         Hardware.cameraSolenoid.set(DoubleSolenoid.Value.kForward);
-        armStatus = true;
-        }
-    else if (downState && toggle == true && armStatus == true)
-        {
+        armIsUp = true;
+    }
+    else if (downState && toggle == true && armIsUp == true)
+    {
         Hardware.cameraSolenoid.set(DoubleSolenoid.Value.kReverse);
-        armStatus = false;
-        }
+        armIsUp = false;
+    }
     else if (holdState && toggle == false)
-        {
+    {
         Hardware.cameraSolenoid.set(DoubleSolenoid.Value.kForward);
-        }
+    }
     else
-        {
+    {
         Hardware.cameraSolenoid.set(DoubleSolenoid.Value.kReverse);
-        }
+    }
 
 }
 
@@ -290,17 +289,17 @@ public static void takePicture ()
     //	 light to turn on.
     if (Hardware.leftOperator.getRawButton(6) == true
             && Hardware.leftOperator.getRawButton(7) == true)
-        {
+    {
         if (prepPic == false)
-            {
+        {
             Hardware.axisCamera.writeBrightness(
                     Hardware.MINIMUM_AXIS_CAMERA_BRIGHTNESS);
             Hardware.ringLightRelay.set(Value.kOn);
             Hardware.delayTimer.start();
             prepPic = true;
             takingLitImage = true;
-            }
         }
+    }
     // --------------------------------------------------------------------------
     // ---CAMERA
     // TEST------------------------------------------------------------
@@ -332,13 +331,13 @@ public static void takePicture ()
     // other pictures.
     if (Hardware.leftOperator.getRawButton(10) == true &&
             Hardware.leftOperator.getRawButton(11) == true)
-        {
+    {
         if (takingUnlitImage == false)
-            {
+        {
             takingUnlitImage = true;
             Hardware.axisCamera.saveImagesSafely();
-            }
         }
+    }
     else
         takingUnlitImage = false;
 
@@ -350,26 +349,26 @@ public static void takePicture ()
     // the trigger, then the boolean resets itself to false to take
     // pictures again.
     if (Hardware.leftOperator.getTrigger() == true)
-        {
+    {
         if (processingImage == true)
-            {
+        {
             processImage();
             processingImage = false;
-            }
         }
+    }
 
     // TODO TESTING CODE. REMOVE ASAP.
     // If we're pressing button 4
     if (Hardware.leftOperator.getRawButton(4) == true)
-        {
+    {
 
         if (Hardware.delayTimer.get() == 0)
-            {
+        {
             Hardware.axisCamera.writeBrightness(
                     Hardware.MINIMUM_AXIS_CAMERA_BRIGHTNESS);
             Hardware.delayTimer.start();
             Hardware.ringLightRelay.set(Value.kOn);
-            }
+        }
 
 
         // process taken images
@@ -379,11 +378,11 @@ public static void takePicture ()
         // {
 
         // }
-        }
+    }
     // System.out.println(
     // "The delay timer is " + Hardware.delayTimer.get());
     if (Hardware.delayTimer.get() >= 1.0)
-        {
+    {
         // Hardware.axisCamera.writeBrightness(
         // Hardware.NORMAL_AXIS_CAMERA_BRIGHTNESS);
         Hardware.axisCamera.saveImagesSafely();
@@ -391,15 +390,15 @@ public static void takePicture ()
         // Updates image when the 4th button is pressed and prints number
         // of blobs
         try
-            {
+        {
             Hardware.imageProcessor
                     .updateImage(Hardware.axisCamera.getImage());
-            }
+        }
         catch (NIVisionException e)
-            {
+        {
             // TODO Auto-generated catch block
             e.printStackTrace();
-            }
+        }
         Hardware.imageProcessor.updateParticleAnalysisReports();
         System.out.println("Number of blobs equals: "
                 + Hardware.imageProcessor.getNumBlobs());
@@ -408,7 +407,7 @@ public static void takePicture ()
         Hardware.delayTimer.stop();
         Hardware.delayTimer.reset();
 
-        }
+    }
 } // end Periodic
 
 static boolean hasBegunTurning = true;
