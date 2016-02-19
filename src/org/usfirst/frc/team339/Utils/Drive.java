@@ -959,8 +959,31 @@ public boolean turnRightDegrees (final double degrees,
             rightJoystickInputValue));
 } // end turnRightDegrees()
 
+/**
+ * Turn the robot until it has the largest blob in its vision processing
+ * array at roughly the center of its vision.
+ * 
+ * @param percentageDeadBand
+ *            -The percentage from the center to the edge of the image that
+ *            the blob must rest within.
+ * @param correctionSpeed
+ *            -The speed at which the robot should turn to get the target in
+ *            the center. Be careful though, if the deadband is too narrow
+ *            and the speed to high, the robot will oscillate around the
+ *            center or stop on the other side of the deadband.
+ * @param savePictures
+ *            -Boolean to determine whether we want to save up to 10 images
+ *            taken for manual processing later. No guarantee that they
+ *            will not be overridden by another call to saveImagesSafely
+ *            somewhere else, so they may not actually be on the drive
+ *            after the match.
+ * @return
+ *         -True if we're done centering, false otherwise.
+ * @author Alex Kneipp
+ */
+//TODO correct for offset camera
 public boolean alignByCamera (double percentageDeadBand,
-        double correctionSpeed)
+        double correctionSpeed, boolean savePictures)
 {
     if (isAligningByCamera == false)
         {
@@ -985,7 +1008,8 @@ public boolean alignByCamera (double percentageDeadBand,
             {
             Hardware.imageProcessor
                     .updateImage(Hardware.axisCamera.getImage());
-            Hardware.axisCamera.saveImagesSafely();
+            if (savePictures == true)
+                Hardware.axisCamera.saveImagesSafely();
             }
         //This is NI yelling at us for something being wrong
         catch (NIVisionException e)
@@ -1011,8 +1035,9 @@ public boolean alignByCamera (double percentageDeadBand,
             {
             //turn left until it is in the zone (will be called over and
             //over again until the blob is within the acceptable zone)
-            Hardware.transmission.controls(-correctionSpeed,
-                    correctionSpeed);
+            //TODO check and make sure this still doesn't work, then 
+            //change it back or write turn continuous method
+            this.turnLeftDegrees(5, false);
             }
         //if the center of the largest blob is to the right of our 
         //acceptable zone around the center
@@ -1022,10 +1047,9 @@ public boolean alignByCamera (double percentageDeadBand,
                         .getParticleAnalysisReports()[0].center_mass_x,
                         true) >= percentageDeadBand)
             {
-            //turn left until it is in the zone (will be called over and
+            //turn right until it is in the zone (will be called over and
             //over again until the blob is within the acceptable zone)
-            Hardware.transmission.controls(correctionSpeed,
-                    -correctionSpeed);
+            this.turnRightDegrees(5, false);
             }
         //If the center of the blob is nestled happily in our deadzone
         else
@@ -1037,13 +1061,15 @@ public boolean alignByCamera (double percentageDeadBand,
             return true;
             }
         }
-    else
-        {
-        return false;
-        }
     return false;
 
 }//end alignByCamera()
+
+public boolean alignByCamera (double percentageDeadBand,
+        double correctionSpeed)
+{
+    return alignByCamera(percentageDeadBand, correctionSpeed, false);
+}
 
 public boolean alignByCamera (double percentageDeadBand)
 {
