@@ -1021,9 +1021,11 @@ private static int getLane ()
 {
 	int position = Hardware.startingPositionDial.getPosition();
 
+	//-1 is returned when there is no signal. 
 	if (position == -1)
+	//Go to lane 1 by default.
 	{
-	position = 0;
+	position = 1;
 	}
 
 	position = position + 1;
@@ -1087,6 +1089,7 @@ private static boolean hasTurnedBasedOnSign (double degrees)
 /**
  * Contains distances and speeds at which to drive.
  *
+ * TODO: Figure out reasonable speeds, etc.
  */
 private static final class DriveInformation
 {
@@ -1111,12 +1114,12 @@ static final double[] MOTOR_RATIO_TO_OUTER_WORKS =
  */
 static final double[] MOTOR_RATIO_TO_A_LINE =
         {
-                0.0,
-                0.5,
-                0.6,
-                0.4,
-                0.4,
-                0.6
+                0.0, //PLACEHOLDER
+                0.5, //lane 1
+                0.6, //lane 2
+                0.4, //lane 3
+                0.4, //lane 4
+                0.6  //lane 5
         };
 
 /**
@@ -1154,12 +1157,12 @@ static final double[] FORWARDS_FROM_ALIGNMENT_LINE_DISTANCE =
  */
 static final double[] FORWARDS_FROM_ALIGNMENT_LINE_MOTOR_RATIO =
         {
-                0.0,
-                0.4,
-                0.4,
-                0.3,
-                0.3,
-                0.4
+                0.0, // nothing. Not used. Arbitrary; makes it work.
+                0.4, //lane 1
+                0.4, //lane 2
+                0.3, //lane 3
+                0.3, //lane 4
+                0.4  //lane 5
         };
 
 /**
@@ -1221,8 +1224,16 @@ private static final double DISTANCE_TO_OUTER_WORKS = 22.75;
  */
 private static final double DISTANCE_OVER_OUTER_WORKS = 96.25;
 
+/**
+ * Motor ratio at which we move over outer works.
+ * TODO: possibly make into array.
+ */
 private static final double OUTER_WORKS_MOTOR_RATIO = 0.4;
 
+/**
+ * Speed at which to make turns by default.
+ * TODO: figure out a reasonable speed.
+ */
 private static final double DEFAULT_TURN_SPEED = 0.28;
 
 }
