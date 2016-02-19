@@ -314,7 +314,7 @@ public static Drive drive = new Drive(transmission);
 // -------------------
 
 public static ManipulatorArm pickupArm = new ManipulatorArm(armMotor,
-        armIntakeMotor, armPot);
+        armIntakeMotor, armPot, armIR);
 
 
 // ------------------------------------
