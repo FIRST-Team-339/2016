@@ -467,12 +467,13 @@ public static void printStatements ()
     // IR sensors-----------
     // System.out.println("left IR = " + Hardware.leftIR.isOn());
     // System.out.println("right IR = " + Hardware.rightIR.isOn());
+    System.out.println("Has ball IR = " + Hardware.armIR.isOn());
 
     // pots-----------------
     // System.out.println("delay pot = " + (int) Hardware.delayPot.get());
     // prints the value of the transducer- (range in code is 50)
     // hits psi of 100 accurately
-    // System.out.println("transducer = " + Hardware.transducer.get());
+    System.out.println("transducer = " + Hardware.transducer.get());
     // System.out.println("Test Pot = " + Hardware.armPot.get());
 
     // Motor controllers-----
@@ -490,12 +491,12 @@ public static void printStatements ()
     // Solenoids-------------
     // prints the state of the solenoids
     // System.out.println("cameraSolenoid = " + Hardware.cameraSolenoid.get());
-    // System.out.println("catapultSolenoid0 = " +
-    // Hardware.catapultSolenoid0.get());
-    // System.out.println("catapultSolenoid1 = " +
-    // Hardware.catapultSolenoid1.get());
-    // System.out.println("catapultSolenoid2 = " +
-    // Hardware.catapultSolenoid2.get());
+    System.out.println("catapultSolenoid0 = " +
+            Hardware.catapultSolenoid0.get());
+    System.out.println("catapultSolenoid1 = " +
+            Hardware.catapultSolenoid1.get());
+    System.out.println("catapultSolenoid2 = " +
+            Hardware.catapultSolenoid2.get());
 
     // Encoders-------------
     // System.out.println(
