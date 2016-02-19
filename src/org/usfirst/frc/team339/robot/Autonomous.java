@@ -1025,7 +1025,7 @@ private static int getLane ()
 	if (position == -1)
 	//Go to lane 1 by default.
 	{
-	position = 1;
+	position = 0;
 	}
 
 	position = position + 1;
