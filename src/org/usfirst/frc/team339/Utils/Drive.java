@@ -978,7 +978,10 @@ public boolean turnRightDegrees (final double degrees,
  *            somewhere else, so they may not actually be on the drive
  *            after the match.
  * @return
- *         -True if we're done centering, false otherwise.
+ *         -True if we're done centering, false otherwise. Especially
+ *         false if we don't have a camera or ringlight. How does one
+ *         test for an "especially false" value you ask, well that's for
+ *         me to not know and you to laugh at.
  * @author Alex Kneipp
  */
 //TODO correct for offset camera, probably add arg to accomodate for it
@@ -1075,18 +1078,58 @@ public boolean alignByCamera (double percentageDeadBand,
 
 }//end alignByCamera()
 
+/**
+ * 2 argument override method of alignByCamera(double,double,boolean),
+ * presumes that the caller doesn't want to save images taken to the
+ * "Hard drive." If that sounds like something you do want to do, try
+ * alignByCamera(double,double,boolean)
+ * 
+ * @param percentageDeadBand
+ *            -See alignByCamera(double, double, boolean)
+ * @param correctionSpeed
+ *            -See alignByCamera(double, double, boolean)
+ * @return
+ *         -See alignByCamera(double, double, boolean)
+ * @author Alex Kneipp
+ */
 public boolean alignByCamera (double percentageDeadBand,
         double correctionSpeed)
 {
     return alignByCamera(percentageDeadBand, correctionSpeed, false);
 }
 
+/**
+ * 1 argument override method of alignByCamera(double,double,boolean)
+ * presumes that the caller doesn't want to save images taken to the
+ * "Hard drive," and that the caller doesn't want to set the turning
+ * speed for the correction.
+ * If either of those sound like something you do want to do, try
+ * alignByCamera(double,double,boolean)
+ * 
+ * @param percentageDeadBand
+ *            -See alignByCamera(double, double, boolean)
+ * @return
+ *         -See alignByCamera(double, double, boolean)
+ * @author Alex Kneipp
+ */
 public boolean alignByCamera (double percentageDeadBand)
 {
     //I've decided .45 is a fair correction speed, can tweak later if need be.
     return alignByCamera(percentageDeadBand, .45);
 }
 
+/**
+ * No argument override method of alignByCamera(double,double,boolean),
+ * for lazy programmers. Presumes you just want the default values,
+ * cause you're lazy. If you're not lazy and you indeed do want to
+ * control whether or not the alignByCamera method saves images taken,
+ * the deadband percentage size, or the turning speed of the alignment,
+ * see the other methods with the same name.
+ * 
+ * @return
+ *         -See alignByCamera(double, double, boolean)
+ * @author Alex Kneipp
+ */
 public boolean alignByCamera ()
 {
     //I've decided 10% is a fair deadband range for general alignment, can tweak later if need be.
