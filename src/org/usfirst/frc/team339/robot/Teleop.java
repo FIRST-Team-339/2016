@@ -32,6 +32,7 @@
 package org.usfirst.frc.team339.robot;
 
 import org.usfirst.frc.team339.Hardware.Hardware;
+import org.usfirst.frc.team339.Utils.Guidance;
 import org.usfirst.frc.team339.Utils.ManipulatorArm;
 import edu.wpi.first.wpilibj.CameraServer;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
@@ -84,9 +85,9 @@ public static void init ()
 } // end Init
 
 
-private char[] reports;
+//private char[] reports;
 private static boolean done = false;
-private static boolean done2 = false;
+//private static boolean done2 = false;
 private static edu.wpi.first.wpilibj.DoubleSolenoid.Value Reverse;
 private static edu.wpi.first.wpilibj.DoubleSolenoid.Value Forward;
 
@@ -128,6 +129,7 @@ public static void periodic ()
         Hardware.cameraSolenoid.set(Reverse);
         cameraIsUp = false;
         }
+    //end raise/lower camera block
 
     //Block of code to align us on the goal using the camera
     if (Hardware.rightOperator.getTrigger() == true)
@@ -146,6 +148,7 @@ public static void periodic ()
             isAligningByCamera = false;
             }
         }
+    //end alignByCameraBlock
 
     // Block of code to pick up ball or push it out
     //pull in the ball if the pull in button is pressed.
@@ -185,6 +188,41 @@ public static void periodic ()
             // if we're done firing, drop the request
             fireRequested = false;
         }
+    //end fire block
+
+    //block of code to tell the drivers where to go
+    //TODO finish based on camera input and IR sensors
+    //if the rightIR detects HDPE and the left one doesn't
+    if (Hardware.rightIR.isOn() == true
+            && Hardware.leftIR.isOn() == false)
+        {
+        //tell the drivers to spin right a little
+        Hardware.arrowDashboard.setDirection(Guidance.Direction.right);
+        }
+    //if the right side doesn't detect HDPE but the left one does
+    else if (Hardware.rightIR.isOn() == false
+            && Hardware.leftIR.isOn() == true)
+        {
+        //tell the drives to spin left a little
+        Hardware.arrowDashboard.setDirection(Guidance.Direction.left);
+        }
+    //if both of the IR's detect HDPE
+    else if (Hardware.rightIR.isOn() == true
+            && Hardware.leftIR.isOn() == true)
+        {
+        //Tell the drivers to stop and hopefully alignByCamera
+        Hardware.arrowDashboard.setDirection(Guidance.Direction.stop);
+        }
+    //If neither IR detects anything on the ground
+    else if (Hardware.rightIR.isOn() == false
+            && Hardware.leftIR.isOn() == false)
+        {
+        //trust the camera
+        //TODO base these ones on the camera if we have one.
+        }
+    //put the arrows on the screen
+    Hardware.arrowDashboard.update();
+    //End driver direction block
     // Print statements to test Hardware on the Robot
     printStatements();
 
@@ -325,8 +363,8 @@ public static boolean fire (int power)
     if (Hardware.fireTimer.get() >= 1.0)
         {
         Hardware.fireTimer.stop();
-            return true;
-            }
+        return true;
+        }
     return false;
 
 }
@@ -595,7 +633,8 @@ private static final double MAXIMUM_TELEOP_SPEED = 1.0;
 
 private static final double FIRST_GEAR_PERCENTAGE = 0.5;
 
-private static final double SECOND_GEAR_PERCENTAGE = MAXIMUM_TELEOP_SPEED;
+private static final double SECOND_GEAR_PERCENTAGE =
+        MAXIMUM_TELEOP_SPEED;
 // right driver 3
 private static final int GEAR_UPSHIFT_JOYSTICK_BUTTON = 3;
 // right driver 2
