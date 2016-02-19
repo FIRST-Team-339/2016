@@ -452,7 +452,7 @@ private static void runMainStateMachine ()
 
 		case FORWARDS_OVER_OUTER_WORKS:
 			//Drive over Outer Works.
-			if (Hardware.drive.driveForwardInches(
+			if (Hardware.drive.driveStraightByInches(
 			        DriveInformation.DISTANCE_OVER_OUTER_WORKS, false,
 			        DriveInformation.OUTER_WORKS_MOTOR_RATIO,
 			        DriveInformation.OUTER_WORKS_MOTOR_RATIO) == true)
@@ -634,7 +634,7 @@ private static MoveWhileLoweringArmReturn hasLoweredArmAndMoved ()
 	// We can do cat D and B no problem. C is out. A may require extra arm code.
 
 	// Go forth.
-	if ((Hardware.drive.driveForwardInches(
+	if ((Hardware.drive.driveStraightByInches(
 	        DriveInformation.DISTANCE_TO_OUTER_WORKS
 	                * LAB_SCALING_FACTOR,
 	        false,
@@ -740,7 +740,7 @@ private static boolean hasDrivenToTapeByDistance ()
 
 
 	// Drive forwards.
-	if (Hardware.drive.driveForwardInches(
+	if (Hardware.drive.driveStraightByInches(
 	        DriveInformation.DISTANCE_TO_TAPE * LAB_SCALING_FACTOR,
 	        false, DriveInformation.MOTOR_RATIO_TO_A_LINE[lane],
 	        DriveInformation.MOTOR_RATIO_TO_A_LINE[lane]) == true)
@@ -765,7 +765,7 @@ private static boolean hasMovedToTape ()
 	boolean tapeness = false;
 
 	// Move forwards.
-	Hardware.drive.driveContinuous();
+	Hardware.drive.driveStraightContinuous();
 
 	// simply check if we have detected the tape on either side.
 	if (Hardware.leftIR.isOn() || Hardware.rightIR.isOn())
@@ -789,7 +789,7 @@ private static boolean hasMovedFowardsFromTape ()
 	boolean done = false;
 
 	// Drive the distance from the tape to the line normal to the goal.
-	if (Hardware.drive.driveForwardInches(
+	if (Hardware.drive.driveStraightByInches(
 	        DriveInformation.FORWARDS_FROM_ALIGNMENT_LINE_DISTANCE[lane]
 	                * LAB_SCALING_FACTOR,
 	        true,
@@ -850,7 +850,7 @@ private static boolean hasDrivenUpToGoal ()
 	// Have we reached the distance according to drawings.
 	// OR
 	// Have we seen if we have reached cleats of the tower according to IR?
-	if ((Hardware.drive.driveForwardInches(
+	if ((Hardware.drive.driveStraightByInches(
 	        DriveInformation.DRIVE_UP_TO_GOAL[lane]
 	                * LAB_SCALING_FACTOR,
 	        true, DriveInformation.DRIVE_UP_TO_GOAL_MOTOR_RATIO[lane],
