@@ -981,83 +981,94 @@ public boolean turnRightDegrees (final double degrees,
  *         -True if we're done centering, false otherwise.
  * @author Alex Kneipp
  */
-//TODO correct for offset camera
+//TODO correct for offset camera, probably add arg to accomodate for it
 public boolean alignByCamera (double percentageDeadBand,
         double correctionSpeed, boolean savePictures)
 {
-    if (isAligningByCamera == false)
+    //If the stupid programmers didn't give me a camera or relay before
+    //calling this, don't even to align, it would kill me and all my
+    //friend classes.  Trying to align by the camera without a camera...
+    //How stupid can you get, programmers?
+    if (this.camera != null && this.ringLightRelay != null)
         {
-        //say we've started
-        isAligningByCamera = true;
-        //actually start
-        this.cameraTimer.reset();
-        this.cameraTimer.start();
-        //turn down the lights
-        Hardware.axisCamera.writeBrightness(
-                Hardware.MINIMUM_AXIS_CAMERA_BRIGHTNESS);
-        //Woah, that's too dark! Turn on the ringlight someone!
-        Hardware.ringLightRelay.set(Value.kOn);
-        return false;
-        }
-    //If we claim to be driving by camera and we've waitied long enough 
-    //for someone to brighten up the darkness with the ringlight
-    if (isAligningByCamera == true && Hardware.delayTimer.get() >= .75)
-        {
-        //try to take a picture and save it in memory and on the "hard disk"
-        try
+        if (isAligningByCamera == false)
             {
-            Hardware.imageProcessor
-                    .updateImage(Hardware.axisCamera.getImage());
-            if (savePictures == true)
-                Hardware.axisCamera.saveImagesSafely();
+            //say we've started
+            isAligningByCamera = true;
+            //actually start
+            this.cameraTimer.reset();
+            this.cameraTimer.start();
+            //turn down the lights
+            Hardware.axisCamera.writeBrightness(
+                    Hardware.MINIMUM_AXIS_CAMERA_BRIGHTNESS);
+            //Woah, that's too dark! Turn on the ringlight someone!
+            Hardware.ringLightRelay.set(Value.kOn);
+            return false;
             }
-        //This is NI yelling at us for something being wrong
-        catch (NIVisionException e)
+        //If we claim to be driving by camera and we've waitied long enough 
+        //for someone to brighten up the darkness with the ringlight
+        if (isAligningByCamera == true
+                && Hardware.delayTimer.get() >= .75)
             {
-            //if something wrong happens, tell the stupid programmers 
-            //who let it happen more information about where it came from
-            e.printStackTrace();
-            }
-        //tell imageProcessor to use the image we just took to look for 
-        //blobs
-        Hardware.imageProcessor.updateParticleAnalysisReports();
-        //tell the programmers where the X coordinate of the center of 
-        //mass of the largest blob
-        //        System.out.println("CenterOfMass: " + Hardware.imageProcessor
-        //                .getParticleAnalysisReports()[0].center_mass_x);
-        //if the center of the largest blob is to the left of our 
-        //acceptable zone around the center
-        if (Hardware.imageProcessor
-                .getParticleAnalysisReports().length > 0
-                && getRelativeCameraCoordinate(Hardware.imageProcessor
-                        .getParticleAnalysisReports()[0].center_mass_x,
-                        true) <= -percentageDeadBand)
-            {
-            //turn left until it is in the zone (will be called over and
-            //over again until the blob is within the acceptable zone)
-            //TODO check and make sure this still doesn't work, then 
-            //change it back or write turn continuous method
-            this.turnLeftDegrees(2,false);
-        //if the center of the largest blob is to the right of our 
-        //acceptable zone around the center
-        else if (Hardware.imageProcessor
-                .getParticleAnalysisReports().length > 0
-                && getRelativeCameraCoordinate(Hardware.imageProcessor
-                        .getParticleAnalysisReports()[0].center_mass_x,
-                        true) >= percentageDeadBand)
-            {
-            //turn right until it is in the zone (will be called over and
-            //over again until the blob is within the acceptable zone)
-            this.turnRightDegrees(2, false);
-            }
-        //If the center of the blob is nestled happily in our deadzone
-        else
-            {
-            //We're done, no need to go again.
-            isAligningByCamera = false;
-            //Stop moving
-            Hardware.transmission.controls(0.0, 0.0);
-            return true;
+            //try to take a picture and save it in memory and on the "hard disk"
+            try
+                {
+                Hardware.imageProcessor
+                        .updateImage(Hardware.axisCamera.getImage());
+                if (savePictures == true)
+                    Hardware.axisCamera.saveImagesSafely();
+                }
+            //This is NI yelling at us for something being wrong
+            catch (NIVisionException e)
+                {
+                //if something wrong happens, tell the stupid programmers 
+                //who let it happen more information about where it came from
+                e.printStackTrace();
+                }
+            //tell imageProcessor to use the image we just took to look for 
+            //blobs
+            Hardware.imageProcessor.updateParticleAnalysisReports();
+            //tell the programmers where the X coordinate of the center of 
+            //mass of the largest blob
+            //        System.out.println("CenterOfMass: " + Hardware.imageProcessor
+            //                .getParticleAnalysisReports()[0].center_mass_x);
+            //if the center of the largest blob is to the left of our 
+            //acceptable zone around the center
+            if (Hardware.imageProcessor
+                    .getParticleAnalysisReports().length > 0
+                    && getRelativeCameraCoordinate(
+                            Hardware.imageProcessor
+                                    .getParticleAnalysisReports()[0].center_mass_x,
+                            true) <= -percentageDeadBand)
+                {
+                //turn left until it is in the zone (will be called over and
+                //over again until the blob is within the acceptable zone)
+                //TODO check and make sure this still doesn't work, then 
+                //change it back or write turn continuous method
+                this.turnLeftDegrees(2, false);
+                }
+            //if the center of the largest blob is to the right of our 
+            //acceptable zone around the center
+            else if (Hardware.imageProcessor
+                    .getParticleAnalysisReports().length > 0
+                    && getRelativeCameraCoordinate(
+                            Hardware.imageProcessor
+                                    .getParticleAnalysisReports()[0].center_mass_x,
+                            true) >= percentageDeadBand)
+                {
+                //turn right until it is in the zone (will be called over and
+                //over again until the blob is within the acceptable zone)
+                this.turnRightDegrees(2, false);
+                }
+            //If the center of the blob is nestled happily in our deadzone
+            else
+                {
+                //We're done, no need to go again.
+                isAligningByCamera = false;
+                //Stop moving
+                Hardware.transmission.controls(0.0, 0.0);
+                return true;
+                }
             }
         }
     return false;
