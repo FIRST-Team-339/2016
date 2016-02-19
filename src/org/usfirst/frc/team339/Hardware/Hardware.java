@@ -60,7 +60,7 @@ public class Hardware
 // Public Constants
 // ------------------------------------
 public static final int DELAY_POT_DEGREES = 270;
-public static final int TRANSDUCER_MAX_VALUE = 50;
+public static final int TRANSDUCER_MAX_VALUE = 150;
 public static final int ARM_POT_MAX_VALUE = 270;// 360 is a placeholder
 
 // The amount of time the camera is delayed for picture taking, so the light
@@ -104,8 +104,9 @@ public static final Resolution AXIS_RESOLUTION =
 
 public static TalonSRX rightRearMotor = new TalonSRX(2);
 public static TalonSRX leftRearMotor = new TalonSRX(3);
-public static TalonSRX rightFrontMotor = new TalonSRX(1);
-public static TalonSRX leftFrontMotor = new TalonSRX(4);
+// Switched the bottom two ports
+public static TalonSRX rightFrontMotor = new TalonSRX(4);
+public static TalonSRX leftFrontMotor = new TalonSRX(1);
 
 // ------------------------------------
 // Victor classes
@@ -121,7 +122,7 @@ public static VictorSP armIntakeMotor = new VictorSP(5);
 // Relay classes
 // ====================================
 // Relay that controls the RingLight
-public static Relay ringLightRelay = new Relay(0);
+public static Relay ringLightRelay = new Relay(1);
 
 // ------------------------------------
 // Compressor class - runs the compressor

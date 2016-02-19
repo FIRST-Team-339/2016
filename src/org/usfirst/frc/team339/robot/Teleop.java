@@ -99,12 +99,14 @@ private static edu.wpi.first.wpilibj.DoubleSolenoid.Value Forward;
  */
 public static void periodic ()
 {
-    //block of code to move the arm
-    //TODO set deadzone to variable
+    // block of code to move the arm
+    // TODO set deadzone to variable
     if (Math.abs(Hardware.rightOperator.getY()) >= .2)
         {
-        //use the formula for the sign (value/abs(value)) to get the direction we want the motor to go in,
-        //and round it just in case it isn't exactly 1, then cast to an int to make the compiler happy
+        // use the formula for the sign (value/abs(value)) to get the direction
+        // we want the motor to go in,
+        // and round it just in case it isn't exactly 1, then cast to an int to
+        // make the compiler happy
         Hardware.pickupArm
                 .moveFast((int) Math.round(Hardware.rightOperator.getY()
                         / Math.abs(Hardware.rightOperator.getY())));
@@ -145,7 +147,7 @@ public static void periodic ()
             }
         }
 
-    //Block of code to pick up ball or push it out
+    // Block of code to pick up ball or push it out
     //pull in the ball if the pull in button is pressed.
     if (Hardware.rightOperator
             .getRawButton(TAKE_IN_BALL_BUTTON) == true)
@@ -164,23 +166,23 @@ public static void periodic ()
         Hardware.pickupArm.stopIntakeArms();
         }
 
-    //block of code to fire
+    // block of code to fire
     if (Hardware.leftOperator.getTrigger() == true)
         {
         //Tell the code to start firing
         fireRequested = true;
         }
-    //cancel the fire request
+    // cancel the fire request
     if (Hardware.rightOperator.getRawButton(FIRE_CANCEL_BUTTON) == true)
         {
         fireRequested = false;
         }
-    //if we want to fire
+    // if we want to fire
     if (fireRequested == true)
         {
-        //fire
+        // fire
         if (fire(3) == true)
-            //if we're done firing, drop the request
+            // if we're done firing, drop the request
             fireRequested = false;
         }
     // Print statements to test Hardware on the Robot
@@ -323,8 +325,8 @@ public static boolean fire (int power)
     if (Hardware.fireTimer.get() >= 1.0)
         {
         Hardware.fireTimer.stop();
-        return true;
-        }
+            return true;
+            }
     return false;
 
 }
@@ -336,6 +338,14 @@ public static boolean fire (int power)
  */
 public static void takePicture ()
 {
+
+    // A test to turn the ringlight on when we click the right operator
+    // trigger.
+    if (Hardware.rightOperator.getTrigger() == true)
+        {
+        Hardware.ringLightRelay.set(Value.kOn);
+        }
+
     // If we click buttons 6+7 on the left operator joystick, we dim the
     // brightness a lot, turn the ringlight on, and then if we haven't
     // already taken an image then we do and set the boolean to true to
@@ -365,22 +375,22 @@ public static void takePicture ()
     // @TODO Change .25 to a constant, see line 65 under Hardware
     // Replaced '.25' with Hardware.CAMERA_DELAY_TIME' change back if camera
     // fails
-    // if (Hardware.delayTimer.get() >= Hardware.CAMERA_DELAY_TIME
-    // && prepPic == true && takingLitImage == true)
-    // {
-    // Hardware.axisCamera.saveImagesSafely();
-    // prepPic = false;
-    // takingLitImage = false;
-    // }
-    //
-    // if (takingLitImage == false && Hardware.delayTimer.get() >= 1)
-    // {
-    // Hardware.axisCamera.writeBrightness(
-    // Hardware.NORMAL_AXIS_CAMERA_BRIGHTNESS);
-    // Hardware.ringLightRelay.set(Value.kOff);
-    // Hardware.delayTimer.stop();
-    // Hardware.delayTimer.reset();
-    // }
+    if (Hardware.delayTimer.get() >= Hardware.CAMERA_DELAY_TIME
+            && prepPic == true && takingLitImage == true)
+        {
+        Hardware.axisCamera.saveImagesSafely();
+        prepPic = false;
+        takingLitImage = false;
+        }
+
+    if (takingLitImage == false && Hardware.delayTimer.get() >= 1)
+        {
+        Hardware.axisCamera.writeBrightness(
+                Hardware.NORMAL_AXIS_CAMERA_BRIGHTNESS);
+        Hardware.ringLightRelay.set(Value.kOff);
+        Hardware.delayTimer.stop();
+        Hardware.delayTimer.reset();
+        }
 
     // If we click buttons 10+11, we take a picture without the
     // ringlight and set the boolean to true so we don't take a bunch of
@@ -524,11 +534,11 @@ public static void printStatements ()
     System.out.println("Has ball IR = " + Hardware.armIR.isOn());
 
     // pots-----------------
-    System.out.println("delay pot = " + (int) Hardware.delayPot.get());
+    // System.out.println("delay pot = " + (int) Hardware.delayPot.get());
     // prints the value of the transducer- (range in code is 50)
     // hits psi of 100 accurately
     System.out.println("transducer = " + Hardware.transducer.get());
-    System.out.println("Arm Pot = " + Hardware.armPot.get());
+    // System.out.println("Arm Pot = " + Hardware.armPot.get());
 
     // Motor controllers-----
     // prints value of the motors
@@ -545,12 +555,12 @@ public static void printStatements ()
     // Solenoids-------------
     // prints the state of the solenoids
     // System.out.println("cameraSolenoid = " + Hardware.cameraSolenoid.get());
-    System.out.println("catapultSolenoid0 = " +
-            Hardware.catapultSolenoid0.get());
-    System.out.println("catapultSolenoid1 = " +
-            Hardware.catapultSolenoid1.get());
-    System.out.println("catapultSolenoid2 = " +
-            Hardware.catapultSolenoid2.get());
+    // System.out.println("catapultSolenoid0 = " +
+    // Hardware.catapultSolenoid0.get());
+    // System.out.println("catapultSolenoid1 = " +
+    // Hardware.catapultSolenoid1.get());
+    // System.out.println("catapultSolenoid2 = " +
+    // Hardware.catapultSolenoid2.get());
 
     // Encoders-------------
     // System.out.println(
@@ -567,8 +577,8 @@ public static void printStatements ()
     // System.out.println("Shoot Low Switch: " + Hardware.shootLow.isOn());
 
     // print the position of the 6 position switch------------
-    // System.out.println("Position: " +
-    // Hardware.startingPositionDial.getPosition());
+    System.out.println("Position: " +
+            Hardware.startingPositionDial.getPosition());
 
     // Relay-----------------
     // System.out.println(Hardware.ringLightRelay.get());
@@ -585,24 +595,22 @@ private static final double MAXIMUM_TELEOP_SPEED = 1.0;
 
 private static final double FIRST_GEAR_PERCENTAGE = 0.5;
 
-private static final double SECOND_GEAR_PERCENTAGE =
-        MAXIMUM_TELEOP_SPEED;
-//right driver 3
+private static final double SECOND_GEAR_PERCENTAGE = MAXIMUM_TELEOP_SPEED;
+// right driver 3
 private static final int GEAR_UPSHIFT_JOYSTICK_BUTTON = 3;
-//right driver 2
+// right driver 2
 private static final int GEAR_DOWNSHIFT_JOYSTICK_BUTTON = 2;
-//left operator 2
+// left operator 2
 private static final int CAMERA_TOGGLE_BUTTON = 2;
-//Right operator 2
+// Right operator 2
 private static final int FIRE_OVERRIDE_BUTTON = 2;
-//Right operator 3
+// Right operator 3
 private static final int FIRE_CANCEL_BUTTON = 3;
-//left operator 4
+// left operator 4
 private static final int TAKE_IN_BALL_BUTTON = 4;
-//right operator 5
+// right operator 5
 private static final int PUSH_OUT_BALL_BUTTON = 5;
-
-//TODO completely arbitrary and move to manipulator arm class
+// TODO completely arbitrary and move to manipulator arm class
 private static final double MAX_SOFT_ARM_STOP = 200;
 private static final int MIN_SOFT_ARM_STOP = 0;
 
