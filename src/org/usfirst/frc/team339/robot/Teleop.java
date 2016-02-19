@@ -250,7 +250,7 @@ public static boolean fire (int power)
     if (Hardware.transducer.get() >= 100)
         {
         if (Hardware.pickupArm.moveToPosition(
-                ManipulatorArm.armPosition.CLEAR_OF_FIRING_ARM) == true)
+                ManipulatorArm.ArmPosition.CLEAR_OF_FIRING_ARM) == true)
             {
             switch (power)
                 {
