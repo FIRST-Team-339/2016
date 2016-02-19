@@ -1,6 +1,5 @@
 package org.usfirst.frc.team339.Utils;
 
-import org.usfirst.frc.team339.Hardware.Hardware;
 import org.usfirst.frc.team339.HardwareInterfaces.IRSensor;
 import org.usfirst.frc.team339.HardwareInterfaces.RobotPotentiometer;
 import edu.wpi.first.wpilibj.SpeedController;
@@ -10,11 +9,12 @@ public class ManipulatorArm
 {
 public ManipulatorArm (SpeedController armMotorController,
         SpeedController intakeMotor,
-        RobotPotentiometer armPot)
+        RobotPotentiometer armPot, IRSensor ballIsInArmSensor)
 {
 	this.motor = armMotorController;
 	this.armPot = armPot;
 	this.intakeMotor = intakeMotor;
+	this.hasBallSensor = ballIsInArmSensor;
 }
 
 //TODO change so it doens't move beyond soft limit from encoder.
@@ -37,7 +37,7 @@ public void moveSlow (int direction)
  */
 public void moveFast (int direction)
 {
-	this.move(direction * this.maxArmSpeed);
+	this.move(direction * this.MAX_ARM_SPEED);
 }
 
 /**
@@ -113,13 +113,18 @@ public void stopIntakeArms ()
 	this.intakeMotor.set(0.0);
 }
 
+public void setIntakeArmsSpeed (double speed)
+{
+	this.intakeMotor.set(speed);
+}
+
 /**
  * 
  * @return true if arm is down.
  */
 public boolean isDown ()
 {
-	if (this.armPot.get() >= this.ARM_SOFT_MAX_DEGREES)
+	if (this.armPot.get() <= this.ARM_SOFT_MIN_DEGREES)
 	{
 	return true;
 	}
@@ -135,7 +140,7 @@ public boolean isDown ()
  */
 public boolean isUp ()
 {
-	if (this.armPot.get() <= this.ARM_SOFT_MIN_DEGREES)
+	if (this.armPot.get() >= this.ARM_SOFT_MAX_DEGREES)
 	{
 	return true;
 	}
@@ -145,16 +150,86 @@ public boolean isUp ()
 	}
 }
 
+
+/**
+ * 
+ * @return true if arm is out of the way.
+ */
+public boolean isClearOfArm ()
+{
+	if (armPot.get() <= this.ARM_OUT_OF_WAY_DEGREES)
+	{
+	return true;
+	}
+
+	return false;
+}
+
+/**
+ * Moves the arm at full speed to the desired position.
+ * 
+ * @param position
+ *            desired.
+ * @return true when positioning is complete.
+ */
+public boolean moveToPosition (ArmPosition position)
+{
+	boolean done = false;
+
+	switch (position)
+	{
+		case FULL_DOWN:
+			move(-MAX_ARM_SPEED);
+			if (this.isDown())
+			{
+			move(0.0);
+			done = true;
+			}
+			break;
+		case FULL_UP:
+			move(MAX_ARM_SPEED);
+			if (this.isUp())
+			{
+			move(0.0);
+			done = true;
+			}
+			break;
+		default:
+		case CLEAR_OF_FIRING_ARM:
+			move(-MAX_ARM_SPEED);
+			if (this.isClearOfArm() == true)
+			{
+			move(0.0);
+			done = true;
+			}
+			break;
+
+	}
+
+	return false;
+}
+
+/**
+ * 
+ * A set of positions the arm can be in.
+ *
+ */
+public static enum ArmPosition
+	{
+	FULL_DOWN, FULL_UP, CLEAR_OF_FIRING_ARM;
+	}
+
 private SpeedController intakeMotor = null;
 private SpeedController motor = null;
 private RobotPotentiometer armPot = null;
-private IRSensor hasBallSensor = Hardware.armIR;
+private IRSensor hasBallSensor = null;
 //default maximum arm turn speed proportion
-private double maxArmSpeed = .75;
+private final double MAX_ARM_SPEED = .75;
 //default slow arm turn speed proportion
 private double slowSpeed = .5;
 //TODO entirely arbitrary values until we can actually test
 private final double ARM_SOFT_MAX_DEGREES = 20.0;
 private final double ARM_SOFT_MIN_DEGREES = 0.0;
+private final double ARM_OUT_OF_WAY_DEGREES = 10.0;
 
 }

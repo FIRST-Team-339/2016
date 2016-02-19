@@ -18,6 +18,7 @@ package org.usfirst.frc.team339.Hardware;
 import org.usfirst.frc.team339.HardwareInterfaces.DoubleThrowSwitch;
 import org.usfirst.frc.team339.HardwareInterfaces.IRSensor;
 import org.usfirst.frc.team339.HardwareInterfaces.KilroyCamera;
+import org.usfirst.frc.team339.HardwareInterfaces.MomentarySwitch;
 import org.usfirst.frc.team339.HardwareInterfaces.RobotPotentiometer;
 import org.usfirst.frc.team339.HardwareInterfaces.SingleThrowSwitch;
 import org.usfirst.frc.team339.HardwareInterfaces.SixPositionSwitch;
@@ -59,8 +60,8 @@ public class Hardware
 // Public Constants
 // ------------------------------------
 public static final int DELAY_POT_DEGREES = 270;
-public static final int TRANSDUCER_MAX_VALUE = 50;
-public static final int ARM_POT_MAX_VALUE = 360;// 360 is a placeholder
+public static final int TRANSDUCER_MAX_VALUE = 150;
+public static final int ARM_POT_MAX_VALUE = 270;// 360 is a placeholder
 
 // The amount of time the camera is delayed for picture taking, so the light
 // isn't too bright.
@@ -103,8 +104,9 @@ public static final Resolution AXIS_RESOLUTION =
 
 public static TalonSRX rightRearMotor = new TalonSRX(2);
 public static TalonSRX leftRearMotor = new TalonSRX(3);
-public static TalonSRX rightFrontMotor = new TalonSRX(1);
-public static TalonSRX leftFrontMotor = new TalonSRX(4);
+// Switched the bottom two ports
+public static TalonSRX rightFrontMotor = new TalonSRX(4);
+public static TalonSRX leftFrontMotor = new TalonSRX(1);
 
 // ------------------------------------
 // Victor classes
@@ -120,7 +122,7 @@ public static VictorSP armIntakeMotor = new VictorSP(5);
 // Relay classes
 // ====================================
 // Relay that controls the RingLight
-public static Relay ringLightRelay = new Relay(0);
+public static Relay ringLightRelay = new Relay(1);
 
 // ------------------------------------
 // Compressor class - runs the compressor
@@ -233,14 +235,14 @@ public static Solenoid catapultSolenoid2 = new Solenoid(2);
 // Potentiometers
 // -------------------------------------
 // -------------------------------------
-public static RobotPotentiometer delayPot = new RobotPotentiometer(3,
+public static RobotPotentiometer delayPot = new RobotPotentiometer(1,
         DELAY_POT_DEGREES);
 // transducer (written as a potentiometer)
 // set to 50 to hit 100 psi accurately
 public static RobotPotentiometer transducer = new RobotPotentiometer(2,
         TRANSDUCER_MAX_VALUE);
 // to be used with the manipulator arm
-public static RobotPotentiometer armPot = new RobotPotentiometer(1,
+public static RobotPotentiometer armPot = new RobotPotentiometer(3,
         ARM_POT_MAX_VALUE);
 
 
@@ -285,6 +287,8 @@ public static Joystick leftDriver = new Joystick(0);
 public static Joystick rightDriver = new Joystick(1);
 public static Joystick leftOperator = new Joystick(2);
 public static Joystick rightOperator = new Joystick(3);
+public static MomentarySwitch cameraToggleButton =
+        new MomentarySwitch(leftOperator, 2, false);
 
 // **********************************************************
 // Kilroy's Ancillary classes
@@ -317,7 +321,7 @@ public static Drive drive = new Drive(transmission);
 // -------------------
 
 public static ManipulatorArm pickupArm = new ManipulatorArm(armMotor,
-        armIntakeMotor, armPot);
+        armIntakeMotor, armPot, armIR);
 
 
 // ------------------------------------
@@ -326,6 +330,7 @@ public static ManipulatorArm pickupArm = new ManipulatorArm(armMotor,
 public static final Timer kilroyTimer = new Timer();
 public static final Timer autoTimer = new Timer();
 public static final Timer delayTimer = new Timer();
+public static final Timer fireTimer = new Timer();
 public static final ErrorMessage errorMessage = new ErrorMessage(
         true /* append timelog */);
 

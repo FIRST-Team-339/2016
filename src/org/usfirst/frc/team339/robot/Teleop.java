@@ -32,6 +32,7 @@
 package org.usfirst.frc.team339.robot;
 
 import org.usfirst.frc.team339.Hardware.Hardware;
+import org.usfirst.frc.team339.Utils.ManipulatorArm;
 import edu.wpi.first.wpilibj.CameraServer;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.Relay.Value;
@@ -46,6 +47,8 @@ import edu.wpi.first.wpilibj.image.NIVisionException;
  */
 public class Teleop
 {
+
+
 /**
  * User Initialization code for teleop mode should go here. Will be
  * called once when the robot enters teleop mode.
@@ -96,79 +99,91 @@ private static edu.wpi.first.wpilibj.DoubleSolenoid.Value Forward;
  */
 public static void periodic ()
 {
-    // If we haven't already started and we've been told to start
-    if (isDrivingByCamera == false
-            && Hardware.rightOperator.getRawButton(5) == true)
+    // block of code to move the arm
+    // TODO set deadzone to variable
+    if (Math.abs(Hardware.rightOperator.getY()) >= .2)
         {
-        // say we've started
-        isDrivingByCamera = true;
-        // actually start
-        Hardware.delayTimer.start();
-        // turn down the lights
-        Hardware.axisCamera.writeBrightness(
-                Hardware.MINIMUM_AXIS_CAMERA_BRIGHTNESS);
-        // Woah, that's too dark! Turn on the ringlight someone!
-        Hardware.ringLightRelay.set(Value.kOn);
+        // use the formula for the sign (value/abs(value)) to get the direction
+        // we want the motor to go in,
+        // and round it just in case it isn't exactly 1, then cast to an int to
+        // make the compiler happy
+        Hardware.pickupArm
+                .moveFast((int) Math.round(Hardware.rightOperator.getY()
+                        / Math.abs(Hardware.rightOperator.getY())));
         }
-    // If we claim to be driving by camera and we've waited long enough
-    // for someone to brighten up the darkness with the ringlight
-    if (isDrivingByCamera == true && Hardware.delayTimer.get() >= .75)
+    //Block of code to toggle the camera up or down
+    //If the camera is down and we press the button.
+    if (cameraIsUp == false
+            && Hardware.cameraToggleButton.isOn() == true)
         {
-        // try to take a picture and save it in memory and on the "hard disk"
-        try
+        //raise the camera and tell the code that it's up
+        Hardware.cameraSolenoid.set(Forward);
+        cameraIsUp = true;
+        }
+    //If the camera is up and we press the toggle button.
+    if (cameraIsUp == true
+            && Hardware.cameraToggleButton.isOn() == true)
+        {
+        //Drop the camera and tell the code that it's down
+        Hardware.cameraSolenoid.set(Reverse);
+        cameraIsUp = false;
+        }
+
+    //Block of code to align us on the goal using the camera
+    if (Hardware.rightOperator.getTrigger() == true)
+        {
+        //Tell the code to align us to the camera
+        isAligningByCamera = true;
+        }
+    //If we want to point at the goal using the camera
+    if (isAligningByCamera == true)
+        {
+        //TODO outsource both to a variable
+        //Keep trying to point at the goal
+        if (Hardware.drive.alignByCamera(.15, .45) == true)
             {
-            Hardware.imageProcessor
-                    .updateImage(Hardware.axisCamera.getImage());
-            Hardware.axisCamera.saveImagesSafely();
-            }
-        // This is NI yelling at us for something being wrong
-        catch (NIVisionException e)
-            {
-            // if something wrong happens, tell the stupid programmers
-            // who let it happen more information about where it came from.
-            e.printStackTrace();
-            }
-        // tell imageProcessor to use the image we just took to look for
-        // blobs
-        Hardware.imageProcessor.updateParticleAnalysisReports();
-        // tell the programmers where the X coordinate of the center of
-        // mass of the largest blob
-        System.out.println("CenterOfMass: " + Hardware.imageProcessor
-                .getParticleAnalysisReports()[0].center_mass_x);
-        // if the center of the largest blob is to the left of our
-        // acceptable zone around the center
-        if (Hardware.imageProcessor
-                .getParticleAnalysisReports()[0].center_mass_x <= 145)
-            {
-            // turn left until it is in the zone (will be called over and
-            // over again until the blob is within the acceptable zone)
-            Hardware.transmission.controls(-.5, .5);
-            }
-        // if the center of the largest blob is to the right of our
-        // acceptable zone around the center
-        else if (Hardware.imageProcessor
-                .getParticleAnalysisReports()[0].center_mass_x >= 175)
-            {
-            // turn left until it is in the zone (will be called over and
-            // over again until the blob is within the acceptable zone)
-            Hardware.transmission.controls(.5, -.5);
-            }
-        // If the center of the blob is nestled happily in our deadzone
-        else
-            {
-            // We're done, no need to go again.
-            isDrivingByCamera = false;
-            // Stop moving
-            Hardware.transmission.controls(0.0, 0.0);
+            //Once we're in the center, tell the code we no longer care about steering towards the goal
+            isAligningByCamera = false;
             }
         }
-    if (isDrivingByCamera == false)
+
+    // Block of code to pick up ball or push it out
+    //pull in the ball if the pull in button is pressed.
+    if (Hardware.rightOperator
+            .getRawButton(TAKE_IN_BALL_BUTTON) == true)
         {
-        // We only want to write the brightness high if we're not driving
-        // by camera.
-        Hardware.ringLightRelay.set(Value.kOff);
-        Hardware.axisCamera.writeBrightness(
-                Hardware.NORMAL_AXIS_CAMERA_BRIGHTNESS);
+        Hardware.pickupArm.pullInBall();
+        }
+    //push out the ball if the push out button is pressed
+    else if (Hardware.rightOperator
+            .getRawButton(PUSH_OUT_BALL_BUTTON) == true)
+        {
+        Hardware.pickupArm.pushOutBall();
+        }
+    //If neither the pull in or the push out button are pressed, stop the intake motors
+    else
+        {
+        Hardware.pickupArm.stopIntakeArms();
+        }
+
+    // block of code to fire
+    if (Hardware.leftOperator.getTrigger() == true)
+        {
+        //Tell the code to start firing
+        fireRequested = true;
+        }
+    // cancel the fire request
+    if (Hardware.rightOperator.getRawButton(FIRE_CANCEL_BUTTON) == true)
+        {
+        fireRequested = false;
+        }
+    // if we want to fire
+    if (fireRequested == true)
+        {
+        // fire
+        if (fire(3) == true)
+            // if we're done firing, drop the request
+            fireRequested = false;
         }
     // Print statements to test Hardware on the Robot
     printStatements();
@@ -184,7 +199,7 @@ public static void periodic ()
             Hardware.rightOperator.getRawButton(10), false, true);
 } // end Periodic
 
-static boolean isDrivingByCamera = false;
+
 
 
 /**
@@ -226,7 +241,7 @@ public static void driveRobot ()
 public static boolean armIsUp = false;
 
 /**
- * ^^^Bring the boolean armStatus
+ * ^^^Bring the boolean armIsUp
  * if method is moved to a different class.^^^
  * 
  * @param upState
@@ -270,8 +285,51 @@ public static void runCameraSolenoid (boolean upState,
 
 }
 
+/**
+ * Fires the catapult.
+ * 
+ * @param power
+ *            -Can be 1, 2, or 3; corresponds to the amount of solenoids used to
+ *            fire.
+ * @return
+ *         -False if we're not yet done firing, true otherwise.
+ */
+public static boolean fire (int power)
+{
+    if (Hardware.transducer.get() >= 100)
+        {
+        if (Hardware.pickupArm.moveToPosition(
+                ManipulatorArm.ArmPosition.CLEAR_OF_FIRING_ARM) == true)
+            {
+            Hardware.fireTimer.reset();
+            Hardware.fireTimer.start();
+            switch (power)
+                {
+                case 1:
+                    Hardware.catapultSolenoid0.set(true);
+                    break;
+                case 2:
+                    Hardware.catapultSolenoid1.set(true);
+                    Hardware.catapultSolenoid0.set(true);
+                    break;
+                default:
+                case 3:
+                    Hardware.catapultSolenoid0.set(true);
+                    Hardware.catapultSolenoid1.set(true);
+                    Hardware.catapultSolenoid2.set(true);
+                    break;
+                }
+            }
+        }
+    //TODO reduce time to minimum possible
+    if (Hardware.fireTimer.get() >= 1.0)
+        {
+        Hardware.fireTimer.stop();
+            return true;
+            }
+    return false;
 
-
+}
 
 /**
  * Takes a picture, processes it and saves it with left operator joystick
@@ -280,6 +338,14 @@ public static void runCameraSolenoid (boolean upState,
  */
 public static void takePicture ()
 {
+
+    // A test to turn the ringlight on when we click the right operator
+    // trigger.
+    if (Hardware.rightOperator.getTrigger() == true)
+        {
+        Hardware.ringLightRelay.set(Value.kOn);
+        }
+
     // If we click buttons 6+7 on the left operator joystick, we dim the
     // brightness a lot, turn the ringlight on, and then if we haven't
     // already taken an image then we do and set the boolean to true to
@@ -309,22 +375,22 @@ public static void takePicture ()
     // @TODO Change .25 to a constant, see line 65 under Hardware
     // Replaced '.25' with Hardware.CAMERA_DELAY_TIME' change back if camera
     // fails
-    // if (Hardware.delayTimer.get() >= Hardware.CAMERA_DELAY_TIME
-    // && prepPic == true && takingLitImage == true)
-    // {
-    // Hardware.axisCamera.saveImagesSafely();
-    // prepPic = false;
-    // takingLitImage = false;
-    // }
-    //
-    // if (takingLitImage == false && Hardware.delayTimer.get() >= 1)
-    // {
-    // Hardware.axisCamera.writeBrightness(
-    // Hardware.NORMAL_AXIS_CAMERA_BRIGHTNESS);
-    // Hardware.ringLightRelay.set(Value.kOff);
-    // Hardware.delayTimer.stop();
-    // Hardware.delayTimer.reset();
-    // }
+    if (Hardware.delayTimer.get() >= Hardware.CAMERA_DELAY_TIME
+            && prepPic == true && takingLitImage == true)
+        {
+        Hardware.axisCamera.saveImagesSafely();
+        prepPic = false;
+        takingLitImage = false;
+        }
+
+    if (takingLitImage == false && Hardware.delayTimer.get() >= 1)
+        {
+        Hardware.axisCamera.writeBrightness(
+                Hardware.NORMAL_AXIS_CAMERA_BRIGHTNESS);
+        Hardware.ringLightRelay.set(Value.kOff);
+        Hardware.delayTimer.stop();
+        Hardware.delayTimer.reset();
+        }
 
     // If we click buttons 10+11, we take a picture without the
     // ringlight and set the boolean to true so we don't take a bunch of
@@ -465,13 +531,14 @@ public static void printStatements ()
     // IR sensors-----------
     // System.out.println("left IR = " + Hardware.leftIR.isOn());
     // System.out.println("right IR = " + Hardware.rightIR.isOn());
+    System.out.println("Has ball IR = " + Hardware.armIR.isOn());
 
     // pots-----------------
     // System.out.println("delay pot = " + (int) Hardware.delayPot.get());
     // prints the value of the transducer- (range in code is 50)
     // hits psi of 100 accurately
-    // System.out.println("transducer = " + Hardware.transducer.get());
-    // System.out.println("Test Pot = " + Hardware.armPot.get());
+    System.out.println("transducer = " + Hardware.transducer.get());
+    // System.out.println("Arm Pot = " + Hardware.armPot.get());
 
     // Motor controllers-----
     // prints value of the motors
@@ -510,8 +577,8 @@ public static void printStatements ()
     // System.out.println("Shoot Low Switch: " + Hardware.shootLow.isOn());
 
     // print the position of the 6 position switch------------
-    // System.out.println("Position: " +
-    // Hardware.startingPositionDial.getPosition());
+    System.out.println("Position: " +
+            Hardware.startingPositionDial.getPosition());
 
     // Relay-----------------
     // System.out.println(Hardware.ringLightRelay.get());
@@ -529,14 +596,35 @@ private static final double MAXIMUM_TELEOP_SPEED = 1.0;
 private static final double FIRST_GEAR_PERCENTAGE = 0.5;
 
 private static final double SECOND_GEAR_PERCENTAGE = MAXIMUM_TELEOP_SPEED;
-
+// right driver 3
 private static final int GEAR_UPSHIFT_JOYSTICK_BUTTON = 3;
-
+// right driver 2
 private static final int GEAR_DOWNSHIFT_JOYSTICK_BUTTON = 2;
+// left operator 2
+private static final int CAMERA_TOGGLE_BUTTON = 2;
+// Right operator 2
+private static final int FIRE_OVERRIDE_BUTTON = 2;
+// Right operator 3
+private static final int FIRE_CANCEL_BUTTON = 3;
+// left operator 4
+private static final int TAKE_IN_BALL_BUTTON = 4;
+// right operator 5
+private static final int PUSH_OUT_BALL_BUTTON = 5;
+// TODO completely arbitrary and move to manipulator arm class
+private static final double MAX_SOFT_ARM_STOP = 200;
+private static final int MIN_SOFT_ARM_STOP = 0;
 
 // ==========================================
 // TUNEABLES
 // ==========================================
+
+private static boolean isAligningByCamera = false;
+
+private static boolean cameraIsUp = false;
+
+private static boolean isDrivingByCamera = false;
+
+private static boolean fireRequested = false;
 
 private static boolean processingImage = true;
 
