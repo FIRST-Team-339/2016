@@ -110,15 +110,19 @@ public static void periodic ()
                         / Math.abs(Hardware.rightOperator.getY())));
         }
     //Block of code to toggle the camera up or down
+    //If the camera is down and we press the button.
     if (cameraIsUp == false
             && Hardware.cameraToggleButton.isOn() == true)
         {
+        //raise the camera and tell the code that it's up
         Hardware.cameraSolenoid.set(Forward);
         cameraIsUp = true;
         }
+    //If the camera is up and we press the toggle button.
     if (cameraIsUp == true
             && Hardware.cameraToggleButton.isOn() == true)
         {
+        //Drop the camera and tell the code that it's down
         Hardware.cameraSolenoid.set(Reverse);
         cameraIsUp = false;
         }
@@ -126,14 +130,17 @@ public static void periodic ()
     //Block of code to align us on the goal using the camera
     if (Hardware.rightOperator.getTrigger() == true)
         {
+        //Tell the code to align us to the camera
         isAligningByCamera = true;
         }
-
+    //If we want to point at the goal using the camera
     if (isAligningByCamera == true)
         {
         //TODO outsource both to a variable
+        //Keep trying to point at the goal
         if (Hardware.drive.alignByCamera(.15, .45) == true)
             {
+            //Once we're in the center, tell the code we no longer care about steering towards the goal
             isAligningByCamera = false;
             }
         }
@@ -161,6 +168,7 @@ public static void periodic ()
     //block of code to fire
     if (Hardware.leftOperator.getTrigger() == true)
         {
+        //Tell the code to start firing
         fireRequested = true;
         }
     //cancel the fire request
