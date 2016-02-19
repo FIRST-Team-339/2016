@@ -236,7 +236,6 @@ public void robotInit ()
             .setDistancePerPulse(distancePerTickForMotorEncoders);
     Hardware.rightRearEncoder.reset();
 
-    Hardware.rightRearMotor.setInverted(true);
     // --------------------------------------
     // initialize all things with the drive system
     // --------------------------------------
@@ -244,10 +243,17 @@ public void robotInit ()
 
     Hardware.transmission.setJoystickDeadbandRange(.20);
 
+    // @TODO Make sure this is right
+    // Reverses both the right and the left rear motors so that we drive
+    // correctly.
+    Hardware.transmission.rightRearMotorIsReversed(true);
+    Hardware.transmission.rightMotorIsReversed(false);
+    Hardware.transmission.leftMotorIsReversed(false);
+    Hardware.transmission.leftRearMotorIsReversed(true);
     // -------------------------------------
     // AXIS camera initialization
     // -------------------------------------
-    //Set the axis camera brightness to normal
+    // Set the axis camera brightness to normal
     Hardware.axisCamera
             .writeBrightness(Hardware.NORMAL_AXIS_CAMERA_BRIGHTNESS);
     // -------------------------------------
@@ -286,9 +292,9 @@ public void robotInit ()
     // convex hull connecting the two totes when we carry more than one
     // info on cropping image here:
     // http://www.chiefdelphi.com/forums/showthread.php?t=134264
-    //Removed criteria that drops blobs outside the center that was in 
-    //this general area, we need to keep them so we can tell where it is 
-    //on the screen if it isn't in the center
+    // Removed criteria that drops blobs outside the center that was in
+    // this general area, we need to keep them so we can tell where it is
+    // on the screen if it isn't in the center
     // Tells the relay which way is on (kBackward is unable to be used)
     Hardware.ringLightRelay.setDirection(Direction.kForward);
 
