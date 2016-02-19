@@ -32,6 +32,7 @@
 package org.usfirst.frc.team339.robot;
 
 import org.usfirst.frc.team339.Hardware.Hardware;
+import org.usfirst.frc.team339.Utils.ManipulatorArm;
 import edu.wpi.first.wpilibj.CameraServer;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.Relay.Value;
@@ -101,27 +102,48 @@ public static void periodic ()
     //block of code to move the arm
     //TODO set deadzone to variable
     //TODO ask operators about stuff
-    //TODO change <> stuff and soft max and min
-    if (Math.abs(Hardware.rightOperator.getY()) >= .2
-            && Hardware.armPot.get(270) <= MAX_SOFT_ARM_STOP
-            && Hardware.armPot.get(270) >= MIN_SOFT_ARM_STOP)
+    if (Math.abs(Hardware.rightOperator.getY()) >= .2)
         {
-        //TODO tweak.
-        Hardware.armMotor.set(Hardware.rightOperator.getY());
+        //use the formula for the sign (value/abs(value)) to get the direction we want the motor to go in,
+        //and round it just in case it isn't exactly 1, then cast to an int to make the compiler happy
+        Hardware.pickupArm
+                .moveFast((int) Math.round(Hardware.rightOperator.getY()
+                        / Math.abs(Hardware.rightOperator.getY())));
         }
 
     //Block of code to pick up ball or push it out
-    if (Hardware.rightOperator.getRawButton(3) == true)
+    if (Hardware.rightOperator
+            .getRawButton(TAKE_IN_BALL_BUTTON) == true)
         {
         Hardware.pickupArm.pullInBall();
         }
-    else if (Hardware.rightOperator.getRawButton(4) == true)
+    else if (Hardware.rightOperator
+            .getRawButton(PUSH_OUT_BALL_BUTTON) == true)
         {
         Hardware.pickupArm.pushOutBall();
         }
     else
         {
         Hardware.pickupArm.stopIntakeArms();
+        }
+
+    //block of code to fire
+    if (Hardware.leftOperator.getTrigger() == true)
+        {
+        fireRequested = true;
+        }
+    //cancel the fire request
+    if (Hardware.rightOperator.getRawButton(FIRE_CANCEL_BUTTON) == true)
+        {
+        fireRequested = false;
+        }
+    //if we want to fire
+    if (fireRequested == true)
+        {
+        //fire
+        if (fire(3) == true)
+            //if we're done firing, drop the request
+            fireRequested = false;
         }
     // Print statements to test Hardware on the Robot
     printStatements();
@@ -223,8 +245,33 @@ public static void runCameraSolenoid (boolean upState,
 
 }
 
-public boolean fire (int power)
+public static boolean fire (int power)
 {
+    if (Hardware.transducer.get() >= 100)
+        {
+        if (Hardware.pickupArm.moveToPosition(
+                ManipulatorArm.armPosition.CLEAR_OF_FIRING_ARM) == true)
+            {
+            switch (power)
+                {
+                case 1:
+                    Hardware.catapultSolenoid0.set(true);
+                    break;
+                case 2:
+                    Hardware.catapultSolenoid1.set(true);
+                    Hardware.catapultSolenoid0.set(true);
+                    break;
+                default:
+                case 3:
+                    Hardware.catapultSolenoid0.set(true);
+                    Hardware.catapultSolenoid1.set(true);
+                    Hardware.catapultSolenoid2.set(true);
+                    break;
+                }
+            return true;
+            }
+        }
+    return false;
 
 }
 
@@ -485,11 +532,22 @@ private static final double FIRST_GEAR_PERCENTAGE = 0.5;
 
 private static final double SECOND_GEAR_PERCENTAGE =
         MAXIMUM_TELEOP_SPEED;
-
+//right driver 3
 private static final int GEAR_UPSHIFT_JOYSTICK_BUTTON = 3;
-
+//right driver 2
 private static final int GEAR_DOWNSHIFT_JOYSTICK_BUTTON = 2;
-
+//left operator 3
+private static final int CAMERA_UP_BUTTON = 3;
+//left operator 2
+private static final int CAMERA_DOWN_BUTTON = 2;
+//Right operator 2
+private static final int FIRE_OVERRIDE_BUTTON = 2;
+//Right operator 3
+private static final int FIRE_CANCEL_BUTTON = 3;
+//left operator 4
+private static final int TAKE_IN_BALL_BUTTON = 4;
+//right operator 5
+private static final int PUSH_OUT_BALL_BUTTON = 5;
 //TODO completely arbitrary and move to manipulator arm class
 private static final double MAX_SOFT_ARM_STOP = 200;
 private static final int MIN_SOFT_ARM_STOP = 0;
@@ -498,7 +556,9 @@ private static final int MIN_SOFT_ARM_STOP = 0;
 // TUNEABLES
 // ==========================================
 
-static boolean isDrivingByCamera = false;
+private static boolean isDrivingByCamera = false;
+
+private static boolean fireRequested = false;
 
 private static boolean processingImage = true;
 
