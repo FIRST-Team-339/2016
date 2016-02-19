@@ -20,31 +20,42 @@ private static Direction direction = Direction.neutral;
 public void update ()
 {
     switch (direction)
-    {
+        {
         case left:
             SmartDashboard.putBoolean("Left", true);
             SmartDashboard.putBoolean("Right", false);
             SmartDashboard.putBoolean("Straight", false);
+            SmartDashboard.putBoolean("Stop", false);
             break;
 
         case right:
             SmartDashboard.putBoolean("Right", true);
             SmartDashboard.putBoolean("Left", false);
             SmartDashboard.putBoolean("Straight", false);
+            SmartDashboard.putBoolean("Stop", false);
             break;
 
         case neutral:
             SmartDashboard.putBoolean("Right", false);
             SmartDashboard.putBoolean("Left", false);
             SmartDashboard.putBoolean("Straight", false);
+            SmartDashboard.putBoolean("Stop", false);
             break;
 
         case linedUp:
             SmartDashboard.putBoolean("Straight", true);
             SmartDashboard.putBoolean("Right", false);
             SmartDashboard.putBoolean("Left", false);
+            SmartDashboard.putBoolean("Stop", false);
             break;
-    }
+
+        case stop:
+            SmartDashboard.putBoolean("Straight", false);
+            SmartDashboard.putBoolean("Right", false);
+            SmartDashboard.putBoolean("Left", false);
+            SmartDashboard.putBoolean("Stop", true);
+            break;
+        }
 }
 
 /**
@@ -74,7 +85,7 @@ public void setDirection (Direction direction)
  *
  */
 public static enum Direction
-{
-    left, right, neutral, linedUp
-}
+    {
+    left, right, neutral, linedUp, stop
+    }
 }
