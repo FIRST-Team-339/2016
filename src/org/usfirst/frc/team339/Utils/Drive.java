@@ -1037,8 +1037,7 @@ public boolean alignByCamera (double percentageDeadBand,
             //over again until the blob is within the acceptable zone)
             //TODO check and make sure this still doesn't work, then 
             //change it back or write turn continuous method
-            this.turnLeftDegrees(5, false);
-            }
+            this.turnLeftDegrees(2,false);
         //if the center of the largest blob is to the right of our 
         //acceptable zone around the center
         else if (Hardware.imageProcessor
@@ -1049,7 +1048,7 @@ public boolean alignByCamera (double percentageDeadBand,
             {
             //turn right until it is in the zone (will be called over and
             //over again until the blob is within the acceptable zone)
-            this.turnRightDegrees(5, false);
+            this.turnRightDegrees(2, false);
             }
         //If the center of the blob is nestled happily in our deadzone
         else
@@ -1127,17 +1126,20 @@ public enum turnWhichWay
 private final double ROBOT_TURNING_RADIUS = 12.0;
 
 private Transmission_old transmission = null;
-
+//Camera we use for vision processing.
 private KilroyCamera camera = null;
-
+//Relay to control the ring light surrounding the camera for vision 
+//processing
 private Relay ringLightRelay = null;
-
+//Delay timer for the camera so we Don't try to take a picture before 
+//the camera is ready.
 private final Timer cameraTimer = new Timer();
-
+//Boolean so we know whether or not we're currently aligning by camera
+//TODO may no longer be needed.
 private boolean isAligningByCamera = false;
-
+//The horizontal resolution of the camera for the drive class
 private double cameraXResolution;
-
+//The vertical resolution of the camera used in the drive class.
 private double cameraYResolution;
 
 private double prevTime = 0.0;
