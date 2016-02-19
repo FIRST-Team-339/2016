@@ -101,7 +101,6 @@ public static void periodic ()
 {
     // block of code to move the arm
     // TODO set deadzone to variable
-    // TODO ask operators about stuff
     if (Math.abs(Hardware.rightOperator.getY()) >= .2)
         {
         // use the formula for the sign (value/abs(value)) to get the direction
@@ -112,18 +111,56 @@ public static void periodic ()
                 .moveFast((int) Math.round(Hardware.rightOperator.getY()
                         / Math.abs(Hardware.rightOperator.getY())));
         }
+    //Block of code to toggle the camera up or down
+    //If the camera is down and we press the button.
+    if (cameraIsUp == false
+            && Hardware.cameraToggleButton.isOn() == true)
+        {
+        //raise the camera and tell the code that it's up
+        Hardware.cameraSolenoid.set(Forward);
+        cameraIsUp = true;
+        }
+    //If the camera is up and we press the toggle button.
+    if (cameraIsUp == true
+            && Hardware.cameraToggleButton.isOn() == true)
+        {
+        //Drop the camera and tell the code that it's down
+        Hardware.cameraSolenoid.set(Reverse);
+        cameraIsUp = false;
+        }
+
+    //Block of code to align us on the goal using the camera
+    if (Hardware.rightOperator.getTrigger() == true)
+        {
+        //Tell the code to align us to the camera
+        isAligningByCamera = true;
+        }
+    //If we want to point at the goal using the camera
+    if (isAligningByCamera == true)
+        {
+        //TODO outsource both to a variable
+        //Keep trying to point at the goal
+        if (Hardware.drive.alignByCamera(.15, .45) == true)
+            {
+            //Once we're in the center, tell the code we no longer care about steering towards the goal
+            isAligningByCamera = false;
+            }
+        }
 
     // Block of code to pick up ball or push it out
+    //pull in the ball if the pull in button is pressed.
     if (Hardware.rightOperator
             .getRawButton(TAKE_IN_BALL_BUTTON) == true)
         {
         Hardware.pickupArm.pullInBall();
         }
+    //push out the ball if the push out button is pressed
     else if (Hardware.rightOperator
             .getRawButton(PUSH_OUT_BALL_BUTTON) == true)
         {
         Hardware.pickupArm.pushOutBall();
         }
+    //If neither the pull in or the push out button are pressed, stop the intake motors
     else
         {
         Hardware.pickupArm.stopIntakeArms();
@@ -132,6 +169,7 @@ public static void periodic ()
     // block of code to fire
     if (Hardware.leftOperator.getTrigger() == true)
         {
+        //Tell the code to start firing
         fireRequested = true;
         }
     // cancel the fire request
@@ -247,6 +285,15 @@ public static void runCameraSolenoid (boolean upState,
 
 }
 
+/**
+ * Fires the catapult.
+ * 
+ * @param power
+ *            -Can be 1, 2, or 3; corresponds to the amount of solenoids used to
+ *            fire.
+ * @return
+ *         -False if we're not yet done firing, true otherwise.
+ */
 public static boolean fire (int power)
 {
     if (Hardware.transducer.get() >= 100)
@@ -254,6 +301,8 @@ public static boolean fire (int power)
         if (Hardware.pickupArm.moveToPosition(
                 ManipulatorArm.ArmPosition.CLEAR_OF_FIRING_ARM) == true)
             {
+            Hardware.fireTimer.reset();
+            Hardware.fireTimer.start();
             switch (power)
                 {
                 case 1:
@@ -270,9 +319,14 @@ public static boolean fire (int power)
                     Hardware.catapultSolenoid2.set(true);
                     break;
                 }
-            return true;
             }
         }
+    //TODO reduce time to minimum possible
+    if (Hardware.fireTimer.get() >= 1.0)
+        {
+        Hardware.fireTimer.stop();
+            return true;
+            }
     return false;
 
 }
@@ -477,6 +531,7 @@ public static void printStatements ()
     // IR sensors-----------
     // System.out.println("left IR = " + Hardware.leftIR.isOn());
     // System.out.println("right IR = " + Hardware.rightIR.isOn());
+    System.out.println("Has ball IR = " + Hardware.armIR.isOn());
 
     // pots-----------------
     // System.out.println("delay pot = " + (int) Hardware.delayPot.get());
@@ -518,8 +573,7 @@ public static void printStatements ()
     // prints state of switches
     // System.out.println("Autonomous Enabled Switch: " +
     // Hardware.autonomousEnabled.isOn());
-    // System.out
-    // .println("Shoot High Switch: " + Hardware.shootHigh.isOn());
+    // System.out.println("Shoot High Switch: " + Hardware.shootHigh.isOn());
     // System.out.println("Shoot Low Switch: " + Hardware.shootLow.isOn());
 
     // print the position of the 6 position switch------------
@@ -546,10 +600,8 @@ private static final double SECOND_GEAR_PERCENTAGE = MAXIMUM_TELEOP_SPEED;
 private static final int GEAR_UPSHIFT_JOYSTICK_BUTTON = 3;
 // right driver 2
 private static final int GEAR_DOWNSHIFT_JOYSTICK_BUTTON = 2;
-// left operator 3
-private static final int CAMERA_UP_BUTTON = 3;
 // left operator 2
-private static final int CAMERA_DOWN_BUTTON = 2;
+private static final int CAMERA_TOGGLE_BUTTON = 2;
 // Right operator 2
 private static final int FIRE_OVERRIDE_BUTTON = 2;
 // Right operator 3
@@ -565,6 +617,10 @@ private static final int MIN_SOFT_ARM_STOP = 0;
 // ==========================================
 // TUNEABLES
 // ==========================================
+
+private static boolean isAligningByCamera = false;
+
+private static boolean cameraIsUp = false;
 
 private static boolean isDrivingByCamera = false;
 
