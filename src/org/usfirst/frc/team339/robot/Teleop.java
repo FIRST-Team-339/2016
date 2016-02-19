@@ -223,10 +223,10 @@ public static void runCameraSolenoid (boolean upState,
 
 }
 
-public boolean fire (int power)
-{
-
-}
+//public boolean fire (int power)
+//{
+//
+//}
 
 /**
  * Takes a picture, processes it and saves it with left operator joystick
