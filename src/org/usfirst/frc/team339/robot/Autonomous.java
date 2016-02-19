@@ -52,7 +52,7 @@ import edu.wpi.first.wpilibj.vision.AxisCamera.Resolution;
  * TODO: "make it worky".
  * 
  * @author Michael Andrzej Klaczynski
- * @written ath the eleventh stroke of midnight, the 28th of January, Year of
+ * @written at the eleventh stroke of midnight, the 28th of January, Year of
  *          our LORD 2015
  */
 public class Autonomous
@@ -136,6 +136,12 @@ private static enum MainState
 	 * We shoot the cannon ball.
 	 */
 	SHOOT, // adjusts its self (?) and fires the cannon ball.
+
+	/**
+	 * Wait to close the solenoids.
+	 */
+	DELAY_AFTER_SHOOT,
+
 	/**
 	 * We stop, and do nothing else.
 	 */
@@ -193,6 +199,8 @@ private static enum ArmState
 	 */
 	DONE
 	}
+
+
 
 
 // ==========================================
@@ -562,8 +570,14 @@ private static void runMainStateMachine ()
 		case SHOOT:
 			//FIRE!!!
 			shoot();
-			mainState = MainState.DONE;
+			mainState = MainState.DELAY_AFTER_SHOOT;
 			break;
+
+		case DELAY_AFTER_SHOOT:
+			if (hasShot() == true)
+			{
+			mainState = MainState.DONE;
+			}
 
 		default:
 		case DONE:
@@ -585,6 +599,8 @@ private static void mainInit ()
 	Hardware.kilroyTimer.start();
 }
 
+
+
 /**
  * Starts the arm motor downwards and resets the associated encoder.
  */
@@ -592,26 +608,6 @@ private static void beginLoweringArm ()
 {
 	Hardware.armMotor.set(1.0);
 
-}
-
-/**
- * Checks whether or not the pickup arm has been lowered.
- * TODO: Move to ManipulatorArm class?
- * 
- * @return true if it is down.
- */
-private static boolean armIsLowered ()
-{
-	// false by default.
-	boolean done = false;
-
-	if (Hardware.armPot.get() >= ARM_DOWN_DEGREES)
-	// The arm IS down.
-	{
-	done = true;
-	}
-
-	return done;
 }
 
 /**
@@ -626,7 +622,7 @@ private static MoveWhileLoweringArmReturn hasLoweredArmAndMoved ()
 	        MoveWhileLoweringArmReturn.NOT_DONE;
 
 	// the status of the arm being down
-	boolean armIsDown = armIsLowered();
+	boolean armIsDown = Hardware.pickupArm.isDown();
 
 	if (armIsDown == true)
 	{
@@ -695,7 +691,7 @@ private static boolean delayIsDone ()
 	Hardware.delayTimer.reset();
 	}
 
-	if (armIsLowered() == true)
+	if (Hardware.pickupArm.isDown() == true)
 	{
 	Hardware.pickupArm.move(0.0);
 	}
@@ -881,6 +877,7 @@ private static boolean hasDrivenUpToGoal ()
 }
 
 /**
+ * <b> FIRE!!! </b>
  * Shoots the ball. May want to add states/methods to align.
  * 
  */
@@ -889,6 +886,30 @@ private static void shoot ()
 
 	// TODO: write method to shoot cannonball.
 
+	Hardware.catapultSolenoid0.set(true);
+	Hardware.catapultSolenoid1.set(true);
+	Hardware.catapultSolenoid2.set(true);
+
+	Hardware.kilroyTimer.reset();
+	Hardware.kilroyTimer.start();
+}
+
+/**
+ * Wait a second...
+ * Close the solenoids.
+ * 
+ * @return true when delay is up.
+ */
+private static boolean hasShot ()
+{
+	if (Hardware.kilroyTimer.get() > DELAY_TIME_AFTER_SHOOT)
+	{
+	Hardware.catapultSolenoid0.set(false);
+	Hardware.catapultSolenoid1.set(false);
+	Hardware.catapultSolenoid2.set(false);
+	return true;
+	}
+	return false;
 }
 
 /**
@@ -901,6 +922,7 @@ private static void done ()
 	Hardware.transmission.controls(0.0, 0.0);
 	Hardware.armMotor.set(0.0);
 	Hardware.delayTimer.stop();
+
 }
 
 /*
@@ -908,6 +930,9 @@ private static void done ()
  * END OF MAIN AUTONOMOUS STATE METHODS
  * =========================================
  */
+
+
+
 
 /**
  * A separate state machine, used to run arm movements in parallel.
@@ -1022,25 +1047,41 @@ private static void resetEncoders ()
  * COUNTERCLOCKWISE.
  * Kilroy must turn along different paths.
  * You must use this to be versatile.
- * TODO: add parameters for break and speeds.
  */
-private static boolean hasTurnedBasedOnSign (double degrees)
+private static boolean hasTurnedBasedOnSign (double degrees,
+        double turnSpeed)
 {
 	boolean done = false;
 
 	if (degrees < 0)
 	//Turn right. Make degrees positive.
 	{
-	done = Hardware.drive.turnRightDegrees(-degrees, false, 0.28,
-	        -0.28);
+	done = Hardware.drive.turnRightDegrees(-degrees, false,
+	        turnSpeed,
+	        -turnSpeed);
 	}
 	else
 	//Turn left the given number of degrees.
 	{
-	done = Hardware.drive.turnLeftDegrees(degrees, false, -0.28, 0.28);
+	done = Hardware.drive.turnLeftDegrees(degrees, false,
+	        -turnSpeed,
+	        turnSpeed);
 	}
 	return done;
 
+}
+
+/**
+ * For turning in drive based on array of positive and negative values.
+ * Use to turn a number of degrees
+ * COUNTERCLOCKWISE.
+ * Kilroy must turn along different paths.
+ * You must use this to be versatile.
+ */
+private static boolean hasTurnedBasedOnSign (double degrees)
+{
+	return hasTurnedBasedOnSign(degrees,
+	        DriveInformation.DEFAULT_TURN_SPEED);
 }
 
 /**
@@ -1182,6 +1223,8 @@ private static final double DISTANCE_OVER_OUTER_WORKS = 96.25;
 
 private static final double OUTER_WORKS_MOTOR_RATIO = 0.4;
 
+private static final double DEFAULT_TURN_SPEED = 0.28;
+
 }
 
 
@@ -1223,5 +1266,8 @@ private static final boolean DEBUGGING_DEFAULT = true;
  * Factor by which to scale all distances for testing in our small lab space.
  */
 private static final double LAB_SCALING_FACTOR = 0.5;
+
+
+private static final double DELAY_TIME_AFTER_SHOOT = 1.0;
 
 } // end class
