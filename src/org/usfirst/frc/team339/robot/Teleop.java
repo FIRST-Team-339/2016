@@ -68,7 +68,7 @@ public static void init ()
 	Hardware.transmission.setFirstGearPercentage(FIRST_GEAR_PERCENTAGE);
 	Hardware.transmission
 	        .setSecondGearPercentage(SECOND_GEAR_PERCENTAGE);
-	Hardware.transmission.setGear(1);
+    Hardware.transmission.setGear(2);//TODO change back to 1
 	Hardware.transmission.setJoystickDeadbandRange(.20);
 	Hardware.transmission.setJoysticksAreReversed(false);
 	Hardware.ringLightRelay.set(Value.kOff);
@@ -260,26 +260,6 @@ public static void periodic ()
 	Hardware.pickupArm.stopIntakeArms();
 	}
 
-	// Block of code to pick up ball or push it out
-	//pull in the ball if the pull in button is pressed.
-	if (Hardware.rightOperator
-	        .getRawButton(TAKE_IN_BALL_BUTTON) == true)
-	{
-	Hardware.pickupArm.pullInBall();
-	}
-	//push out the ball if the push out button is pressed
-	else if (Hardware.rightOperator
-	        .getRawButton(PUSH_OUT_BALL_BUTTON) == true)
-	{
-	Hardware.pickupArm.pushOutBall();
-	}
-	// If neither the pull in or the push out button are pressed, stop the
-	// intake motors
-	else
-	{
-	Hardware.pickupArm.stopIntakeArms();
-	}
-
 	// block of code to fire
 	if (Hardware.leftOperator.getTrigger() == true)
 	{
@@ -342,12 +322,28 @@ public static void periodic ()
 
 
 	// Driving the Robot
+
+    //TODO delete all conditionals.
+    if (Hardware.leftDriver.getRawButton(8) == true)
+        {
+        isSpeedTesting = true;
+        }
+    if (isSpeedTesting == false)
 	driveRobot();
+    else
+        {
+        if (Hardware.drive.driveStraightByInches(140, true, -.7,
+                -.7) == true)
+            {
+            isSpeedTesting = false;
+            }
+        }
 
 	runCameraSolenoid(Hardware.rightOperator.getRawButton(11),
 	        Hardware.rightOperator.getRawButton(10), false, true);
 } // end Periodic
 
+private static boolean isSpeedTesting = false;
 
 
 
@@ -358,7 +354,6 @@ public static void periodic ()
  */
 public static void driveRobot ()
 {
-
 	//
 	// Hardware.transmission.controls(Hardware.rightDriver.getY(),
 	// Hardware.leftDriver.getY());
@@ -377,26 +372,6 @@ public static void driveRobot ()
 	{
 	Hardware.transmission.downshift(1);
 	}
-
-	//
-	// Hardware.transmission.controls(Hardware.rightDriver.getY(),
-	// Hardware.leftDriver.getY());
-	// If we're pressing the upshift button, shift up.
-	Hardware.transmission.controls(Hardware.leftDriver.getY(),
-	        Hardware.rightDriver.getY());
-	// If we're pressing the upshift button, shift up.
-	if (Hardware.rightDriver
-	        .getRawButton(GEAR_UPSHIFT_JOYSTICK_BUTTON) == true)
-	{
-	Hardware.transmission.upshift(1);
-	}
-	// If we press the downshift button, shift down.
-	if (Hardware.rightDriver
-	        .getRawButton(GEAR_DOWNSHIFT_JOYSTICK_BUTTON) == true)
-	{
-	Hardware.transmission.downshift(1);
-	}
-
 }
 
 
@@ -738,11 +713,6 @@ public static void printStatements ()
 	// System.out.println(
 	// "LR distance = " + Hardware.leftRearEncoder.getDistance());
 	// System.out.println("Arm Motor = " + Hardware.armMotor.getDistance());
-	System.out.println("Left Rear Encoder Tics: " +
-	        Hardware.leftRearEncoder.get());
-	System.out.println("Right Rear Encoder Tics: " +
-	        Hardware.rightRearEncoder.get());
-
 
 	// Switches--------------
 	// prints state of switches
@@ -750,7 +720,6 @@ public static void printStatements ()
 	// Hardware.autonomousEnabled.isOn());
 	// System.out.println("Shoot High Switch: " + Hardware.shootHigh.isOn());
 	// System.out.println("Shoot Low Switch: " + Hardware.shootLow.isOn());
-
 
 	// print the position of the 6 position switch------------
 	//System.out.println("Position: " +
@@ -776,8 +745,7 @@ private static final double MAXIMUM_TELEOP_SPEED = 1.0;
 
 private static final double FIRST_GEAR_PERCENTAGE = 0.5;
 
-private static final double SECOND_GEAR_PERCENTAGE =
-        MAXIMUM_TELEOP_SPEED;
+private static final double SECOND_GEAR_PERCENTAGE = 0.7;
 // right driver 3
 private static final int GEAR_UPSHIFT_JOYSTICK_BUTTON = 3;
 // right driver 2
