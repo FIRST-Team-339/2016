@@ -72,6 +72,9 @@ public static void init ()
 	Hardware.transmission.setJoysticksAreReversed(false);
 	Hardware.ringLightRelay.set(Value.kOff);
 
+    Hardware.arrowDashboard.setDirection(Guidance.Direction.neutral);
+    Hardware.arrowDashboard.update();
+
 	// armEncoder needs to be set to 0
 	Hardware.delayTimer.reset();
 	Hardware.rightRearEncoder.reset();
@@ -144,7 +147,8 @@ public static void periodic ()
 	//Keep trying to point at the goal
 	if (Hardware.drive.alignByCamera(.15, .45) == true)
 	{
-	//Once we're in the center, tell the code we no longer care about steering towards the goal
+            // Once we're in the center, tell the code we no longer care about
+            // steering towards the goal
 	isAligningByCamera = false;
 	}
 	}
@@ -163,7 +167,8 @@ public static void periodic ()
 	{
 	Hardware.pickupArm.pushOutBall();
 	}
-	//If neither the pull in or the push out button are pressed, stop the intake motors
+    // If neither the pull in or the push out button are pressed, stop the
+    // intake motors
 	else
 	{
 	Hardware.pickupArm.stopIntakeArms();
@@ -250,17 +255,9 @@ public static void driveRobot ()
 	//
 	// Hardware.transmission.controls(Hardware.rightDriver.getY(),
 	// Hardware.leftDriver.getY());
-	Hardware.transmission.setJoysticksAreReversed(true);
-	if (Hardware.rightDriver.getTrigger() == true && done == false)
-	{
-
-	done = Hardware.drive.turnLeftDegrees(90);
-	// done = Hardware.drive.driveForwardInches(48.0);
-
-	}
 	// If we're pressing the upshift button, shift up.
-	Hardware.transmission.controls(Hardware.rightDriver.getY(),
-	        Hardware.leftDriver.getY());
+    Hardware.transmission.controls(Hardware.leftDriver.getY(),
+            Hardware.rightDriver.getY());
 	// If we're pressing the upshift button, shift up.
 	if (Hardware.rightDriver
 	        .getRawButton(GEAR_UPSHIFT_JOYSTICK_BUTTON) == true)
@@ -377,12 +374,6 @@ public static boolean fire (int power)
 public static void takePicture ()
 {
 
-	// A test to turn the ringlight on when we click the right operator
-	// trigger.
-	if (Hardware.rightOperator.getTrigger() == true)
-	{
-	Hardware.ringLightRelay.set(Value.kOn);
-	}
 
 	// If we click buttons 6+7 on the left operator joystick, we dim the
 	// brightness a lot, turn the ringlight on, and then if we haven't
@@ -619,8 +610,8 @@ public static void printStatements ()
 	// System.out.println("Shoot Low Switch: " + Hardware.shootLow.isOn());
 
 	// print the position of the 6 position switch------------
-	System.out.println("Position: " +
-	        Hardware.startingPositionDial.getPosition());
+    //System.out.println("Position: " +
+    //Hardware.startingPositionDial.getPosition());
 
 	// Relay-----------------
 	// System.out.println(Hardware.ringLightRelay.get());

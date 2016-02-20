@@ -172,8 +172,7 @@ private debugStateValues debugState = debugStateValues.DEBUG_NONE;
  *              with each one corresponding to the gear that we are in.
  *              -------------------------------------------------------
  */
-private final Vector<Integer> digitalChannelNumberForGearLight =
-        new Vector<Integer>();
+private final Vector<Integer> digitalChannelNumberForGearLight = new Vector<Integer>();
 
 /**
  * -------------------------------------------------------
@@ -240,9 +239,8 @@ private double leftFifthGearPercentage = 1.00;
  * @written Jan 21, 2011
  *          -------------------------------------------------------
  */
-private final JoystickDirection leftJoystickIsReversed =
-        new JoystickDirection(
-                JoystickDirection.NORMAL);
+private final JoystickDirection leftJoystickIsReversed = new JoystickDirection(
+        JoystickDirection.NORMAL);
 
 /**
  * -------------------------------------------------------
@@ -341,9 +339,8 @@ private boolean presentUpshiftState = false;
  * @written Jan 21, 2011
  *          -------------------------------------------------------
  */
-private final JoystickDirection rightJoystickIsReversed =
-        new JoystickDirection(
-                JoystickDirection.NORMAL);
+private final JoystickDirection rightJoystickIsReversed = new JoystickDirection(
+        JoystickDirection.NORMAL);
 
 /**
  * -------------------------------------------------------
@@ -1303,21 +1300,21 @@ public void controls (final double magnitude, final double direction,
             }
         else
             {
-            //                        this.pidLeftController.setSetpoint(leftFrontSpeed *
-            //                                this.maxEncoderRate *
-            //                                this.leftMotorDirection.get());
+            // this.pidLeftController.setSetpoint(leftFrontSpeed *
+            // this.maxEncoderRate *
+            // this.leftMotorDirection.get());
             //
-            //            this.pidRightController.setSetpoint(rightFrontSpeed *
-            //                    this.maxEncoderRate *
-            //                    this.rightMotorDirection.get());
+            // this.pidRightController.setSetpoint(rightFrontSpeed *
+            // this.maxEncoderRate *
+            // this.rightMotorDirection.get());
             //
-            //            this.pidRightRearController.setSetpoint(rightRearSpeed *
-            //                    this.maxEncoderRate *
-            //                    this.rightRearMotorDirection.get());
+            // this.pidRightRearController.setSetpoint(rightRearSpeed *
+            // this.maxEncoderRate *
+            // this.rightRearMotorDirection.get());
             //
-            //            this.pidLeftRearController.setSetpoint(leftRearSpeed *
-            //                    this.maxEncoderRate *
-            //                    this.leftRearMotorDirection.get());
+            // this.pidLeftRearController.setSetpoint(leftRearSpeed *
+            // this.maxEncoderRate *
+            // this.leftRearMotorDirection.get());
 
             // If we need to, debug the PID data
             if ((this
@@ -1349,28 +1346,21 @@ public void controls (final double magnitude, final double direction,
         this.controlSpeedController(leftFrontSpeed *
                 this.leftJoystickIsReversed.get(),
                 this.leftSpeedController,
-                this.getMotorControllerDirection(leftSpeedController),
                 WhichJoystick.ONE_JOYSTICK);
 
         this.controlSpeedController(leftRearSpeed *
                 this.leftJoystickIsReversed.get(),
                 this.leftRearSpeedController,
-                this.getMotorControllerDirection(
-                        leftRearSpeedController),
                 WhichJoystick.ONE_JOYSTICK);
 
         this.controlSpeedController(rightRearSpeed *
                 this.rightJoystickIsReversed.get(),
                 this.rightRearSpeedController,
-                this.getMotorControllerDirection(
-                        rightRearSpeedController),
                 WhichJoystick.ONE_JOYSTICK);
 
         this.controlSpeedController(rightFrontSpeed *
                 this.rightJoystickIsReversed.get(),
                 this.oneOrRightSpeedController,
-                this.getMotorControllerDirection(
-                        oneOrRightSpeedController),
                 WhichJoystick.ONE_JOYSTICK);
 
         /*
@@ -1539,27 +1529,23 @@ public void controls (double leftJoystickValue,
     // left front motor
     this.controlSpeedController(leftJoystickValue *
             this.leftJoystickIsReversed.get(), leftSpeedController,
-            this.getMotorControllerDirection(leftSpeedController),
             WhichJoystick.LEFT_JOYSTICK);
 
     // left rear motor
     this.controlSpeedController(leftJoystickValue *
             this.leftJoystickIsReversed.get(), leftRearSpeedController,
-            this.getMotorControllerDirection(leftRearSpeedController),
             WhichJoystick.LEFT_JOYSTICK);
 
     // right front motor
     this.controlSpeedController(rightJoystickValue *
             this.rightJoystickIsReversed.get(),
             this.oneOrRightSpeedController,
-            this.getMotorControllerDirection(oneOrRightSpeedController),
             WhichJoystick.RIGHT_JOYSTICK);
 
     // right rear motor
     this.controlSpeedController(rightJoystickValue *
             this.rightJoystickIsReversed.get(),
             rightRearSpeedController,
-            this.getMotorControllerDirection(rightRearSpeedController),
             WhichJoystick.RIGHT_JOYSTICK);
 }
 
@@ -1597,7 +1583,6 @@ public void controls (final double joystickInputValue,
     // -------------------------------------
     this.controlSpeedController(joystickInputValue *
             this.rightJoystickIsReversed.get(), rightSpeedController,
-            this.getMotorControllerDirection(rightSpeedController),
             WhichJoystick.ONE_JOYSTICK);
 } // end controls
 
@@ -1645,11 +1630,9 @@ public void controls (final double leftJoystickInputValue,
     // -------------------------------------
     this.controlSpeedController(leftJoystickInputValue *
             this.leftJoystickIsReversed.get(), leftSpeedController,
-            this.getMotorControllerDirection(leftSpeedController),
             WhichJoystick.LEFT_JOYSTICK);
     this.controlSpeedController(rightJoystickInputValue *
             this.rightJoystickIsReversed.get(), rightSpeedController,
-            this.getMotorControllerDirection(rightSpeedController),
             WhichJoystick.RIGHT_JOYSTICK);
 } // end Controls
 
@@ -1681,8 +1664,6 @@ private void controlSpeedController (final double joystickInputValue,
         // controller to
         final SpeedController oneSpeedController,
         // control one Motor
-        final int motorDirection,  // direction - the value of either forward
-        // or reversed
         final int whichJoystick)
 // character used to denote which joystick
 // was input
@@ -1698,9 +1679,7 @@ private void controlSpeedController (final double joystickInputValue,
         {
         if ((joystickInputValue >= -1.0) && (joystickInputValue <= 1.0))
             {
-            controllerInput = joystickInputValue * motorDirection;
-            oneSpeedController.set(controllerInput);
-
+            oneSpeedController.set(joystickInputValue);
             } // if
         } // if
     else
@@ -1715,9 +1694,7 @@ private void controlSpeedController (final double joystickInputValue,
                 controllerInput = this.mapSoftwareJoystickValues(
                         joystickInputValue,
                         this.getFifthGearPercentage(
-                                whichJoystick))
-                        *
-                        motorDirection;
+                                whichJoystick));
                 oneSpeedController.set(controllerInput);
                 break;
 
@@ -1725,9 +1702,7 @@ private void controlSpeedController (final double joystickInputValue,
                 controllerInput = this.mapSoftwareJoystickValues(
                         joystickInputValue,
                         this.getFourthGearPercentage(
-                                whichJoystick))
-                        *
-                        motorDirection;
+                                whichJoystick));
                 oneSpeedController.set(controllerInput);
                 break;
 
@@ -1735,9 +1710,7 @@ private void controlSpeedController (final double joystickInputValue,
                 controllerInput = this.mapSoftwareJoystickValues(
                         joystickInputValue,
                         this.getThirdGearPercentage(
-                                whichJoystick))
-                        *
-                        motorDirection;
+                                whichJoystick));
                 oneSpeedController.set(controllerInput);
                 break;
 
@@ -1745,9 +1718,7 @@ private void controlSpeedController (final double joystickInputValue,
                 controllerInput = this.mapSoftwareJoystickValues(
                         joystickInputValue,
                         this.getSecondGearPercentage(
-                                whichJoystick))
-                        *
-                        motorDirection;
+                                whichJoystick));
                 oneSpeedController.set(controllerInput);
                 break;
 
@@ -1755,9 +1726,7 @@ private void controlSpeedController (final double joystickInputValue,
                 controllerInput = this.mapSoftwareJoystickValues(
                         joystickInputValue,
                         this.getFirstGearPercentage(
-                                whichJoystick))
-                        *
-                        motorDirection;
+                                whichJoystick));
                 oneSpeedController.set(controllerInput);
                 break;
 
@@ -2118,30 +2087,6 @@ public int getMaxGear ()
 {
     return (this.maxGears);
 } // end getMaxGear
-
-//-------------------------------------------------------
-/**
- * returns to the caller a -1 if the motor controllers are
- * reversed and a 1 if the motor controllers are not
- * reversed
- *
- * @method getMotorControllerDirection
- * @param motorController
- *            - a SpeedController which will be queried as
- *            to whether or not it isInverted()
- * @return int - returns to the caller a -1 if the motor controllers
- *         are reversed and a 1 if the motor controllers are not
- *         reversed
- * @author Bob Brown
- * @written 19 February 2016
- *          -------------------------------------------------------
- */
-public int getMotorControllerDirection (SpeedController motorController)
-{
-    if (motorController.getInverted() == true)
-        return -1;
-    return 1;
-} // end getMotorControllerDirection
 
 /**
  * returns the logical gear that we will switch the actual
@@ -2564,54 +2509,6 @@ public boolean isRightJoystickReversed ()
     return (false);
 } // end isRightJoystickReversed()
 
-// -------------------------------------------------------
-/**
- * This function denotes that the left motor is reversed
- * or not. It is generally set at the beginning of the
- * robot starting, but can be set anytime.
- *
- * @method leftMotorIsReversed
- * @param reversed
- *            - the left motor is reversed or not
- * @return boolean - left motor is reversed or not
- * @author Bob Brown
- * @written Sep 20, 2009
- *          -------------------------------------------------------
- */
-public boolean leftMotorIsReversed (final boolean reversed)
-{
-    this.leftSpeedController.setInverted(reversed);
-    if (this.pidLeftController != null)
-        {
-        this.pidLeftController.setMotorReversed(reversed);
-        }
-    return (reversed);
-} // end leftMotorIsReversed
-
-// -------------------------------------------------------
-/**
- * This function denotes that the left rear motor is reversed
- * or not. It is generally set at the beginning of the
- * robot starting, but can be set anytime.
- *
- * @method leftRearMotorIsReversed
- * @param reversed
- *            - tells us whether or not the left rear motor is reversed
- * @return boolean - left rear motor is reversed or not
- * @author Noah Golmant
- * @written Jan. 9, 2014
- *          -------------------------------------------------------
- */
-public boolean leftRearMotorIsReversed (final boolean reversed)
-{
-    this.leftRearSpeedController.setInverted(reversed);
-    if (this.pidLeftRearController != null)
-        {
-        this.pidLeftRearController.setMotorReversed(reversed);
-        }
-    return (reversed);
-} // end leftRearMotorIsReversed()
-
 /**
  * A mini function to limit motor values to a range of -1.0..1.0
  *
@@ -2701,54 +2598,6 @@ public void resetPID ()
         System.out.println("[PID] Reset PID.");
         }
 } // end resetPID()
-
-// -------------------------------------------------------
-/**
- * This function denotes that the right motor is reversed
- * or not. It is generally set at the beginning of the
- * robot starting, but can be set anytime.
- *
- * @method rightMotorIsReversed
- * @param reversed
- *            - tells us whether or not the right motor is reversed
- * @return boolean - right motor is reversed or not
- * @author Bob Brown
- * @written Sep 20, 2009
- *          -------------------------------------------------------
- */
-public boolean rightMotorIsReversed (final boolean reversed)
-{
-    this.oneOrRightSpeedController.setInverted(reversed);
-    if (this.pidRightController != null)
-        {
-        this.pidRightController.setMotorReversed(reversed);
-        }
-    return (reversed);
-} // end rightMotorIsReversed
-
-// -------------------------------------------------------
-/**
- * This function denotes that the right rear motor is reversed
- * or not. It is generally set at the beginning of the
- * robot starting, but can be set anytime.
- *
- * @method rightRearMotorIsReversed
- * @param reversed
- *            - tells us whether or not the right rear motor is reversed
- * @return boolean - right rear motor is reversed or not
- * @author Noah Golmant
- * @written Jan 9, 2014
- *          -------------------------------------------------------
- */
-public boolean rightRearMotorIsReversed (final boolean reversed)
-{
-    this.rightRearSpeedController.setInverted(reversed);
-    if (this.pidRightRearController != null)
-        {
-        this.pidRightRearController.setMotorReversed(reversed);
-        }
-    return (reversed);
-} // end rightRearMotorIsReversed()
 
 // -------------------------------------------------------
 /**
