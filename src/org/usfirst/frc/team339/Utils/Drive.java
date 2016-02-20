@@ -1148,24 +1148,16 @@ public boolean alignByCamera (double percentageDeadBand,
     //How stupid can you get, programmers?
     if (this.camera != null && this.ringLightRelay != null)
         {
-        if (isAligningByCamera == false)
-            {
-            //say we've started
-            isAligningByCamera = true;
-            //actually start
-            this.cameraTimer.reset();
-            this.cameraTimer.start();
-            //turn down the lights
-            Hardware.axisCamera.writeBrightness(
-                    Hardware.MINIMUM_AXIS_CAMERA_BRIGHTNESS);
-            //Woah, that's too dark! Turn on the ringlight someone!
-            Hardware.ringLightRelay.set(Value.kOn);
-            return false;
-            }
+        //actually start
+        this.cameraTimer.start();
+        //turn down the lights
+        Hardware.axisCamera.writeBrightness(
+                Hardware.MINIMUM_AXIS_CAMERA_BRIGHTNESS);
+        //Woah, that's too dark! Turn on the ringlight someone!
+        Hardware.ringLightRelay.set(Value.kOn);
         //If we claim to be driving by camera and we've waitied long enough 
         //for someone to brighten up the darkness with the ringlight
-        if (isAligningByCamera == true
-                && Hardware.delayTimer.get() >= .75)
+        if (Hardware.delayTimer.get() >= .75)
             {
             //try to take a picture and save it in memory and on the "hard disk"
             try
@@ -1220,9 +1212,9 @@ public boolean alignByCamera (double percentageDeadBand,
             //If the center of the blob is nestled happily in our deadzone
             else
                 {
-                //We're done, no need to go again.
-                isAligningByCamera = false;
                 //Stop moving
+                this.cameraTimer.stop();
+                this.cameraTimer.reset();
                 Hardware.transmission.controls(0.0, 0.0);
                 return true;
                 }
@@ -1342,9 +1334,6 @@ private Relay ringLightRelay = null;
 //Delay timer for the camera so we Don't try to take a picture before 
 //the camera is ready.
 private final Timer cameraTimer = new Timer();
-//Boolean so we know whether or not we're currently aligning by camera
-//TODO may no longer be needed.
-private boolean isAligningByCamera = false;
 //The horizontal resolution of the camera for the drive class
 private double cameraXResolution;
 //The vertical resolution of the camera used in the drive class.
