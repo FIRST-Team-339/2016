@@ -480,5 +480,6 @@ public void testPeriodic ()
 // ==========================================
 // TUNEABLES
 // ==========================================
-private final double distancePerTickForMotorEncoders = 0.019706;
+private final double distancePerTickForMotorEncoders = 0.0755614;
+//was 0.0745614
 } // end class

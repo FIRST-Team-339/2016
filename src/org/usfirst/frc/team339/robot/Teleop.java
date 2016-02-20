@@ -67,7 +67,7 @@ public static void init ()
     Hardware.transmission.setFirstGearPercentage(FIRST_GEAR_PERCENTAGE);
     Hardware.transmission
             .setSecondGearPercentage(SECOND_GEAR_PERCENTAGE);
-    Hardware.transmission.setGear(1);
+    Hardware.transmission.setGear(2);//TODO change back to 1
     Hardware.transmission.setJoystickDeadbandRange(.20);
     Hardware.transmission.setJoysticksAreReversed(false);
     Hardware.ringLightRelay.set(Value.kOff);
@@ -236,13 +236,28 @@ public static void periodic ()
 
 
     // Driving the Robot
-    driveRobot();
+
+    //TODO delete all conditionals.
+    if (Hardware.leftDriver.getRawButton(8) == true)
+        {
+        isSpeedTesting = true;
+        }
+    if (isSpeedTesting == false)
+        driveRobot();
+    else
+        {
+        if (Hardware.drive.driveStraightByInches(140, true, -.7,
+                -.7) == true)
+            {
+            isSpeedTesting = false;
+            }
+        }
 
     runCameraSolenoid(Hardware.rightOperator.getRawButton(11),
             Hardware.rightOperator.getRawButton(10), false, true);
 } // end Periodic
 
-
+private static boolean isSpeedTesting = false;
 
 
 /**
@@ -566,7 +581,7 @@ public static void printStatements ()
     // System.out.println("delay pot = " + (int) Hardware.delayPot.get());
     // prints the value of the transducer- (range in code is 50)
     //hits psi of 100 accurately
-	System.out.println("transducer = " + Hardware.transducer.get());
+    System.out.println("transducer = " + Hardware.transducer.get());
     // System.out.println("Arm Pot = " + Hardware.armPot.get());
 
     // Motor controllers-----
@@ -597,10 +612,10 @@ public static void printStatements ()
     // System.out.println(
     // "LR distance = " + Hardware.leftRearEncoder.getDistance());
     // System.out.println("Arm Motor = " + Hardware.armMotor.getDistance());
-	System.out.println("Left Rear Encoder Tics: " +
-	        Hardware.leftRearEncoder.get());
-	System.out.println("Right Rear Encoder Tics: " +
-	        Hardware.rightRearEncoder.get());
+    System.out.println("Left Rear Encoder Tics: " +
+            Hardware.leftRearEncoder.get());
+    System.out.println("Right Rear Encoder Tics: " +
+            Hardware.rightRearEncoder.get());
 
     // Switches--------------
     // prints state of switches
@@ -628,8 +643,7 @@ private static final double MAXIMUM_TELEOP_SPEED = 1.0;
 
 private static final double FIRST_GEAR_PERCENTAGE = 0.5;
 
-private static final double SECOND_GEAR_PERCENTAGE =
-        MAXIMUM_TELEOP_SPEED;
+private static final double SECOND_GEAR_PERCENTAGE = 0.7;
 // right driver 3
 private static final int GEAR_UPSHIFT_JOYSTICK_BUTTON = 3;
 // right driver 2
