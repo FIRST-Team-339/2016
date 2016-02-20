@@ -73,6 +73,7 @@ public static void init ()
     Hardware.transmission.setJoysticksAreReversed(false);
     Hardware.ringLightRelay.set(Value.kOff);
 
+    isAligningByCamera = false;
     fireRequested = false;
     Hardware.arrowDashboard.setDirection(Guidance.Direction.neutral);
     Hardware.arrowDashboard.update();
