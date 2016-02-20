@@ -147,7 +147,8 @@ public static void periodic ()
         //Keep trying to point at the goal
         if (Hardware.drive.alignByCamera(.15, .45) == true)
             {
-            //Once we're in the center, tell the code we no longer care about steering towards the goal
+            // Once we're in the center, tell the code we no longer care about
+            // steering towards the goal
             isAligningByCamera = false;
             }
         }
@@ -166,7 +167,8 @@ public static void periodic ()
         {
         Hardware.pickupArm.pushOutBall();
         }
-    //If neither the pull in or the push out button are pressed, stop the intake motors
+    // If neither the pull in or the push out button are pressed, stop the
+    // intake motors
     else
         {
         Hardware.pickupArm.stopIntakeArms();
@@ -254,8 +256,8 @@ public static void driveRobot ()
     // Hardware.transmission.controls(Hardware.rightDriver.getY(),
     // Hardware.leftDriver.getY());
     // If we're pressing the upshift button, shift up.
-    Hardware.transmission.controls(Hardware.rightDriver.getY(),
-            Hardware.leftDriver.getY());
+    Hardware.transmission.controls(Hardware.leftDriver.getY(),
+            Hardware.rightDriver.getY());
     // If we're pressing the upshift button, shift up.
     if (Hardware.rightDriver
             .getRawButton(GEAR_UPSHIFT_JOYSTICK_BUTTON) == true)
@@ -372,12 +374,6 @@ public static boolean fire (int power)
 public static void takePicture ()
 {
 
-    // A test to turn the ringlight on when we click the right operator
-    // trigger.
-    if (Hardware.rightOperator.getTrigger() == true)
-        {
-        Hardware.ringLightRelay.set(Value.kOn);
-        }
 
     // If we click buttons 6+7 on the left operator joystick, we dim the
     // brightness a lot, turn the ringlight on, and then if we haven't
@@ -628,8 +624,7 @@ private static final double MAXIMUM_TELEOP_SPEED = 1.0;
 
 private static final double FIRST_GEAR_PERCENTAGE = 0.5;
 
-private static final double SECOND_GEAR_PERCENTAGE =
-        MAXIMUM_TELEOP_SPEED;
+private static final double SECOND_GEAR_PERCENTAGE = MAXIMUM_TELEOP_SPEED;
 // right driver 3
 private static final int GEAR_UPSHIFT_JOYSTICK_BUTTON = 3;
 // right driver 2
