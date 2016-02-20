@@ -60,7 +60,7 @@ public class Hardware
 // Public Constants
 // ------------------------------------
 public static final int DELAY_POT_DEGREES = 270;
-public static final int TRANSDUCER_MAX_VALUE = 150;
+public static final int TRANSDUCER_MAX_VALUE = 200;
 public static final int ARM_POT_MAX_VALUE = 270;// 360 is a placeholder
 
 // The amount of time the camera is delayed for picture taking, so the light
