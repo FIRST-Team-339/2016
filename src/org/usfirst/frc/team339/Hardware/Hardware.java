@@ -60,7 +60,7 @@ public class Hardware
 // Public Constants
 // ------------------------------------
 public static final int DELAY_POT_DEGREES = 270;
-public static final int TRANSDUCER_MAX_VALUE = 150;
+public static final int TRANSDUCER_MAX_VALUE = 200;
 public static final int ARM_POT_MAX_VALUE = 270;// 360 is a placeholder
 
 // The amount of time the camera is delayed for picture taking, so the light
@@ -188,8 +188,8 @@ public static Encoder rightRearEncoder = new Encoder(3, 4);
 // -------------------------------------
 // Red Light/IR Sensor class
 // -------------------------------------
-public static IRSensor rightIR = new IRSensor(0);
-public static IRSensor leftIR = new IRSensor(1);
+public static IRSensor rightIR = new IRSensor(1);
+public static IRSensor leftIR = new IRSensor(0);
 
 public static IRSensor armIR = new IRSensor(2);
 
