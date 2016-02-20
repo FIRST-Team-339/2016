@@ -243,13 +243,10 @@ public void robotInit ()
 
     Hardware.transmission.setJoystickDeadbandRange(.20);
 
-    // @TODO Make sure this is right
-    // Reverses both the right and the left rear motors so that we drive
-    // correctly.
-    Hardware.transmission.rightRearMotorIsReversed(true);
-    Hardware.transmission.rightMotorIsReversed(false);
-    Hardware.transmission.leftMotorIsReversed(false);
-    Hardware.transmission.leftRearMotorIsReversed(true);
+    Hardware.rightFrontMotor.setInverted(true);
+    Hardware.rightRearMotor.setInverted(false);
+    Hardware.leftFrontMotor.setInverted(true);
+    Hardware.leftRearMotor.setInverted(true);
     // -------------------------------------
     // AXIS camera initialization
     // -------------------------------------

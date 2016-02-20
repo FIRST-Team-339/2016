@@ -85,9 +85,9 @@ public static void init ()
 } // end Init
 
 
-//private char[] reports;
+// private char[] reports;
 private static boolean done = false;
-//private static boolean done2 = false;
+// private static boolean done2 = false;
 private static edu.wpi.first.wpilibj.DoubleSolenoid.Value Reverse;
 private static edu.wpi.first.wpilibj.DoubleSolenoid.Value Forward;
 
@@ -100,6 +100,14 @@ private static edu.wpi.first.wpilibj.DoubleSolenoid.Value Forward;
  */
 public static void periodic ()
 {
+
+    // A test to turn the ringlight on when we click the right operator
+    // trigger.
+    if (Hardware.rightOperator.getTrigger() == true)
+        {
+        Hardware.ringLightRelay.set(Value.kOn);
+        }
+
     // block of code to move the arm
     // TODO set deadzone to variable
     if (Math.abs(Hardware.rightOperator.getY()) >= .2)
@@ -112,58 +120,60 @@ public static void periodic ()
                 .moveFast((int) Math.round(Hardware.rightOperator.getY()
                         / Math.abs(Hardware.rightOperator.getY())));
         }
-    //Block of code to toggle the camera up or down
-    //If the camera is down and we press the button.
+    // Block of code to toggle the camera up or down
+    // If the camera is down and we press the button.
     if (cameraIsUp == false
             && Hardware.cameraToggleButton.isOn() == true)
         {
-        //raise the camera and tell the code that it's up
+        // raise the camera and tell the code that it's up
         Hardware.cameraSolenoid.set(Forward);
         cameraIsUp = true;
         }
-    //If the camera is up and we press the toggle button.
+    // If the camera is up and we press the toggle button.
     if (cameraIsUp == true
             && Hardware.cameraToggleButton.isOn() == true)
         {
-        //Drop the camera and tell the code that it's down
+        // Drop the camera and tell the code that it's down
         Hardware.cameraSolenoid.set(Reverse);
         cameraIsUp = false;
         }
-    //end raise/lower camera block
+    // end raise/lower camera block
 
-    //Block of code to align us on the goal using the camera
+    // Block of code to align us on the goal using the camera
     if (Hardware.rightOperator.getTrigger() == true)
         {
-        //Tell the code to align us to the camera
+        // Tell the code to align us to the camera
         isAligningByCamera = true;
         }
-    //If we want to point at the goal using the camera
+    // If we want to point at the goal using the camera
     if (isAligningByCamera == true)
         {
-        //TODO outsource both to a variable
-        //Keep trying to point at the goal
+        // TODO outsource both to a variable
+        // Keep trying to point at the goal
         if (Hardware.drive.alignByCamera(.15, .45) == true)
             {
-            //Once we're in the center, tell the code we no longer care about steering towards the goal
+            // Once we're in the center, tell the code we no longer care about
+            // steering towards the goal
             isAligningByCamera = false;
             }
         }
-    //end alignByCameraBlock
+    // end alignByCameraBlock
 
     // Block of code to pick up ball or push it out
-    //pull in the ball if the pull in button is pressed.
+    // pull in the ball if the pull in button is pressed.
     if (Hardware.rightOperator
             .getRawButton(TAKE_IN_BALL_BUTTON) == true)
         {
         Hardware.pickupArm.pullInBall();
         }
-    //push out the ball if the push out button is pressed
+    // push out the ball if the push out button is pressed
     else if (Hardware.rightOperator
             .getRawButton(PUSH_OUT_BALL_BUTTON) == true)
         {
         Hardware.pickupArm.pushOutBall();
         }
-    //If neither the pull in or the push out button are pressed, stop the intake motors
+    // If neither the pull in or the push out button are pressed, stop the
+    // intake motors
     else
         {
         Hardware.pickupArm.stopIntakeArms();
@@ -172,7 +182,7 @@ public static void periodic ()
     // block of code to fire
     if (Hardware.leftOperator.getTrigger() == true)
         {
-        //Tell the code to start firing
+        // Tell the code to start firing
         fireRequested = true;
         }
     // cancel the fire request
@@ -188,41 +198,41 @@ public static void periodic ()
             // if we're done firing, drop the request
             fireRequested = false;
         }
-    //end fire block
+    // end fire block
 
-    //block of code to tell the drivers where to go
-    //TODO finish based on camera input and IR sensors
-    //if the rightIR detects HDPE and the left one doesn't
+    // block of code to tell the drivers where to go
+    // TODO finish based on camera input and IR sensors
+    // if the rightIR detects HDPE and the left one doesn't
     if (Hardware.rightIR.isOn() == true
             && Hardware.leftIR.isOn() == false)
         {
-        //tell the drivers to spin right a little
+        // tell the drivers to spin right a little
         Hardware.arrowDashboard.setDirection(Guidance.Direction.right);
         }
-    //if the right side doesn't detect HDPE but the left one does
+    // if the right side doesn't detect HDPE but the left one does
     else if (Hardware.rightIR.isOn() == false
             && Hardware.leftIR.isOn() == true)
         {
-        //tell the drives to spin left a little
+        // tell the drives to spin left a little
         Hardware.arrowDashboard.setDirection(Guidance.Direction.left);
         }
-    //if both of the IR's detect HDPE
+    // if both of the IR's detect HDPE
     else if (Hardware.rightIR.isOn() == true
             && Hardware.leftIR.isOn() == true)
         {
-        //Tell the drivers to stop and hopefully alignByCamera
+        // Tell the drivers to stop and hopefully alignByCamera
         Hardware.arrowDashboard.setDirection(Guidance.Direction.stop);
         }
-    //If neither IR detects anything on the ground
+    // If neither IR detects anything on the ground
     else if (Hardware.rightIR.isOn() == false
             && Hardware.leftIR.isOn() == false)
         {
-        //trust the camera
-        //TODO base these ones on the camera if we have one.
+        // trust the camera
+        // TODO base these ones on the camera if we have one.
         }
-    //put the arrows on the screen
+    // put the arrows on the screen
     Hardware.arrowDashboard.update();
-    //End driver direction block
+    // End driver direction block
     // Print statements to test Hardware on the Robot
     printStatements();
 
@@ -238,8 +248,6 @@ public static void periodic ()
 } // end Periodic
 
 
-
-
 /**
  * Hand the transmission class the joystick values and motor controllers for
  * four wheel drive.
@@ -247,20 +255,9 @@ public static void periodic ()
  */
 public static void driveRobot ()
 {
-    //
-    // Hardware.transmission.controls(Hardware.rightDriver.getY(),
-    // Hardware.leftDriver.getY());
-    Hardware.transmission.setJoysticksAreReversed(true);
-    if (Hardware.rightDriver.getTrigger() == true && done == false)
-        {
-
-        done = Hardware.drive.turnLeftDegrees(90);
-        // done = Hardware.drive.driveForwardInches(48.0);
-
-        }
     // If we're pressing the upshift button, shift up.
-    Hardware.transmission.controls(Hardware.rightDriver.getY(),
-            Hardware.leftDriver.getY());
+    Hardware.transmission.controls(Hardware.leftDriver.getY(),
+            Hardware.rightDriver.getY());
     // If we're pressing the upshift button, shift up.
     if (Hardware.rightDriver
             .getRawButton(GEAR_UPSHIFT_JOYSTICK_BUTTON) == true)
@@ -359,7 +356,7 @@ public static boolean fire (int power)
                 }
             }
         }
-    //TODO reduce time to minimum possible
+    // TODO reduce time to minimum possible
     if (Hardware.fireTimer.get() >= 1.0)
         {
         Hardware.fireTimer.stop();
@@ -377,12 +374,7 @@ public static boolean fire (int power)
 public static void takePicture ()
 {
 
-    // A test to turn the ringlight on when we click the right operator
-    // trigger.
-    if (Hardware.rightOperator.getTrigger() == true)
-        {
-        Hardware.ringLightRelay.set(Value.kOn);
-        }
+
 
     // If we click buttons 6+7 on the left operator joystick, we dim the
     // brightness a lot, turn the ringlight on, and then if we haven't
@@ -633,8 +625,7 @@ private static final double MAXIMUM_TELEOP_SPEED = 1.0;
 
 private static final double FIRST_GEAR_PERCENTAGE = 0.5;
 
-private static final double SECOND_GEAR_PERCENTAGE =
-        MAXIMUM_TELEOP_SPEED;
+private static final double SECOND_GEAR_PERCENTAGE = MAXIMUM_TELEOP_SPEED;
 // right driver 3
 private static final int GEAR_UPSHIFT_JOYSTICK_BUTTON = 3;
 // right driver 2
