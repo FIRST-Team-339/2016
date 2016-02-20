@@ -558,9 +558,9 @@ public static void printStatements ()
     // System.out.println("Right Operator: " + Hardware.rightOperator.getY());
 
     // IR sensors-----------
-    //System.out.println("left IR = " + Hardware.leftIR.isOn());
-    //System.out.println("right IR = " + Hardware.rightIR.isOn());
-    //System.out.println("Has ball IR = " + Hardware.armIR.isOn());
+    System.out.println("left IR = " + Hardware.leftIR.isOn());
+    System.out.println("right IR = " + Hardware.rightIR.isOn());
+    System.out.println("Has ball IR = " + Hardware.armIR.isOn());
 
     // pots-----------------
     // System.out.println("delay pot = " + (int) Hardware.delayPot.get());
@@ -624,7 +624,8 @@ private static final double MAXIMUM_TELEOP_SPEED = 1.0;
 
 private static final double FIRST_GEAR_PERCENTAGE = 0.5;
 
-private static final double SECOND_GEAR_PERCENTAGE = MAXIMUM_TELEOP_SPEED;
+private static final double SECOND_GEAR_PERCENTAGE =
+        MAXIMUM_TELEOP_SPEED;
 // right driver 3
 private static final int GEAR_UPSHIFT_JOYSTICK_BUTTON = 3;
 // right driver 2

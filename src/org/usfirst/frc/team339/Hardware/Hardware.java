@@ -188,8 +188,8 @@ public static Encoder rightRearEncoder = new Encoder(3, 4);
 // -------------------------------------
 // Red Light/IR Sensor class
 // -------------------------------------
-public static IRSensor rightIR = new IRSensor(0);
-public static IRSensor leftIR = new IRSensor(1);
+public static IRSensor rightIR = new IRSensor(1);
+public static IRSensor leftIR = new IRSensor(0);
 
 public static IRSensor armIR = new IRSensor(2);
 
