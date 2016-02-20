@@ -19,43 +19,43 @@ private static Direction direction = Direction.neutral;
  */
 public void update ()
 {
-    switch (direction)
-        {
-        case left:
-            SmartDashboard.putBoolean("Left", true);
-            SmartDashboard.putBoolean("Right", false);
-            SmartDashboard.putBoolean("Straight", false);
-            SmartDashboard.putBoolean("Stop", false);
-            break;
+	switch (direction)
+	{
+		case left:
+			SmartDashboard.putBoolean("Left", true);
+			SmartDashboard.putBoolean("Right", false);
+			SmartDashboard.putBoolean("Straight", false);
+			SmartDashboard.putBoolean("Stop", false);
+			break;
 
-        case right:
-            SmartDashboard.putBoolean("Right", true);
-            SmartDashboard.putBoolean("Left", false);
-            SmartDashboard.putBoolean("Straight", false);
-            SmartDashboard.putBoolean("Stop", false);
-            break;
+		case right:
+			SmartDashboard.putBoolean("Right", true);
+			SmartDashboard.putBoolean("Left", false);
+			SmartDashboard.putBoolean("Straight", false);
+			SmartDashboard.putBoolean("Stop", false);
+			break;
 
-        case neutral:
-            SmartDashboard.putBoolean("Right", false);
-            SmartDashboard.putBoolean("Left", false);
-            SmartDashboard.putBoolean("Straight", false);
-            SmartDashboard.putBoolean("Stop", false);
-            break;
+		case neutral:
+			SmartDashboard.putBoolean("Right", false);
+			SmartDashboard.putBoolean("Left", false);
+			SmartDashboard.putBoolean("Straight", false);
+			SmartDashboard.putBoolean("Stop", false);
+			break;
 
-        case linedUp:
-            SmartDashboard.putBoolean("Straight", true);
-            SmartDashboard.putBoolean("Right", false);
-            SmartDashboard.putBoolean("Left", false);
-            SmartDashboard.putBoolean("Stop", false);
-            break;
+		case linedUp:
+			SmartDashboard.putBoolean("Straight", true);
+			SmartDashboard.putBoolean("Right", false);
+			SmartDashboard.putBoolean("Left", false);
+			SmartDashboard.putBoolean("Stop", false);
+			break;
 
-        case stop:
-            SmartDashboard.putBoolean("Straight", false);
-            SmartDashboard.putBoolean("Right", false);
-            SmartDashboard.putBoolean("Left", false);
-            SmartDashboard.putBoolean("Stop", true);
-            break;
-        }
+		case stop:
+			SmartDashboard.putBoolean("Straight", false);
+			SmartDashboard.putBoolean("Right", false);
+			SmartDashboard.putBoolean("Left", false);
+			SmartDashboard.putBoolean("Stop", true);
+			break;
+	}
 }
 
 /**
@@ -64,12 +64,12 @@ public void update ()
  */
 public static Direction getDirection ()
 {
-    return direction;
+	return direction;
 }
 
 public void setDirection (Direction direction)
 {
-    Guidance.direction = direction;
+	Guidance.direction = direction;
 }
 
 /**
@@ -78,14 +78,16 @@ public void setDirection (Direction direction)
  * 
  *         left lights up the left arrow.
  *         right lights up the right arrow.
- *         neutral keeps both off.
+ *         neutral keeps both off. linedUp lights
+ *         up the background green, stop lights up
+ *         the background red.
  * 
  *         NOTE: Remember to add update()
  *         or else this code will not work!
  *
  */
 public static enum Direction
-    {
-    left, right, neutral, linedUp, stop
-    }
+	{
+	left, right, neutral, linedUp, stop
+	}
 }
