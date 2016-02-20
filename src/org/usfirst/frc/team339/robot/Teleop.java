@@ -566,7 +566,7 @@ public static void printStatements ()
     // System.out.println("delay pot = " + (int) Hardware.delayPot.get());
     // prints the value of the transducer- (range in code is 50)
     //hits psi of 100 accurately
-    //System.out.println("transducer = " + Hardware.transducer.get());
+	System.out.println("transducer = " + Hardware.transducer.get());
     // System.out.println("Arm Pot = " + Hardware.armPot.get());
 
     // Motor controllers-----
@@ -597,6 +597,10 @@ public static void printStatements ()
     // System.out.println(
     // "LR distance = " + Hardware.leftRearEncoder.getDistance());
     // System.out.println("Arm Motor = " + Hardware.armMotor.getDistance());
+	System.out.println("Left Rear Encoder Tics: " +
+	        Hardware.leftRearEncoder.get());
+	System.out.println("Right Rear Encoder Tics: " +
+	        Hardware.rightRearEncoder.get());
 
     // Switches--------------
     // prints state of switches
