@@ -72,6 +72,9 @@ public static void init ()
     Hardware.transmission.setJoysticksAreReversed(false);
     Hardware.ringLightRelay.set(Value.kOff);
 
+    Hardware.arrowDashboard.setDirection(Guidance.Direction.neutral);
+    Hardware.arrowDashboard.update();
+
     // armEncoder needs to be set to 0
     Hardware.delayTimer.reset();
     Hardware.rightRearEncoder.reset();
@@ -250,14 +253,6 @@ public static void driveRobot ()
     //
     // Hardware.transmission.controls(Hardware.rightDriver.getY(),
     // Hardware.leftDriver.getY());
-    Hardware.transmission.setJoysticksAreReversed(true);
-    if (Hardware.rightDriver.getTrigger() == true && done == false)
-        {
-
-        done = Hardware.drive.turnLeftDegrees(90);
-        // done = Hardware.drive.driveForwardInches(48.0);
-
-        }
     // If we're pressing the upshift button, shift up.
     Hardware.transmission.controls(Hardware.rightDriver.getY(),
             Hardware.leftDriver.getY());
@@ -567,15 +562,15 @@ public static void printStatements ()
     // System.out.println("Right Operator: " + Hardware.rightOperator.getY());
 
     // IR sensors-----------
-    // System.out.println("left IR = " + Hardware.leftIR.isOn());
-    // System.out.println("right IR = " + Hardware.rightIR.isOn());
-    System.out.println("Has ball IR = " + Hardware.armIR.isOn());
+    //System.out.println("left IR = " + Hardware.leftIR.isOn());
+    //System.out.println("right IR = " + Hardware.rightIR.isOn());
+    //System.out.println("Has ball IR = " + Hardware.armIR.isOn());
 
     // pots-----------------
     // System.out.println("delay pot = " + (int) Hardware.delayPot.get());
     // prints the value of the transducer- (range in code is 50)
-    // hits psi of 100 accurately
-    System.out.println("transducer = " + Hardware.transducer.get());
+    //hits psi of 100 accurately
+    //System.out.println("transducer = " + Hardware.transducer.get());
     // System.out.println("Arm Pot = " + Hardware.armPot.get());
 
     // Motor controllers-----
@@ -615,8 +610,8 @@ public static void printStatements ()
     // System.out.println("Shoot Low Switch: " + Hardware.shootLow.isOn());
 
     // print the position of the 6 position switch------------
-    System.out.println("Position: " +
-            Hardware.startingPositionDial.getPosition());
+    //System.out.println("Position: " +
+    //Hardware.startingPositionDial.getPosition());
 
     // Relay-----------------
     // System.out.println(Hardware.ringLightRelay.get());
