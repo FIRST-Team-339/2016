@@ -122,7 +122,7 @@ public static VictorSP armIntakeMotor = new VictorSP(5);
 // Relay classes
 // ====================================
 // Relay that controls the RingLight
-public static Relay ringLightRelay = new Relay(1);
+public static Relay ringLightRelay = new Relay(0);
 
 // ------------------------------------
 // Compressor class - runs the compressor

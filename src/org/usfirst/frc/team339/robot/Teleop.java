@@ -36,6 +36,7 @@ import org.usfirst.frc.team339.Utils.Guidance;
 import org.usfirst.frc.team339.Utils.ManipulatorArm;
 import edu.wpi.first.wpilibj.CameraServer;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
+import edu.wpi.first.wpilibj.Relay.Direction;
 import edu.wpi.first.wpilibj.Relay.Value;
 import edu.wpi.first.wpilibj.image.NIVisionException;
 
@@ -72,8 +73,8 @@ public static void init ()
 	Hardware.transmission.setJoysticksAreReversed(false);
 	Hardware.ringLightRelay.set(Value.kOff);
 
-    Hardware.arrowDashboard.setDirection(Guidance.Direction.neutral);
-    Hardware.arrowDashboard.update();
+	Hardware.arrowDashboard.setDirection(Guidance.Direction.neutral);
+	Hardware.arrowDashboard.update();
 
 	// armEncoder needs to be set to 0
 	Hardware.delayTimer.reset();
@@ -103,6 +104,40 @@ private static edu.wpi.first.wpilibj.DoubleSolenoid.Value Forward;
  */
 public static void periodic ()
 {
+
+	//If we press button 6 on the right Operator joystick, we set the
+	//direction of the channel as forward and try to turn the ringlight
+	//on.
+	if (Hardware.rightOperator.getRawButton(6) == true)
+	{
+	Hardware.ringLightRelay.setDirection(Direction.kForward);
+	Hardware.ringLightRelay.set(Value.kOn);
+	}
+
+	//If we press button 7, we set the direction as forward and try to 
+	//turn the ringlight off
+	if (Hardware.rightOperator.getRawButton(7) == true)
+	{
+	Hardware.ringLightRelay.setDirection(Direction.kForward);
+	Hardware.ringLightRelay.set(Value.kOff);
+	}
+
+	//If we press button 10, we set the direction as reverse and then 
+	//try to turn the ringlight on
+	if (Hardware.rightOperator.getRawButton(10) == true)
+	{
+	Hardware.ringLightRelay.setDirection(Direction.kReverse);
+	Hardware.ringLightRelay.set(Value.kOn);
+	}
+
+	//If we press button 11, we set the direction as reverse and then 
+	//try to turn the ringlight off
+	if (Hardware.rightOperator.getRawButton(11) == true)
+	{
+	Hardware.ringLightRelay.setDirection(Direction.kReverse);
+	Hardware.ringLightRelay.set(Value.kOff);
+	}
+
 	// block of code to move the arm
 	// TODO set deadzone to variable
 	if (Math.abs(Hardware.rightOperator.getY()) >= .2)
@@ -147,8 +182,8 @@ public static void periodic ()
 	//Keep trying to point at the goal
 	if (Hardware.drive.alignByCamera(.15, .45) == true)
 	{
-            // Once we're in the center, tell the code we no longer care about
-            // steering towards the goal
+	// Once we're in the center, tell the code we no longer care about
+	// steering towards the goal
 	isAligningByCamera = false;
 	}
 	}
@@ -167,8 +202,8 @@ public static void periodic ()
 	{
 	Hardware.pickupArm.pushOutBall();
 	}
-    // If neither the pull in or the push out button are pressed, stop the
-    // intake motors
+	// If neither the pull in or the push out button are pressed, stop the
+	// intake motors
 	else
 	{
 	Hardware.pickupArm.stopIntakeArms();
@@ -256,8 +291,8 @@ public static void driveRobot ()
 	// Hardware.transmission.controls(Hardware.rightDriver.getY(),
 	// Hardware.leftDriver.getY());
 	// If we're pressing the upshift button, shift up.
-    Hardware.transmission.controls(Hardware.leftDriver.getY(),
-            Hardware.rightDriver.getY());
+	Hardware.transmission.controls(Hardware.leftDriver.getY(),
+	        Hardware.rightDriver.getY());
 	// If we're pressing the upshift button, shift up.
 	if (Hardware.rightDriver
 	        .getRawButton(GEAR_UPSHIFT_JOYSTICK_BUTTON) == true)
@@ -592,15 +627,17 @@ public static void printStatements ()
 	// Hardware.catapultSolenoid2.get());
 
 	// Encoders-------------
-	// System.out.println(
-	// "RR distance = " + Hardware.rightRearEncoder.getDistance());
-	// System.out.println(
-	// "LR distance = " + Hardware.leftRearEncoder.getDistance());
-	// System.out.println("Arm Motor = " + Hardware.armMotor.getDistance());
-	System.out.println("Left Rear Encoder Tics: " +
-	        Hardware.leftRearEncoder.get());
-	System.out.println("Right Rear Encoder Tics: " +
-	        Hardware.rightRearEncoder.get());
+	System.out.println(
+	        "RR distance = " + Hardware.rightRearEncoder.getDistance());
+	System.out.println(
+	        "LR distance = " + Hardware.leftRearEncoder.getDistance());
+	//	 System.out.println("Arm Motor = " + Hardware.armMotor.getDistance());
+	System.out.println(
+	        "Right Rear Encoder Tics: "
+	                + Hardware.rightRearEncoder.get());
+	System.out.println(
+	        "Left Rear Encoder Tics: "
+	                + Hardware.leftRearEncoder.get());
 
 	// Switches--------------
 	// prints state of switches
@@ -610,8 +647,8 @@ public static void printStatements ()
 	// System.out.println("Shoot Low Switch: " + Hardware.shootLow.isOn());
 
 	// print the position of the 6 position switch------------
-    //System.out.println("Position: " +
-    //Hardware.startingPositionDial.getPosition());
+	//System.out.println("Position: " +
+	//Hardware.startingPositionDial.getPosition());
 
 	// Relay-----------------
 	// System.out.println(Hardware.ringLightRelay.get());
