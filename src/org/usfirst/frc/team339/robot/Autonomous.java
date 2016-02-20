@@ -46,14 +46,15 @@ import edu.wpi.first.wpilibj.vision.AxisCamera.Resolution;
 
 /**
  * A new and improved Autonomous class.
- * The class <b>beautifully</b> uses nested state machines in order to execute
- * methods during the Autonomous period.
- * I really hope the autoformatting doesn't mess it up.
+ * The class <b>beautifully</b> uses state machines in order to periodically
+ * execute instructions during the Autonomous period.
+ * 
  * TODO: "make it worky".
  * 
  * @author Michael Andrzej Klaczynski
  * @written at the eleventh stroke of midnight, the 28th of January, Year of
- *          our LORD 2015
+ *          our LORD 2016. Rewritten ever thereafter.
+ * 
  */
 public class Autonomous
 {
@@ -111,6 +112,12 @@ private static enum MainState
 	 */
 	FORWARDS_UNTIL_TAPE, // drives forwards until detection of the gaffers'
 						// tape.
+
+	/**
+	 * Drives up 16 inches to put the center of the robot over the Alien.
+	 */
+	CENTER_TO_TAPE,
+
 	/**
 	 * Upon reaching the Alignment line, sometimes we must rotate.
 	 */
@@ -149,10 +156,26 @@ private static enum MainState
 	}
 
 
-
-private static enum MoveWhileLoweringArmReturn
+/**
+ * Used by a select few methods (@see hasLoweredArmAndMoved()) to return
+ * instructions to the state machine.
+ * TODO: make it so that we do not need this.
+ */
+private static enum GeneralStateReturn
 	{
-	NOT_DONE, DONE, FAILED
+	/**
+	 * Keep doing what we are doing.
+	 */
+	NOT_DONE,
+	/**
+	 * Finished; Go to next state.
+	 */
+	DONE,
+	/**
+	 * Something went horribly, horribly wrong; End it. End it all. Let it burn
+	 * in the cleansing fire of God.
+	 */
+	FAILED
 	}
 
 /**
@@ -206,6 +229,10 @@ private static enum ArmState
 // ==========================================
 // AUTO STATES
 // ==========================================
+
+/**
+ * The state to be executed periodically throughout Autonomous.
+ */
 private static MainState mainState = MainState.INIT;
 
 /**
@@ -216,7 +243,11 @@ private static ArmState armState = ArmState.DONE;
 // ==================================
 // VARIABLES
 // ==================================
-private static boolean enabled;
+
+/**
+ * The boolean that decides whether or not we run autonomous.
+ */
+private static boolean autonomousEnabled;
 
 /**
  * Time to delay at beginning. 0-3 seconds
@@ -252,7 +283,7 @@ private static boolean debug;
 public static void init ()
 {
 
-	enabled = Hardware.autonomousEnabled.isOn();
+	autonomousEnabled = Hardware.autonomousEnabled.isOn();
 
 	// set the delay time based on potentiometer.
 	delay = initDelayTime();
@@ -310,7 +341,6 @@ public static void init ()
 	Hardware.rightRearMotor.set(0.0);
 	Hardware.armMotor.set(0.0);
 	Hardware.armIntakeMotor.set(0.0);
-	// Hardware.drive.setMaxSpeed(MAXIMUM_AUTONOMOUS_SPEED);
 
 	Hardware.errorMessage.clearErrorlog();
 
@@ -332,7 +362,7 @@ public static void periodic ()
 	// System.out.println("Time: " + Hardware.kilroyTimer.get());
 
 	// Checks the "enabled" switch.
-	if (enabled == true)
+	if (autonomousEnabled == true)
 	{
 	// runs the overarching state machine.
 	runMainStateMachine();
@@ -373,12 +403,12 @@ private static void runMainStateMachine ()
 	Hardware.errorMessage.printError(
 	        "Main State: " + mainState,
 	        ErrorMessage.PrintsTo.roboRIO);
-	Hardware.errorMessage.printError(
-	        "Left:" + Hardware.leftRearEncoder.getDistance(),
-	        ErrorMessage.PrintsTo.roboRIO);
-	Hardware.errorMessage.printError(
-	        "Right:" + Hardware.rightRearEncoder.getDistance(),
-	        ErrorMessage.PrintsTo.roboRIO);
+	//	Hardware.errorMessage.printError(
+	//	        "Left:" + Hardware.leftRearEncoder.getDistance(),
+	//	        ErrorMessage.PrintsTo.roboRIO);
+	//	Hardware.errorMessage.printError(
+	//	        "Right:" + Hardware.rightRearEncoder.getDistance(),
+	//	        ErrorMessage.PrintsTo.roboRIO);
 	}
 
 	switch (mainState)
@@ -403,14 +433,18 @@ private static void runMainStateMachine ()
 
 
 		case BEGIN_LOWERING_ARM:
-			// starts the arm motor
-			beginLoweringArm();
+			// starts the arm movement to the floor
+			// runArmStates = true;
+			// armState = ArmState.INIT_DOWN;
+			//TODO: Use arm state machine code above.
+			Hardware.armMotor.set(1.0);
 			// goes into initDelay
 			mainState = MainState.INIT_DELAY;
 			break;
 
 		case LOWER_ARM_AND_MOVE:
 			// goes forwards to outer works.
+			//TODO: Make clean.
 			switch (hasLoweredArmAndMoved())
 			{
 
@@ -473,7 +507,7 @@ private static void runMainStateMachine ()
 
 		case FORWARDS_BASED_ON_ENCODERS_OR_IR:
 			// Check if we are in lane One.
-			if (isInLaneOne() == true)
+			if (lane == 1)
 			// If so, move forwards the distance to the A-tape.
 			{
 			mainState = MainState.FORWARDS_TO_TAPE_BY_DISTANCE;
@@ -487,7 +521,11 @@ private static void runMainStateMachine ()
 
 		case FORWARDS_TO_TAPE_BY_DISTANCE:
 			// Drive the distance from outer works to A-Line.
-			if (hasDrivenToTapeByDistance() == true)
+			if ((Hardware.drive.driveStraightByInches(
+			        DriveInformation.DISTANCE_TO_TAPE
+			                * LAB_SCALING_FACTOR,
+			        false, DriveInformation.MOTOR_RATIO_TO_A_LINE[lane],
+			        DriveInformation.MOTOR_RATIO_TO_A_LINE[lane]) == true))
 			// when done, proceed from Alignment line.
 			{
 			//reset Encoders to prepare for next state.
@@ -496,7 +534,7 @@ private static void runMainStateMachine ()
 
 
 			//We definitely don't need to rotate.
-			mainState = MainState.FORWARDS_FROM_ALIGNMENT_LINE;
+			mainState = MainState.CENTER_TO_TAPE;
 			}
 			break;
 
@@ -509,13 +547,27 @@ private static void runMainStateMachine ()
 			resetEncoders();
 
 			// When done, possibly rotate.
+			mainState = MainState.CENTER_TO_TAPE;
+			}
+			break;
+
+		case CENTER_TO_TAPE:
+			//Drive up from front of the Alignment Line to put the pivoting center of the robot on the Line.
+			if (Hardware.drive.driveStraightByInches(
+			        DriveInformation.DISTANCE_TO_CENTRE_OF_ROBOT,
+			        DriveInformation.BREAK_ON_ALIGNMENT_LINE[lane],
+			        DriveInformation.CENTRE_TO_ALIGNMENT_LINE_MOTOR_RATIO[lane],
+			        DriveInformation.CENTRE_TO_ALIGNMENT_LINE_MOTOR_RATIO[lane]))
+			{
 			mainState = MainState.ROTATE_ON_ALIGNMENT_LINE;
 			}
 			break;
 
 		case ROTATE_ON_ALIGNMENT_LINE:
-			//Rotates until]l we are pointed at the place where we want to shoot.
-			if (hasRotatedTowardsShootingPosition() == true)
+			//Rotates until we are pointed at the place from whence we want to shoot.
+			if (hasTurnedBasedOnSign(
+			        DriveInformation.ROTATE_ON_ALIGNMENT_LINE_DISTANCE[lane]
+			                * LAB_SCALING_FACTOR) == true)
 			{
 			//reset Encoders to prepare for next state.
 			resetEncoders();
@@ -525,7 +577,13 @@ private static void runMainStateMachine ()
 			break;
 
 		case FORWARDS_FROM_ALIGNMENT_LINE:
-			if (hasMovedFowardsFromTape() == true)
+			//Drive until we reach the line normal to the goal.
+			if (Hardware.drive.driveStraightByInches(
+			        DriveInformation.FORWARDS_FROM_ALIGNMENT_LINE_DISTANCE[lane]
+			                * LAB_SCALING_FACTOR,
+			        true, //breaking here is preferable.
+			        DriveInformation.FORWARDS_FROM_ALIGNMENT_LINE_MOTOR_RATIO[lane],
+			        DriveInformation.FORWARDS_FROM_ALIGNMENT_LINE_MOTOR_RATIO[lane]) == true)
 			{
 			//reset Encoders to prepare for next state.
 			resetEncoders();
@@ -535,7 +593,9 @@ private static void runMainStateMachine ()
 
 		case TURN_TO_FACE_GOAL:
 			//Turns until we are facing the goal.
-			if (hasTurnedToFaceGoal() == true)
+			if (hasTurnedBasedOnSign(
+			        DriveInformation.TURN_TO_FACE_GOAL_DEGREES[lane]
+			                * LAB_SCALING_FACTOR) == true)
 			//when done move up to the batter.
 			{
 			//reset Encoders to prepare for next state
@@ -558,10 +618,9 @@ private static void runMainStateMachine ()
 			break;
 
 		case ALIGN_IN_FRONT_OF_GOAL:
-		//align based on the camera until we are facing the goal. head-on.
-		//TODO: uncomment once this method exists.
-		//	if (Hardware.drive.alignByCamera())
-		//Once we are in position, we shoot!
+			//align based on the camera until we are facing the goal. head-on.
+			if (Hardware.drive.alignByCamera())
+			//Once we are in position, we shoot!
 			{
 			mainState = MainState.SHOOT;
 			}
@@ -574,6 +633,7 @@ private static void runMainStateMachine ()
 			break;
 
 		case DELAY_AFTER_SHOOT:
+			//Check if enough time has passed for the air to have been released.
 			if (hasShot() == true)
 			{
 			mainState = MainState.DONE;
@@ -581,6 +641,8 @@ private static void runMainStateMachine ()
 
 		default:
 		case DONE:
+			//clean everything up;
+			//the blood of our enemies stains quickly.
 			done();
 			break;
 	}
@@ -600,26 +662,16 @@ private static void mainInit ()
 }
 
 
-
-/**
- * Starts the arm motor downwards and resets the associated encoder.
- */
-private static void beginLoweringArm ()
-{
-	Hardware.armMotor.set(1.0);
-
-}
-
 /**
  * Moves forwards returns DONE when has reached the distance, however,
  * if the arm is not down by the distance it returns FAILED.
  * 
  * @return
  */
-private static MoveWhileLoweringArmReturn hasLoweredArmAndMoved ()
+private static GeneralStateReturn hasLoweredArmAndMoved ()
 {
-	MoveWhileLoweringArmReturn returnStatus =
-	        MoveWhileLoweringArmReturn.NOT_DONE;
+	GeneralStateReturn returnStatus =
+	        GeneralStateReturn.NOT_DONE;
 
 	// the status of the arm being down
 	boolean armIsDown = Hardware.pickupArm.isDown();
@@ -647,12 +699,12 @@ private static MoveWhileLoweringArmReturn hasLoweredArmAndMoved ()
 	// We want the arm to be down, but it is not.
 	// Return FAILED, just to be safe.
 	{
-	returnStatus = MoveWhileLoweringArmReturn.FAILED;
+	returnStatus = GeneralStateReturn.FAILED;
 	}
 	else
 	// The arm is down and we have reached the distance. Go on.
 	{
-	returnStatus = MoveWhileLoweringArmReturn.DONE;
+	returnStatus = GeneralStateReturn.DONE;
 	}
 	}
 
@@ -703,57 +755,6 @@ private static boolean delayIsDone ()
 
 
 /**
- * Returns the Oneness of the lane.
- * 
- * @return true if in lane one.
- */
-private static boolean isInLaneOne ()
-{
-	// the state of being in lane 1.
-	boolean oneness;
-
-
-	if (lane == 1)
-	// we are in lane 1
-	{
-	oneness = true;
-	}
-	else
-	// we are not
-	{
-	oneness = false;
-	}
-
-
-	return oneness;
-}
-
-/**
- * Drives the distance from outer works to alignment line.
- * 
- * @return when done.
- */
-private static boolean hasDrivenToTapeByDistance ()
-{
-
-	boolean hasReachedDistance = false;
-
-
-	// Drive forwards.
-	if (Hardware.drive.driveStraightByInches(
-	        DriveInformation.DISTANCE_TO_TAPE * LAB_SCALING_FACTOR,
-	        false, DriveInformation.MOTOR_RATIO_TO_A_LINE[lane],
-	        DriveInformation.MOTOR_RATIO_TO_A_LINE[lane]) == true)
-	// If we have reached the desired distance, return true.
-	{
-	hasReachedDistance = true;
-	}
-
-
-	return hasReachedDistance;
-}
-
-/**
  * Drives, and
  * Checks to see if the IRSensors detect Alignment tape.
  * 
@@ -761,7 +762,7 @@ private static boolean hasDrivenToTapeByDistance ()
  */
 private static boolean hasMovedToTape ()
 {
-
+	//The stateness of being on the tape.
 	boolean tapeness = false;
 
 	// Move forwards.
@@ -779,64 +780,7 @@ private static boolean hasMovedToTape ()
 
 }
 
-/**
- * Moves from the alignment line towards the goal.
- * 
- * @return
- */
-private static boolean hasMovedFowardsFromTape ()
-{
-	boolean done = false;
 
-	// Drive the distance from the tape to the line normal to the goal.
-	if (Hardware.drive.driveStraightByInches(
-	        DriveInformation.FORWARDS_FROM_ALIGNMENT_LINE_DISTANCE[lane]
-	                * LAB_SCALING_FACTOR,
-	        true,
-	        DriveInformation.FORWARDS_FROM_ALIGNMENT_LINE_MOTOR_RATIO[lane],
-	        DriveInformation.FORWARDS_FROM_ALIGNMENT_LINE_MOTOR_RATIO[lane]) == true)
-	{
-	done = true;
-	}
-
-	return done;
-}
-
-/**
- * Rotates on the alignment line to face the final shooting position.
- * 
- * @return
- */
-private static boolean hasRotatedTowardsShootingPosition ()
-{
-	boolean done = false;
-
-	// Turn the degrees specified.
-	// TODO: Add more parameters to this method.
-	done = hasTurnedBasedOnSign(
-	        DriveInformation.ROTATE_ON_ALIGNMENT_LINE_DISTANCE[lane]
-	                * LAB_SCALING_FACTOR);
-
-	return done;
-}
-
-/**
- * Rotates to face the goal.
- * 
- * @return true when complete.
- */
-private static boolean hasTurnedToFaceGoal ()
-{
-	boolean done = false;
-
-	// Turn the degrees specified.
-	// TODO: Add more parameters to this method.
-	done = hasTurnedBasedOnSign(
-	        DriveInformation.TURN_TO_FACE_GOAL_DEGREES[lane]
-	                * LAB_SCALING_FACTOR);
-
-	return done;
-}
 
 /**
  * Drives to the final shooting position.
@@ -883,13 +827,12 @@ private static boolean hasDrivenUpToGoal ()
  */
 private static void shoot ()
 {
-
-	// TODO: write method to shoot cannonball.
-
+	//RELEASE THE KRACKEN! I mean, the pressurized air...
 	Hardware.catapultSolenoid0.set(true);
 	Hardware.catapultSolenoid1.set(true);
 	Hardware.catapultSolenoid2.set(true);
 
+	//set a timer so that we know when to close the solenoids.
 	Hardware.kilroyTimer.reset();
 	Hardware.kilroyTimer.start();
 }
@@ -902,7 +845,9 @@ private static void shoot ()
  */
 private static boolean hasShot ()
 {
+	//Check the time.
 	if (Hardware.kilroyTimer.get() > DELAY_TIME_AFTER_SHOOT)
+	//Close the airways, and finish.
 	{
 	Hardware.catapultSolenoid0.set(false);
 	Hardware.catapultSolenoid1.set(false);
@@ -917,7 +862,7 @@ private static boolean hasShot ()
  */
 private static void done ()
 {
-	enabled = false;
+	autonomousEnabled = false;
 	debug = false;
 	Hardware.transmission.controls(0.0, 0.0);
 	Hardware.armMotor.set(0.0);
@@ -1010,7 +955,7 @@ private static void runArmStates ()
 	}
 }
 
-
+//TODO: Remove unecessary TODOs
 
 /**
  * Return the starting position based on 6-position switch on the robot.
@@ -1028,7 +973,7 @@ private static int getLane ()
 	position = 0;
 	}
 
-	position = position + 1;
+	position++;
 
 	return position;
 }
@@ -1095,6 +1040,19 @@ private static final class DriveInformation
 {
 
 /**
+ * For each lane, decides whether or not to break on the Alignment Line
+ */
+private static final boolean[] BREAK_ON_ALIGNMENT_LINE =
+        {
+                false, // A placeholder, allowing lane to line up with index.
+                false, //lane 1
+                false, //lane 2
+                true, // lane 3
+                true, // lane 4
+                false // lane 5
+        };
+
+/**
  * The motor controller values for moving to the outer works.
  * As these are initial speeds, keep them low, to go easy on the motors.
  * Lane is indicated by index.
@@ -1140,6 +1098,7 @@ static final double[] ROTATE_ON_ALIGNMENT_LINE_DISTANCE =
 /**
  * Distances to drive after reaching alignment tape.
  * Lane is indicated by index.
+ * 16 inchworms added inevitably, to start from centre of robot.
  */
 static final double[] FORWARDS_FROM_ALIGNMENT_LINE_DISTANCE =
         {
@@ -1151,13 +1110,23 @@ static final double[] FORWARDS_FROM_ALIGNMENT_LINE_DISTANCE =
                 86.5 // lane 5
         };
 
+static final double[] CENTRE_TO_ALIGNMENT_LINE_MOTOR_RATIO =
+        {
+                0.0,
+                1.0,
+                1.0,
+                .25,
+                .25,
+                1.0
+        };
+
 /**
  * "Speeds" at which to drive from the A-Line to the imaginary line normal to
  * the goal.
  */
 static final double[] FORWARDS_FROM_ALIGNMENT_LINE_MOTOR_RATIO =
         {
-                0.0, // nothing. Not used. Arbitrary; makes it work.
+                0.0, // nothing. A Placeholder.
                 0.4, //lane 1
                 0.4, //lane 2
                 0.3, //lane 3
@@ -1170,7 +1139,7 @@ static final double[] FORWARDS_FROM_ALIGNMENT_LINE_MOTOR_RATIO =
  */
 static final double[] TURN_TO_FACE_GOAL_DEGREES =
         {
-                0.0, // nothing. Not used. Arbitrary; makes it work.
+                0.0, // makes it so the indexes line up with the lane #
                 -60.0,// lane 1
                 -60.0,// lane 2
                 20.0,// lane 3
@@ -1209,9 +1178,10 @@ static final double[] DRIVE_UP_TO_GOAL_MOTOR_RATIO =
         };
 
 /**
- * Distance from Outer Works checkpoint to Alignment Line
+ * Distance from Outer Works checkpoint to Alignment Line.
+ * The front of the robot will be touching the Lion.
  */
-private static final double DISTANCE_TO_TAPE = 83.75;
+private static final double DISTANCE_TO_TAPE = 17.5;
 
 
 /**
@@ -1229,6 +1199,8 @@ private static final double DISTANCE_OVER_OUTER_WORKS = 96.25;
  * TODO: possibly make into array.
  */
 private static final double OUTER_WORKS_MOTOR_RATIO = 0.4;
+
+private static final double DISTANCE_TO_CENTRE_OF_ROBOT = 16.0;
 
 /**
  * Speed at which to make turns by default.
@@ -1253,6 +1225,7 @@ private static final double DEFAULT_TURN_SPEED = 0.28;
 
 /**
  * Always 1.0. Do not change. The code depends on it.
+ * TODO: Actually, we are not currently using this.
  */
 private static final double MAXIMUM_AUTONOMOUS_SPEED = 1.0;
 
@@ -1261,12 +1234,6 @@ private static final double MAXIMUM_AUTONOMOUS_SPEED = 1.0;
  * Used to scale the ratio given by the potentiometer.
  */
 private static final double MAXIMUM_DELAY = 3.0;
-
-/**
- * Potentiometer degrees for arm to be down.
- * TODO: set to empirical value.
- */
-private static final double ARM_DOWN_DEGREES = 0.0;
 
 /**
  * Set to true to print out print statements.
@@ -1278,7 +1245,9 @@ private static final boolean DEBUGGING_DEFAULT = true;
  */
 private static final double LAB_SCALING_FACTOR = 0.5;
 
-
+/**
+ * Time to wait after releasing the solenoids before closing them back up.
+ */
 private static final double DELAY_TIME_AFTER_SHOOT = 1.0;
 
 } // end class
