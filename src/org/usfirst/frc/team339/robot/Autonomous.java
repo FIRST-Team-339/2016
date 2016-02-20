@@ -52,8 +52,8 @@ import edu.wpi.first.wpilibj.vision.AxisCamera.Resolution;
  * TODO: "make it worky".
  * 
  * @author Michael Andrzej Klaczynski
- * @written at the eleventh stroke of midnight, the 28th of January, Year of
- *          our LORD 2016. Rewritten ever thereafter.
+ * @written at the eleventh stroke of midnight, the 28th of January,
+ *          Year of our LORD 2016. Rewritten ever thereafter.
  * 
  */
 public class Autonomous
@@ -80,7 +80,7 @@ private static enum MainState
 	 * If it reaches the end of the distance, and the arm is not fully down,
 	 * skips to DONE.
 	 */
-	LOWER_ARM_AND_MOVE,//
+	MOVE_TO_OUTER_WORKS,//
 	/**
 	 * Resets and starts delay timer.
 	 */
@@ -153,29 +153,6 @@ private static enum MainState
 	 * We stop, and do nothing else.
 	 */
 	DONE
-	}
-
-
-/**
- * Used by a select few methods (@see hasLoweredArmAndMoved()) to return
- * instructions to the state machine.
- * TODO: make it so that we do not need this.
- */
-private static enum GeneralStateReturn
-	{
-	/**
-	 * Keep doing what we are doing.
-	 */
-	NOT_DONE,
-	/**
-	 * Finished; Go to next state.
-	 */
-	DONE,
-	/**
-	 * Something went horribly, horribly wrong; End it. End it all. Let it burn
-	 * in the cleansing fire of God.
-	 */
-	FAILED
 	}
 
 /**
@@ -283,6 +260,7 @@ private static boolean debug;
 public static void init ()
 {
 
+	//check the Autonomous ENABLED/DISABLED switch.
 	autonomousEnabled = Hardware.autonomousEnabled.isOn();
 
 	// set the delay time based on potentiometer.
@@ -356,11 +334,6 @@ public static void init ()
 public static void periodic ()
 {
 
-	// test
-	// TransmissionFourWheel debugTrans = Hardware.transmissionFourWheel;
-	// moveToShootingPositionStep = MoveToShootingPositionStep.FORWARDS_ONE;
-	// System.out.println("Time: " + Hardware.kilroyTimer.get());
-
 	// Checks the "enabled" switch.
 	if (autonomousEnabled == true)
 	{
@@ -409,6 +382,7 @@ private static void runMainStateMachine ()
 	//	Hardware.errorMessage.printError(
 	//	        "Right:" + Hardware.rightRearEncoder.getDistance(),
 	//	        ErrorMessage.PrintsTo.roboRIO);
+	// System.out.println("Time: " + Hardware.kilroyTimer.get());
 	}
 
 	switch (mainState)
@@ -434,37 +408,39 @@ private static void runMainStateMachine ()
 
 		case BEGIN_LOWERING_ARM:
 			// starts the arm movement to the floor
-			// runArmStates = true;
-			// armState = ArmState.INIT_DOWN;
-			//TODO: Use arm state machine code above.
-			Hardware.armMotor.set(1.0);
+			runArmStates = true;
+			armState = ArmState.INIT_DOWN;
+			//TODO: Remove primitive stuff below.
+			//Hardware.armMotor.set(1.0);
 			// goes into initDelay
 			mainState = MainState.INIT_DELAY;
 			break;
 
-		case LOWER_ARM_AND_MOVE:
+		case MOVE_TO_OUTER_WORKS:
+
 			// goes forwards to outer works.
-			//TODO: Make clean.
-			switch (hasLoweredArmAndMoved())
+			if ((Hardware.drive.driveStraightByInches(
+			        DriveInformation.DISTANCE_TO_OUTER_WORKS
+			                * LAB_SCALING_FACTOR,
+			        false,
+			        DriveInformation.MOTOR_RATIO_TO_OUTER_WORKS[lane],
+			        DriveInformation.MOTOR_RATIO_TO_OUTER_WORKS[lane])) == true)
+			//continue over the outer works unless the arm is going to get in the way.
 			{
 
-				case DONE:
-					// Goes to Accelerate when done
-					mainState =
-					        MainState.FORWARDS_OVER_OUTER_WORKS;
-					resetEncoders();
-					Hardware.kilroyTimer.stop();
-					break;
-				case FAILED:
-					// Unless arm is not down. In that case, stop everything.
-					mainState = MainState.DONE;
-					break;
+			//continue over the Outer Works
+			mainState = MainState.FORWARDS_OVER_OUTER_WORKS;
+			resetEncoders();
 
-				default:
-				case NOT_DONE:
-					// continue
-					mainState = MainState.LOWER_ARM_AND_MOVE;
-					break;
+			//UNLESS...
+
+			//When going under the low bar (lane 1), the arm must be down.
+			if ((lane == 1) && (Hardware.pickupArm.isDown() == false))
+			//arm is not down in time. STOP.
+			{
+			mainState = MainState.DONE;
+			}
+
 			}
 			break;
 
@@ -480,7 +456,7 @@ private static void runMainStateMachine ()
 			if (delayIsDone() == true)
 			// go to move forwards while lowering arm when finished.
 			{
-			mainState = MainState.LOWER_ARM_AND_MOVE;
+			mainState = MainState.MOVE_TO_OUTER_WORKS;
 			}
 			break;
 
@@ -659,57 +635,6 @@ private static void mainInit ()
 
 	Hardware.kilroyTimer.reset();
 	Hardware.kilroyTimer.start();
-}
-
-
-/**
- * Moves forwards returns DONE when has reached the distance, however,
- * if the arm is not down by the distance it returns FAILED.
- * 
- * @return
- */
-private static GeneralStateReturn hasLoweredArmAndMoved ()
-{
-	GeneralStateReturn returnStatus =
-	        GeneralStateReturn.NOT_DONE;
-
-	// the status of the arm being down
-	boolean armIsDown = Hardware.pickupArm.isDown();
-
-	if (armIsDown == true)
-	{
-	// stop the arm.
-	Hardware.pickupArm.move(0.0);
-	}
-
-
-	// We can do cat D and B no problem. C is out. A may require extra arm code.
-
-	// Go forth.
-	if ((Hardware.drive.driveStraightByInches(
-	        DriveInformation.DISTANCE_TO_OUTER_WORKS
-	                * LAB_SCALING_FACTOR,
-	        false,
-	        DriveInformation.MOTOR_RATIO_TO_OUTER_WORKS[lane],
-	        DriveInformation.MOTOR_RATIO_TO_OUTER_WORKS[lane])) == true)
-	// The distance has been reached. Now check the arm's status.
-	{
-
-	if (lane == 1 && armIsDown == false)
-	// We want the arm to be down, but it is not.
-	// Return FAILED, just to be safe.
-	{
-	returnStatus = GeneralStateReturn.FAILED;
-	}
-	else
-	// The arm is down and we have reached the distance. Go on.
-	{
-	returnStatus = GeneralStateReturn.DONE;
-	}
-	}
-
-
-	return returnStatus;
 }
 
 
@@ -1200,6 +1125,11 @@ private static final double DISTANCE_OVER_OUTER_WORKS = 96.25;
  */
 private static final double OUTER_WORKS_MOTOR_RATIO = 0.4;
 
+/**
+ * The distance to the central pivot point from the front of the robot.
+ * We will use this so that we may rotate around a desired point at the end of a
+ * distance.
+ */
 private static final double DISTANCE_TO_CENTRE_OF_ROBOT = 16.0;
 
 /**
