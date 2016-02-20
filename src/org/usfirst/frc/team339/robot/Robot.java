@@ -243,6 +243,10 @@ public void robotInit ()
 
     Hardware.transmission.setJoystickDeadbandRange(.20);
 
+    // ---------------------------------------
+    // denote which motors are wired backwards
+    // from what we want
+    // ---------------------------------------
     Hardware.rightFrontMotor.setInverted(true);
     Hardware.rightRearMotor.setInverted(false);
     Hardware.leftFrontMotor.setInverted(true);
