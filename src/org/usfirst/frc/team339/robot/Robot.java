@@ -480,6 +480,7 @@ public void testPeriodic ()
 // ==========================================
 // TUNEABLES
 // ==========================================
+//The inches/tics ratio
 private final double distancePerTickForMotorEncoders = 0.0755614;
-//was 0.0745614
+// was 0.0745614
 } // end class
