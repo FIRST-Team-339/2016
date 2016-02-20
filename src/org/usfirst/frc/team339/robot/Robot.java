@@ -243,6 +243,10 @@ public void robotInit ()
 
     Hardware.transmission.setJoystickDeadbandRange(.20);
 
+    Hardware.transmission.setFirstGearPercentage(FIRST_GEAR_PERCENTAGE);
+    Hardware.transmission
+            .setSecondGearPercentage(SECOND_GEAR_PERCENTAGE);
+
     // ---------------------------------------
     // denote which motors are wired backwards
     // from what we want
@@ -481,6 +485,9 @@ public void testPeriodic ()
 // TUNEABLES
 // ==========================================
 //The inches/tics ratio
-private final double distancePerTickForMotorEncoders = 0.0755614;
+private final double distancePerTickForMotorEncoders = 0.0745614;
 // was 0.0745614
+// 
+public static final double FIRST_GEAR_PERCENTAGE = 0.5;
+public static final double SECOND_GEAR_PERCENTAGE = 0.7;
 } // end class

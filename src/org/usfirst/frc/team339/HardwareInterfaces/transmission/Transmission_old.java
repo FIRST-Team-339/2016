@@ -172,7 +172,8 @@ private debugStateValues debugState = debugStateValues.DEBUG_NONE;
  *              with each one corresponding to the gear that we are in.
  *              -------------------------------------------------------
  */
-private final Vector<Integer> digitalChannelNumberForGearLight = new Vector<Integer>();
+private final Vector<Integer> digitalChannelNumberForGearLight =
+        new Vector<Integer>();
 
 /**
  * -------------------------------------------------------
@@ -239,8 +240,9 @@ private double leftFifthGearPercentage = 1.00;
  * @written Jan 21, 2011
  *          -------------------------------------------------------
  */
-private final JoystickDirection leftJoystickIsReversed = new JoystickDirection(
-        JoystickDirection.NORMAL);
+private final JoystickDirection leftJoystickIsReversed =
+        new JoystickDirection(
+                JoystickDirection.NORMAL);
 
 /**
  * -------------------------------------------------------
@@ -339,8 +341,9 @@ private boolean presentUpshiftState = false;
  * @written Jan 21, 2011
  *          -------------------------------------------------------
  */
-private final JoystickDirection rightJoystickIsReversed = new JoystickDirection(
-        JoystickDirection.NORMAL);
+private final JoystickDirection rightJoystickIsReversed =
+        new JoystickDirection(
+                JoystickDirection.NORMAL);
 
 /**
  * -------------------------------------------------------
