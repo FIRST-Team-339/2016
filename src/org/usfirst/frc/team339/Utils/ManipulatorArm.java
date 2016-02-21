@@ -12,10 +12,10 @@ public ManipulatorArm (SpeedController armMotorController,
         SpeedController intakeMotor,
         RobotPotentiometer armPot, IRSensor ballIsInArmSensor)
 {
-	this.motor = armMotorController;
-	this.armPot = armPot;
-	this.intakeMotor = intakeMotor;
-	this.hasBallSensor = ballIsInArmSensor;
+    this.motor = armMotorController;
+    this.armPot = armPot;
+    this.intakeMotor = intakeMotor;
+    this.hasBallSensor = ballIsInArmSensor;
 }
 
 //TODO change so it doens't move beyond soft limit from encoder.
@@ -28,8 +28,8 @@ public ManipulatorArm (SpeedController armMotorController,
 public void moveSlow (int direction)
 {
 
-	direction *= -1;
-	this.move(direction * this.slowSpeed);
+    direction *= -1;
+    this.move(direction * this.slowSpeed);
 }
 
 /**
@@ -40,8 +40,8 @@ public void moveSlow (int direction)
  */
 public void moveFast (int direction)
 {
-	direction *= -1;
-	this.move(direction * this.MAX_ARM_SPEED);
+    direction *= -1;
+    this.move(direction * this.MAX_ARM_SPEED);
 }
 
 /**
@@ -52,16 +52,16 @@ public void moveFast (int direction)
  */
 public void move (double speed)
 {
-	//If we're currently beyond our soft limits, don't do anything.  Otherwise do what the user wants.
-	if (this.armPot.get() >= this.MAX_SOFT_ARM_STOP
-	        || this.armPot.get() <= this.MIN_SOFT_ARM_STOP)
-	{
-	this.motor.set(0.0);
-	}
-	else
-	{
-	this.motor.set(speed);
-	}
+    //If we're currently beyond our soft limits, don't do anything.  Otherwise do what the user wants.
+    if (this.armPot.get() <= this.MAX_SOFT_ARM_STOP
+            || this.armPot.get() <= this.MIN_SOFT_ARM_STOP)
+        {
+        this.motor.set(0.0);
+        }
+    else
+        {
+        this.motor.set(speed);
+        }
 }
 
 /**
@@ -70,16 +70,16 @@ public void move (double speed)
  */
 public void pullInBall ()
 {
-	if (Hardware.armIR.get() == false)
-	{
-	//If we already have a ball, no need to pull one in.
-	//TODO check to make sure -1 pulls in and not the reverse.
-	this.intakeMotor.set(-1.0);
-	}
-	else
-	{
-	this.intakeMotor.set(0.0);
-	}
+    if (Hardware.armIR.get() == false)
+        {
+        //If we already have a ball, no need to pull one in.
+        //TODO check to make sure -1 pulls in and not the reverse.
+        this.intakeMotor.set(-1.0);
+        }
+    else
+        {
+        this.intakeMotor.set(0.0);
+        }
 
 }
 
@@ -90,8 +90,8 @@ public void pullInBall ()
 public void pushOutBall ()
 {
 
-	//TODO check to make sure 1 pushes out and not the reverse.
-	this.intakeMotor.set(1.0);
+    //TODO check to make sure 1 pushes out and not the reverse.
+    this.intakeMotor.set(1.0);
 
 }
 
@@ -101,7 +101,7 @@ public void pushOutBall ()
  */
 public boolean ballIsOut ()
 {
-	return !this.hasBallSensor.get();
+    return !this.hasBallSensor.get();
 }
 
 /**
@@ -109,12 +109,12 @@ public boolean ballIsOut ()
  */
 public void stopIntakeArms ()
 {
-	this.intakeMotor.set(0.0);
+    this.intakeMotor.set(0.0);
 }
 
 public void setIntakeArmsSpeed (double speed)
 {
-	this.intakeMotor.set(speed);
+    this.intakeMotor.set(speed);
 }
 
 /**
@@ -123,14 +123,14 @@ public void setIntakeArmsSpeed (double speed)
  */
 public boolean isDown ()
 {
-	if (this.armPot.get() <= this.MIN_SOFT_ARM_STOP)
-	{
-	return true;
-	}
-	else
-	{
-	return false;
-	}
+    if (this.armPot.get() <= this.MIN_SOFT_ARM_STOP)
+        {
+        return true;
+        }
+    else
+        {
+        return false;
+        }
 }
 
 /**
@@ -139,14 +139,14 @@ public boolean isDown ()
  */
 public boolean isUp ()
 {
-	if (this.armPot.get() >= MAX_SOFT_ARM_STOP)
-	{
-	return true;
-	}
-	else
-	{
-	return false;
-	}
+    if (this.armPot.get() >= MAX_SOFT_ARM_STOP)
+        {
+        return true;
+        }
+    else
+        {
+        return false;
+        }
 }
 
 
@@ -156,12 +156,12 @@ public boolean isUp ()
  */
 public boolean isClearOfArm ()
 {
-	if (armPot.get() <= this.ARM_OUT_OF_WAY_DEGREES)
-	{
-	return true;
-	}
+    if (armPot.get() <= this.ARM_OUT_OF_WAY_DEGREES)
+        {
+        return true;
+        }
 
-	return false;
+    return false;
 }
 
 /**
@@ -173,39 +173,39 @@ public boolean isClearOfArm ()
  */
 public boolean moveToPosition (ArmPosition position)
 {
-	boolean done = false;
+    boolean done = false;
 
-	switch (position)
-	{
-		case FULL_DOWN:
-			move(-MAX_ARM_SPEED);
-			if (this.isDown())
-			{
-			move(0.0);
-			done = true;
-			}
-			break;
-		case FULL_UP:
-			move(MAX_ARM_SPEED);
-			if (this.isUp())
-			{
-			move(0.0);
-			done = true;
-			}
-			break;
-		default:
-		case CLEAR_OF_FIRING_ARM:
-			move(-MAX_ARM_SPEED);
-			if (this.isClearOfArm() == true)
-			{
-			move(0.0);
-			done = true;
-			}
-			break;
+    switch (position)
+        {
+        case FULL_DOWN:
+            move(-MAX_ARM_SPEED);
+            if (this.isDown())
+                {
+                move(0.0);
+                done = true;
+                }
+            break;
+        case FULL_UP:
+            move(MAX_ARM_SPEED);
+            if (this.isUp())
+                {
+                move(0.0);
+                done = true;
+                }
+            break;
+        default:
+        case CLEAR_OF_FIRING_ARM:
+            move(-MAX_ARM_SPEED);
+            if (this.isClearOfArm() == true)
+                {
+                move(0.0);
+                done = true;
+                }
+            break;
 
-	}
+        }
 
-	return false;
+    return false;
 }
 
 /**
@@ -214,9 +214,9 @@ public boolean moveToPosition (ArmPosition position)
  *
  */
 public static enum ArmPosition
-	{
-	FULL_DOWN, FULL_UP, CLEAR_OF_FIRING_ARM;
-	}
+    {
+    FULL_DOWN, FULL_UP, CLEAR_OF_FIRING_ARM;
+    }
 
 private SpeedController intakeMotor = null;
 private SpeedController motor = null;

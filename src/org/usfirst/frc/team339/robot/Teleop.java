@@ -607,7 +607,7 @@ public static void printStatements ()
     //            "RR distance = " + Hardware.rightRearEncoder.getDistance());
     //    System.out.println(
     //            "LR distance = " + Hardware.leftRearEncoder.getDistance());
-    //	 System.out.println("Arm Motor = " + Hardware.armMotor.getDistance());
+    //    //    	 System.out.println("Arm Motor = " + Hardware.armMotor.getDistance());
     //    System.out.println(
     //            "Right Rear Encoder Tics: "
     //                    + Hardware.rightRearEncoder.get());
