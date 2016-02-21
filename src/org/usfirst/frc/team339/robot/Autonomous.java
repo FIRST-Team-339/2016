@@ -201,6 +201,7 @@ private static enum ArmState
 
 
 
+
 // ==========================================
 // AUTO STATES
 // ==========================================
@@ -433,7 +434,8 @@ private static void runMainStateMachine ()
 			//UNLESS...
 
 			//When going under the low bar (lane 1), the arm must be down.
-			if ((lane == 1) && (Hardware.pickupArm.isDown() == false))
+			if ((lane == 1)
+			        && (Hardware.pickupArm.isDown() == false))
 			//arm is not down in time. STOP.
 			{
 			mainState = MainState.DONE;
@@ -470,6 +472,7 @@ private static void runMainStateMachine ()
 
 			//put up camera.
 			Hardware.cameraSolenoid.set(Value.kForward);
+
 
 			//initiate the arm motion.
 			runArmStates = true;
@@ -668,7 +671,6 @@ private static boolean delayIsDone ()
 
 	if (Hardware.pickupArm.isDown() == true)
 	{
-	Hardware.pickupArm.move(0.0);
 	}
 
 	return done;
@@ -873,6 +875,7 @@ private static void runArmStates ()
 			//stop running state machine.
 			runArmStates = false;
 			break;
+
 
 
 	}
