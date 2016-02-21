@@ -67,15 +67,8 @@ public void move (double speed)
 public void pullInBall ()
 {
 	//If we already have a ball, no need to pull one in.
-	if (this.hasBallSensor.get() != true)
-	{
 	//TODO check to make sure -1 pulls in and not the reverse.
 	this.intakeMotor.set(-1.0);
-	}
-	else
-	{
-	this.stopIntakeArms();
-	}
 }
 
 /**
@@ -84,16 +77,10 @@ public void pullInBall ()
  */
 public void pushOutBall ()
 {
-	//Only bother pushing the ball out if we have a ball
-	if (this.hasBallSensor.get() == true)
-	{
+
 	//TODO check to make sure 1 pushes out and not the reverse.
 	this.intakeMotor.set(1.0);
-	}
-	else
-	{
-	this.stopIntakeArms();
-	}
+
 }
 
 /**
@@ -224,9 +211,9 @@ private SpeedController motor = null;
 private RobotPotentiometer armPot = null;
 private IRSensor hasBallSensor = null;
 //default maximum arm turn speed proportion
-private final double MAX_ARM_SPEED = .75;
+private final double MAX_ARM_SPEED = .4;
 //default slow arm turn speed proportion
-private double slowSpeed = .5;
+private double slowSpeed = .2;
 //TODO entirely arbitrary values until we can actually test
 private final double ARM_SOFT_MAX_DEGREES = 20.0;
 private final double ARM_SOFT_MIN_DEGREES = 0.0;
