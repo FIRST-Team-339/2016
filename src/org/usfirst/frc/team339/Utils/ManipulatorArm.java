@@ -53,7 +53,7 @@ public void moveFast (int direction)
 public void move (double speed)
 {
     //If we're currently beyond our soft limits, don't do anything.  Otherwise do what the user wants.
-    if (this.armPot.get() <= this.MAX_SOFT_ARM_STOP
+    if (this.armPot.get() >= this.MAX_SOFT_ARM_STOP
             || this.armPot.get() <= this.MIN_SOFT_ARM_STOP)
         {
         this.motor.set(0.0);
@@ -164,6 +164,17 @@ public boolean isClearOfArm ()
     return false;
 }
 
+public boolean isInDepositPosition ()
+{
+	if (armPot.get() > DEPOSIT_POSITION - DEPOSIT_POSITION_THRESHOLD
+	        && armPot.get() < DEPOSIT_POSITION
+	                + DEPOSIT_POSITION_THRESHOLD)
+	{
+	return true;
+	}
+	return false;
+}
+
 /**
  * Moves the arm at full speed to the desired position.
  * 
@@ -193,6 +204,23 @@ public boolean moveToPosition (ArmPosition position)
                 done = true;
                 }
             break;
+		case DEPOSIT:
+			if (armPot.get() < DEPOSIT_POSITION
+			        - DEPOSIT_POSITION_THRESHOLD)
+			{
+			move(MAX_ARM_SPEED);
+			}
+			else if (armPot.get() > DEPOSIT_POSITION
+			        + DEPOSIT_POSITION_THRESHOLD)
+			{
+			move(-MAX_ARM_SPEED);
+			}
+			else
+			{
+			move(0.0);
+			done = true;
+			}
+			break;
         default:
         case CLEAR_OF_FIRING_ARM:
             move(-MAX_ARM_SPEED);
@@ -205,7 +233,7 @@ public boolean moveToPosition (ArmPosition position)
 
         }
 
-    return false;
+	return done;
 }
 
 /**
@@ -215,7 +243,22 @@ public boolean moveToPosition (ArmPosition position)
  */
 public static enum ArmPosition
     {
-    FULL_DOWN, FULL_UP, CLEAR_OF_FIRING_ARM;
+	/**
+	 * All the way down, as in down-to-the-floor down.
+	 */
+	FULL_DOWN,
+	/**
+	 * Folded up all the way.
+	 */
+	FULL_UP,
+	/**
+	 * Within a rang from which we can pu the ball into the catapult.
+	 */
+	DEPOSIT,
+	/**
+	 * Out of the way of the catapult.
+	 */
+	CLEAR_OF_FIRING_ARM;
     }
 
 private SpeedController intakeMotor = null;
@@ -227,9 +270,12 @@ private final double MAX_ARM_SPEED = .4;
 //default slow arm turn speed proportion
 private double slowSpeed = .2;
 
-private final double MAX_SOFT_ARM_STOP = 173;
-private final int MIN_SOFT_ARM_STOP = 19;
+private final double MAX_SOFT_ARM_STOP = 173.0;
+private final double MIN_SOFT_ARM_STOP = 19.0;
 
 private final double ARM_OUT_OF_WAY_DEGREES = 10.0;
+
+private final double DEPOSIT_POSITION = 70.0;
+private final double DEPOSIT_POSITION_THRESHOLD = 5.0;
 
 }

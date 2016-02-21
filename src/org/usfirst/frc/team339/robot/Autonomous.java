@@ -33,6 +33,7 @@ package org.usfirst.frc.team339.robot;
 
 import org.usfirst.frc.team339.Hardware.Hardware;
 import org.usfirst.frc.team339.Utils.ErrorMessage;
+import org.usfirst.frc.team339.Utils.ManipulatorArm.ArmPosition;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.vision.AxisCamera.Resolution;
 
@@ -852,7 +853,8 @@ private static void runArmStates ()
 			break;
 		case CHECK_UP_TO_DEPOSIT:
 			//check is in up position so that we may deposit the ball.
-			if (Hardware.pickupArm.isUp() == true)
+			if (Hardware.pickupArm
+			        .moveToPosition(ArmPosition.DEPOSIT) == true)
 			//stop, and go to deposit.
 			{
 			Hardware.pickupArm.move(0.0);
