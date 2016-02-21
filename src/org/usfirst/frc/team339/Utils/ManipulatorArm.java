@@ -1,5 +1,6 @@
 package org.usfirst.frc.team339.Utils;
 
+import org.usfirst.frc.team339.Hardware.Hardware;
 import org.usfirst.frc.team339.HardwareInterfaces.IRSensor;
 import org.usfirst.frc.team339.HardwareInterfaces.RobotPotentiometer;
 import edu.wpi.first.wpilibj.SpeedController;
@@ -26,6 +27,7 @@ public ManipulatorArm (SpeedController armMotorController,
  */
 public void moveSlow (int direction)
 {
+	direction *= -1;
 	this.move(direction * this.slowSpeed);
 }
 
@@ -37,6 +39,7 @@ public void moveSlow (int direction)
  */
 public void moveFast (int direction)
 {
+	direction *= -1;
 	this.move(direction * this.MAX_ARM_SPEED);
 }
 
@@ -66,9 +69,17 @@ public void move (double speed)
  */
 public void pullInBall ()
 {
+	if (Hardware.armIR.get() == false)
+	{
 	//If we already have a ball, no need to pull one in.
 	//TODO check to make sure -1 pulls in and not the reverse.
 	this.intakeMotor.set(-1.0);
+	}
+	else
+	{
+	this.intakeMotor.set(0.0);
+	}
+
 }
 
 /**
