@@ -35,6 +35,7 @@ import org.usfirst.frc.team339.Hardware.Hardware;
 import org.usfirst.frc.team339.Utils.Guidance;
 import edu.wpi.first.wpilibj.CameraServer;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
+import edu.wpi.first.wpilibj.Relay.Direction;
 import edu.wpi.first.wpilibj.Relay.Value;
 
 /**
@@ -156,7 +157,7 @@ public static void periodic ()
             isAligningByCamera = false;
             }
         }
-    System.out.println("AligningByCamera = " + isAligningByCamera);
+
     //end alignByCameraBlock
 
     // Block of code to pick up ball or push it out
@@ -357,7 +358,7 @@ public static boolean armIsUp = false;
  */
 public static boolean fire (int power, boolean override)
 {
-    if (Hardware.transducer.get() >= 90 || override == true)
+	if (Hardware.transducer.get() >= FIRING_MIN_PSI || override == true)
         {
         //        if (Hardware.pickupArm.moveToPosition(
         //                ManipulatorArm.ArmPosition.CLEAR_OF_FIRING_ARM) == true)
@@ -534,6 +535,9 @@ public static void processImage ()
 public static void printStatements ()
 {
 
+	// Align By Camera------
+	//System.out.println("AligningByCamera = " + isAligningByCamera);
+	//checks to see if the robot is aligning by camera
 
     // Joysticks------------
     //    System.out.println("Left Joystick: " + Hardware.leftDriver.getY());
@@ -635,15 +639,17 @@ private static final int GEAR_DOWNSHIFT_JOYSTICK_BUTTON = 2;
 private static final int CAMERA_TOGGLE_BUTTON = 2;
 // Right operator 2
 private static final int FIRE_OVERRIDE_BUTTON = 2;
-// Right operator 3
+// Left operator 3
 private static final int FIRE_CANCEL_BUTTON = 3;
-// left operator 4
+// Right operator 4
 private static final int TAKE_IN_BALL_BUTTON = 4;
 // right operator 5
 private static final int PUSH_OUT_BALL_BUTTON = 5;
 // TODO completely arbitrary and move to manipulator arm class
 private static final double MAX_SOFT_ARM_STOP = 200;
 private static final int MIN_SOFT_ARM_STOP = 0;
+//minimum pressure when allowed to fire
+private static final int FIRING_MIN_PSI = 90;
 
 // ==========================================
 // TUNEABLES
