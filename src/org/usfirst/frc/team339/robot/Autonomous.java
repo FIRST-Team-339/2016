@@ -170,7 +170,7 @@ private static enum ArmState
 	/**
 	 * Czecks to see if the arm is all the way down.
 	 */
-	CHECK_DOWN,
+	MOVE_DOWN,
 	/**
 	 * Begins moving the arm in a upwards/up-to-the-shooter action fashion.
 	 */
@@ -408,7 +408,7 @@ private static void runMainStateMachine ()
 		case BEGIN_LOWERING_ARM:
 			// starts the arm movement to the floor
 			runArmStates = true;
-			armState = ArmState.INIT_DOWN;
+			armState = ArmState.MOVE_DOWN;
 			//TODO: Remove primitive stuff below.
 			//Hardware.armMotor.set(1.0);
 			// goes into initDelay
@@ -819,11 +819,12 @@ private static void runArmStates ()
 			//begin moving arm down
 			Hardware.pickupArm.move(-1.0);
 			//go to periodically check.
-			armState = ArmState.CHECK_DOWN;
+			armState = ArmState.MOVE_DOWN;
 			break;
-		case CHECK_DOWN:
+		case MOVE_DOWN:
 			//check if down.
-			if (Hardware.pickupArm.isDown() == true)
+			if (Hardware.pickupArm
+			        .moveToPosition(ArmPosition.FULL_DOWN) == true)
 			//stop.
 			{
 			Hardware.pickupArm.move(0.0);
