@@ -13,6 +13,8 @@ public class Drive
 {
 
 
+
+
 /**
  * Constructor for a Drive object. Should only be called once.
  * 
@@ -1149,12 +1151,16 @@ public boolean alignByCamera (double percentageDeadBand,
     if (this.camera != null && this.ringLightRelay != null)
         {
         //actually start
-        this.cameraTimer.start();
-        //turn down the lights
-        Hardware.axisCamera.writeBrightness(
-                Hardware.MINIMUM_AXIS_CAMERA_BRIGHTNESS);
-        //Woah, that's too dark! Turn on the ringlight someone!
-        Hardware.ringLightRelay.set(Value.kOn);
+        if (firstTimeAlign == true)
+            {
+            this.cameraTimer.start();
+            //turn down the lights
+            Hardware.axisCamera.writeBrightness(
+                    Hardware.MINIMUM_AXIS_CAMERA_BRIGHTNESS);
+            //Woah, that's too dark! Turn on the ringlight someone!
+            Hardware.ringLightRelay.set(Value.kOn);
+            firstTimeAlign = false;
+            }
         //If we claim to be driving by camera and we've waitied long enough 
         //for someone to brighten up the darkness with the ringlight
         if (Hardware.delayTimer.get() >= .75)
@@ -1213,6 +1219,7 @@ public boolean alignByCamera (double percentageDeadBand,
             else
                 {
                 //Stop moving
+                firstTimeAlign = true;
                 this.cameraTimer.stop();
                 this.cameraTimer.reset();
                 Hardware.transmission.controls(0.0, 0.0);
@@ -1338,6 +1345,8 @@ private final Timer cameraTimer = new Timer();
 private double cameraXResolution;
 //The vertical resolution of the camera used in the drive class.
 private double cameraYResolution;
+
+private boolean firstTimeAlign = true;
 
 private double prevTime = 0.0;
 private double prevLeftDistance = 0.0;
