@@ -180,13 +180,10 @@ private static enum ArmState
 	 */
 	CHECK_UP,
 	/**
-	 * Begins moving up, with full intention of releasing the ball.
+	 * Moves, and czecks to see if the arm is all the way up, so that we may
+	 * deposit.
 	 */
-	INIT_UP_AND_DEPOSIT,
-	/**
-	 * Czecks to see if the arm is all the way up, so that we may deposit.
-	 */
-	CHECK_UP_TO_DEPOSIT,
+	MOVE_UP_TO_DEPOSIT,
 	/**
 	 * Begins spinning its wheels so as to spit out the cannon ball.
 	 */
@@ -476,7 +473,7 @@ private static void runMainStateMachine ()
 
 			//initiate the arm motion.
 			runArmStates = true;
-			armState = ArmState.INIT_UP_AND_DEPOSIT;
+			armState = ArmState.MOVE_UP_TO_DEPOSIT;
 
 			mainState = MainState.FORWARDS_BASED_ON_ENCODERS_OR_IR;
 			}
@@ -818,7 +815,7 @@ private static void runArmStates ()
 	{
 		case INIT_DOWN:
 			//begin moving arm down
-			Hardware.pickupArm.move(1.0);
+			Hardware.pickupArm.move(-1.0);
 			//go to periodically check.
 			armState = ArmState.CHECK_DOWN;
 			break;
@@ -833,7 +830,7 @@ private static void runArmStates ()
 			break;
 		case INIT_UP:
 			//begin moving arm up.
-			Hardware.pickupArm.move(-1.0);
+			Hardware.pickupArm.move(1.0);
 			//go to periodically check.
 			armState = ArmState.CHECK_UP;
 			break;
@@ -846,12 +843,7 @@ private static void runArmStates ()
 			armState = ArmState.DONE;
 			}
 			break;
-		case INIT_UP_AND_DEPOSIT:
-			//begin moving arm to depositing position.
-			Hardware.pickupArm.move(-1.0);
-			armState = ArmState.CHECK_UP_TO_DEPOSIT;
-			break;
-		case CHECK_UP_TO_DEPOSIT:
+		case MOVE_UP_TO_DEPOSIT:
 			//check is in up position so that we may deposit the ball.
 			if (Hardware.pickupArm
 			        .moveToPosition(ArmPosition.DEPOSIT) == true)
