@@ -17,6 +17,27 @@ private static Direction direction = Direction.neutral;
 
 
 /**
+ * @param robotHasBall
+ * 
+ *            if the armIR senses that the robot already has
+ *            a ball, send that info to the SmartDashboard.
+ * 
+ * @author Ryan McGee
+ */
+public static void updateBallStatus (boolean robotHasBall)
+{
+    if (robotHasBall)
+        {
+        SmartDashboard.putBoolean("Has Ball", true);
+        }
+    else
+        {
+        SmartDashboard.putBoolean("Has Ball", false);
+        }
+}
+
+
+/**
  * Changes value of arrows on Smart Dashboard based on the set direction.
  */
 public void update ()
@@ -49,13 +70,6 @@ public void update ()
             SmartDashboard.putBoolean("Right", false);
             SmartDashboard.putBoolean("Left", false);
             SmartDashboard.putBoolean("Stop", false);
-            break;
-
-        case stop:
-            SmartDashboard.putBoolean("Straight", false);
-            SmartDashboard.putBoolean("Right", false);
-            SmartDashboard.putBoolean("Left", false);
-            SmartDashboard.putBoolean("Stop", true);
             break;
         }
 }
@@ -110,17 +124,9 @@ public static enum Direction
     /**
      * flashes the world green.
      */
-    linedUp,
-    /**
-     * turns the screen red
-     */
-    stop
+    linedUp
     }
 
-public static void updateBallStatus (boolean b)
-{
-
-}
 }
 
 
