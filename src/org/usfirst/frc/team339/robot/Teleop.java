@@ -124,7 +124,7 @@ public static void periodic ()
         }
     else
         {
-        Hardware.armMotor.set(0.0);
+        Hardware.pickupArm.stopArmMotor();
         }
     //Block of code to toggle the camera up or down
     //If the camera is down and we press the button.
