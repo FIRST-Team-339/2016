@@ -26,14 +26,14 @@ private static Direction direction = Direction.neutral;
  */
 public static void updateBallStatus (boolean robotHasBall)
 {
-	if (robotHasBall)
-	{
-	SmartDashboard.putBoolean("Has Ball", true);
-	}
-	else
-	{
-	SmartDashboard.putBoolean("Has Ball", false);
-	}
+    if (robotHasBall)
+        {
+        SmartDashboard.putBoolean("Has Ball", true);
+        }
+    else
+        {
+        SmartDashboard.putBoolean("Has Ball", false);
+        }
 }
 
 
@@ -42,36 +42,36 @@ public static void updateBallStatus (boolean robotHasBall)
  */
 public void update ()
 {
-	switch (direction)
-	{
-		case left:
-			SmartDashboard.putBoolean("Left", true);
-			SmartDashboard.putBoolean("Right", false);
-			SmartDashboard.putBoolean("Straight", false);
-			SmartDashboard.putBoolean("Stop", false);
-			break;
+    switch (direction)
+        {
+        case left:
+            SmartDashboard.putBoolean("Left", true);
+            SmartDashboard.putBoolean("Right", false);
+            SmartDashboard.putBoolean("Straight", false);
+            SmartDashboard.putBoolean("Stop", false);
+            break;
 
-		case right:
-			SmartDashboard.putBoolean("Right", true);
-			SmartDashboard.putBoolean("Left", false);
-			SmartDashboard.putBoolean("Straight", false);
-			SmartDashboard.putBoolean("Stop", false);
-			break;
+        case right:
+            SmartDashboard.putBoolean("Right", true);
+            SmartDashboard.putBoolean("Left", false);
+            SmartDashboard.putBoolean("Straight", false);
+            SmartDashboard.putBoolean("Stop", false);
+            break;
 
-		case neutral:
-			SmartDashboard.putBoolean("Right", false);
-			SmartDashboard.putBoolean("Left", false);
-			SmartDashboard.putBoolean("Straight", false);
-			SmartDashboard.putBoolean("Stop", false);
-			break;
+        case neutral:
+            SmartDashboard.putBoolean("Right", false);
+            SmartDashboard.putBoolean("Left", false);
+            SmartDashboard.putBoolean("Straight", false);
+            SmartDashboard.putBoolean("Stop", false);
+            break;
 
-		case linedUp:
-			SmartDashboard.putBoolean("Straight", true);
-			SmartDashboard.putBoolean("Right", false);
-			SmartDashboard.putBoolean("Left", false);
-			SmartDashboard.putBoolean("Stop", false);
-			break;
-	}
+        case linedUp:
+            SmartDashboard.putBoolean("Straight", true);
+            SmartDashboard.putBoolean("Right", false);
+            SmartDashboard.putBoolean("Left", false);
+            SmartDashboard.putBoolean("Stop", false);
+            break;
+        }
 }
 
 /**
@@ -80,7 +80,7 @@ public void update ()
  */
 public static Direction getDirection ()
 {
-	return direction;
+    return direction;
 }
 
 /**
@@ -90,7 +90,7 @@ public static Direction getDirection ()
  */
 public void setDirection (Direction direction)
 {
-	Guidance.direction = direction;
+    Guidance.direction = direction;
 }
 
 /**
@@ -108,24 +108,25 @@ public void setDirection (Direction direction)
  *
  */
 public static enum Direction
-	{
-	/**
-	 * lights up an orange arrow on the left.
-	 */
-	left,
-	/**
-	 * lights up an orange arrow on the right.
-	 */
-	right,
-	/**
-	 * Nicht. Nein. Nada.
-	 */
-	neutral,
-	/**
-	 * flashes the world green.
-	 */
-	linedUp
-	}
+    {
+    /**
+     * lights up an orange arrow on the left.
+     */
+    left,
+    /**
+     * lights up an orange arrow on the right.
+     */
+    right,
+    /**
+     * Nicht. Nein. Nada.
+     */
+    neutral,
+    /**
+     * flashes the world green.
+     */
+    linedUp
+    }
+
 }
 
 
