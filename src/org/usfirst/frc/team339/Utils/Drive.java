@@ -1268,7 +1268,8 @@ public boolean alignByCamera (double percentageDeadBand,
 public boolean alignByCamera (double percentageDeadBand)
 {
     //I've decided .45 is a fair correction speed, can tweak later if need be.
-    return alignByCamera(percentageDeadBand, .45);
+    return alignByCamera(percentageDeadBand,
+            DEFAULT_CAMERA_ALIGNMENT_TURNING_SPEED);
 }
 
 /**
@@ -1286,8 +1287,8 @@ public boolean alignByCamera (double percentageDeadBand)
 public boolean alignByCamera ()
 {
     //I've decided 10% is a fair deadband range for general alignment, can tweak later if need be.
-    //TODO: Demystify magic numbers.
-    return alignByCamera(.1, .45);
+    return alignByCamera(DEFAULT_ALIGNMENT_DEADBAND,
+            DEFAULT_CAMERA_ALIGNMENT_TURNING_SPEED);
 }
 
 
@@ -1332,6 +1333,9 @@ public enum turnWhichWay
 
 // TODO - get Kilroy's new turning radius
 private final double ROBOT_TURNING_RADIUS = 12.0;
+
+private final double DEFAULT_ALIGNMENT_DEADBAND = .1;
+private final double DEFAULT_CAMERA_ALIGNMENT_TURNING_SPEED = .45;
 
 private Transmission_old transmission = null;
 //Camera we use for vision processing.

@@ -46,8 +46,6 @@ import edu.wpi.first.wpilibj.Relay.Value;
  */
 public class Teleop
 {
-
-
 /**
  * User Initialization code for teleop mode should go here. Will be
  * called once when the robot enters teleop mode.
@@ -63,7 +61,7 @@ public static void init ()
     // set max speed. change by gear?
     Hardware.drive.setMaxSpeed(MAXIMUM_TELEOP_SPEED);
 
-    Hardware.transmission.setGear(1);//TODO change back to 1
+    Hardware.transmission.setGear(1);
     Hardware.transmission
             .setFirstGearPercentage(Robot.FIRST_GEAR_PERCENTAGE);
     Hardware.transmission
@@ -110,8 +108,8 @@ private static edu.wpi.first.wpilibj.DoubleSolenoid.Value Forward;
 public static void periodic ()
 {
     // block of code to move the arm
-    // TODO set deadzone to variable
-    if (Math.abs(Hardware.rightOperator.getY()) >= .2)
+    if (Math.abs(Hardware.rightOperator
+            .getY()) >= PICKUP_ARM_CONTROL_DEADZONE)
         {
         // use the formula for the sign (value/abs(value)) to get the direction
         // we want the motor to go in,
@@ -153,9 +151,10 @@ public static void periodic ()
     //If we want to point at the goal using the camera
     if (isAligningByCamera == true)
         {
-        //TODO outsource both to a variable
         //Keep trying to point at the goal
-        if (Hardware.drive.alignByCamera(.15, .45) == true)
+        if (Hardware.drive.alignByCamera(
+                PERCENT_IMAGE_PROCESSING_DEADBAND,
+                CAMERA_ALIGNMENT_TURNING_SPEED) == true)
             {
             // Once we're in the center, tell the code we no longer care about
             // steering towards the goal
@@ -666,6 +665,12 @@ private static final int FIRE_CANCEL_BUTTON = 3;
 private static final int TAKE_IN_BALL_BUTTON = 4;
 // right operator 5
 private static final int PUSH_OUT_BALL_BUTTON = 5;
+
+private static final double PICKUP_ARM_CONTROL_DEADZONE = 0.2;
+
+private final static double PERCENT_IMAGE_PROCESSING_DEADBAND = .15;
+
+private final static double CAMERA_ALIGNMENT_TURNING_SPEED = .45;
 
 //minimum pressure when allowed to fire
 private static final int FIRING_MIN_PSI = 90;
