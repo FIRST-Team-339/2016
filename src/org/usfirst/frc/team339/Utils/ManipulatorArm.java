@@ -52,16 +52,18 @@ public void moveFast (int direction, boolean override)
  */
 public void move (double speed, boolean override)
 {
-    //If we're currently beyond our soft limits, don't do anything.  Otherwise do what the user wants.
+    //If we're currently beyond our soft limits, don't do anything that would 
+    //bring up further out of them.  Otherwise do what the user wants.
     if ((speed < 0 && this.armPot.get() < this.MIN_SOFT_ARM_STOP)
             || (speed > 0
                     && this.armPot.get() > this.MAX_SOFT_ARM_STOP))
         {
-        this.motor.set(0.0);
+        //we have to give a little bit of voltage to stop the motor.
+        this.stopArmMotor();
         }
     else
         {
-        this.motor.set(speed);
+        this.motor.set(-speed);
         }
 }
 
@@ -70,6 +72,10 @@ public void move (double speed)
     this.move(speed, false);
 }
 
+public void stopArmMotor ()
+{
+    this.motor.set(-.1);
+}
 
 /**
  * Starts the intake motor to suck in a ball; stopIntakeArms() needs to be
