@@ -1145,7 +1145,7 @@ public boolean alignByCamera (double percentageDeadBand,
         double correctionSpeed, boolean savePictures)
 {
     //If the stupid programmers didn't give me a camera or relay before
-    //calling this, don't even to align, it would kill me and all my
+    //calling this, don't even try to align, it would kill me and all my
     //friend classes.  Trying to align by the camera without a camera...
     //How stupid can you get, programmers?
     if (this.camera != null && this.ringLightRelay != null)
@@ -1157,12 +1157,13 @@ public boolean alignByCamera (double percentageDeadBand,
             //turn down the lights
             Hardware.axisCamera.writeBrightness(
                     Hardware.MINIMUM_AXIS_CAMERA_BRIGHTNESS);
-            //Woah, that's too dark! Turn on the ringlight someone!
+            //Woah, that's too dark! Someone turn on the ringlight!
             Hardware.ringLightRelay.set(Value.kOn);
             firstTimeAlign = false;
             }
         //If we claim to be driving by camera and we've waitied long enough 
         //for someone to brighten up the darkness with the ringlight
+        //TODO: Demystify magic number 
         if (Hardware.delayTimer.get() >= .75)
             {
             //try to take a picture and save it in memory and on the "hard disk"
@@ -1228,7 +1229,6 @@ public boolean alignByCamera (double percentageDeadBand,
             }
         }
     return false;
-
 }//end alignByCamera()
 
 /**
@@ -1286,6 +1286,7 @@ public boolean alignByCamera (double percentageDeadBand)
 public boolean alignByCamera ()
 {
     //I've decided 10% is a fair deadband range for general alignment, can tweak later if need be.
+    //TODO: Demystify magic numbers.
     return alignByCamera(.1, .45);
 }
 
