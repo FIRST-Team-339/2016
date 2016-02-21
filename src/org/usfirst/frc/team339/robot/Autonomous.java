@@ -94,7 +94,7 @@ private static enum MainState
 	 * This state checks to see if we are in lane 1.
 	 * If so, we go until we reach an encoder distance (set to distance to
 	 * alignment tape),
-	 * Else, we go util the sensors find the Alignment tape.
+	 * Else, we go until the sensors find the Alignment tape.
 	 */
 	FORWARDS_BASED_ON_ENCODERS_OR_IR, // decides based on lane whether to move
 										// to tape based on encoders or IR
@@ -114,7 +114,7 @@ private static enum MainState
 						// tape.
 
 	/**
-	 * Drives up 16 inches to put the center of the robot over the Alien.
+	 * Drives up 16 inches to put the center of the robot over the Aline.
 	 */
 	CENTER_TO_TAPE,
 
@@ -287,8 +287,8 @@ public static void init ()
 	// Encoder Initialization
 	// --------------------------------------
 	Hardware.leftRearEncoder.reset();
-	Hardware.leftRearEncoder.setDistancePerPulse(0.019706);
-	Hardware.rightRearEncoder.setDistancePerPulse(0.019706);
+	Hardware.leftRearEncoder.setDistancePerPulse(0.0745614);
+	Hardware.rightRearEncoder.setDistancePerPulse(0.0745614);
 	Hardware.rightRearEncoder.reset();
 
 	// -------------------------------------
@@ -337,7 +337,7 @@ public static void periodic ()
 	// Checks the "enabled" switch.
 	if (autonomousEnabled == true)
 	{
-	// runs the overarching state machine.
+	//runs the overarching state machine.
 	runMainStateMachine();
 	}
 
@@ -595,7 +595,7 @@ private static void runMainStateMachine ()
 
 		case ALIGN_IN_FRONT_OF_GOAL:
 			//align based on the camera until we are facing the goal. head-on.
-			if (Hardware.drive.alignByCamera())
+			if (Hardware.drive.alignByCamera() == true)
 			//Once we are in position, we shoot!
 			{
 			mainState = MainState.SHOOT;
@@ -699,10 +699,7 @@ private static boolean hasMovedToTape ()
 	{
 	tapeness = true;
 	}
-
-
 	return tapeness;
-
 }
 
 
@@ -752,10 +749,17 @@ private static boolean hasDrivenUpToGoal ()
  */
 private static void shoot ()
 {
+
+	//Make sure the arm is out of the way.
+	if (Hardware.pickupArm.isClearOfArm())
+	{
+
 	//RELEASE THE KRACKEN! I mean, the pressurized air...
 	Hardware.catapultSolenoid0.set(true);
 	Hardware.catapultSolenoid1.set(true);
 	Hardware.catapultSolenoid2.set(true);
+
+	}
 
 	//set a timer so that we know when to close the solenoids.
 	Hardware.kilroyTimer.reset();
@@ -798,7 +802,7 @@ private static void done ()
 /*
  * =============================================
  * END OF MAIN AUTONOMOUS STATE METHODS
- * =========================================
+ * =============================================
  */
 
 
@@ -829,7 +833,7 @@ private static void runArmStates ()
 		case INIT_UP:
 			//begin moving arm up.
 			Hardware.pickupArm.move(-1.0);
-			//go to periotically check.
+			//go to periodically check.
 			armState = ArmState.CHECK_UP;
 			break;
 		case CHECK_UP:
