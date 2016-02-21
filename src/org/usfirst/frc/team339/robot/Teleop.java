@@ -35,7 +35,6 @@ import org.usfirst.frc.team339.Hardware.Hardware;
 import org.usfirst.frc.team339.Utils.Guidance;
 import edu.wpi.first.wpilibj.CameraServer;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
-import edu.wpi.first.wpilibj.Relay.Direction;
 import edu.wpi.first.wpilibj.Relay.Value;
 
 /**
@@ -110,40 +109,6 @@ private static edu.wpi.first.wpilibj.DoubleSolenoid.Value Forward;
  */
 public static void periodic ()
 {
-
-    //If we press button 6 on the right Operator joystick, we set the
-    //direction of the channel as forward and try to turn the ringlight
-    //on.
-    if (Hardware.rightOperator.getRawButton(6) == true)
-        {
-        Hardware.ringLightRelay.setDirection(Direction.kForward);
-        Hardware.ringLightRelay.set(Value.kOn);
-        }
-
-    //If we press button 7, we set the direction as forward and try to 
-    //turn the ringlight off
-    if (Hardware.rightOperator.getRawButton(7) == true)
-        {
-        Hardware.ringLightRelay.setDirection(Direction.kForward);
-        Hardware.ringLightRelay.set(Value.kOff);
-        }
-
-    //If we press button 10, we set the direction as reverse and then 
-    //try to turn the ringlight on
-    if (Hardware.rightOperator.getRawButton(10) == true)
-        {
-        Hardware.ringLightRelay.setDirection(Direction.kReverse);
-        Hardware.ringLightRelay.set(Value.kOn);
-        }
-
-    //If we press button 11, we set the direction as reverse and then 
-    //try to turn the ringlight off
-    if (Hardware.rightOperator.getRawButton(11) == true)
-        {
-        Hardware.ringLightRelay.setDirection(Direction.kReverse);
-        Hardware.ringLightRelay.set(Value.kOff);
-        }
-
     // block of code to move the arm
     // TODO set deadzone to variable
     if (Math.abs(Hardware.rightOperator.getY()) >= .2)
