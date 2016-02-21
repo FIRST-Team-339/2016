@@ -27,6 +27,7 @@ public ManipulatorArm (SpeedController armMotorController,
  */
 public void moveSlow (int direction)
 {
+
 	direction *= -1;
 	this.move(direction * this.slowSpeed);
 }
@@ -52,8 +53,8 @@ public void moveFast (int direction)
 public void move (double speed)
 {
 	//If we're currently beyond our soft limits, don't do anything.  Otherwise do what the user wants.
-	if (this.armPot.get() >= this.ARM_SOFT_MAX_DEGREES
-	        || this.armPot.get() <= this.ARM_SOFT_MIN_DEGREES)
+	if (this.armPot.get() >= this.MAX_SOFT_ARM_STOP
+	        || this.armPot.get() <= this.MIN_SOFT_ARM_STOP)
 	{
 	this.motor.set(0.0);
 	}
@@ -122,7 +123,7 @@ public void setIntakeArmsSpeed (double speed)
  */
 public boolean isDown ()
 {
-	if (this.armPot.get() <= this.ARM_SOFT_MIN_DEGREES)
+	if (this.armPot.get() <= this.MIN_SOFT_ARM_STOP)
 	{
 	return true;
 	}
@@ -138,7 +139,7 @@ public boolean isDown ()
  */
 public boolean isUp ()
 {
-	if (this.armPot.get() >= this.ARM_SOFT_MAX_DEGREES)
+	if (this.armPot.get() >= MAX_SOFT_ARM_STOP)
 	{
 	return true;
 	}
@@ -225,9 +226,10 @@ private IRSensor hasBallSensor = null;
 private final double MAX_ARM_SPEED = .4;
 //default slow arm turn speed proportion
 private double slowSpeed = .2;
-//TODO entirely arbitrary values until we can actually test
-private final double ARM_SOFT_MAX_DEGREES = 20.0;
-private final double ARM_SOFT_MIN_DEGREES = 0.0;
+
+private final double MAX_SOFT_ARM_STOP = 173;
+private final int MIN_SOFT_ARM_STOP = 19;
+
 private final double ARM_OUT_OF_WAY_DEGREES = 10.0;
 
 }

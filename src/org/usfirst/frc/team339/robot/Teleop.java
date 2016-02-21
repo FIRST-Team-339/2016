@@ -664,9 +664,7 @@ private static final int FIRE_CANCEL_BUTTON = 3;
 private static final int TAKE_IN_BALL_BUTTON = 4;
 // right operator 5
 private static final int PUSH_OUT_BALL_BUTTON = 5;
-// TODO completely arbitrary and move to manipulator arm class
-private static final double MAX_SOFT_ARM_STOP = 261;
-private static final int MIN_SOFT_ARM_STOP = 128;
+
 //minimum pressure when allowed to fire
 private static final int FIRING_MIN_PSI = 90;
 
