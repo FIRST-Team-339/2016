@@ -117,7 +117,8 @@ public static void periodic ()
         // make the compiler happy
         Hardware.pickupArm
                 .moveFast((int) Math.round(Hardware.rightOperator.getY()
-                        / Math.abs(Hardware.rightOperator.getY())));
+                        / Math.abs(Hardware.rightOperator.getY())),
+                        Hardware.rightOperator.getRawButton(2));
         //	Hardware.pickupArm.moveFast(1);
 
         }
@@ -169,7 +170,9 @@ public static void periodic ()
     if (Hardware.rightOperator
             .getRawButton(TAKE_IN_BALL_BUTTON) == true)
         {
-        Hardware.pickupArm.pullInBall();
+        //TODO demystify magic argument
+        Hardware.pickupArm
+                .pullInBall(Hardware.rightOperator.getRawButton(3));
         }
     //push out the ball if the push out button is pressed
     else if (Hardware.rightOperator
@@ -571,7 +574,7 @@ public static void printStatements ()
     // IR sensors-----------
     //System.out.println("left IR = " + Hardware.leftIR.isOn());
     //System.out.println("right IR = " + Hardware.rightIR.isOn());
-    //System.out.println("Has ball IR = " + Hardware.armIR.isOn());
+    System.out.println("Has ball IR = " + Hardware.armIR.isOn());
 
     // pots-----------------
     // System.out.println("delay pot = " + (int) Hardware.delayPot.get());
