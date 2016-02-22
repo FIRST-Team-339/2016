@@ -8,6 +8,7 @@ import edu.wpi.first.wpilibj.SpeedController;
 // TODO fix everything when we have a physical arm
 public class ManipulatorArm
 {
+
 public ManipulatorArm (SpeedController armMotorController,
         SpeedController intakeMotor,
         RobotPotentiometer armPot, IRSensor ballIsInArmSensor)
@@ -74,7 +75,9 @@ public void move (double speed)
 
 public void stopArmMotor ()
 {
+
     this.motor.set(.15);
+
 }
 
 /**
@@ -188,6 +191,23 @@ public boolean isInDepositPosition ()
     return false;
 }
 
+public void holdInHoldingPosition ()
+{
+    if (armPot.get() < HOLDING_POSITION - HOLDING_POSITION_THRESHOLD)
+        {
+        move(MAX_ARM_SPEED);
+        }
+    else if (armPot.get() > HOLDING_POSITION
+            + HOLDING_POSITION_THRESHOLD)
+        {
+        move(-MAX_ARM_SPEED);
+        }
+    else
+        {
+        move(HOLDING_SPEED);
+        }
+}
+
 /**
  * Moves the arm at full speed to the desired position.
  * 
@@ -202,6 +222,7 @@ public boolean moveToPosition (ArmPosition position)
     switch (position)
         {
         case FULL_DOWN:
+
             move(-MAX_ARM_SPEED);
             if (this.isDown())
                 {
@@ -234,7 +255,6 @@ public boolean moveToPosition (ArmPosition position)
                 done = true;
                 }
             break;
-        default:
         case CLEAR_OF_FIRING_ARM:
             move(-MAX_ARM_SPEED);
             if (this.isClearOfArm() == true)
@@ -243,7 +263,10 @@ public boolean moveToPosition (ArmPosition position)
                 done = true;
                 }
             break;
-
+        default:
+        case HOLD:
+            holdInHoldingPosition();
+            break;
         }
 
     return done;
@@ -271,7 +294,11 @@ public static enum ArmPosition
     /**
      * Out of the way of the catapult.
      */
-    CLEAR_OF_FIRING_ARM;
+    CLEAR_OF_FIRING_ARM,
+    /**
+     * Stay off the ground, yet out of the way,.
+     */
+    HOLD
     }
 
 private SpeedController intakeMotor = null;
@@ -288,7 +315,11 @@ private final double MIN_SOFT_ARM_STOP = 19.0;
 
 private final double ARM_OUT_OF_WAY_DEGREES = 10.0;
 
-private final double DEPOSIT_POSITION = 70.0;
+private final double DEPOSIT_POSITION = 90.0;
 private final double DEPOSIT_POSITION_THRESHOLD = 5.0;
+
+private static final int HOLDING_POSITION = 70;
+private static final int HOLDING_POSITION_THRESHOLD = 5;
+private static final double HOLDING_SPEED = 0.1;
 
 }
