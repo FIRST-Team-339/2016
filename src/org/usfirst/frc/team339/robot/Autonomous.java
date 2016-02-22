@@ -193,6 +193,10 @@ private static enum ArmState
 	 */
 	DEPOSIT,
 	/**
+	 * Hold the ball out of the way.
+	 */
+	HOLD,
+	/**
 	 * Do nothing, but set armStatesOn to false.
 	 */
 	DONE
@@ -476,7 +480,7 @@ private static void runMainStateMachine ()
 
 			//initiate the arm motion.
 			runArmStates = true;
-			armState = ArmState.MOVE_UP_TO_DEPOSIT;
+			armState = ArmState.HOLD;
 
 			mainState = MainState.FORWARDS_BASED_ON_ENCODERS_OR_IR;
 			}
@@ -870,6 +874,9 @@ private static void runArmStates ()
 			//get out of the way.
 			armState = ArmState.INIT_DOWN;
 			}
+			break;
+		case HOLD:
+			Hardware.pickupArm.holdInHoldingPosition();
 			break;
 		default:
 		case DONE:
