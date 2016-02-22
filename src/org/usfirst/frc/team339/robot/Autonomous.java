@@ -876,7 +876,7 @@ private static void runArmStates ()
 			}
 			break;
 		case HOLD:
-			Hardware.pickupArm.holdInHoldingPosition();
+			Hardware.pickupArm.moveToPosition(ArmPosition.HOLD);
 			break;
 		default:
 		case DONE:
