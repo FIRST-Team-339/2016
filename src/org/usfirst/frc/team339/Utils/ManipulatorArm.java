@@ -74,7 +74,7 @@ public void move (double speed)
 
 public void stopArmMotor ()
 {
-    this.motor.set(-.1);
+    this.motor.set(.15);
 }
 
 /**
