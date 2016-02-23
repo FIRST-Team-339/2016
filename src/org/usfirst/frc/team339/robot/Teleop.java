@@ -578,14 +578,14 @@ public static void printStatements ()
 	// IR sensors-----------
 	//System.out.println("left IR = " + Hardware.leftIR.isOn());
 	//System.out.println("right IR = " + Hardware.rightIR.isOn());
-	System.out.println("Has ball IR = " + Hardware.armIR.isOn());
+	//	System.out.println("Has ball IR = " + Hardware.armIR.isOn());
 
 	// pots-----------------
-	System.out.println("delay pot = " + (int) Hardware.delayPot.get());
+	//	System.out.println("delay pot = " + (int) Hardware.delayPot.get());
 	// prints the value of the transducer- (range in code is 50)
 	//hits psi of 100 accurately
 	//System.out.println("transducer = " + Hardware.transducer.get());
-	System.out.println("Arm Pot = " + Hardware.armPot.get());
+	//	System.out.println("Arm Pot = " + Hardware.armPot.get());
 
 	// Motor controllers-----
 	// prints value of the motors
@@ -594,9 +594,9 @@ public static void printStatements ()
 	//    System.out
 	//            .println("RF Motor T = " + Hardware.rightFrontMotor.get());
 	//    System.out.println("LF Motor T = " + Hardware.leftFrontMotor.get());
-	System.out.println("Arm Motor: " + Hardware.armMotor.get());
-	System.out
-	        .println("Intake Motor: " + Hardware.armIntakeMotor.get());
+	//	System.out.println("Arm Motor: " + Hardware.armMotor.get());
+	//	System.out
+	//	        .println("Intake Motor: " + Hardware.armIntakeMotor.get());
 
 	// Solenoids-------------
 	// prints the state of the solenoids
@@ -631,11 +631,11 @@ public static void printStatements ()
 
 	// Switches--------------
 	// prints state of switches
-	System.out.println("Autonomous Enabled Switch: " +
-	        Hardware.autonomousEnabled.isOn());
-	System.out
-	        .println("Shoot High Switch: " + Hardware.shootHigh.isOn());
-	System.out.println("Shoot Low Switch: " + Hardware.shootLow.isOn());
+	//	System.out.println("Autonomous Enabled Switch: " +
+	//	        Hardware.autonomousEnabled.isOn());
+	//	System.out
+	//	        .println("Shoot High Switch: " + Hardware.shootHigh.isOn());
+	//	System.out.println("Shoot Low Switch: " + Hardware.shootLow.isOn());
 
 	// print the position of the 6 position switch------------
 	System.out.println("Position: " +
