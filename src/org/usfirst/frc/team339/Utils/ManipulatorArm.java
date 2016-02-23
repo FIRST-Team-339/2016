@@ -45,27 +45,39 @@ public void moveFast (int direction, boolean override)
 	this.move(direction * this.MAX_ARM_SPEED, override);
 }
 
+/**
+ * Method used to smoothly raise and lower arm at a humanly managable speed.
+ * Changes speed after a certain tipping point.
+ * 
+ * @param direction
+ * @param override
+ */
 public void moveReasonably (int direction, boolean override)
 {
 	direction *= -1;
 	if (direction > 0)
+	//Going UP!
 	{
 	if (armPot.get() < REASONABLE_DECELERATION_ANGLE)
+	//Starting up, has to work hard.
 	{
 	move(REASONABLE_UP_FACTOR, override);
 	}
 	else
+	//We are over the hump, slow down.
 	{
 	move(REASONABLE_UP_AND_OVER_FACTOR, override);
 	}
 	}
 	else
+	//going down.
 	{
 	if (armPot.get() > REASONABLE_DECELERATION_ANGLE)
 	{
 	move(REASONABLE_DOWN_FACTOR, override);
 	}
 	else
+	//now gravity is on our side. Slow down a bit.
 	{
 	move(REASONABLE_DOWN_UNDER_FACTOR, override);
 	}
