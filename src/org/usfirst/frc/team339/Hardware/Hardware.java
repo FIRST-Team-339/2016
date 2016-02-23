@@ -156,7 +156,7 @@ public static DoubleThrowSwitch noShoot = new DoubleThrowSwitch(
  */
 public static SixPositionSwitch startingPositionDial =
         new SixPositionSwitch(
-                14, 15, 16, 17, 18, 21);
+                14, 15, 16, 17, 18, 21, true);
 
 // ------------------------------------
 // Gear Tooth Sensors

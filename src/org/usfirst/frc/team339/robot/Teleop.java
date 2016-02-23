@@ -581,7 +581,7 @@ public static void printStatements ()
 	//	System.out.println("Has ball IR = " + Hardware.armIR.isOn());
 
 	// pots-----------------
-	//	System.out.println("delay pot = " + (int) Hardware.delayPot.get());
+	System.out.println("delay pot = " + (int) Hardware.delayPot.get());
 	// prints the value of the transducer- (range in code is 50)
 	//hits psi of 100 accurately
 	//System.out.println("transducer = " + Hardware.transducer.get());
