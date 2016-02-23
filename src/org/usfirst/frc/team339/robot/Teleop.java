@@ -217,9 +217,8 @@ public static void periodic ()
         fireRequested = false;
         }
     // if we want to fire, the arm is out of the way, and we have enough pressure so we don't hurt ourselves.
-    if (Hardware.pickupArm.moveToPosition(
+    if (fireRequested == true && Hardware.pickupArm.moveToPosition(
             ManipulatorArm.ArmPosition.CLEAR_OF_FIRING_ARM) == true
-            && fireRequested == true
             && Hardware.leftOperator
                     .getRawButton(FIRE_OVERRIDE_BUTTON) != true)
         {
