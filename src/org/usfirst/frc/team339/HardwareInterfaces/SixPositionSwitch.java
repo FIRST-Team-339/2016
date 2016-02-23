@@ -43,6 +43,7 @@ public SixPositionSwitch (int portZero, int portOne, int portTwo,
 
 /**
  * Define a six-position switch with six digital input ports.
+ * Extra parameter to invert the switch.
  * 
  * @param portZero
  * @param portOne
@@ -51,11 +52,14 @@ public SixPositionSwitch (int portZero, int portOne, int portTwo,
  * @param portFour
  * @param portFive
  * @param inverted
+ *            - set to 5-4-3-2-1-0
  */
 public SixPositionSwitch (int portZero, int portOne, int portTwo,
         int portThree, int portFour, int portFive, boolean inverted)
 {
+
 	if (inverted == false)
+	//do things normally 
 	{
 	position0 = new SingleThrowSwitch(portZero);
 	position1 = new SingleThrowSwitch(portOne);
@@ -65,6 +69,7 @@ public SixPositionSwitch (int portZero, int portOne, int portTwo,
 	position5 = new SingleThrowSwitch(portFive);
 	}
 	else
+	//invert it.
 	{
 	position0 = new SingleThrowSwitch(portFive);
 	position1 = new SingleThrowSwitch(portFour);
