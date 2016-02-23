@@ -13,10 +13,10 @@ public ManipulatorArm (SpeedController armMotorController,
         SpeedController intakeMotor,
         RobotPotentiometer armPot, IRSensor ballIsInArmSensor)
 {
-    this.motor = armMotorController;
-    this.armPot = armPot;
-    this.intakeMotor = intakeMotor;
-    this.hasBallSensor = ballIsInArmSensor;
+	this.motor = armMotorController;
+	this.armPot = armPot;
+	this.intakeMotor = intakeMotor;
+	this.hasBallSensor = ballIsInArmSensor;
 }
 
 //TODO change so it doens't move beyond soft limit from encoder.
@@ -29,8 +29,8 @@ public ManipulatorArm (SpeedController armMotorController,
 public void moveSlow (int direction, boolean override)
 {
 
-    direction *= -1;
-    this.move(direction * this.slowSpeed, override);
+	direction *= -1;
+	this.move(direction * this.slowSpeed, override);
 }
 
 /**
@@ -41,8 +41,36 @@ public void moveSlow (int direction, boolean override)
  */
 public void moveFast (int direction, boolean override)
 {
-    direction *= -1;
-    this.move(direction * this.MAX_ARM_SPEED, override);
+	direction *= -1;
+	this.move(direction * this.MAX_ARM_SPEED, override);
+}
+
+public void moveReasonably (int direction, boolean override)
+{
+	direction *= -1;
+	if (direction > 0)
+	{
+	if (armPot.get() < REASONABLE_DECELERATION_ANGLE)
+	{
+	move(REASONABLE_UP_FACTOR, override);
+	}
+	else
+	{
+	move(REASONABLE_UP_AND_OVER_FACTOR, override);
+	}
+	}
+	else
+	{
+	if (armPot.get() > REASONABLE_DECELERATION_ANGLE)
+	{
+	move(REASONABLE_DOWN_FACTOR, override);
+	}
+	else
+	{
+	move(REASONABLE_DOWN_UNDER_FACTOR, override);
+	}
+	}
+
 }
 
 /**
@@ -53,30 +81,30 @@ public void moveFast (int direction, boolean override)
  */
 public void move (double speed, boolean override)
 {
-    //If we're currently beyond our soft limits, don't do anything that would 
-    //bring up further out of them.  Otherwise do what the user wants.
-    if ((speed < 0 && this.armPot.get() < this.MIN_SOFT_ARM_STOP)
-            || (speed > 0
-                    && this.armPot.get() > this.MAX_SOFT_ARM_STOP))
-        {
-        //we have to give a little bit of voltage to stop the motor.
-        this.stopArmMotor();
-        }
-    else
-        {
-        this.motor.set(-speed);
-        }
+	//If we're currently beyond our soft limits, don't do anything that would 
+	//bring up further out of them.  Otherwise do what the user wants.
+	if ((speed > 0 && this.armPot.get() < this.MIN_SOFT_ARM_STOP)
+	        || (speed < 0
+	                && this.armPot.get() > this.MAX_SOFT_ARM_STOP))
+	{
+	//we have to give a little bit of voltage to stop the motor.
+	this.stopArmMotor();
+	}
+	else
+	{
+	this.motor.set(-speed);
+	}
 }
 
 public void move (double speed)
 {
-    this.move(speed, false);
+	this.move(speed, false);
 }
 
 public void stopArmMotor ()
 {
 
-    this.motor.set(.15);
+	this.motor.set(.15);
 
 }
 
@@ -86,16 +114,17 @@ public void stopArmMotor ()
  */
 public void pullInBall (boolean override)
 {
-    if (Hardware.armIR.isOn() == true && override == false)
-        {
-        //If we already have a ball, no need to pull one in.
-        //TODO check to make sure -1 pulls in and not the reverse.
-        this.intakeMotor.set(0.0);
-        }
-    else
-        {
-        this.intakeMotor.set(-1.0);
-        }
+	if (Hardware.armIR.isOn() == true && override == false
+	        && armPot.get(0) < 145)
+	{
+	//If we already have a ball, no need to pull one in.
+	//TODO check to make sure -1 pulls in and not the reverse.
+	this.intakeMotor.set(0.0);
+	}
+	else
+	{
+	this.intakeMotor.set(-INTAKE_SPEED);
+	}
 
 }
 
@@ -106,8 +135,8 @@ public void pullInBall (boolean override)
 public void pushOutBall ()
 {
 
-    //TODO check to make sure 1 pushes out and not the reverse.
-    this.intakeMotor.set(1.0);
+	//TODO check to make sure 1 pushes out and not the reverse.
+	this.intakeMotor.set(1.0);
 
 }
 
@@ -117,7 +146,7 @@ public void pushOutBall ()
  */
 public boolean ballIsOut ()
 {
-    return !this.hasBallSensor.get();
+	return !this.hasBallSensor.get();
 }
 
 /**
@@ -125,12 +154,12 @@ public boolean ballIsOut ()
  */
 public void stopIntakeArms ()
 {
-    this.intakeMotor.set(0.0);
+	this.intakeMotor.set(0.0);
 }
 
 public void setIntakeArmsSpeed (double speed)
 {
-    this.intakeMotor.set(speed);
+	this.intakeMotor.set(speed);
 }
 
 /**
@@ -139,14 +168,14 @@ public void setIntakeArmsSpeed (double speed)
  */
 public boolean isDown ()
 {
-    if (this.armPot.get() <= this.MIN_SOFT_ARM_STOP)
-        {
-        return true;
-        }
-    else
-        {
-        return false;
-        }
+	if (this.armPot.get() <= this.MIN_SOFT_ARM_STOP)
+	{
+	return true;
+	}
+	else
+	{
+	return false;
+	}
 }
 
 /**
@@ -155,14 +184,14 @@ public boolean isDown ()
  */
 public boolean isUp ()
 {
-    if (this.armPot.get() >= MAX_SOFT_ARM_STOP)
-        {
-        return true;
-        }
-    else
-        {
-        return false;
-        }
+	if (this.armPot.get() >= MAX_SOFT_ARM_STOP)
+	{
+	return true;
+	}
+	else
+	{
+	return false;
+	}
 }
 
 
@@ -172,40 +201,40 @@ public boolean isUp ()
  */
 public boolean isClearOfArm ()
 {
-    if (armPot.get() <= this.ARM_OUT_OF_WAY_DEGREES)
-        {
-        return true;
-        }
+	if (armPot.get() <= this.ARM_OUT_OF_WAY_DEGREES)
+	{
+	return true;
+	}
 
-    return false;
+	return false;
 }
 
 public boolean isInDepositPosition ()
 {
-    if (armPot.get() > DEPOSIT_POSITION - DEPOSIT_POSITION_THRESHOLD
-            && armPot.get() < DEPOSIT_POSITION
-                    + DEPOSIT_POSITION_THRESHOLD)
-        {
-        return true;
-        }
-    return false;
+	if (armPot.get() > DEPOSIT_POSITION - DEPOSIT_POSITION_THRESHOLD
+	        && armPot.get() < DEPOSIT_POSITION
+	                + DEPOSIT_POSITION_THRESHOLD)
+	{
+	return true;
+	}
+	return false;
 }
 
 public void holdInHoldingPosition ()
 {
-    if (armPot.get() < HOLDING_POSITION - HOLDING_POSITION_THRESHOLD)
-        {
-        move(MAX_ARM_SPEED);
-        }
-    else if (armPot.get() > HOLDING_POSITION
-            + HOLDING_POSITION_THRESHOLD)
-        {
-        move(-MAX_ARM_SPEED);
-        }
-    else
-        {
-        move(HOLDING_SPEED);
-        }
+	if (armPot.get() < HOLDING_POSITION - HOLDING_POSITION_THRESHOLD)
+	{
+	move(MAX_ARM_SPEED);
+	}
+	else if (armPot.get() > HOLDING_POSITION
+	        + HOLDING_POSITION_THRESHOLD)
+	{
+	move(-MAX_ARM_SPEED);
+	}
+	else
+	{
+	move(HOLDING_SPEED);
+	}
 }
 
 /**
@@ -217,59 +246,59 @@ public void holdInHoldingPosition ()
  */
 public boolean moveToPosition (ArmPosition position)
 {
-    boolean done = false;
+	boolean done = false;
 
-    switch (position)
-        {
-        case FULL_DOWN:
+	switch (position)
+	{
+		case FULL_DOWN:
 
-            move(-MAX_ARM_SPEED);
-            if (this.isDown())
-                {
-                move(0.0);
-                done = true;
-                }
-            break;
-        case FULL_UP:
-            move(MAX_ARM_SPEED);
-            if (this.isUp())
-                {
-                move(0.0);
-                done = true;
-                }
-            break;
-        case DEPOSIT:
-            if (armPot.get() < DEPOSIT_POSITION
-                    - DEPOSIT_POSITION_THRESHOLD)
-                {
-                move(MAX_ARM_SPEED);
-                }
-            else if (armPot.get() > DEPOSIT_POSITION
-                    + DEPOSIT_POSITION_THRESHOLD)
-                {
-                move(-MAX_ARM_SPEED);
-                }
-            else
-                {
-                move(0.0);
-                done = true;
-                }
-            break;
-        case CLEAR_OF_FIRING_ARM:
-            move(-MAX_ARM_SPEED);
-            if (this.isClearOfArm() == true)
-                {
-                move(0.0);
-                done = true;
-                }
-            break;
-        default:
-        case HOLD:
-            holdInHoldingPosition();
-            break;
-        }
+			move(-MAX_ARM_SPEED);
+			if (this.isDown())
+			{
+			move(0.0);
+			done = true;
+			}
+			break;
+		case FULL_UP:
+			move(MAX_ARM_SPEED);
+			if (this.isUp())
+			{
+			move(0.0);
+			done = true;
+			}
+			break;
+		case DEPOSIT:
+			if (armPot.get() < DEPOSIT_POSITION
+			        - DEPOSIT_POSITION_THRESHOLD)
+			{
+			move(MAX_ARM_SPEED);
+			}
+			else if (armPot.get() > DEPOSIT_POSITION
+			        + DEPOSIT_POSITION_THRESHOLD)
+			{
+			move(-MAX_ARM_SPEED);
+			}
+			else
+			{
+			move(0.0);
+			done = true;
+			}
+			break;
+		case CLEAR_OF_FIRING_ARM:
+			move(-MAX_ARM_SPEED);
+			if (this.isClearOfArm() == true)
+			{
+			move(0.0);
+			done = true;
+			}
+			break;
+		default:
+		case HOLD:
+			holdInHoldingPosition();
+			break;
+	}
 
-    return done;
+	return done;
 }
 
 /**
@@ -278,45 +307,53 @@ public boolean moveToPosition (ArmPosition position)
  *
  */
 public static enum ArmPosition
-    {
-    /**
-     * All the way down, as in down-to-the-floor down.
-     */
-    FULL_DOWN,
-    /**
-     * Folded up all the way.
-     */
-    FULL_UP,
-    /**
-     * Within a rang from which we can pu the ball into the catapult.
-     */
-    DEPOSIT,
-    /**
-     * Out of the way of the catapult.
-     */
-    CLEAR_OF_FIRING_ARM,
-    /**
-     * Stay off the ground, yet out of the way,.
-     */
-    HOLD
-    }
+	{
+	/**
+	 * All the way down, as in down-to-the-floor down.
+	 */
+	FULL_DOWN,
+	/**
+	 * Folded up all the way.
+	 */
+	FULL_UP,
+	/**
+	 * Within a rang from which we can pu the ball into the catapult.
+	 */
+	DEPOSIT,
+	/**
+	 * Out of the way of the catapult.
+	 */
+	CLEAR_OF_FIRING_ARM,
+	/**
+	 * Stay off the ground, yet out of the way,.
+	 */
+	HOLD
+	}
 
 private SpeedController intakeMotor = null;
 private SpeedController motor = null;
 private RobotPotentiometer armPot = null;
 private IRSensor hasBallSensor = null;
 //default maximum arm turn speed proportion
-private final double MAX_ARM_SPEED = .4;
+private final double MAX_ARM_SPEED = -1.0;
 //default slow arm turn speed proportion
 private double slowSpeed = .2;
 
-private final double MAX_SOFT_ARM_STOP = 173.0;
-private final double MIN_SOFT_ARM_STOP = 19.0;
+private final double MAX_SOFT_ARM_STOP = 170.0;
+private final double MIN_SOFT_ARM_STOP = 25.0;
 
-private final double ARM_OUT_OF_WAY_DEGREES = 10.0;
+private final double ARM_OUT_OF_WAY_DEGREES = 140.0;
 
 private final double DEPOSIT_POSITION = 90.0;
 private final double DEPOSIT_POSITION_THRESHOLD = 5.0;
+
+private final double REASONABLE_UP_FACTOR = -1.0;
+private final double REASONABLE_UP_AND_OVER_FACTOR = -0.40;
+private final double REASONABLE_DOWN_FACTOR = 0.35;
+private final double REASONABLE_DOWN_UNDER_FACTOR = 0.20;
+private final double REASONABLE_DECELERATION_ANGLE = 111.1;
+
+private final double INTAKE_SPEED = 0.5;
 
 private static final int HOLDING_POSITION = 70;
 private static final int HOLDING_POSITION_THRESHOLD = 5;
