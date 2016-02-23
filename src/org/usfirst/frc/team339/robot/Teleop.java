@@ -33,6 +33,7 @@ package org.usfirst.frc.team339.robot;
 
 import org.usfirst.frc.team339.Hardware.Hardware;
 import org.usfirst.frc.team339.Utils.Guidance;
+import org.usfirst.frc.team339.Utils.ManipulatorArm.ArmPosition;
 import edu.wpi.first.wpilibj.CameraServer;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.Relay.Value;
@@ -197,11 +198,31 @@ public static void periodic ()
 	//Tell the code to start firing
 	fireRequested = true;
 	}
+
+	//if we want to fire, but the arm is in the way
+	//NOTE: temporarily stores the firing state so that if fireRequested is false the method won't stop working
+	if (!Hardware.pickupArm.isClearOfArm()
+	        && (fireRequested == true || storeFiringState == true))
+	{
+	storeFiringState = fireRequested;
+	fireRequested = false;
+	if (Hardware.pickupArm
+	        .moveToPosition(
+	                ArmPosition.CLEAR_OF_FIRING_ARM) == true)
+	{
+	fireRequested = true;
+	storeFiringState = false;
+	}
+	}
+
+
 	if (Hardware.leftOperator.getRawButton(4) == true
 	        && fireRequested == true)
 	{
 	if (fire(3, true) == true)
-		fireRequested = false;
+	{
+	fireRequested = false;
+	}
 	}
 	// cancel the fire request
 	if (Hardware.leftOperator.getRawButton(FIRE_CANCEL_BUTTON) == true)
@@ -219,6 +240,8 @@ public static void periodic ()
 	fireRequested = false;
 	}
 	}
+
+
 	//end fire block
 
 	//block of code to tell the drivers where to go
@@ -580,8 +603,9 @@ public static void printStatements ()
 	//System.out.println("right IR = " + Hardware.rightIR.isOn());
 	//	System.out.println("Has ball IR = " + Hardware.armIR.isOn());
 
+
 	// pots-----------------
-	System.out.println("delay pot = " + (int) Hardware.delayPot.get());
+	// System.out.println("delay pot = " + (int) Hardware.delayPot.get());
 	// prints the value of the transducer- (range in code is 50)
 	//hits psi of 100 accurately
 	//System.out.println("transducer = " + Hardware.transducer.get());
@@ -631,11 +655,11 @@ public static void printStatements ()
 
 	// Switches--------------
 	// prints state of switches
-	//	System.out.println("Autonomous Enabled Switch: " +
-	//	        Hardware.autonomousEnabled.isOn());
+	// System.out.println("Autonomous Enabled Switch: " +
+	// Hardware.autonomousEnabled.isOn());
 	//	System.out
 	//	        .println("Shoot High Switch: " + Hardware.shootHigh.isOn());
-	//	System.out.println("Shoot Low Switch: " + Hardware.shootLow.isOn());
+	// System.out.println("Shoot Low Switch: " + Hardware.shootLow.isOn());
 
 	// print the position of the 6 position switch------------
 	System.out.println("Position: " +
@@ -706,5 +730,8 @@ private static boolean takingUnlitImage = false;
 // this is for preparing to take a picture with the timer; changes
 // brightness, turns on ringlight, starts timer
 private static boolean prepPic = false;
+
+//Stores temporarily whether firingState is true, for use in whether the arm is in the way
+private static boolean storeFiringState;
 
 } // end class
