@@ -198,6 +198,7 @@ public static void periodic ()
         {
         //Tell the code to start firing
         fireRequested = true;
+        Hardware.armOutOfWayTimer.start();
         }
     //if the override button is pressed and we want to fire
     if (Hardware.leftOperator.getRawButton(FIRE_OVERRIDE_BUTTON) == true
@@ -219,6 +220,7 @@ public static void periodic ()
     // if we want to fire, the arm is out of the way, and we have enough pressure so we don't hurt ourselves.
     if (fireRequested == true && Hardware.pickupArm.moveToPosition(
             ManipulatorArm.ArmPosition.CLEAR_OF_FIRING_ARM) == true
+            && Hardware.armOutOfWayTimer.get() >= ARM_IS_OUT_OF_WAY_TIME
             && Hardware.leftOperator
                     .getRawButton(FIRE_OVERRIDE_BUTTON) != true)
         {
@@ -227,6 +229,8 @@ public static void periodic ()
             {
             // if we're done firing, drop the request
             fireRequested = false;
+            Hardware.armOutOfWayTimer.stop();
+            Hardware.armOutOfWayTimer.reset();
             }
         }
 
@@ -692,6 +696,8 @@ private static final double PICKUP_ARM_CONTROL_DEADZONE = 0.2;
 private final static double PERCENT_IMAGE_PROCESSING_DEADBAND = .15;
 
 private final static double CAMERA_ALIGNMENT_TURNING_SPEED = .45;
+
+private final static double ARM_IS_OUT_OF_WAY_TIME = .25;
 
 //minimum pressure when allowed to fire
 private static final int FIRING_MIN_PSI = 90;

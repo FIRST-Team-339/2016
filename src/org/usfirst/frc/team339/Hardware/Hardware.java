@@ -331,6 +331,7 @@ public static final Timer kilroyTimer = new Timer();
 public static final Timer autoTimer = new Timer();
 public static final Timer delayTimer = new Timer();
 public static final Timer fireTimer = new Timer();
+public static final Timer armOutOfWayTimer = new Timer();
 public static final ErrorMessage errorMessage = new ErrorMessage(
         true /* append timelog */);
 
