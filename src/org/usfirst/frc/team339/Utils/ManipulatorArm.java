@@ -116,8 +116,14 @@ public void move (double speed)
 
 public void stopArmMotor ()
 {
-
-	this.motor.set(.15);
+	if (armPot.get() > STOP_DOWN_ANGLE)
+	{
+	this.motor.set(0.15);
+	}
+	else
+	{
+	this.motor.set(0.0);
+	}
 
 }
 
@@ -353,7 +359,7 @@ private final double MAX_ARM_SPEED = -1.0;
 private double slowSpeed = .2;
 
 private final double MAX_SOFT_ARM_STOP = 170.0;
-private final double MIN_SOFT_ARM_STOP = 25.0;
+private final double MIN_SOFT_ARM_STOP = 21.0;
 
 private final double ARM_OUT_OF_WAY_DEGREES = 130.0;
 
@@ -371,5 +377,7 @@ private final double INTAKE_SPEED = 0.5;
 private static final int HOLDING_POSITION = 70;
 private static final int HOLDING_POSITION_THRESHOLD = 5;
 private static final double HOLDING_SPEED = 0.1;
+
+private static final int STOP_DOWN_ANGLE = 45;
 
 }
