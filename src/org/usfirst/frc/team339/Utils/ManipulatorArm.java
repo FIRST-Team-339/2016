@@ -55,8 +55,8 @@ public void move (double speed, boolean override)
 {
     //If we're currently beyond our soft limits, don't do anything that would 
     //bring up further out of them.  Otherwise do what the user wants.
-    if ((speed < 0 && this.armPot.get() < this.MIN_SOFT_ARM_STOP)
-            || (speed > 0
+    if ((speed > 0 && this.armPot.get() < this.MIN_SOFT_ARM_STOP)
+            || (speed < 0
                     && this.armPot.get() > this.MAX_SOFT_ARM_STOP))
         {
         //we have to give a little bit of voltage to stop the motor.
