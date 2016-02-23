@@ -581,7 +581,7 @@ public static void printStatements ()
 	System.out.println("Has ball IR = " + Hardware.armIR.isOn());
 
 	// pots-----------------
-	// System.out.println("delay pot = " + (int) Hardware.delayPot.get());
+	System.out.println("delay pot = " + (int) Hardware.delayPot.get());
 	// prints the value of the transducer- (range in code is 50)
 	//hits psi of 100 accurately
 	//System.out.println("transducer = " + Hardware.transducer.get());
@@ -631,14 +631,15 @@ public static void printStatements ()
 
 	// Switches--------------
 	// prints state of switches
-	// System.out.println("Autonomous Enabled Switch: " +
-	// Hardware.autonomousEnabled.isOn());
-	// System.out.println("Shoot High Switch: " + Hardware.shootHigh.isOn());
-	// System.out.println("Shoot Low Switch: " + Hardware.shootLow.isOn());
+	System.out.println("Autonomous Enabled Switch: " +
+	        Hardware.autonomousEnabled.isOn());
+	System.out
+	        .println("Shoot High Switch: " + Hardware.shootHigh.isOn());
+	System.out.println("Shoot Low Switch: " + Hardware.shootLow.isOn());
 
 	// print the position of the 6 position switch------------
-	//System.out.println("Position: " +
-	//Hardware.startingPositionDial.getPosition());
+	System.out.println("Position: " +
+	        Hardware.startingPositionDial.getPosition());
 
 	// print the position of the 6 position switch------------
 	//System.out.println("Position: " +
