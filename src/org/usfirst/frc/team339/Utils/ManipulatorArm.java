@@ -149,7 +149,6 @@ public void pullInBall (boolean override)
 	this.intakeMotor.set(0.0);
 
 	Hardware.kilroyTimer.stop();
-	Hardware.kilroyTimer.reset();
 	intakeInitialized = false;
 	}
 	else
