@@ -56,40 +56,41 @@ public class Teleop
  */
 public static void init ()
 {
-	CameraServer.getInstance().setSize(1);
-	Hardware.axisCamera
-	        .writeBrightness(Hardware.NORMAL_AXIS_CAMERA_BRIGHTNESS);
-	// set max speed. change by gear?
-	Hardware.drive.setMaxSpeed(MAXIMUM_TELEOP_SPEED);
+    CameraServer.getInstance().setSize(1);
+    Hardware.axisCamera
+            .writeBrightness(Hardware.NORMAL_AXIS_CAMERA_BRIGHTNESS);
+    // set max speed. change by gear?
+    Hardware.drive.setMaxSpeed(MAXIMUM_TELEOP_SPEED);
 
-	Hardware.transmission.setGear(1);
-	Hardware.transmission
-	        .setFirstGearPercentage(Robot.FIRST_GEAR_PERCENTAGE);
-	Hardware.transmission
-	        .setSecondGearPercentage(Robot.SECOND_GEAR_PERCENTAGE);
-	Hardware.transmission.setJoystickDeadbandRange(.20);
-	Hardware.transmission.setJoysticksAreReversed(false);
-	Hardware.ringLightRelay.set(Value.kOff);
+    Hardware.transmission.setGear(1);
+    Hardware.transmission
+            .setFirstGearPercentage(Robot.FIRST_GEAR_PERCENTAGE);
+    Hardware.transmission
+            .setSecondGearPercentage(Robot.SECOND_GEAR_PERCENTAGE);
+    Hardware.transmission.setJoystickDeadbandRange(.20);
+    Hardware.transmission.setJoysticksAreReversed(false);
+    Hardware.ringLightRelay.set(Value.kOff);
 
-	isAligningByCamera = false;
-	fireRequested = false;
-	Hardware.arrowDashboard.setDirection(Guidance.Direction.neutral);
-	Hardware.arrowDashboard.update();
+    isAligningByCamera = false;
+    fireRequested = false;
+    prepPic = false;
+    Hardware.arrowDashboard.setDirection(Guidance.Direction.neutral);
+    Hardware.arrowDashboard.update();
 
-	Hardware.catapultSolenoid0.set(false);
-	Hardware.catapultSolenoid1.set(false);
-	Hardware.catapultSolenoid2.set(false);
+    Hardware.catapultSolenoid0.set(false);
+    Hardware.catapultSolenoid1.set(false);
+    Hardware.catapultSolenoid2.set(false);
 
-	// armEncoder needs to be set to 0
-	Hardware.delayTimer.reset();
-	Hardware.rightRearEncoder.reset();
-	Hardware.leftRearEncoder.reset();
-	Hardware.leftFrontMotor.set(0.0);
-	Hardware.leftRearMotor.set(0.0);
-	Hardware.rightFrontMotor.set(0.0);
-	Hardware.rightRearMotor.set(0.0);
-	Hardware.armMotor.set(0.0);
-	Hardware.armIntakeMotor.set(0.0);
+    // armEncoder needs to be set to 0
+    Hardware.delayTimer.reset();
+    Hardware.rightRearEncoder.reset();
+    Hardware.leftRearEncoder.reset();
+    Hardware.leftFrontMotor.set(0.0);
+    Hardware.leftRearMotor.set(0.0);
+    Hardware.rightFrontMotor.set(0.0);
+    Hardware.rightRearMotor.set(0.0);
+    Hardware.armMotor.set(0.0);
+    Hardware.armIntakeMotor.set(0.0);
 } // end Init
 
 
@@ -108,213 +109,213 @@ private static edu.wpi.first.wpilibj.DoubleSolenoid.Value Forward;
  */
 public static void periodic ()
 {
-	// block of code to move the arm
-	if (Math.abs(Hardware.rightOperator
-	        .getY()) >= PICKUP_ARM_CONTROL_DEADZONE)
-	{
-	// use the formula for the sign (value/abs(value)) to get the direction
-	// we want the motor to go in,
-	// and round it just in case it isn't exactly 1, then cast to an int to
-	// make the compiler happy
-	Hardware.pickupArm.moveReasonably(
-	        -(int) Math.round(Hardware.rightOperator.getY()
-	                / Math.abs(Hardware.rightOperator.getY())),
-	        Hardware.rightOperator.getRawButton(2));
-	//        Hardware.pickupArm
-	//                .moveFast((int) Math.round(Hardware.rightOperator.getY()
-	//                        / Math.abs(Hardware.rightOperator.getY())),
-	//                        Hardware.rightOperator.getRawButton(2));
-	//	Hardware.pickupArm.moveFast(1);
+    // block of code to move the arm
+    if (Math.abs(Hardware.rightOperator
+            .getY()) >= PICKUP_ARM_CONTROL_DEADZONE)
+        {
+        // use the formula for the sign (value/abs(value)) to get the direction
+        // we want the motor to go in,
+        // and round it just in case it isn't exactly 1, then cast to an int to
+        // make the compiler happy
+        Hardware.pickupArm.moveReasonably(
+                -(int) Math.round(Hardware.rightOperator.getY()
+                        / Math.abs(Hardware.rightOperator.getY())),
+                Hardware.rightOperator.getRawButton(2));
+        //        Hardware.pickupArm
+        //                .moveFast((int) Math.round(Hardware.rightOperator.getY()
+        //                        / Math.abs(Hardware.rightOperator.getY())),
+        //                        Hardware.rightOperator.getRawButton(2));
+        //	Hardware.pickupArm.moveFast(1);
 
-	}
-	else
-	{
-	Hardware.pickupArm.stopArmMotor();
-	}
-	//Block of code to toggle the camera up or down
-	//If the camera is down and we press the button.
+        }
+    else
+        {
+        Hardware.pickupArm.stopArmMotor();
+        }
+    //Block of code to toggle the camera up or down
+    //If the camera is down and we press the button.
 
-	if (Hardware.cameraToggleButton.isOnCheckNow() == false)
-	{
-	//raise the camera and tell the code that it's up
-	Hardware.cameraSolenoid.set(DoubleSolenoid.Value.kForward);
-	}
-	//If the camera is up and we press the toggle button.
-	if (Hardware.cameraToggleButton.isOnCheckNow() == true)
-	{
-	//Drop the camera and tell the code that it's down
-	Hardware.cameraSolenoid.set(DoubleSolenoid.Value.kReverse);
-	}
+    if (Hardware.cameraToggleButton.isOnCheckNow() == false)
+        {
+        //raise the camera and tell the code that it's up
+        Hardware.cameraSolenoid.set(DoubleSolenoid.Value.kForward);
+        }
+    //If the camera is up and we press the toggle button.
+    if (Hardware.cameraToggleButton.isOnCheckNow() == true)
+        {
+        //Drop the camera and tell the code that it's down
+        Hardware.cameraSolenoid.set(DoubleSolenoid.Value.kReverse);
+        }
 
-	//end raise/lower camera block
+    //end raise/lower camera block
 
-	//Block of code to align us on the goal using the camera
-	if (Hardware.rightOperator.getTrigger() == true)
-	{
-	//Tell the code to align us to the camera
-	isAligningByCamera = true;
-	}
-	//If we want to point at the goal using the camera
-	if (isAligningByCamera == true)
-	{
-	//Keep trying to point at the goal
-	if (Hardware.drive.alignByCamera(
-	        PERCENT_IMAGE_PROCESSING_DEADBAND,
-	        CAMERA_ALIGNMENT_TURNING_SPEED) == true)
-	{
-	// Once we're in the center, tell the code we no longer care about
-	// steering towards the goal
-	isAligningByCamera = false;
-	}
-	}
+    //Block of code to align us on the goal using the camera
+    if (Hardware.rightOperator.getTrigger() == true)
+        {
+        //Tell the code to align us to the camera
+        isAligningByCamera = true;
+        }
+    //If we want to point at the goal using the camera
+    if (isAligningByCamera == true)
+        {
+        //Keep trying to point at the goal
+        if (Hardware.drive.alignByCamera(
+                PERCENT_IMAGE_PROCESSING_DEADBAND,
+                CAMERA_ALIGNMENT_TURNING_SPEED) == true)
+            {
+            // Once we're in the center, tell the code we no longer care about
+            // steering towards the goal
+            isAligningByCamera = false;
+            }
+        }
 
-	//end alignByCameraBlock
+    //end alignByCameraBlock
 
-	// Block of code to pick up ball or push it out
-	//pull in the ball if the pull in button is pressed.
-	if (Hardware.rightOperator
-	        .getRawButton(TAKE_IN_BALL_BUTTON) == true)
-	{
-	//TODO demystify magic argument
-	Hardware.pickupArm
-	        .pullInBall(Hardware.rightOperator.getRawButton(3));
-	}
-	//push out the ball if the push out button is pressed
-	else if (Hardware.rightOperator
-	        .getRawButton(PUSH_OUT_BALL_BUTTON) == true)
-	{
-	Hardware.pickupArm.pushOutBall();
-	}
-	// If neither the pull in or the push out button are pressed, stop the
-	// intake motors
-	else
-	{
-	Hardware.pickupArm.stopIntakeArms();
-	}
-	//----------------------------
-	// block of code to fire
-	//----------------------------
-	if (Hardware.leftOperator.getTrigger() == true)
-	{
-	//Tell the code to start firing
-	fireRequested = true;
-	Hardware.armOutOfWayTimer.start();
-	}
-	//if the override button is pressed and we want to fire
-	if (Hardware.leftOperator.getRawButton(FIRE_OVERRIDE_BUTTON) == true
-	        && fireRequested == true)
-	{
-	//FIRE NO MATTER WHAT!!!!!
-	if (fire(3, true) == true)
-	{
-	//We've shot our ball, we don't want to fire anymore.
-	fireRequested = false;
-	}
-	}
-	// If the drivers decided they were being stupid and we don't want to fire anymore
-	if (Hardware.leftOperator.getRawButton(FIRE_CANCEL_BUTTON) == true)
-	{
-	//Stop asking the code to fire
-	fireRequested = false;
-	}
-	// if we want to fire, the arm is out of the way, and we have enough pressure so we don't hurt ourselves.
-	if (fireRequested == true && Hardware.pickupArm.moveToPosition(
-	        ManipulatorArm.ArmPosition.CLEAR_OF_FIRING_ARM) == true
-	        && Hardware.armOutOfWayTimer.get() >= ARM_IS_OUT_OF_WAY_TIME
-	        && Hardware.leftOperator
-	                .getRawButton(FIRE_OVERRIDE_BUTTON) != true)
-	{
-	// fire, if we're ready to
-	if (fire(3, false) == true)
-	{
-	// if we're done firing, drop the request
-	fireRequested = false;
-	Hardware.armOutOfWayTimer.stop();
-	Hardware.armOutOfWayTimer.reset();
-	}
-	}
-
-
-	//end fire block
-
-	//block of code to tell the drivers where to go
-	//TODO finish based on camera input and IR sensors
-	//if the rightIR detects HDPE and the left one doesn't
-	//	if (Hardware.rightIR.isOn() == true
-	//	        && Hardware.leftIR.isOn() == false)
-	//	{
-	//	//tell the drivers to spin right a little
-	//	Hardware.arrowDashboard.setDirection(Guidance.Direction.right);
-	//	}
-	//	//if the right side doesn't detect HDPE but the left one does
-	//	else if (Hardware.rightIR.isOn() == false
-	//	        && Hardware.leftIR.isOn() == true)
-	//	{
-	//	//tell the drives to spin left a little
-	//	Hardware.arrowDashboard.setDirection(Guidance.Direction.left);
-	//	}
+    // Block of code to pick up ball or push it out
+    //pull in the ball if the pull in button is pressed.
+    if (Hardware.rightOperator
+            .getRawButton(TAKE_IN_BALL_BUTTON) == true)
+        {
+        //TODO demystify magic argument
+        Hardware.pickupArm
+                .pullInBall(Hardware.rightOperator.getRawButton(3));
+        }
+    //push out the ball if the push out button is pressed
+    else if (Hardware.rightOperator
+            .getRawButton(PUSH_OUT_BALL_BUTTON) == true)
+        {
+        Hardware.pickupArm.pushOutBall();
+        }
+    // If neither the pull in or the push out button are pressed, stop the
+    // intake motors
+    else
+        {
+        Hardware.pickupArm.stopIntakeArms();
+        }
+    //----------------------------
+    // block of code to fire
+    //----------------------------
+    if (Hardware.leftOperator.getTrigger() == true)
+        {
+        //Tell the code to start firing
+        fireRequested = true;
+        Hardware.armOutOfWayTimer.start();
+        }
+    //if the override button is pressed and we want to fire
+    if (Hardware.leftOperator.getRawButton(FIRE_OVERRIDE_BUTTON) == true
+            && fireRequested == true)
+        {
+        //FIRE NO MATTER WHAT!!!!!
+        if (fire(3, true) == true)
+            {
+            //We've shot our ball, we don't want to fire anymore.
+            fireRequested = false;
+            }
+        }
+    // If the drivers decided they were being stupid and we don't want to fire anymore
+    if (Hardware.leftOperator.getRawButton(FIRE_CANCEL_BUTTON) == true)
+        {
+        //Stop asking the code to fire
+        fireRequested = false;
+        }
+    // if we want to fire, the arm is out of the way, and we have enough pressure so we don't hurt ourselves.
+    if (fireRequested == true && Hardware.pickupArm.moveToPosition(
+            ManipulatorArm.ArmPosition.CLEAR_OF_FIRING_ARM) == true
+            && Hardware.armOutOfWayTimer.get() >= ARM_IS_OUT_OF_WAY_TIME
+            && Hardware.leftOperator
+                    .getRawButton(FIRE_OVERRIDE_BUTTON) != true)
+        {
+        // fire, if we're ready to
+        if (fire(3, false) == true)
+            {
+            // if we're done firing, drop the request
+            fireRequested = false;
+            Hardware.armOutOfWayTimer.stop();
+            Hardware.armOutOfWayTimer.reset();
+            }
+        }
 
 
-	//if one of the IR's detect HDPE
-	if (Hardware.rightIR.isOn() == true
-	        || Hardware.leftIR.isOn() == true)
-	{
-	//Tell the drivers to stop and hopefully alignByCamera
-	Hardware.arrowDashboard
-	        .setDirection(Guidance.Direction.linedUp);
-	}
-	//If neither IR detects anything on the ground
-	else
-	{
-	//trust the camera
-	//TODO base these ones on the camera if we have one.
-	Hardware.arrowDashboard
-	        .setDirection(Guidance.Direction.neutral);
-	}
-	//put the arrows on the screen
-	Hardware.arrowDashboard.update();
+    //end fire block
 
-	//If the ball is in the robot, update the driver station with that info
-	if (Hardware.armIR.get())
-	{
-	Guidance.updateBallStatus(true);
-	}
-	else
-	{
-	Guidance.updateBallStatus(false);
-	}
+    //block of code to tell the drivers where to go
+    //TODO finish based on camera input and IR sensors
+    //if the rightIR detects HDPE and the left one doesn't
+    //	if (Hardware.rightIR.isOn() == true
+    //	        && Hardware.leftIR.isOn() == false)
+    //	{
+    //	//tell the drivers to spin right a little
+    //	Hardware.arrowDashboard.setDirection(Guidance.Direction.right);
+    //	}
+    //	//if the right side doesn't detect HDPE but the left one does
+    //	else if (Hardware.rightIR.isOn() == false
+    //	        && Hardware.leftIR.isOn() == true)
+    //	{
+    //	//tell the drives to spin left a little
+    //	Hardware.arrowDashboard.setDirection(Guidance.Direction.left);
+    //	}
 
 
-	//End driver direction block
+    //if one of the IR's detect HDPE
+    if (Hardware.rightIR.isOn() == true
+            || Hardware.leftIR.isOn() == true)
+        {
+        //Tell the drivers to stop and hopefully alignByCamera
+        Hardware.arrowDashboard
+                .setDirection(Guidance.Direction.linedUp);
+        }
+    //If neither IR detects anything on the ground
+    else
+        {
+        //trust the camera
+        //TODO base these ones on the camera if we have one.
+        Hardware.arrowDashboard
+                .setDirection(Guidance.Direction.neutral);
+        }
+    //put the arrows on the screen
+    Hardware.arrowDashboard.update();
+
+    //If the ball is in the robot, update the driver station with that info
+    if (Hardware.armIR.get())
+        {
+        Guidance.updateBallStatus(true);
+        }
+    else
+        {
+        Guidance.updateBallStatus(false);
+        }
 
 
-	// Print statements to test Hardware on the Robot
-	printStatements();
-
-	// Takes Pictures based on Operator Button stuff.
-	takePicture();
+    //End driver direction block
 
 
-	// Driving the Robot
+    // Print statements to test Hardware on the Robot
+    printStatements();
 
-	//TODO delete all conditionals.
-	if (Hardware.leftDriver.getRawButton(8) == true)
-	{
-	isSpeedTesting = true;
-	}
-	if (isSpeedTesting == false)
-		driveRobot();
-	else
-	{
-	if (Hardware.drive.driveStraightByInches(140.0, true, -1.0,
-	        -1.0) == true)
-	{
-	isSpeedTesting = false;
-	}
-	}
+    // Takes Pictures based on Operator Button stuff.
+    takePicture();
 
-	//    runCameraSolenoid(Hardware.rightOperator.getRawButton(11),
-	//            Hardware.rightOperator.getRawButton(10), false, true);
+
+    // Driving the Robot
+
+    //TODO delete all conditionals.
+    if (Hardware.leftDriver.getRawButton(8) == true)
+        {
+        isSpeedTesting = true;
+        }
+    if (isSpeedTesting == false)
+        driveRobot();
+    else
+        {
+        if (Hardware.drive.driveStraightByInches(140.0, true, -1.0,
+                -1.0) == true)
+            {
+            isSpeedTesting = false;
+            }
+        }
+
+    //    runCameraSolenoid(Hardware.rightOperator.getRawButton(11),
+    //            Hardware.rightOperator.getRawButton(10), false, true);
 } // end Periodic
 
 private static boolean isSpeedTesting = false;
@@ -328,21 +329,21 @@ private static boolean isSpeedTesting = false;
  */
 public static void driveRobot ()
 {
-	//drive the robot with the joysticks
-	Hardware.transmission.controls(Hardware.leftDriver.getY(),
-	        Hardware.rightDriver.getY());
-	// If we're pressing the upshift button, shift up.
-	if (Hardware.rightDriver
-	        .getRawButton(GEAR_UPSHIFT_JOYSTICK_BUTTON) == true)
-	{
-	Hardware.transmission.upshift(1);
-	}
-	// If we press the downshift button, shift down.
-	if (Hardware.rightDriver
-	        .getRawButton(GEAR_DOWNSHIFT_JOYSTICK_BUTTON) == true)
-	{
-	Hardware.transmission.downshift(1);
-	}
+    //drive the robot with the joysticks
+    Hardware.transmission.controls(Hardware.leftDriver.getY(),
+            Hardware.rightDriver.getY());
+    // If we're pressing the upshift button, shift up.
+    if (Hardware.rightDriver
+            .getRawButton(GEAR_UPSHIFT_JOYSTICK_BUTTON) == true)
+        {
+        Hardware.transmission.upshift(1);
+        }
+    // If we press the downshift button, shift down.
+    if (Hardware.rightDriver
+            .getRawButton(GEAR_DOWNSHIFT_JOYSTICK_BUTTON) == true)
+        {
+        Hardware.transmission.downshift(1);
+        }
 }
 
 
@@ -403,47 +404,46 @@ public static boolean armIsUp = false;
  */
 public static boolean fire (int power, boolean override)
 {
-	if (Hardware.transducer.get() >= FIRING_MIN_PSI || override == true)
-	{
-	//        if (Hardware.pickupArm.moveToPosition(
-	//                ManipulatorArm.ArmPosition.CLEAR_OF_FIRING_ARM) == true)
-	//            {
-	if (firstTimeFireRun == true)
-	{
-	Hardware.fireTimer.start();
-	firstTimeFireRun = false;
-	}
-	switch (power)
-	{
-		case 1:
-			Hardware.catapultSolenoid0.set(true);
-			break;
-		case 2:
-			Hardware.catapultSolenoid1.set(true);
-			Hardware.catapultSolenoid0.set(true);
-			break;
-		default:
-		case 3:
-			Hardware.catapultSolenoid0.set(true);
-			Hardware.catapultSolenoid1.set(true);
-			Hardware.catapultSolenoid2.set(true);
-			break;
-	}
-	//            }
-	}
-	//TODO reduce time to minimum possible
-	if (Hardware.fireTimer.get() >= .5)
-	{
-	System.out.println("Somehow getting into if");
-	Hardware.catapultSolenoid0.set(false);
-	Hardware.catapultSolenoid1.set(false);
-	Hardware.catapultSolenoid2.set(false);
-	Hardware.fireTimer.stop();
-	Hardware.fireTimer.reset();
-	firstTimeFireRun = true;
-	return true;
-	}
-	return false;
+    if (Hardware.transducer.get() >= FIRING_MIN_PSI || override == true)
+        {
+        //        if (Hardware.pickupArm.moveToPosition(
+        //                ManipulatorArm.ArmPosition.CLEAR_OF_FIRING_ARM) == true)
+        //            {
+        if (firstTimeFireRun == true)
+            {
+            Hardware.fireTimer.start();
+            firstTimeFireRun = false;
+            }
+        switch (power)
+            {
+            case 1:
+                Hardware.catapultSolenoid1.set(true);
+                break;
+            case 2:
+                Hardware.catapultSolenoid2.set(true);
+                Hardware.catapultSolenoid0.set(true);
+                break;
+            default:
+            case 3:
+                Hardware.catapultSolenoid0.set(true);
+                Hardware.catapultSolenoid1.set(true);
+                Hardware.catapultSolenoid2.set(true);
+                break;
+            }
+        //            }
+        }
+    //TODO reduce time to minimum possible
+    if (Hardware.fireTimer.get() >= .5)
+        {
+        Hardware.catapultSolenoid0.set(false);
+        Hardware.catapultSolenoid1.set(false);
+        Hardware.catapultSolenoid2.set(false);
+        Hardware.fireTimer.stop();
+        Hardware.fireTimer.reset();
+        firstTimeFireRun = true;
+        return true;
+        }
+    return false;
 
 }
 
@@ -458,82 +458,82 @@ public static void takePicture ()
 {
 
 
-	// If we click buttons 6+7 on the left operator joystick, we dim the
-	// brightness a lot, turn the ringlight on, and then if we haven't
-	// already taken an image then we do and set the boolean to true to
-	// prevent us taking more images. Otherwise we don't turn on the
-	// ringlight and we don't take a picture. We added a timer to delay
-	// taking the picture for the brightness to dim and for the ring
-	// light to turn on.
-	if (Hardware.leftOperator.getRawButton(6) == true
-	        && Hardware.leftOperator.getRawButton(7) == true)
-	{
-	if (prepPic == false)
-	{
-	Hardware.axisCamera.writeBrightness(
-	        Hardware.MINIMUM_AXIS_CAMERA_BRIGHTNESS);
-	Hardware.ringLightRelay.set(Value.kOn);
-	Hardware.delayTimer.start();
-	prepPic = true;
-	takingLitImage = true;
-	}
-	}
-	// --------------------------------------------------------------------------
-	// ---CAMERA
-	// TEST------------------------------------------------------------
-	// Once the brightness is down and the ring light is on then the
-	// picture is taken, the brightness returns to normal, the ringlight
-	// is turned off, and the timer is stopped and reset.
-	// @TODO Change .25 to a constant, see line 65 under Hardware
-	// Replaced '.25' with Hardware.CAMERA_DELAY_TIME' change back if camera
-	// fails
-	if (Hardware.delayTimer.get() >= Hardware.CAMERA_DELAY_TIME
-	        && prepPic == true && takingLitImage == true)
-	{
-	Hardware.axisCamera.saveImagesSafely();
-	prepPic = false;
-	takingLitImage = false;
-	}
+    // If we click buttons 6+7 on the left operator joystick, we dim the
+    // brightness a lot, turn the ringlight on, and then if we haven't
+    // already taken an image then we do and set the boolean to true to
+    // prevent us taking more images. Otherwise we don't turn on the
+    // ringlight and we don't take a picture. We added a timer to delay
+    // taking the picture for the brightness to dim and for the ring
+    // light to turn on.
+    if (Hardware.leftOperator.getRawButton(6) == true
+            && Hardware.leftOperator.getRawButton(7) == true)
+        {
+        if (prepPic == false)
+            {
+            Hardware.axisCamera.writeBrightness(
+                    Hardware.MINIMUM_AXIS_CAMERA_BRIGHTNESS);
+            Hardware.ringLightRelay.set(Value.kOn);
+            Hardware.delayTimer.start();
+            prepPic = true;
+            takingLitImage = true;
+            }
+        }
+    // --------------------------------------------------------------------------
+    // ---CAMERA
+    // TEST------------------------------------------------------------
+    // Once the brightness is down and the ring light is on then the
+    // picture is taken, the brightness returns to normal, the ringlight
+    // is turned off, and the timer is stopped and reset.
+    // @TODO Change .25 to a constant, see line 65 under Hardware
+    // Replaced '.25' with Hardware.CAMERA_DELAY_TIME' change back if camera
+    // fails
+    if (Hardware.delayTimer.get() >= Hardware.CAMERA_DELAY_TIME
+            && prepPic == true && takingLitImage == true)
+        {
+        Hardware.axisCamera.saveImagesSafely();
+        prepPic = false;
+        takingLitImage = false;
+        }
 
-	if (takingLitImage == false && Hardware.delayTimer.get() >= 1)
-	{
-	Hardware.axisCamera.writeBrightness(
-	        Hardware.NORMAL_AXIS_CAMERA_BRIGHTNESS);
-	Hardware.ringLightRelay.set(Value.kOff);
-	Hardware.delayTimer.stop();
-	Hardware.delayTimer.reset();
-	}
+    if (takingLitImage == false && Hardware.delayTimer.get() >= 1.0)
+        {
+        Hardware.axisCamera.writeBrightness(
+                Hardware.NORMAL_AXIS_CAMERA_BRIGHTNESS);
+        Hardware.ringLightRelay.set(Value.kOff);
+        Hardware.delayTimer.stop();
+        Hardware.delayTimer.reset();
+        }
 
-	// If we click buttons 10+11, we take a picture without the
-	// ringlight and set the boolean to true so we don't take a bunch of
-	// other pictures.
-	if (Hardware.leftOperator.getRawButton(10) == true &&
-	        Hardware.leftOperator.getRawButton(11) == true)
-	{
-	if (takingUnlitImage == false)
-	{
-	takingUnlitImage = true;
-	Hardware.axisCamera.saveImagesSafely();
-	}
-	}
-	else
-		takingUnlitImage = false;
+    // If we click buttons 10+11, we take a picture without the
+    // ringlight and set the boolean to true so we don't take a bunch of
+    // other pictures.
+    if (Hardware.leftOperator.getRawButton(10) == true &&
+            Hardware.leftOperator.getRawButton(11) == true)
+        {
+        if (takingUnlitImage == false)
+            {
+            takingUnlitImage = true;
+            Hardware.axisCamera.saveImagesSafely();
+            }
+        }
+    else
+        takingUnlitImage = false;
 
-	// if the left operator trigger is pressed, then we check to see if
-	// we're taking a processed picture through the boolean. If we are
-	// not currently taking a processed picture, then it lets us take a
-	// picture and sets the boolean to true so we don't take multiple
-	// pictures. If it is true, then it does nothing. If we don't click
-	// the trigger, then the boolean resets itself to false to take
-	// pictures again.
-	//    if (Hardware.leftOperator.getTrigger() == true)
-	//        {
-	//        if (processingImage == true)
-	//            {
-	//            processImage();
-	//            processingImage = false;
-	//            }
-	//        }
+    // if the left operator trigger is pressed, then we check to see if
+    // we're taking a processed picture through the boolean. If we are
+    // not currently taking a processed picture, then it lets us take a
+    // picture and sets the boolean to true so we don't take multiple
+    // pictures. If it is true, then it does nothing. If we don't click
+    // the trigger, then the boolean resets itself to false to take
+    // pictures again.
+    //    if (Hardware.leftOperator.getTrigger() == true)
+    //        {
+    //        if (processingImage == true)
+    //            {
+    //            processImage();
+    //            processingImage = false;
+    //            }
+    //        }
 } // end Periodic
 
 static boolean hasBegunTurning = true;
@@ -551,14 +551,14 @@ static boolean hasBegunTurning = true;
 public static void processImage ()
 {
 
-	// If we took a picture, we set the boolean to true to prevent
-	// taking more pictures and create an image processor to process
-	// images.
-	// processingImage = true;
-	// Hardware.imageProcessor.processImage();
-	// System.out.println("Length: " +
-	// Hardware.imageProcessor.reports.length);
-	// System.out.println("Center of Mass Y: ");
+    // If we took a picture, we set the boolean to true to prevent
+    // taking more pictures and create an image processor to process
+    // images.
+    // processingImage = true;
+    // Hardware.imageProcessor.processImage();
+    // System.out.println("Length: " +
+    // Hardware.imageProcessor.reports.length);
+    // System.out.println("Center of Mass Y: ");
 
 }
 // End processImage
@@ -580,94 +580,94 @@ public static void processImage ()
 public static void printStatements ()
 {
 
-	// Align By Camera------
-	//System.out.println("AligningByCamera = " + isAligningByCamera);
-	//checks to see if the robot is aligning by camera
+    // Align By Camera------
+    //System.out.println("AligningByCamera = " + isAligningByCamera);
+    //checks to see if the robot is aligning by camera
 
-	// Joysticks------------
-	//    System.out.println("Left Joystick: " + Hardware.leftDriver.getY());
-	//    System.out
-	//            .println("Right Joystick: " + Hardware.rightDriver.getY());
-	//System.out.println("Left Operator: " + Hardware.leftOperator.getY());
-	// System.out.println("Right Operator: " + Hardware.rightOperator.getY());
+    // Joysticks------------
+    //    System.out.println("Left Joystick: " + Hardware.leftDriver.getY());
+    //    System.out
+    //            .println("Right Joystick: " + Hardware.rightDriver.getY());
+    //System.out.println("Left Operator: " + Hardware.leftOperator.getY());
+    // System.out.println("Right Operator: " + Hardware.rightOperator.getY());
 
-	// IR sensors-----------
-	//System.out.println("left IR = " + Hardware.leftIR.isOn());
-	//System.out.println("right IR = " + Hardware.rightIR.isOn());
-	//	System.out.println("Has ball IR = " + Hardware.armIR.isOn());
-
-
-
-	// pots-----------------
-	// System.out.println("delay pot = " + (int) Hardware.delayPot.get());
-	// prints the value of the transducer- (range in code is 50)
-	//hits psi of 100 accurately
-	//System.out.println("transducer = " + Hardware.transducer.get());
-	//	System.out.println("Arm Pot = " + Hardware.armPot.get());
-
-	// Motor controllers-----
-	// prints value of the motors
-	//    System.out.println("RR Motor T = " + Hardware.rightRearMotor.get());
-	//    System.out.println("LR Motor T = " + Hardware.leftRearMotor.get());
-	//    System.out
-	//            .println("RF Motor T = " + Hardware.rightFrontMotor.get());
-	//    System.out.println("LF Motor T = " + Hardware.leftFrontMotor.get());
-	//	System.out.println("Arm Motor: " + Hardware.armMotor.get());
-	//	System.out
-	//	        .println("Intake Motor: " + Hardware.armIntakeMotor.get());
-
-	// Solenoids-------------
-	// prints the state of the solenoids
-	// System.out.println("cameraSolenoid = " + Hardware.cameraSolenoid.get());
-	// System.out.println("catapultSolenoid0 = " +
-	// Hardware.catapultSolenoid0.get());
-	// System.out.println("catapultSolenoid1 = " +
-	// Hardware.catapultSolenoid1.get());
-	// System.out.println("catapultSolenoid2 = " +
-	// Hardware.catapultSolenoid2.get());
+    // IR sensors-----------
+    //System.out.println("left IR = " + Hardware.leftIR.isOn());
+    //System.out.println("right IR = " + Hardware.rightIR.isOn());
+    //	System.out.println("Has ball IR = " + Hardware.armIR.isOn());
 
 
-	// Encoders-------------
-	//    System.out.println(
-	//            "RR distance = " + Hardware.rightRearEncoder.getDistance());
-	//    System.out.println(
-	//            "LR distance = " + Hardware.leftRearEncoder.getDistance());
-	//    //    	 System.out.println("Arm Motor = " + Hardware.armMotor.getDistance());
-	//    System.out.println(
-	//            "Right Rear Encoder Tics: "
-	//                    + Hardware.rightRearEncoder.get());
-	//    System.out.println(
-	//            "Left Rear Encoder Tics: "
-	//                    + Hardware.leftRearEncoder.get());
+
+    // pots-----------------
+    // System.out.println("delay pot = " + (int) Hardware.delayPot.get());
+    // prints the value of the transducer- (range in code is 50)
+    //hits psi of 100 accurately
+    //System.out.println("transducer = " + Hardware.transducer.get());
+    //	System.out.println("Arm Pot = " + Hardware.armPot.get());
+
+    // Motor controllers-----
+    // prints value of the motors
+    //    System.out.println("RR Motor T = " + Hardware.rightRearMotor.get());
+    //    System.out.println("LR Motor T = " + Hardware.leftRearMotor.get());
+    //    System.out
+    //            .println("RF Motor T = " + Hardware.rightFrontMotor.get());
+    //    System.out.println("LF Motor T = " + Hardware.leftFrontMotor.get());
+    //	System.out.println("Arm Motor: " + Hardware.armMotor.get());
+    //	System.out
+    //	        .println("Intake Motor: " + Hardware.armIntakeMotor.get());
+
+    // Solenoids-------------
+    // prints the state of the solenoids
+    // System.out.println("cameraSolenoid = " + Hardware.cameraSolenoid.get());
+    // System.out.println("catapultSolenoid0 = " +
+    // Hardware.catapultSolenoid0.get());
+    // System.out.println("catapultSolenoid1 = " +
+    // Hardware.catapultSolenoid1.get());
+    // System.out.println("catapultSolenoid2 = " +
+    // Hardware.catapultSolenoid2.get());
 
 
-	// Encoders-------------
-	System.out.println(
-	        "RR distance = " + Hardware.rightRearEncoder.getDistance());
-	System.out.println(
-	        "LR distance = " + Hardware.leftRearEncoder.getDistance());
-	        //	 System.out.println("Arm Motor = " + Hardware.armMotor.getDistance());
-
-	// Switches--------------
-	// prints state of switches
-	// System.out.println("Autonomous Enabled Switch: " +
-	// Hardware.autonomousEnabled.isOn());
-	//	System.out
-	//	        .println("Shoot High Switch: " + Hardware.shootHigh.isOn());
-	// System.out.println("Shoot Low Switch: " + Hardware.shootLow.isOn());
+    // Encoders-------------
+    //    System.out.println(
+    //            "RR distance = " + Hardware.rightRearEncoder.getDistance());
+    //    System.out.println(
+    //            "LR distance = " + Hardware.leftRearEncoder.getDistance());
+    //    //    	 System.out.println("Arm Motor = " + Hardware.armMotor.getDistance());
+    //    System.out.println(
+    //            "Right Rear Encoder Tics: "
+    //                    + Hardware.rightRearEncoder.get());
+    //    System.out.println(
+    //            "Left Rear Encoder Tics: "
+    //                    + Hardware.leftRearEncoder.get());
 
 
-	// print the position of the 6 position switch------------
-	//	System.out.println("Position: " +
-	//	        Hardware.startingPositionDial.getPosition());
+    // Encoders-------------
+    System.out.println(
+            "RR distance = " + Hardware.rightRearEncoder.getDistance());
+    System.out.println(
+            "LR distance = " + Hardware.leftRearEncoder.getDistance());
+            //	 System.out.println("Arm Motor = " + Hardware.armMotor.getDistance());
 
-	// print the position of the 6 position switch------------
-	//System.out.println("Position: " +
-	//Hardware.startingPositionDial.getPosition());
+    // Switches--------------
+    // prints state of switches
+    // System.out.println("Autonomous Enabled Switch: " +
+    // Hardware.autonomousEnabled.isOn());
+    //	System.out
+    //	        .println("Shoot High Switch: " + Hardware.shootHigh.isOn());
+    // System.out.println("Shoot Low Switch: " + Hardware.shootLow.isOn());
 
 
-	// Relay-----------------
-	// System.out.println(Hardware.ringLightRelay.get());
+    // print the position of the 6 position switch------------
+    //	System.out.println("Position: " +
+    //	        Hardware.startingPositionDial.getPosition());
+
+    // print the position of the 6 position switch------------
+    //System.out.println("Position: " +
+    //Hardware.startingPositionDial.getPosition());
+
+
+    // Relay-----------------
+    // System.out.println(Hardware.ringLightRelay.get());
 } // end printStatements
 
 
