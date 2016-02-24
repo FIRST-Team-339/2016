@@ -241,39 +241,64 @@ public static void periodic ()
     //block of code to tell the drivers where to go
     //TODO finish based on camera input and IR sensors
     //if the rightIR detects HDPE and the left one doesn't
-    //	if (Hardware.rightIR.isOn() == true
-    //	        && Hardware.leftIR.isOn() == false)
-    //	{
-    //	//tell the drivers to spin right a little
-    //	Hardware.arrowDashboard.setDirection(Guidance.Direction.right);
-    //	}
-    //	//if the right side doesn't detect HDPE but the left one does
-    //	else if (Hardware.rightIR.isOn() == false
-    //	        && Hardware.leftIR.isOn() == true)
-    //	{
-    //	//tell the drives to spin left a little
-    //	Hardware.arrowDashboard.setDirection(Guidance.Direction.left);
-    //	}
-
-
     //if one of the IR's detect HDPE
-    if (Hardware.rightIR.isOn() == true
-            || Hardware.leftIR.isOn() == true)
-        {
-        //Tell the drivers to stop and hopefully alignByCamera
-        Hardware.arrowDashboard
-                .setDirection(Guidance.Direction.linedUp);
-        }
-    //If neither IR detects anything on the ground
-    else
-        {
-        //trust the camera
-        //TODO base these ones on the camera if we have one.
-        Hardware.arrowDashboard
-                .setDirection(Guidance.Direction.neutral);
-        }
-    //put the arrows on the screen
-    Hardware.arrowDashboard.update();
+    //    if (Hardware.rightIR.isOn() == true
+    //            || Hardware.leftIR.isOn() == true)
+    //        {
+    //        //Tell the drivers to stop and hopefully alignByCamera
+    ////        Hardware.arrowDashboard
+    ////                .setDirection(Guidance.Direction.linedUp);
+    //        if (processingImage == false)
+    //            {
+    //            Hardware.cameraInTeleopTimer.start();
+    //            Hardware.axisCamera.writeBrightness(
+    //                    Hardware.MINIMUM_AXIS_CAMERA_BRIGHTNESS);
+    //            //Woah, that's too dark! Someone turn on the ringlight!
+    //            Hardware.ringLightRelay.set(Value.kOn);
+    //            processingImage = true;
+    //            }
+    //        if (processingImage == true
+    //                && Hardware.cameraInTeleopTimer.get() >= .25)
+    //            {
+    //            try
+    //                {
+    //                Hardware.imageProcessor
+    //                        .updateImage(Hardware.axisCamera.getImage());
+    //                }
+    //            //This is NI yelling at us for something being wrong
+    //            catch (NIVisionException e)
+    //                {
+    //                //if something wrong happens, tell the stupid programmers 
+    //                //who let it happen more information about where it came from
+    //                e.printStackTrace();
+    //                }
+    //            //tell imageProcessor to use the image we just took to look for 
+    //            //blobs
+    //            Hardware.imageProcessor.updateParticleAnalysisReports();
+    //            if(Hardware.imageProcessor.getParticleAnalysisReports()[0].center_mass_x <=70)
+    //                {
+    //                Hardware.arrowDashboard.setDirection(Guidance.Direction.left);
+    //                }
+    //            else if(Hardware.imageProcessor.getParticleAnalysisReports()[0].center_mass_x >= 90)
+    //                {
+    //                Hardware.arrowDashboard.setDirection(Guidance.Direction.right);
+    //                }
+    //            else
+    //                {
+    //                Hardware.arrowDashboard.setDirection(Guidance.Direction.linedUp);
+    //                }
+    //            }
+    //        }
+    //    //If neither IR detects anything on the ground
+    //    else
+    //        {
+    //        //trust the camera
+    //        //TODO base these ones on the camera if we have one.
+    //        Hardware.arrowDashboard
+    //                .setDirection(Guidance.Direction.neutral);
+    //        }
+    //    //put the arrows on the screen
+    //    Hardware.arrowDashboard.update();
 
     //If the ball is in the robot, update the driver station with that info
     if (Hardware.armIR.get())

@@ -1168,7 +1168,7 @@ public boolean alignByCamera (double percentageDeadBand,
         //If we claim to be driving by camera and we've waitied long enough 
         //for someone to brighten up the darkness with the ringlight
         //TODO: Demystify magic number 
-        if (Hardware.delayTimer.get() >= .75)
+        if (this.cameraTimer.get() >= .25)
             {
             //try to take a picture and save it in memory and on the "hard disk"
             try
@@ -1205,7 +1205,8 @@ public boolean alignByCamera (double percentageDeadBand,
                 //over again until the blob is within the acceptable zone)
                 //TODO check and make sure this still doesn't work, then 
                 //change it back or write turn continuous method
-                this.turnLeftDegrees(2, false);
+                //this.turnLeftDegrees(2, false);
+                this.transmission.controls(.5, -.5);
                 }
             //if the center of the largest blob is to the right of our 
             //acceptable zone around the center
@@ -1218,7 +1219,8 @@ public boolean alignByCamera (double percentageDeadBand,
                 {
                 //turn right until it is in the zone (will be called over and
                 //over again until the blob is within the acceptable zone)
-                this.turnRightDegrees(2, false);
+                //this.turnRightDegrees(2, false);
+                this.transmission.controls(-.5, .5);
                 }
             //If the center of the blob is nestled happily in our deadzone
             else
