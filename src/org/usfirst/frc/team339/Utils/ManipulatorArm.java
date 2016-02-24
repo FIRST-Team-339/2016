@@ -148,12 +148,19 @@ public void pullInBall (boolean override)
 	//TODO check to make sure -1 pulls in and not the reverse.
 	this.intakeMotor.set(0.0);
 
+
 	Hardware.kilroyTimer.stop();
-	ballHasBeenPreviouslyDetected = false;
 	}
 	else
 	{
 	this.intakeMotor.set(-INTAKE_SPEED);
+
+
+	if (Hardware.armIR.isOn() == false)
+	{
+	Hardware.kilroyTimer.reset();
+	ballHasBeenPreviouslyDetected = false;
+	}
 	}
 
 
@@ -394,6 +401,6 @@ private static final int HOLDING_POSITION_THRESHOLD = 5;
 private static final double HOLDING_SPEED = 0.1;
 
 private static final int STOP_DOWN_ANGLE = 45;
-private static final double DELAY_AFTER_BALL_DETECTION = 0.1;
+private static final double DELAY_AFTER_BALL_DETECTION = 0.08;
 
 }

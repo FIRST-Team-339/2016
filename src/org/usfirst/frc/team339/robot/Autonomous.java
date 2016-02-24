@@ -282,7 +282,7 @@ public static void init ()
 
 	Hardware.transmission.setFirstGearPercentage(1.0);
 	Hardware.transmission.setGear(1);
-	Hardware.transmission.setJoysticksAreReversed(true);
+	Hardware.transmission.setJoysticksAreReversed(false);
 	Hardware.transmission.setJoystickDeadbandRange(0.0);
 
 
@@ -1001,7 +1001,7 @@ private static final boolean[] BREAK_ON_ALIGNMENT_LINE =
 static final double[] MOTOR_RATIO_TO_OUTER_WORKS =
         {
                 0.0, // nothing. Not used. Arbitrary; makes it work.
-                0.25, // lane 1, should be extra low.
+                0.65,//0.25, // lane 1, should be extra low.
                 1.0, // lane 2
                 0.4, // lane 3
                 0.4, // lane 4
