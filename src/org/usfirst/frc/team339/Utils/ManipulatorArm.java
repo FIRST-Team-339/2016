@@ -133,9 +133,9 @@ public void stopArmMotor ()
  */
 public void pullInBall (boolean override)
 {
-	if (intakeInitialized == false && Hardware.armIR.isOn())
+	if (ballHasBeenPreviouslyDetected == false && Hardware.armIR.isOn())
 	{
-	intakeInitialized = true;
+	ballHasBeenPreviouslyDetected = true;
 	Hardware.kilroyTimer.reset();
 	Hardware.kilroyTimer.start();
 	}
@@ -149,7 +149,7 @@ public void pullInBall (boolean override)
 	this.intakeMotor.set(0.0);
 
 	Hardware.kilroyTimer.stop();
-	intakeInitialized = false;
+	ballHasBeenPreviouslyDetected = false;
 	}
 	else
 	{
@@ -366,7 +366,7 @@ private SpeedController motor = null;
 private RobotPotentiometer armPot = null;
 private IRSensor hasBallSensor = null;
 
-private boolean intakeInitialized = false;
+private boolean ballHasBeenPreviouslyDetected = false;
 
 //default maximum arm turn speed proportion
 private final double MAX_ARM_SPEED = -1.0;
