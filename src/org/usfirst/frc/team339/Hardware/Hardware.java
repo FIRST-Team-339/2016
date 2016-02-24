@@ -314,7 +314,8 @@ public static Transmission_old transmission = new Transmission_old(
 // Drive system
 // ------------------------------------
 //
-public static Drive drive = new Drive(transmission);
+public static Drive drive =
+        new Drive(transmission, axisCamera, ringLightRelay);
 
 // -------------------
 // Assembly classes (e.g. forklift)
@@ -332,6 +333,7 @@ public static final Timer autoTimer = new Timer();
 public static final Timer delayTimer = new Timer();
 public static final Timer fireTimer = new Timer();
 public static final Timer armOutOfWayTimer = new Timer();
+public static final Timer cameraInTeleopTimer = new Timer();
 public static final ErrorMessage errorMessage = new ErrorMessage(
         true /* append timelog */);
 
