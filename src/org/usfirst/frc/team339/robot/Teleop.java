@@ -33,7 +33,7 @@ package org.usfirst.frc.team339.robot;
 
 import org.usfirst.frc.team339.Hardware.Hardware;
 import org.usfirst.frc.team339.Utils.Guidance;
-import org.usfirst.frc.team339.Utils.ManipulatorArm.ArmPosition;
+import org.usfirst.frc.team339.Utils.ManipulatorArm;
 import edu.wpi.first.wpilibj.CameraServer;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.Relay.Value;
@@ -191,53 +191,46 @@ public static void periodic ()
 	{
 	Hardware.pickupArm.stopIntakeArms();
 	}
-
+	//----------------------------
 	// block of code to fire
+	//----------------------------
 	if (Hardware.leftOperator.getTrigger() == true)
 	{
 	//Tell the code to start firing
 	fireRequested = true;
+	Hardware.armOutOfWayTimer.start();
 	}
-
-	//if we want to fire, but the arm is in the way
-	//NOTE: temporarily stores the firing state so that if fireRequested is false the method won't stop working
-	if (!Hardware.pickupArm.isClearOfArm()
-	        && (fireRequested == true || storeFiringState == true))
-	{
-	storeFiringState = fireRequested;
-	fireRequested = false;
-	if (Hardware.pickupArm
-	        .moveToPosition(
-	                ArmPosition.CLEAR_OF_FIRING_ARM) == true)
-	{
-	fireRequested = true;
-	storeFiringState = false;
-	}
-	}
-
-
-	if (Hardware.leftOperator.getRawButton(4) == true
+	//if the override button is pressed and we want to fire
+	if (Hardware.leftOperator.getRawButton(FIRE_OVERRIDE_BUTTON) == true
 	        && fireRequested == true)
 	{
+	//FIRE NO MATTER WHAT!!!!!
 	if (fire(3, true) == true)
 	{
+	//We've shot our ball, we don't want to fire anymore.
 	fireRequested = false;
 	}
 	}
-	// cancel the fire request
+	// If the drivers decided they were being stupid and we don't want to fire anymore
 	if (Hardware.leftOperator.getRawButton(FIRE_CANCEL_BUTTON) == true)
 	{
+	//Stop asking the code to fire
 	fireRequested = false;
 	}
-	// if we want to fire
-	if (fireRequested == true
-	        && Hardware.leftOperator.getRawButton(4) != true)
+	// if we want to fire, the arm is out of the way, and we have enough pressure so we don't hurt ourselves.
+	if (fireRequested == true && Hardware.pickupArm.moveToPosition(
+	        ManipulatorArm.ArmPosition.CLEAR_OF_FIRING_ARM) == true
+	        && Hardware.armOutOfWayTimer.get() >= ARM_IS_OUT_OF_WAY_TIME
+	        && Hardware.leftOperator
+	                .getRawButton(FIRE_OVERRIDE_BUTTON) != true)
 	{
-	// fire
+	// fire, if we're ready to
 	if (fire(3, false) == true)
 	{
 	// if we're done firing, drop the request
 	fireRequested = false;
+	Hardware.armOutOfWayTimer.stop();
+	Hardware.armOutOfWayTimer.reset();
 	}
 	}
 
@@ -604,12 +597,13 @@ public static void printStatements ()
 	//	System.out.println("Has ball IR = " + Hardware.armIR.isOn());
 
 
+
 	// pots-----------------
 	// System.out.println("delay pot = " + (int) Hardware.delayPot.get());
 	// prints the value of the transducer- (range in code is 50)
 	//hits psi of 100 accurately
 	//System.out.println("transducer = " + Hardware.transducer.get());
-	System.out.println("Arm Pot = " + Hardware.armPot.get());
+	//	System.out.println("Arm Pot = " + Hardware.armPot.get());
 
 	// Motor controllers-----
 	// prints value of the motors
@@ -646,6 +640,7 @@ public static void printStatements ()
 	//            "Left Rear Encoder Tics: "
 	//                    + Hardware.leftRearEncoder.get());
 
+
 	// Encoders-------------
 	System.out.println(
 	        "RR distance = " + Hardware.rightRearEncoder.getDistance());
@@ -660,6 +655,7 @@ public static void printStatements ()
 	//	System.out
 	//	        .println("Shoot High Switch: " + Hardware.shootHigh.isOn());
 	// System.out.println("Shoot Low Switch: " + Hardware.shootLow.isOn());
+
 
 	// print the position of the 6 position switch------------
 	//	System.out.println("Position: " +
@@ -690,7 +686,7 @@ private static final int GEAR_DOWNSHIFT_JOYSTICK_BUTTON = 2;
 // left operator 2
 private static final int CAMERA_TOGGLE_BUTTON = 2;
 // Right operator 2
-private static final int FIRE_OVERRIDE_BUTTON = 2;
+private static final int FIRE_OVERRIDE_BUTTON = 4;
 // Left operator 3
 private static final int FIRE_CANCEL_BUTTON = 3;
 // Right operator 4
@@ -703,6 +699,8 @@ private static final double PICKUP_ARM_CONTROL_DEADZONE = 0.2;
 private final static double PERCENT_IMAGE_PROCESSING_DEADBAND = .15;
 
 private final static double CAMERA_ALIGNMENT_TURNING_SPEED = .45;
+
+private final static double ARM_IS_OUT_OF_WAY_TIME = .25;
 
 //minimum pressure when allowed to fire
 private static final int FIRING_MIN_PSI = 90;
