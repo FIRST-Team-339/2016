@@ -609,7 +609,7 @@ public static void printStatements ()
 	// prints the value of the transducer- (range in code is 50)
 	//hits psi of 100 accurately
 	//System.out.println("transducer = " + Hardware.transducer.get());
-	//	System.out.println("Arm Pot = " + Hardware.armPot.get());
+	System.out.println("Arm Pot = " + Hardware.armPot.get());
 
 	// Motor controllers-----
 	// prints value of the motors
@@ -647,11 +647,11 @@ public static void printStatements ()
 	//                    + Hardware.leftRearEncoder.get());
 
 	// Encoders-------------
-	// System.out.println(
-	// "RR distance = " + Hardware.rightRearEncoder.getDistance());
-	// System.out.println(
-	// "LR distance = " + Hardware.leftRearEncoder.getDistance());
-	// System.out.println("Arm Motor = " + Hardware.armMotor.getDistance());
+	System.out.println(
+	        "RR distance = " + Hardware.rightRearEncoder.getDistance());
+	System.out.println(
+	        "LR distance = " + Hardware.leftRearEncoder.getDistance());
+	        //	 System.out.println("Arm Motor = " + Hardware.armMotor.getDistance());
 
 	// Switches--------------
 	// prints state of switches
@@ -662,8 +662,8 @@ public static void printStatements ()
 	// System.out.println("Shoot Low Switch: " + Hardware.shootLow.isOn());
 
 	// print the position of the 6 position switch------------
-	System.out.println("Position: " +
-	        Hardware.startingPositionDial.getPosition());
+	//	System.out.println("Position: " +
+	//	        Hardware.startingPositionDial.getPosition());
 
 	// print the position of the 6 position switch------------
 	//System.out.println("Position: " +
