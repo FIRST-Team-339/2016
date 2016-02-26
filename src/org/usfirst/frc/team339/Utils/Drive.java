@@ -11,10 +11,6 @@ import edu.wpi.first.wpilibj.image.NIVisionException;
 
 public class Drive
 {
-
-
-
-
 /**
  * Constructor for a Drive object. Should only be called once.
  * 
@@ -278,9 +274,8 @@ public boolean driveForwardByInches (final double distance,
         return true;
         }
     // drive as per the joystick inputs
-    this.transmission.controls(compensateForReversedLeftJoystick(
-            leftJoystickInputValue), compensateForReversedRightJoystick(
-                    rightJoystickInputValue));
+    this.transmission.controls(leftJoystickInputValue,
+            rightJoystickInputValue);
 
     // PRINT STATEMENTS:
     // TODO: remove
@@ -450,9 +445,9 @@ public boolean driveStraightByInches (final double distance,
             .getRightRearEncoderDistance() == this.transmission
                     .getLeftRearEncoderDistance())
         {
-        System.out.println("Left Joystick: " + -leftJoystickInputValue);
+        System.out.println("Left Joystick: " + leftJoystickInputValue);
         System.out
-                .println("Right Joystick: " + -rightJoystickInputValue);
+                .println("Right Joystick: " + rightJoystickInputValue);
         }
     else if ((this.transmission
             .getRightRearEncoderDistance()) < (this.transmission
@@ -460,16 +455,16 @@ public boolean driveStraightByInches (final double distance,
         {
         System.out.println("Left Joystick: " +
                 determineCorrectedJoystickValue(
-                        -leftJoystickInputValue));
+                        leftJoystickInputValue));
         System.out
-                .println("Right Joystick: " + -rightJoystickInputValue);
+                .println("Right Joystick: " + rightJoystickInputValue);
         }
     else
         {
-        System.out.println("Left Joystick: " + -leftJoystickInputValue);
+        System.out.println("Left Joystick: " + leftJoystickInputValue);
         System.out.println("Right Joystick: " +
                 determineCorrectedJoystickValue(
-                        -rightJoystickInputValue));
+                        rightJoystickInputValue));
         }
 
     // if we are presently going straight - keep the
@@ -930,10 +925,8 @@ public boolean turnByDegrees (final turnWhichWay whichWay,
             }
         }
     // turn the robot
-    this.transmission.controls(
-            compensateForReversedLeftJoystick(leftJoystickInputValue),
-            compensateForReversedRightJoystick(
-                    rightJoystickInputValue));
+    this.transmission.controls(leftJoystickInputValue,
+            rightJoystickInputValue);
     // We're not done driving yet!!
     return false;
 } // end turnByDegrees()
