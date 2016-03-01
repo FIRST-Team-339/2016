@@ -79,6 +79,13 @@ public static final int AXIS_FPS = 15;
 public static final Resolution AXIS_RESOLUTION =
         AxisCamera.Resolution.k320x240;
 
+//---------------------------------
+// denote whether we are running in
+// the lab or not.  This will allow
+// us to test in the lab once the
+// robot is bagged
+//---------------------------------
+public static final boolean runningInLab = false;
 // -------------------------------------
 // Private Constants
 // -------------------------------------

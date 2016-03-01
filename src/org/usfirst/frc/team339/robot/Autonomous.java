@@ -35,7 +35,6 @@ import org.usfirst.frc.team339.Hardware.Hardware;
 import org.usfirst.frc.team339.Utils.ErrorMessage;
 import org.usfirst.frc.team339.Utils.ManipulatorArm.ArmPosition;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
-import edu.wpi.first.wpilibj.vision.AxisCamera.Resolution;
 
 /**
  * This class contains all of the user code for the Autonomous part of the
@@ -285,25 +284,13 @@ public static void init ()
 	Hardware.transmission.setJoysticksAreReversed(true);
 	Hardware.transmission.setJoystickDeadbandRange(0.0);
 
-
 	// --------------------------------------
 	// Encoder Initialization
 	// --------------------------------------
 	Hardware.leftRearEncoder.reset();
-	Hardware.leftRearEncoder.setDistancePerPulse(0.0745614);
-	Hardware.rightRearEncoder.setDistancePerPulse(0.0745614);
 	Hardware.rightRearEncoder.reset();
 
-	// -------------------------------------
-	// close both of the cameras in case they
-	// were previously started in a previous
-	// run. Then, change the camera to one that
-	// will eventually process images.
-	// ------------------------------------
-
-	// Sets FPS and Resolution of camera
-	Hardware.axisCamera.writeMaxFPS(15);
-	Hardware.axisCamera.writeResolution(Resolution.k320x240);
+	// Sets Resolution of camera
 	Hardware.axisCamera
 	        .writeBrightness(Hardware.MINIMUM_AXIS_CAMERA_BRIGHTNESS);
 
