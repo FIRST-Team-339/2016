@@ -282,7 +282,7 @@ public static void init ()
 
 	Hardware.transmission.setFirstGearPercentage(1.0);
 	Hardware.transmission.setGear(1);
-	Hardware.transmission.setJoysticksAreReversed(false);
+	Hardware.transmission.setJoysticksAreReversed(true);
 	Hardware.transmission.setJoystickDeadbandRange(0.0);
 
 
