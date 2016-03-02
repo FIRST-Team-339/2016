@@ -259,6 +259,7 @@ public void robotInit ()
         Hardware.rightRearMotor.setInverted(false);
         Hardware.leftFrontMotor.setInverted(true);
         Hardware.leftRearMotor.setInverted(true);
+        Hardware.axisCamera.setHaveCamera(false);
         }
     else
         {
