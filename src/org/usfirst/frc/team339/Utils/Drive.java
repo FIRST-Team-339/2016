@@ -1124,6 +1124,10 @@ public boolean turnRightDegrees (final double degrees,
  *            the center. Be careful though, if the deadband is too narrow
  *            and the speed to high, the robot will oscillate around the
  *            center or stop on the other side of the deadband.
+ * @param adjustedCenterProportion
+ *            -Double to tell to the code about where in the image we want the
+ *            largest blob to be. Proportional across the image, with the left
+ *            edge as -1.0, the center as 0.0, and the right edge as 1.0
  * @param savePictures
  *            -Boolean to determine whether we want to save up to 10 images
  *            taken for manual processing later. No guarantee that they
@@ -1137,9 +1141,9 @@ public boolean turnRightDegrees (final double degrees,
  *         me to not know and you to laugh at.
  * @author Alex Kneipp
  */
-//TODO correct for offset camera, probably add arg to accomodate for it
 public boolean alignByCamera (double percentageDeadBand,
-        double correctionSpeed, boolean savePictures)
+        double correctionSpeed, double adjustedCenterProportion,
+        boolean savePictures)
 {
 
     //If the stupid programmers didn't give me a camera or relay before
@@ -1159,9 +1163,9 @@ public boolean alignByCamera (double percentageDeadBand,
             this.ringLightRelay.set(Value.kOn);
             firstTimeAlign = false;
             }
-        //If we claim to be driving by camera and we've waitied long enough 
-        //for someone to brighten up the darkness with the ringlight
-        //TODO: Demystify magic number 
+        //If we claim to be driving by camera and we've waitied long enough
+        //(a quarter second) for someone to brighten up the darkness with 
+        //the ringlight.
         if (this.cameraTimer.get() >= .25)
             {
             //try to take a picture and save it in memory and on the "hard disk"
@@ -1193,7 +1197,8 @@ public boolean alignByCamera (double percentageDeadBand,
                     && getRelativeCameraCoordinate(
                             Hardware.imageProcessor
                                     .getParticleAnalysisReports()[0].center_mass_x,
-                            true) <= -percentageDeadBand)
+                            true)
+                            - adjustedCenterProportion <= -percentageDeadBand)
                 {
                 //turn left until it is in the zone (will be called over and
                 //over again until the blob is within the acceptable zone)
@@ -1209,7 +1214,8 @@ public boolean alignByCamera (double percentageDeadBand,
                     && getRelativeCameraCoordinate(
                             Hardware.imageProcessor
                                     .getParticleAnalysisReports()[0].center_mass_x,
-                            true) >= percentageDeadBand)
+                            true)
+                            - adjustedCenterProportion >= percentageDeadBand)
                 {
                 //turn right until it is in the zone (will be called over and
                 //over again until the blob is within the acceptable zone)
@@ -1232,37 +1238,65 @@ public boolean alignByCamera (double percentageDeadBand,
 }//end alignByCamera()
 
 /**
- * 2 argument override method of alignByCamera(double,double,boolean),
+ * 3 argument override method of alignByCamera(double,double,double,boolean),
  * presumes that the caller doesn't want to save images taken to the
  * "Hard drive." If that sounds like something you do want to do, try
- * alignByCamera(double,double,boolean)
+ * alignByCamera(double,double,double,boolean)
  * 
  * @param percentageDeadBand
- *            -See alignByCamera(double, double, boolean)
+ *            -See alignByCamera(double, double, double, boolean)
  * @param correctionSpeed
- *            -See alignByCamera(double, double, boolean)
+ *            -See alignByCamera(double, double, double, boolean)
+ * @param proportionalCenter
+ *            -See alignByCamera(double, double, double, boolean)
  * @return
- *         -See alignByCamera(double, double, boolean)
+ *         -See alignByCamera(double, double, double, boolean)
+ * @author Alex Kneipp
+ */
+public boolean alignByCamera (double percentageDeadBand,
+        double correctionSpeed, double proportionalCenter)
+{
+    return alignByCamera(percentageDeadBand, correctionSpeed,
+            proportionalCenter, false);
+}
+
+/**
+ * 2 argument override method of alignByCamera(double,double,double,boolean),
+ * presumes that the caller doesn't want to save images taken to the
+ * "Hard drive," and that the you don't want to align to something not
+ * in the center of the image. If that sounds like something you do want to do,
+ * try
+ * alignByCamera(double,double,double,boolean)
+ * 
+ * @param percentageDeadBand
+ *            -See alignByCamera(double, double, double, boolean)
+ * @param correctionSpeed
+ *            -See alignByCamera(double, double, double, boolean)
+ * @return
+ *         -See alignByCamera(double, double, double, boolean)
  * @author Alex Kneipp
  */
 public boolean alignByCamera (double percentageDeadBand,
         double correctionSpeed)
 {
-    return alignByCamera(percentageDeadBand, correctionSpeed, false);
+    return alignByCamera(percentageDeadBand, correctionSpeed, 0.0,
+            false);
 }
 
+
 /**
- * 1 argument override method of alignByCamera(double,double,boolean)
+ * 1 argument override method of alignByCamera(double,double,double,boolean),
  * presumes that the caller doesn't want to save images taken to the
- * "Hard drive," and that the caller doesn't want to set the turning
- * speed for the correction.
- * If either of those sound like something you do want to do, try
- * alignByCamera(double,double,boolean)
+ * "Hard drive," that the you don't want to align to something not
+ * in the center of the image, and that you don't want to set the turning speed
+ * for the correction. If that sounds like something you do want to do,
+ * try
+ * alignByCamera(double,double,double,boolean)
  * 
  * @param percentageDeadBand
- *            -See alignByCamera(double, double, boolean)
+ *            -See alignByCamera(double, double, double, boolean)
  * @return
- *         -See alignByCamera(double, double, boolean)
+ *         -See alignByCamera(double, double, double, boolean)
  * @author Alex Kneipp
  */
 public boolean alignByCamera (double percentageDeadBand)
@@ -1273,15 +1307,16 @@ public boolean alignByCamera (double percentageDeadBand)
 }
 
 /**
- * No argument override method of alignByCamera(double,double,boolean),
+ * No argument override method of alignByCamera(double,double,double,boolean),
  * for lazy programmers. Presumes you just want the default values,
  * cause you're lazy. If you're not lazy and you indeed do want to
  * control whether or not the alignByCamera method saves images taken,
- * the deadband percentage size, or the turning speed of the alignment,
- * see the other methods with the same name.
+ * the deadband percentage size, the turning speed of the alignment, or want to
+ * align to something not in the center see the other methods with the same
+ * name.
  * 
  * @return
- *         -See alignByCamera(double, double, boolean)
+ *         -See alignByCamera(double, double, double, boolean)
  * @author Alex Kneipp
  */
 public boolean alignByCamera ()
