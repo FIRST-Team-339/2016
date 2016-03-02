@@ -1112,6 +1112,97 @@ public boolean turnRightDegrees (final double degrees,
             rightJoystickInputValue));
 } // end turnRightDegrees()
 
+public boolean driveByCamera (double percentageDeadBand,
+        double correctionSpeed, double adjustedCenterProportion,
+        boolean savePictures)
+{
+    if (this.camera != null && this.ringLightRelay != null)
+        {
+        if (this.firstRunDriveByCamera == true)
+            {
+            this.cameraTimer.start();
+            //turn down the lights
+            this.camera.writeBrightness(
+                    Hardware.MINIMUM_AXIS_CAMERA_BRIGHTNESS);
+            //Woah, that's too dark! Someone turn on the ringlight!
+            this.ringLightRelay.set(Value.kOn);
+            firstRunDriveByCamera = false;
+            }
+        //If we claim to be driving by camera and we've waitied long enough
+        //(a quarter second) for someone to brighten up the darkness with 
+        //the ringlight.
+        if (this.cameraTimer.get() >= .25)
+            {
+            //try to take a picture and save it in memory and on the "hard disk"
+            try
+                {
+                Hardware.imageProcessor
+                        .updateImage(Hardware.axisCamera.getImage());
+                if (savePictures == true)
+                    Hardware.axisCamera.saveImagesSafely();
+                }
+            //This is NI yelling at us for something being wrong
+            catch (NIVisionException e)
+                {
+                //if something wrong happens, tell the stupid programmers 
+                //who let it happen more information about where it came from
+                e.printStackTrace();
+                }
+            //tell imageProcessor to use the image we just took to look for 
+            //blobs
+            Hardware.imageProcessor.updateParticleAnalysisReports();
+            //tell the programmers where the X coordinate of the center of 
+            //mass of the largest blob
+            //        System.out.println("CenterOfMass: " + Hardware.imageProcessor
+            //                .getParticleAnalysisReports()[0].center_mass_x);
+            //if the center of the largest blob is to the left of our 
+            //acceptable zone around the center
+            if (Hardware.imageProcessor
+                    .getParticleAnalysisReports().length > 0
+                    && getRelativeCameraCoordinate(
+                            Hardware.imageProcessor
+                                    .getParticleAnalysisReports()[0].center_mass_x,
+                            true)
+                            - adjustedCenterProportion <= -percentageDeadBand)
+                {
+                //turn left until it is in the zone (will be called over and
+                //over again until the blob is within the acceptable zone)
+                //TODO check and make sure this still doesn't work, then 
+                //change it back or write turn continuous method
+                //TODO arbitrary magic Numbers
+                this.driveForwardContinuous(.6, .8);
+                //this.transmission.controls(.5, -.5);
+                }
+            //if the center of the largest blob is to the right of our 
+            //acceptable zone around the center
+            else if (Hardware.imageProcessor
+                    .getParticleAnalysisReports().length > 0
+                    && getRelativeCameraCoordinate(
+                            Hardware.imageProcessor
+                                    .getParticleAnalysisReports()[0].center_mass_x,
+                            true)
+                            - adjustedCenterProportion >= percentageDeadBand)
+                {
+                //turn right until it is in the zone (will be called over and
+                //over again until the blob is within the acceptable zone)
+                this.driveForwardContinuous(.8, .6);
+                //this.transmission.controls(-.5, .5);
+                }
+            //If the center of the blob is nestled happily in our deadzone
+            else
+                {
+                //Stop moving
+                firstTimeAlign = true;
+                this.cameraTimer.stop();
+                this.cameraTimer.reset();
+                Hardware.transmission.controls(0.0, 0.0);
+                return true;
+                }
+            }
+        }
+    return false;
+}
+
 /**
  * Turn the robot until it has the largest blob in its vision processing
  * array at roughly the center of its vision.
@@ -1387,6 +1478,8 @@ private double cameraXResolution;
 private double cameraYResolution;
 
 private boolean firstTimeAlign = true;
+
+private boolean firstRunDriveByCamera = true;
 
 private double prevTime = 0.0;
 private double prevLeftDistance = 0.0;
