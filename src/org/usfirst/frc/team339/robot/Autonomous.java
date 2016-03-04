@@ -988,7 +988,7 @@ private static final boolean[] BREAK_ON_ALIGNMENT_LINE =
 static final double[] MOTOR_RATIO_TO_OUTER_WORKS =
         {
                 0.0, // nothing. Not used. Arbitrary; makes it work.
-                0.65,//0.25, // lane 1, should be extra low.
+                0.40,//0.25, // lane 1, should be extra low.
                 1.0, // lane 2
                 0.4, // lane 3
                 0.4, // lane 4
@@ -1176,7 +1176,7 @@ private static final boolean DEBUGGING_DEFAULT = true;
 /**
  * Factor by which to scale all distances for testing in our small lab space.
  */
-private static final double LAB_SCALING_FACTOR = 0.5;
+private static final double LAB_SCALING_FACTOR = .5;
 
 /**
  * Time to wait after releasing the solenoids before closing them back up.
