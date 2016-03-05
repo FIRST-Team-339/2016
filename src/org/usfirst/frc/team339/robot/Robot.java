@@ -229,24 +229,41 @@ public void robotInit ()
     // --------------------------------------
     // Encoder Initialization
     // --------------------------------------
-    Hardware.leftRearEncoder
-            .setDistancePerPulse(distancePerTickForMotorEncoders);
-    Hardware.leftRearEncoder.reset();
-    Hardware.rightRearEncoder
-            .setDistancePerPulse(distancePerTickForMotorEncoders);
-    Hardware.rightRearEncoder.reset();
-    Hardware.rightRearEncoder.setReverseDirection(true);
+    if (Hardware.runningInLab == true)
+        {
+        //---------------------------------
+        // for old Kilroy 16
+        //---------------------------------
+        Hardware.leftRearEncoder.setDistancePerPulse(.0197);
+        Hardware.rightRearEncoder.setDistancePerPulse(.0197);
+        Hardware.leftRearEncoder.reset();
+        Hardware.rightRearEncoder.reset();
+        }
+    else
+        {
+        //---------------------------------
+        // Kilroy 17
+        //---------------------------------
+        Hardware.leftRearEncoder.setDistancePerPulse(
+                this.distancePerTickForMotorEncoders);
+        Hardware.leftRearEncoder.reset();
+        Hardware.rightRearEncoder.setDistancePerPulse(
+                this.distancePerTickForMotorEncoders);
+        Hardware.rightRearEncoder.reset();
+        Hardware.rightRearEncoder.setReverseDirection(true);
+        }
 
     // --------------------------------------
     // initialize all things with the drive system
     // --------------------------------------
     Hardware.transmission.setMaxGear(2);
 
-    Hardware.transmission.setJoystickDeadbandRange(.20);
+    Hardware.transmission.setJoystickDeadbandRange(
+            JOYSTICK_DEADBAND_ZONE);
 
     Hardware.transmission.setFirstGearPercentage(FIRST_GEAR_PERCENTAGE);
-    Hardware.transmission
-            .setSecondGearPercentage(SECOND_GEAR_PERCENTAGE);
+    Hardware.transmission.setSecondGearPercentage(
+            SECOND_GEAR_PERCENTAGE);
 
     // ---------------------------------------
     // denote which motors are wired backwards
@@ -275,8 +292,8 @@ public void robotInit ()
     // AXIS camera initialization
     // -------------------------------------
     // Set the axis camera brightness to normal
-    Hardware.axisCamera
-            .writeBrightness(Hardware.NORMAL_AXIS_CAMERA_BRIGHTNESS);
+    Hardware.axisCamera.writeBrightness(
+            Hardware.NORMAL_AXIS_CAMERA_BRIGHTNESS);
     // -------------------------------------
     // USB camera initialization
     // -------------------------------------
@@ -292,8 +309,8 @@ public void robotInit ()
     // Sets FPS and Resolution of camera
     Hardware.axisCamera.writeMaxFPS(Hardware.AXIS_FPS);
     Hardware.axisCamera.writeResolution(Hardware.AXIS_RESOLUTION);
-    Hardware.axisCamera
-            .writeBrightness(Hardware.NORMAL_AXIS_CAMERA_BRIGHTNESS);
+    Hardware.axisCamera.writeBrightness(
+            Hardware.NORMAL_AXIS_CAMERA_BRIGHTNESS);
     // Hardware.axisCamera
     // .writeWhiteBalance(AxisCamera.WhiteBalance.kHold);
 
@@ -502,6 +519,7 @@ public void testPeriodic ()
 private final double distancePerTickForMotorEncoders = 0.0745614;
 // was 0.0745614
 // 
+public static final double JOYSTICK_DEADBAND_ZONE = 0.20;
 public static final double FIRST_GEAR_PERCENTAGE = 0.5;
 public static final double SECOND_GEAR_PERCENTAGE = 0.7;
 } // end class
