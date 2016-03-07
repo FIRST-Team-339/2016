@@ -174,7 +174,6 @@ public static SixPositionSwitch startingPositionDial =
 // ------------------------------------
 public static Encoder leftRearEncoder = new Encoder(5, 6);
 public static Encoder rightRearEncoder = new Encoder(3, 4);
-// public static Encoder armEncoder = new Encoder(4, 5);
 
 // -----------------------
 // Wiring diagram
@@ -320,14 +319,12 @@ public static Transmission_old transmission = new Transmission_old(
 // ------------------------------------
 // Drive system
 // ------------------------------------
-//
 public static Drive drive =
         new Drive(transmission, axisCamera, ringLightRelay);
 
 // -------------------
 // Assembly classes (e.g. forklift)
 // -------------------
-
 public static ManipulatorArm pickupArm = new ManipulatorArm(armMotor,
         armIntakeMotor, armPot, armIR);
 
