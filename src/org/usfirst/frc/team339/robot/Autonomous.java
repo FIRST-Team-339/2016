@@ -33,6 +33,7 @@ package org.usfirst.frc.team339.robot;
 
 import org.usfirst.frc.team339.Hardware.Hardware;
 import org.usfirst.frc.team339.Utils.ErrorMessage;
+import org.usfirst.frc.team339.Utils.ManipulatorArm;
 import org.usfirst.frc.team339.Utils.ManipulatorArm.ArmPosition;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 
@@ -148,6 +149,11 @@ private static enum MainState
      * Wait to close the solenoids.
      */
     DELAY_AFTER_SHOOT,
+
+    /**
+     * Wait for the arm to come down before crossing the outer works.
+     */
+    WAIT_FOR_ARM_DESCENT,
 
     /**
      * We stop, and do nothing else.
@@ -430,7 +436,7 @@ private static void runMainStateMachine ()
                         && (Hardware.pickupArm.isDown() == false))
                 //arm is not down in time. STOP.
                     {
-                    mainState = MainState.DONE;
+                    mainState = MainState.WAIT_FOR_ARM_DESCENT;
                     }
 
                 }
@@ -472,6 +478,12 @@ private static void runMainStateMachine ()
 
                 mainState = MainState.FORWARDS_BASED_ON_ENCODERS_OR_IR;
                 }
+            break;
+
+        case WAIT_FOR_ARM_DESCENT:
+            if (Hardware.pickupArm.moveToPosition(
+                    ManipulatorArm.ArmPosition.FULL_DOWN) == true)
+                mainState = MainState.FORWARDS_OVER_OUTER_WORKS;
             break;
 
         case FORWARDS_BASED_ON_ENCODERS_OR_IR:
