@@ -430,7 +430,6 @@ private static void runMainStateMachine ()
                 resetEncoders();
 
                 //UNLESS...
-
                 //When going under the low bar (lane 1), the arm must be down.
                 if ((lane == 1)
                         && (Hardware.pickupArm.isDown() == false))
@@ -438,7 +437,6 @@ private static void runMainStateMachine ()
                     {
                     mainState = MainState.WAIT_FOR_ARM_DESCENT;
                     }
-
                 }
             break;
 
