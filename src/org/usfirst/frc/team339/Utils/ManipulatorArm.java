@@ -116,9 +116,15 @@ public void move (double speed)
 
 public void stopArmMotor ()
 {
-	if (armPot.get() > STOP_DOWN_ANGLE)
+	if (armPot.get() >= this.MIN_SOFT_ARM_STOP
+	        && armPot.get() < BRAKE_ARM_WITH_FORWARD_VOLTAGE_DEGREES)
 	{
 	this.motor.set(0.15);
+	}
+	else if (armPot.get() <= this.MAX_SOFT_ARM_STOP
+	        && armPot.get() >= BRAKE_ARM_WITH_FORWARD_VOLTAGE_DEGREES)
+	{
+	this.motor.set(-.15);
 	}
 	else
 	{
@@ -380,10 +386,11 @@ private final double MAX_ARM_SPEED = -1.0;
 //default slow arm turn speed proportion
 private double slowSpeed = .2;
 
-private final double MAX_SOFT_ARM_STOP = 170.0;
+private double MAX_SOFT_ARM_STOP = 170.0;
 private final double MIN_SOFT_ARM_STOP = 21.0;
 
-private final double ARM_OUT_OF_WAY_DEGREES = 130.0;//TODO change back to 130
+private final double ARM_OUT_OF_WAY_DEGREES = 130.0;
+private final double BRAKE_ARM_WITH_FORWARD_VOLTAGE_DEGREES = 120.0;
 
 private final double DEPOSIT_POSITION = 145.0;
 private final double DEPOSIT_POSITION_THRESHOLD = 5.0;
