@@ -139,22 +139,22 @@ private double
 } // end determineCorrectJoystickValue
 
 /**
- * Drives forward forever (almost). (calls driveForwardByInches(9999, false,
+ * Drives forever (almost). (calls driveByInches(9999, false,
  * defaultMaxSpeed (1.0), defaultMaxSpeed (1.0))) with NO correction
  * to keep you straight
  * 
  * @author Robert Brown
  * @date 13 February 2016
  */
-public void driveForwardContinuous ()
+public void driveContinuous ()
 {
-    this.driveForwardByInches(9999.0, false,
+    this.driveByInches(9999.0, false,
             this.getNormalizedDefaultMaxSpeed(),
             this.getNormalizedDefaultMaxSpeed());
-} // end driveForwardContinuous()
+} // end driveContinuous()
 
 /**
- * Drives forward forever (almost). (calls driveForwardByInches(9999, false,
+ * Drives forever (almost). (calls driveByInches(9999, false,
  * leftJoystickInputValue, rightJoystickInputValue)) with NO correction
  * to keep you straight
  * 
@@ -165,18 +165,18 @@ public void driveForwardContinuous ()
  * @author Robert Brown
  * @date 13 February 2016
  */
-public void driveForwardContinuous (
+public void driveContinuous (
         final double leftJoystickInputValue,
         final double rightJoystickInputValue)
 
 {
-    this.driveForwardByInches(9999.0, false, leftJoystickInputValue,
+    this.driveByInches(9999.0, false, leftJoystickInputValue,
             rightJoystickInputValue);
-} // end driveForwardContinuous()
+} // end driveContinuous()
 
 /**
- * Drives forward distance inches with correction. (calls
- * driveStraightByInches(distance, true, defaultMaxSpeed (1.0),
+ * Drives a specified distance (inches) with no correction. (calls
+ * driveByInches(distance, true, defaultMaxSpeed (1.0),
  * defaultMaxSpeed (1.0))) with no correction to keep straight
  * 
  * @param distance
@@ -185,16 +185,16 @@ public void driveForwardContinuous (
  * @author Robert Brown
  * @date 13 February 2016
  */
-public boolean driveForwardByInches (final double distance)
+public boolean driveByInches (final double distance)
 {
-    return (this.driveForwardByInches(distance, true,
+    return (this.driveByInches(distance, true,
             this.getNormalizedDefaultMaxSpeed(),
             this.getNormalizedDefaultMaxSpeed()));
-} // end driveForwardByInches()
+} // end driveByInches()
 
 /**
- * Drives forward distance inches with correction. (calls
- * driveStraightByInches(distance, brakeAtEnd, defaultMaxSpeed (1.0),
+ * Drives a specified distance (inches) with no correction. (calls
+ * driveByInches(distance, brakeAtEnd, defaultMaxSpeed (1.0),
  * defaultMaxSpeed (1.0))) with no correction to keep straight
  * 
  * @param distance
@@ -205,17 +205,17 @@ public boolean driveForwardByInches (final double distance)
  * @author Robert Brown
  * @date 13 February 2016
  */
-public boolean driveForwardByInches (final double distance,
+public boolean driveByInches (final double distance,
         final boolean brakeAtEnd)
 {
-    return (this.driveForwardByInches(distance, brakeAtEnd,
+    return (this.driveByInches(distance, brakeAtEnd,
             this.getNormalizedDefaultMaxSpeed(),
             this.getNormalizedDefaultMaxSpeed()));
-} // end driveForwardByInches()
+} // end driveByInches()
 
 /**
- * Drives straight forward distance inches with correction. (calls
- * driveForwardByInches(distance, true, leftJoystickInputValue,
+ * Drives a specified distance (inches) with no correction. (calls
+ * driveByInches(distance, true, leftJoystickInputValue,
  * rightJoystickInputValue)) with no correction to keep straight
  * 
  * @param distance
@@ -228,16 +228,16 @@ public boolean driveForwardByInches (final double distance,
  * @author Robert Brown
  * @date 13 February 2016
  */
-public boolean driveForwardByInches (final double distance,
+public boolean driveByInches (final double distance,
         final double leftJoystickInputValue,
         final double rightJoystickInputValue)
 {
-    return (this.driveForwardByInches(distance, true,
+    return (this.driveByInches(distance, true,
             leftJoystickInputValue, rightJoystickInputValue));
-} // end driveForwardByInches()
+} // end driveByInches()
 
 /**
- * Drives forward distance inches with NO correction.
+ * Drives a specified distance (inches) with no correction.
  * 
  * @param distance
  *            The desired distance to be traveled in inches.
@@ -251,15 +251,57 @@ public boolean driveForwardByInches (final double distance,
  * @author Robert Brown
  * @date 13 February 2016
  */
-public boolean driveForwardByInches (final double distance,
+public boolean driveByInches (final double distance,
         final boolean brakeAtEnd,
         final double leftJoystickInputValue,
         final double rightJoystickInputValue)
 {
-    // -----------------------------------
-    // stop if the average value of either drive train
-    // is greater than the desired distance traveled.
-    //------------------------------------
+
+    if (this.debugOn == true)
+        {
+        // PRINT STATEMENTS:
+        // TODO: remove
+        // Prints out encoder values and the values we are sending to the
+        // motors.
+        System.out.println("Left Distance: " +
+                Hardware.leftRearEncoder.getDistance());
+        System.out.println("Right Distance: " +
+                Hardware.rightRearEncoder.getDistance());
+
+        if (this.transmission
+                .getRightRearEncoderDistance() == this.transmission
+                        .getLeftRearEncoderDistance())
+            {
+            System.out.println(
+                    "Left Joystick: " + leftJoystickInputValue);
+            System.out
+                    .println("Right Joystick: "
+                            + rightJoystickInputValue);
+            }
+        else if ((this.transmission
+                .getRightRearEncoderDistance()) < (this.transmission
+                        .getLeftRearEncoderDistance()))
+            {
+            System.out.println("Left Joystick: " +
+                    determineCorrectedJoystickValue(
+                            leftJoystickInputValue));
+            System.out
+                    .println("Right Joystick: "
+                            + rightJoystickInputValue);
+            }
+        else
+            {
+            System.out.println(
+                    "Left Joystick: " + leftJoystickInputValue);
+            System.out.println("Right Joystick: " +
+                    determineCorrectedJoystickValue(
+                            rightJoystickInputValue));
+            }
+        } // if debug = on
+         // -----------------------------------
+         // stop if the average value of either drive train
+         // is greater than the desired distance traveled.
+         //------------------------------------
     if (this.hasDrivenInches(distance) == true)
         {
         // if requested to brake, stop
@@ -277,45 +319,14 @@ public boolean driveForwardByInches (final double distance,
     this.transmission.controls(leftJoystickInputValue,
             rightJoystickInputValue);
 
-    // PRINT STATEMENTS:
-    // TODO: remove
-    // Prints out encoder values and the values we are sending to the
-    // motors.
-    // System.out.println("Left Distance: " +
-    // Hardware.leftRearEncoder.getDistance());
-    // System.out.println("Right Distance: " +
-    // Hardware.rightRearEncoder.getDistance());
-
-    // if (this.transmission
-    // .getRightRearEncoderDistance() == this.transmission
-    // .getLeftRearEncoderDistance())
-    // {
-    // System.out.println("Left Joystick: " + -leftJoystickInputValue);
-    // System.out.println("Right Joystick: " + -rightJoystickInputValue);
-    // }
-    // else if ((this.transmission
-    // .getRightRearEncoderDistance()) < (this.transmission
-    // .getLeftRearEncoderDistance()))
-    // {
-    // System.out.println("Left Joystick: " +
-    // determineCorrectedJoystickValue(-leftJoystickInputValue));
-    // System.out.println("Right Joystick: " + -rightJoystickInputValue);
-    // }
-    // else
-    // {
-    // System.out.println("Left Joystick: " + -leftJoystickInputValue);
-    // System.out.println("Right Joystick: " +
-    // determineCorrectedJoystickValue(-rightJoystickInputValue));
-    // }
-
     // ------------------------------------
     // still have more driving to do
     // ------------------------------------
     return false;
-} // end driveStraightByInches()
+} // end driveByInches()
 
 /**
- * Drives forward forever (almost). (calls driveStraightByInches(9999, false,
+ * Drives straight forever (almost). (calls driveStraightByInches(9999, false,
  * defaultMaxSpeed (1.0), defaultMaxSpeed (1.0)))
  * 
  * @author Robert Brown
@@ -329,7 +340,7 @@ public void driveStraightContinuous ()
 } // end driveStraightContinuous()
 
 /**
- * Drives forward forever (almost). (calls driveStraightByInches(9999, false,
+ * Drives straight forever (almost). (calls driveStraightByInches(9999, false,
  * leftJoystickInputValue, rightJoystickInputValue))
  * 
  * @param leftJoystickInputValue
@@ -349,7 +360,7 @@ public void driveStraightContinuous (
 } // end driveStraightContinuous()
 
 /**
- * Drives straight forward distance inches with correction. (calls
+ * Drives straight distance inches with correction. (calls
  * driveStraightByInches(distance, true, defaultMaxSpeed (1.0),
  * defaultMaxSpeed (1.0)))
  * 
@@ -367,7 +378,7 @@ public boolean driveStraightByInches (final double distance)
 } // end driveStraightByInches()
 
 /**
- * Drives straight forward distance inches with correction. (calls
+ * Drives straight distance inches with correction. (calls
  * driveStraightByInches(distance, brakeAtEnd, defaultMaxSpeed (1.0),
  * defaultMaxSpeed (1.0)))
  * 
@@ -388,7 +399,7 @@ public boolean driveStraightByInches (final double distance,
 } // end driveStraightByInches()
 
 /**
- * Drives straight forward distance inches with correction. (calls
+ * Drives straight distance inches with correction. (calls
  * driveStraightByInches(distance, true, leftJoystickInputValue,
  * rightJoystickInputValue))
  * 
@@ -411,7 +422,7 @@ public boolean driveStraightByInches (final double distance,
 } // end driveStraightByInches()
 
 /**
- * Drives straight forward distance inches with correction.
+ * Drives straight distance inches with correction.
  * 
  * @param distance
  *            The desired distance to be traveled in inches.
@@ -432,64 +443,41 @@ public boolean driveStraightByInches (final double distance,
         final double leftJoystickInputValue,
         final double rightJoystickInputValue)
 {
-    // PRINT STATEMENTS:
-    // TODO: remove
-    // Prints out encoder values and the values we are sending to the
-    // motors.
-    System.out.println("Left Distance: " +
-            Hardware.leftRearEncoder.getDistance());
-    System.out.println("Right Distance: " +
-            Hardware.rightRearEncoder.getDistance());
-
-    if (this.transmission
-            .getRightRearEncoderDistance() == this.transmission
-                    .getLeftRearEncoderDistance())
-        {
-        System.out.println("Left Joystick: " + leftJoystickInputValue);
-        System.out
-                .println("Right Joystick: " + rightJoystickInputValue);
-        }
-    else if ((this.transmission
-            .getRightRearEncoderDistance()) < (this.transmission
-                    .getLeftRearEncoderDistance()))
-        {
-        System.out.println("Left Joystick: " +
-                determineCorrectedJoystickValue(
-                        leftJoystickInputValue));
-        System.out
-                .println("Right Joystick: " + rightJoystickInputValue);
-        }
-    else
-        {
-        System.out.println("Left Joystick: " + leftJoystickInputValue);
-        System.out.println("Right Joystick: " +
-                determineCorrectedJoystickValue(
-                        rightJoystickInputValue));
-        }
-
     // if we are presently going straight - keep the
     // speeds equal
     if (this.transmission
             .getRightRearEncoderDistance() == this.transmission
                     .getLeftRearEncoderDistance())
-        return (this.driveForwardByInches(distance, brakeAtEnd,
+        return (this.driveByInches(distance, brakeAtEnd,
                 leftJoystickInputValue, rightJoystickInputValue));
     // if the left drive train is ahead of the right drive train
     else if ((this.transmission
             .getRightRearEncoderDistance()) < (this.transmission
                     .getLeftRearEncoderDistance()))
-        return (this.driveForwardByInches(distance, brakeAtEnd,
+        return (this.driveByInches(distance, brakeAtEnd,
                 determineCorrectedJoystickValue(
                         leftJoystickInputValue),
                 rightJoystickInputValue));
     // if the right drive train is ahead of the left drive train
     else
-        return (this.driveForwardByInches(distance, brakeAtEnd,
+        return (this.driveByInches(distance, brakeAtEnd,
                 leftJoystickInputValue,
                 determineCorrectedJoystickValue(
                         rightJoystickInputValue)));
 
 } // end driveStraightByInches()
+
+/**
+ * returns the state of the debug vrbl for this class
+ * 
+ * @return the present state of the debug vrbl for this class
+ * @author Robert Brown
+ * @date 9 March 2016
+ */
+public boolean getDebugState ()
+{
+    return (this.debugOn);
+} // end getDebugState()
 
 /**
  * returns the brake speed when we execute a braking maneuver
@@ -725,10 +713,12 @@ public double getRotationalVelocity ()
 public boolean hasDrivenInches (final double targetDistance)
 {
     // if either drive train is beyond the targetDistance
-    if (this.transmission
-            .getRightRearEncoderDistance() >= targetDistance ||
-            this.transmission
-                    .getLeftRearEncoderDistance() >= targetDistance)
+    if (Math.abs(this.transmission
+            .getRightRearEncoderDistance()) >= Math.abs(targetDistance)
+            ||
+            Math.abs(this.transmission
+                    .getLeftRearEncoderDistance()) >= Math
+                            .abs(targetDistance))
         {
         // we're done
         return true;
@@ -750,6 +740,20 @@ public double setBrakeSpeed (final double newBrakeSpeed)
 {
     return (this.brakeSpeed = newBrakeSpeed);
 } // end setBrakeSpeed()
+
+/**
+ * sets and returns the state of the debug vrbl for this class
+ * 
+ * @param newDebugState
+ *            - value you wish to change the Debug state to
+ * @return the newly changed state of the debug vrbl for this class
+ * @author Robert Brown
+ * @date 9 March 2016
+ */
+public boolean setDebugState (boolean newDebugState)
+{
+    return (this.debugOn = newDebugState);
+} // end getDebugState()
 
 /**
  * set a new default maximum turn speed and then returns the
@@ -1171,7 +1175,7 @@ public boolean driveByCamera (double percentageDeadBand,
                 //TODO check and make sure this still doesn't work, then 
                 //change it back or write turn continuous method
                 //TODO arbitrary magic Numbers
-                this.driveForwardContinuous(.6, .8);
+                this.driveContinuous(.6, .8);
                 //this.transmission.controls(.5, -.5);
                 }
             //if the center of the largest blob is to the right of our 
@@ -1186,7 +1190,7 @@ public boolean driveByCamera (double percentageDeadBand,
                 {
                 //turn right until it is in the zone (will be called over and
                 //over again until the blob is within the acceptable zone)
-                this.driveForwardContinuous(.8, .6);
+                this.driveContinuous(.8, .6);
                 //this.transmission.controls(-.5, .5);
                 }
             //If the center of the blob is nestled happily in our deadzone
@@ -1526,4 +1530,8 @@ private double drivingCorrectionFactor = 0.75;
 // ------------------------------------
 private double minimumMotorSpeed = .20;
 
+//-------------------------------------
+// DebugOn state - true or false
+//-------------------------------------
+private boolean debugOn = false;
 } // end class
