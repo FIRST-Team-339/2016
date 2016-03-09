@@ -63,97 +63,97 @@ public class Autonomous
  * The overarching states of autonomous mode.
  */
 private static enum MainState
-    {
-    /**
-     * The first state.
-     * Initializes things if necessary,
-     * though most things are initialized
-     * in init().
-     */
-    INIT, // beginning, check conditions
-    /**
-     * Sets arm to head downward.
-     */
-    BEGIN_LOWERING_ARM,
-    /**
-     * Moves at a low speed while lowering arm.
-     * If it reaches the end of the distance, and the arm is not fully down,
-     * skips to DONE.
-     */
-    MOVE_TO_OUTER_WORKS,//
-    /**
-     * Resets and starts delay timer.
-     */
-    INIT_DELAY,// sets delay timer.
-    /**
-     * Waits.
-     * Waits until the delay is up.
-     */
-    DELAY, // waits, depending on settings.
-    /**
-     * This state checks to see if we are in lane 1.
-     * If so, we go until we reach an encoder distance (set to distance to
-     * alignment tape),
-     * Else, we go until the sensors find the Alignment tape.
-     */
-    FORWARDS_BASED_ON_ENCODERS_OR_IR, // decides based on lane whether to move
-                                     // to tape based on encoders or IR
-    /**
-     * Go the distance over the outer works.
-     */
-    FORWARDS_OVER_OUTER_WORKS,
+	{
+	/**
+	 * The first state.
+	 * Initializes things if necessary,
+	 * though most things are initialized
+	 * in init().
+	 */
+	INIT, // beginning, check conditions
+	/**
+	 * Sets arm to head downward.
+	 */
+	BEGIN_LOWERING_ARM,
+	/**
+	 * Moves at a low speed while lowering arm.
+	 * If it reaches the end of the distance, and the arm is not fully down,
+	 * skips to DONE.
+	 */
+	MOVE_TO_OUTER_WORKS,//
+	/**
+	 * Resets and starts delay timer.
+	 */
+	INIT_DELAY,// sets delay timer.
+	/**
+	 * Waits.
+	 * Waits until the delay is up.
+	 */
+	DELAY, // waits, depending on settings.
+	/**
+	 * This state checks to see if we are in lane 1.
+	 * If so, we go until we reach an encoder distance (set to distance to
+	 * alignment tape),
+	 * Else, we go until the sensors find the Alignment tape.
+	 */
+	FORWARDS_BASED_ON_ENCODERS_OR_IR, // decides based on lane whether to move
+										// to tape based on encoders or IR
+	/**
+	 * Go the distance over the outer works.
+	 */
+	FORWARDS_OVER_OUTER_WORKS,
 
-    /**
-     * Goes forward until it reaches the set distance to the Alignment tape.
-     */
-    FORWARDS_TO_TAPE_BY_DISTANCE, // drives the distance required to the tape.
-    /**
-     * Goes forward until it senses the Alignment tape.
-     */
-    FORWARDS_UNTIL_TAPE, // drives forwards until detection of the gaffers'
-                        // tape.
+	/**
+	 * Goes forward until it reaches the set distance to the Alignment tape.
+	 */
+	FORWARDS_TO_TAPE_BY_DISTANCE, // drives the distance required to the tape.
+	/**
+	 * Goes forward until it senses the Alignment tape.
+	 */
+	FORWARDS_UNTIL_TAPE, // drives forwards until detection of the gaffers'
+						// tape.
 
-    /**
-     * Drives up 16 inches to put the center of the robot over the Aline.
-     */
-    CENTER_TO_TAPE,
+	/**
+	 * Drives up 16 inches to put the center of the robot over the Aline.
+	 */
+	CENTER_TO_TAPE,
 
-    /**
-     * Upon reaching the Alignment line, sometimes we must rotate.
-     */
-    ROTATE_ON_ALIGNMENT_LINE, // rotates on the alignment line.
-    /**
-     * After reaching the A-line, or after rotating upon reaching it, drives
-     * towards a position in front of the goal.
-     */
-    FORWARDS_FROM_ALIGNMENT_LINE, // drives from the alignment line.
-    /**
-     * After reaching a spot in front of the goal, we turn to face it.
-     */
-    TURN_TO_FACE_GOAL, // rotates toward the goal.
-    /**
-     * Once we are facing the goal, we may sometimes drive forwards.
-     */
-    DRIVE_UP_TO_GOAL, // drives up the goal.
-    /**
-     * Once we are in the shooting position, we align based on the chimera.
-     */
-    ALIGN_IN_FRONT_OF_GOAL,
-    /**
-     * We shoot the cannon ball.
-     */
-    SHOOT, // adjusts its self (?) and fires the cannon ball.
+	/**
+	 * Upon reaching the Alignment line, sometimes we must rotate.
+	 */
+	ROTATE_ON_ALIGNMENT_LINE, // rotates on the alignment line.
+	/**
+	 * After reaching the A-line, or after rotating upon reaching it, drives
+	 * towards a position in front of the goal.
+	 */
+	FORWARDS_FROM_ALIGNMENT_LINE, // drives from the alignment line.
+	/**
+	 * After reaching a spot in front of the goal, we turn to face it.
+	 */
+	TURN_TO_FACE_GOAL, // rotates toward the goal.
+	/**
+	 * Once we are facing the goal, we may sometimes drive forwards.
+	 */
+	DRIVE_UP_TO_GOAL, // drives up the goal.
+	/**
+	 * Once we are in the shooting position, we align based on the chimera.
+	 */
+	ALIGN_IN_FRONT_OF_GOAL,
+	/**
+	 * We shoot the cannon ball.
+	 */
+	SHOOT, // adjusts its self (?) and fires the cannon ball.
 
-    /**
-     * Wait to close the solenoids.
-     */
-    DELAY_AFTER_SHOOT,
+	/**
+	 * Wait to close the solenoids.
+	 */
+	DELAY_AFTER_SHOOT,
 
-    /**
-     * We stop, and do nothing else.
-     */
-    DONE
-    }
+	/**
+	 * We stop, and do nothing else.
+	 */
+	DONE
+	}
 
 /**
  * 
@@ -161,45 +161,45 @@ private static enum MainState
  *
  */
 private static enum ArmState
-    {
-    /**
-     * Begins moving the arm in a downwards/down-to-the-floor action fashion.
-     */
-    INIT_DOWN,
-    /**
-     * Czecks to see if the arm is all the way down.
-     */
-    MOVE_DOWN,
-    /**
-     * Begins moving the arm in a upwards/up-to-the-shooter action fashion.
-     */
-    INIT_UP,
-    /**
-     * Czecks to see if the arm is all the way up.
-     */
-    CHECK_UP,
-    /**
-     * Moves, and czecks to see if the arm is all the way up, so that we may
-     * deposit.
-     */
-    MOVE_UP_TO_DEPOSIT,
-    /**
-     * Begins spinning its wheels so as to spit out the cannon ball.
-     */
-    INIT_DEPOSIT,
-    /**
-     * Have we spit out the cannon ball? If so, INIT_DOWN.
-     */
-    DEPOSIT,
-    /**
-     * Hold the ball out of the way.
-     */
-    HOLD,
-    /**
-     * Do nothing, but set armStatesOn to false.
-     */
-    DONE
-    }
+	{
+	/**
+	 * Begins moving the arm in a downwards/down-to-the-floor action fashion.
+	 */
+	INIT_DOWN,
+	/**
+	 * Czecks to see if the arm is all the way down.
+	 */
+	MOVE_DOWN,
+	/**
+	 * Begins moving the arm in a upwards/up-to-the-shooter action fashion.
+	 */
+	INIT_UP,
+	/**
+	 * Czecks to see if the arm is all the way up.
+	 */
+	CHECK_UP,
+	/**
+	 * Moves, and czecks to see if the arm is all the way up, so that we may
+	 * deposit.
+	 */
+	MOVE_UP_TO_DEPOSIT,
+	/**
+	 * Begins spinning its wheels so as to spit out the cannon ball.
+	 */
+	INIT_DEPOSIT,
+	/**
+	 * Have we spit out the cannon ball? If so, INIT_DOWN.
+	 */
+	DEPOSIT,
+	/**
+	 * Hold the ball out of the way.
+	 */
+	HOLD,
+	/**
+	 * Do nothing, but set armStatesOn to false.
+	 */
+	DONE
+	}
 
 
 // ==========================================
@@ -259,55 +259,55 @@ private static boolean debug;
 public static void init ()
 {
 
-    //check the Autonomous ENABLED/DISABLED switch.
-    autonomousEnabled = Hardware.autonomousEnabled.isOn();
+	//check the Autonomous ENABLED/DISABLED switch.
+	autonomousEnabled = Hardware.autonomousEnabled.isOn();
 
-    // set the delay time based on potentiometer.
-    delay = initDelayTime();
+	// set the delay time based on potentiometer.
+	delay = initDelayTime();
 
-    // get the lane based off of startingPositionPotentiometer
-    lane = getLane();
+	// get the lane based off of startingPositionPotentiometer
+	lane = getLane();
 
-    debug = DEBUGGING_DEFAULT;
+	debug = DEBUGGING_DEFAULT;
 
-    // Hardware.drive.setMaxSpeed(MAXIMUM_AUTONOMOUS_SPEED);
+	// Hardware.drive.setMaxSpeed(MAXIMUM_AUTONOMOUS_SPEED);
 
-    // -------------------------------------
-    // motor initialization
-    // -------------------------------------
+	// -------------------------------------
+	// motor initialization
+	// -------------------------------------
 
-    Hardware.transmission.setFirstGearPercentage(1.0);
-    Hardware.transmission.setGear(1);
-    Hardware.transmission.setJoysticksAreReversed(true);
-    Hardware.transmission.setJoystickDeadbandRange(0.0);
+	Hardware.transmission.setFirstGearPercentage(1.0);
+	Hardware.transmission.setGear(1);
+	Hardware.transmission.setJoysticksAreReversed(true);
+	Hardware.transmission.setJoystickDeadbandRange(0.0);
 
-    // --------------------------------------
-    // Encoder Initialization
-    // --------------------------------------
-    Hardware.leftRearEncoder.reset();
-    Hardware.rightRearEncoder.reset();
+	// --------------------------------------
+	// Encoder Initialization
+	// --------------------------------------
+	Hardware.leftRearEncoder.reset();
+	Hardware.rightRearEncoder.reset();
 
-    // Sets Resolution of camera
-    Hardware.axisCamera
-            .writeBrightness(Hardware.MINIMUM_AXIS_CAMERA_BRIGHTNESS);
+	// Sets Resolution of camera
+	Hardware.axisCamera
+	        .writeBrightness(Hardware.MINIMUM_AXIS_CAMERA_BRIGHTNESS);
 
-    // ---------------------------------------
-    // turn the timer off and reset the counter
-    // so that we can use it in autonomous
-    // ---------------------------------------
-    Hardware.kilroyTimer.stop();
-    Hardware.kilroyTimer.reset();
+	// ---------------------------------------
+	// turn the timer off and reset the counter
+	// so that we can use it in autonomous
+	// ---------------------------------------
+	Hardware.kilroyTimer.stop();
+	Hardware.kilroyTimer.reset();
 
-    Hardware.leftRearEncoder.reset();
-    Hardware.rightRearEncoder.reset();
-    Hardware.leftFrontMotor.set(0.0);
-    Hardware.leftRearMotor.set(0.0);
-    Hardware.rightFrontMotor.set(0.0);
-    Hardware.rightRearMotor.set(0.0);
-    Hardware.armMotor.set(0.0);
-    Hardware.armIntakeMotor.set(0.0);
+	Hardware.leftRearEncoder.reset();
+	Hardware.rightRearEncoder.reset();
+	Hardware.leftFrontMotor.set(0.0);
+	Hardware.leftRearMotor.set(0.0);
+	Hardware.rightFrontMotor.set(0.0);
+	Hardware.rightRearMotor.set(0.0);
+	Hardware.armMotor.set(0.0);
+	Hardware.armIntakeMotor.set(0.0);
 
-    Hardware.errorMessage.clearErrorlog();
+	Hardware.errorMessage.clearErrorlog();
 
 } // end Init
 
@@ -321,23 +321,23 @@ public static void init ()
 public static void periodic ()
 {
 
-    // Checks the "enabled" switch.
-    if (autonomousEnabled == true)
-        {
-        //runs the overarching state machine.
-        runMainStateMachine();
-        }
+	// Checks the "enabled" switch.
+	if (autonomousEnabled == true)
+	{
+	//runs the overarching state machine.
+	runMainStateMachine();
+	}
 
-    // Czecks if we are running any arm functions.
-    if (runArmStates == true)
-    //run the arm state machine.
-        {
-        runArmStates();
-        }
-    else
-        {
-        Hardware.pickupArm.stopArmMotor();
-        }
+	// Czecks if we are running any arm functions.
+	if (runArmStates == true)
+	//run the arm state machine.
+	{
+	runArmStates();
+	}
+	else
+	{
+	Hardware.pickupArm.stopArmMotor();
+	}
 
 
 } // end Periodic
@@ -348,8 +348,8 @@ public static void periodic ()
  */
 private static int initDelayTime ()
 {
-    return (int) (MAXIMUM_DELAY * Hardware.delayPot.get()
-            / Hardware.DELAY_POT_DEGREES);
+	return (int) (MAXIMUM_DELAY * Hardware.delayPot.get()
+	        / Hardware.DELAY_POT_DEGREES);
 }
 
 
@@ -359,265 +359,265 @@ private static int initDelayTime ()
 private static void runMainStateMachine ()
 {
 
-    if (debug == true)
-    // print out states.
-        {
-        System.out.println("Main State: " + mainState);
-        Teleop.printStatements();
-        Hardware.errorMessage.printError(
-                "Main State: " + mainState,
-                ErrorMessage.PrintsTo.roboRIO);
-        //	Hardware.errorMessage.printError(
-        //	        "Left:" + Hardware.leftRearEncoder.getDistance(),
-        //	        ErrorMessage.PrintsTo.roboRIO);
-        //	Hardware.errorMessage.printError(
-        //	        "Right:" + Hardware.rightRearEncoder.getDistance(),
-        //	        ErrorMessage.PrintsTo.roboRIO);
-        // System.out.println("Time: " + Hardware.kilroyTimer.get());
-        }
+	if (debug == true)
+	// print out states.
+	{
+	System.out.println("Main State: " + mainState);
+	Teleop.printStatements();
+	Hardware.errorMessage.printError(
+	        "Main State: " + mainState,
+	        ErrorMessage.PrintsTo.roboRIO);
+	//	Hardware.errorMessage.printError(
+	//	        "Left:" + Hardware.leftRearEncoder.getDistance(),
+	//	        ErrorMessage.PrintsTo.roboRIO);
+	//	Hardware.errorMessage.printError(
+	//	        "Right:" + Hardware.rightRearEncoder.getDistance(),
+	//	        ErrorMessage.PrintsTo.roboRIO);
+	// System.out.println("Time: " + Hardware.kilroyTimer.get());
+	}
 
-    switch (mainState)
-        {
-        case INIT:
-            // Doesn't do much.
-            // Just a Platypus.
-            mainInit();
+	switch (mainState)
+	{
+		case INIT:
+			// Doesn't do much.
+			// Just a Platypus.
+			mainInit();
 
-            if (lane == 1)
-            // lower the arm to pass beneath the bar.
-                {
-                mainState = MainState.BEGIN_LOWERING_ARM;
-                }
-            else
-            // lowering the arm would get in the way. Skip to delay.
-                {
-                mainState = MainState.INIT_DELAY;
-                }
+			if (lane == 1)
+			// lower the arm to pass beneath the bar.
+			{
+			mainState = MainState.BEGIN_LOWERING_ARM;
+			}
+			else
+			// lowering the arm would get in the way. Skip to delay.
+			{
+			mainState = MainState.INIT_DELAY;
+			}
 
-            break;
-
-
-        case BEGIN_LOWERING_ARM:
-            // starts the arm movement to the floor
-            runArmStates = true;
-            armState = ArmState.MOVE_DOWN;
-            //TODO: Remove primitive stuff below.
-            //Hardware.armMotor.set(1.0);
-            // goes into initDelay
-            mainState = MainState.INIT_DELAY;
-            break;
-
-        case MOVE_TO_OUTER_WORKS:
-
-            // goes forwards to outer works.
-            if ((Hardware.drive.driveStraightByInches(
-                    DriveInformation.DISTANCE_TO_OUTER_WORKS
-                            * LAB_SCALING_FACTOR,
-                    false,
-                    DriveInformation.MOTOR_RATIO_TO_OUTER_WORKS[lane],
-                    DriveInformation.MOTOR_RATIO_TO_OUTER_WORKS[lane])) == true)
-            //continue over the outer works unless the arm is going to get in the way.
-                {
-
-                //continue over the Outer Works
-                mainState = MainState.FORWARDS_OVER_OUTER_WORKS;
-                resetEncoders();
-
-                //UNLESS...
-
-                //When going under the low bar (lane 1), the arm must be down.
-                if ((lane == 1)
-                        && (Hardware.pickupArm.isDown() == false))
-                //arm is not down in time. STOP.
-                    {
-                    mainState = MainState.DONE;
-                    }
-
-                }
-            break;
-
-        case INIT_DELAY:
-            // reset and start timer
-            initDelay();
-            // run DELAY state.
-            mainState = MainState.DELAY;
-            break;
-
-        case DELAY:
-            // check whether done or not until done.
-            if (delayIsDone() == true)
-            // go to move forwards while lowering arm when finished.
-                {
-                mainState = MainState.MOVE_TO_OUTER_WORKS;
-                }
-            break;
-
-        case FORWARDS_OVER_OUTER_WORKS:
-            //Drive over Outer Works.
-            if (Hardware.drive.driveStraightByInches(
-                    DriveInformation.DISTANCE_OVER_OUTER_WORKS, false,
-                    DriveInformation.OUTER_WORKS_MOTOR_RATIO,
-                    DriveInformation.OUTER_WORKS_MOTOR_RATIO) == true)
-            //put up all the things we had to put down under the low bar.
-            //begin loading the catapult.
-                {
-
-                //put up camera.
-                Hardware.cameraSolenoid.set(Value.kForward);
+			break;
 
 
-                //initiate the arm motion.
-                runArmStates = true;
-                armState = ArmState.HOLD;
+		case BEGIN_LOWERING_ARM:
+			// starts the arm movement to the floor
+			runArmStates = true;
+			armState = ArmState.MOVE_DOWN;
+			//TODO: Remove primitive stuff below.
+			//Hardware.armMotor.set(1.0);
+			// goes into initDelay
+			mainState = MainState.INIT_DELAY;
+			break;
 
-                mainState = MainState.FORWARDS_BASED_ON_ENCODERS_OR_IR;
-                }
-            break;
+		case MOVE_TO_OUTER_WORKS:
 
-        case FORWARDS_BASED_ON_ENCODERS_OR_IR:
-            // Check if we are in lane One.
-            if (lane == 1)
-            // If so, move forwards the distance to the A-tape.
-                {
-                mainState = MainState.FORWARDS_TO_TAPE_BY_DISTANCE;
-                }
-            else
-            // If in another lane, move forwards until we detect the A-tape.
-                {
-                mainState = MainState.FORWARDS_UNTIL_TAPE;
-                }
-            break;
+			// goes forwards to outer works.
+			if ((Hardware.drive.driveStraightByInches(
+			        DriveInformation.DISTANCE_TO_OUTER_WORKS
+			                * LAB_SCALING_FACTOR,
+			        false,
+			        DriveInformation.MOTOR_RATIO_TO_OUTER_WORKS[lane],
+			        DriveInformation.MOTOR_RATIO_TO_OUTER_WORKS[lane])) == true)
+			//continue over the outer works unless the arm is going to get in the way.
+			{
 
-        case FORWARDS_TO_TAPE_BY_DISTANCE:
-            // Drive the distance from outer works to A-Line.
-            if ((Hardware.drive.driveStraightByInches(
-                    DriveInformation.DISTANCE_TO_TAPE
-                            * LAB_SCALING_FACTOR,
-                    false, DriveInformation.MOTOR_RATIO_TO_A_LINE[lane],
-                    DriveInformation.MOTOR_RATIO_TO_A_LINE[lane]) == true))
-            // when done, proceed from Alignment line.
-                {
-                //reset Encoders to prepare for next state.
-                resetEncoders();
+			//continue over the Outer Works
+			mainState = MainState.FORWARDS_OVER_OUTER_WORKS;
+			resetEncoders();
+
+			//UNLESS...
+
+			//When going under the low bar (lane 1), the arm must be down.
+			if ((lane == 1)
+			        && (Hardware.pickupArm.isDown() == false))
+			//arm is not down in time. STOP.
+			{
+			mainState = MainState.DONE;
+			}
+
+			}
+			break;
+
+		case INIT_DELAY:
+			// reset and start timer
+			initDelay();
+			// run DELAY state.
+			mainState = MainState.DELAY;
+			break;
+
+		case DELAY:
+			// check whether done or not until done.
+			if (delayIsDone() == true)
+			// go to move forwards while lowering arm when finished.
+			{
+			mainState = MainState.MOVE_TO_OUTER_WORKS;
+			}
+			break;
+
+		case FORWARDS_OVER_OUTER_WORKS:
+			//Drive over Outer Works.
+			if (Hardware.drive.driveStraightByInches(
+			        DriveInformation.DISTANCE_OVER_OUTER_WORKS, false,
+			        DriveInformation.OUTER_WORKS_MOTOR_RATIO,
+			        DriveInformation.OUTER_WORKS_MOTOR_RATIO) == true)
+			//put up all the things we had to put down under the low bar.
+			//begin loading the catapult.
+			{
+
+			//put up camera.
+			Hardware.cameraSolenoid.set(Value.kForward);
+
+
+			//initiate the arm motion.
+			runArmStates = true;
+			armState = ArmState.HOLD;
+
+			mainState = MainState.FORWARDS_BASED_ON_ENCODERS_OR_IR;
+			}
+			break;
+
+		case FORWARDS_BASED_ON_ENCODERS_OR_IR:
+			// Check if we are in lane One.
+			if (lane == 1)
+			// If so, move forwards the distance to the A-tape.
+			{
+			mainState = MainState.FORWARDS_TO_TAPE_BY_DISTANCE;
+			}
+			else
+			// If in another lane, move forwards until we detect the A-tape.
+			{
+			mainState = MainState.FORWARDS_UNTIL_TAPE;
+			}
+			break;
+
+		case FORWARDS_TO_TAPE_BY_DISTANCE:
+			// Drive the distance from outer works to A-Line.
+			if ((Hardware.drive.driveStraightByInches(
+			        DriveInformation.DISTANCE_TO_TAPE
+			                * LAB_SCALING_FACTOR,
+			        false, DriveInformation.MOTOR_RATIO_TO_A_LINE[lane],
+			        DriveInformation.MOTOR_RATIO_TO_A_LINE[lane]) == true))
+			// when done, proceed from Alignment line.
+			{
+			//reset Encoders to prepare for next state.
+			resetEncoders();
 
 
 
-                //We definitely don't need to rotate.
-                mainState = MainState.CENTER_TO_TAPE;
-                }
-            break;
+			//We definitely don't need to rotate.
+			mainState = MainState.CENTER_TO_TAPE;
+			}
+			break;
 
 
-        case FORWARDS_UNTIL_TAPE:
-            // Drive until IR sensors pick up tape.
-            if (hasMovedToTape() == true)
-                {
-                //reset Encoders to prepare for next state.
-                resetEncoders();
+		case FORWARDS_UNTIL_TAPE:
+			// Drive until IR sensors pick up tape.
+			if (hasMovedToTape() == true)
+			{
+			//reset Encoders to prepare for next state.
+			resetEncoders();
 
-                // When done, possibly rotate.
-                mainState = MainState.CENTER_TO_TAPE;
-                }
-            break;
+			// When done, possibly rotate.
+			mainState = MainState.CENTER_TO_TAPE;
+			}
+			break;
 
-        case CENTER_TO_TAPE:
-            //Drive up from front of the Alignment Line to put the pivoting center of the robot on the Line.
-            if (Hardware.drive.driveStraightByInches(
-                    DriveInformation.DISTANCE_TO_CENTRE_OF_ROBOT,
-                    DriveInformation.BREAK_ON_ALIGNMENT_LINE[lane],
-                    DriveInformation.CENTRE_TO_ALIGNMENT_LINE_MOTOR_RATIO[lane],
-                    DriveInformation.CENTRE_TO_ALIGNMENT_LINE_MOTOR_RATIO[lane]))
-                {
-                mainState = MainState.ROTATE_ON_ALIGNMENT_LINE;
-                }
-            break;
+		case CENTER_TO_TAPE:
+			//Drive up from front of the Alignment Line to put the pivoting center of the robot on the Line.
+			if (Hardware.drive.driveStraightByInches(
+			        DriveInformation.DISTANCE_TO_CENTRE_OF_ROBOT,
+			        DriveInformation.BREAK_ON_ALIGNMENT_LINE[lane],
+			        DriveInformation.CENTRE_TO_ALIGNMENT_LINE_MOTOR_RATIO[lane],
+			        DriveInformation.CENTRE_TO_ALIGNMENT_LINE_MOTOR_RATIO[lane]))
+			{
+			mainState = MainState.ROTATE_ON_ALIGNMENT_LINE;
+			}
+			break;
 
-        case ROTATE_ON_ALIGNMENT_LINE:
-            //Rotates until we are pointed at the place from whence we want to shoot.
-            if (hasTurnedBasedOnSign(
-                    DriveInformation.ROTATE_ON_ALIGNMENT_LINE_DISTANCE[lane]
-                            * LAB_SCALING_FACTOR) == true)
-                {
-                //reset Encoders to prepare for next state.
-                resetEncoders();
-                //then move.
-                mainState = MainState.FORWARDS_FROM_ALIGNMENT_LINE;
-                }
-            break;
+		case ROTATE_ON_ALIGNMENT_LINE:
+			//Rotates until we are pointed at the place from whence we want to shoot.
+			if (hasTurnedBasedOnSign(
+			        DriveInformation.ROTATE_ON_ALIGNMENT_LINE_DISTANCE[lane]
+			                * LAB_SCALING_FACTOR) == true)
+			{
+			//reset Encoders to prepare for next state.
+			resetEncoders();
+			//then move.
+			mainState = MainState.FORWARDS_FROM_ALIGNMENT_LINE;
+			}
+			break;
 
-        case FORWARDS_FROM_ALIGNMENT_LINE:
-            //Drive until we reach the line normal to the goal.
-            if (Hardware.drive.driveStraightByInches(
-                    DriveInformation.FORWARDS_FROM_ALIGNMENT_LINE_DISTANCE[lane]
-                            * LAB_SCALING_FACTOR,
-                    true, //breaking here is preferable.
-                    DriveInformation.FORWARDS_FROM_ALIGNMENT_LINE_MOTOR_RATIO[lane],
-                    DriveInformation.FORWARDS_FROM_ALIGNMENT_LINE_MOTOR_RATIO[lane]) == true)
-                {
-                //reset Encoders to prepare for next state.
-                resetEncoders();
-                mainState = MainState.TURN_TO_FACE_GOAL;
-                }
-            break;
+		case FORWARDS_FROM_ALIGNMENT_LINE:
+			//Drive until we reach the line normal to the goal.
+			if (Hardware.drive.driveStraightByInches(
+			        DriveInformation.FORWARDS_FROM_ALIGNMENT_LINE_DISTANCE[lane]
+			                * LAB_SCALING_FACTOR,
+			        true, //breaking here is preferable.
+			        DriveInformation.FORWARDS_FROM_ALIGNMENT_LINE_MOTOR_RATIO[lane],
+			        DriveInformation.FORWARDS_FROM_ALIGNMENT_LINE_MOTOR_RATIO[lane]) == true)
+			{
+			//reset Encoders to prepare for next state.
+			resetEncoders();
+			mainState = MainState.TURN_TO_FACE_GOAL;
+			}
+			break;
 
-        case TURN_TO_FACE_GOAL:
-            //Turns until we are facing the goal.
-            if (hasTurnedBasedOnSign(
-                    DriveInformation.TURN_TO_FACE_GOAL_DEGREES[lane]
-                            * LAB_SCALING_FACTOR) == true)
-            //when done move up to the batter.
-                {
-                //reset Encoders to prepare for next state
-                resetEncoders();
-                //then drive.
-                mainState = MainState.DRIVE_UP_TO_GOAL;
-                }
-            break;
+		case TURN_TO_FACE_GOAL:
+			//Turns until we are facing the goal.
+			if (hasTurnedBasedOnSign(
+			        DriveInformation.TURN_TO_FACE_GOAL_DEGREES[lane]
+			                * LAB_SCALING_FACTOR) == true)
+			//when done move up to the batter.
+			{
+			//reset Encoders to prepare for next state
+			resetEncoders();
+			//then drive.
+			mainState = MainState.DRIVE_UP_TO_GOAL;
+			}
+			break;
 
-        case DRIVE_UP_TO_GOAL:
-            //Moves to goal. Stops to align.
-            if (hasDrivenUpToGoal() == true)
-            //Go to align.
-                {
-                //reset Encoders to prepare for next state.
-                resetEncoders();
+		case DRIVE_UP_TO_GOAL:
+			//Moves to goal. Stops to align.
+			if (hasDrivenUpToGoal() == true)
+			//Go to align.
+			{
+			//reset Encoders to prepare for next state.
+			resetEncoders();
 
-                //go to shoot.
-                //TODO:No longer using align.
-                //go to align.
-                mainState = MainState.SHOOT;
-                }
-            break;
+			//go to shoot.
+			//TODO:No longer using align.
+			//go to align.
+			mainState = MainState.SHOOT;
+			}
+			break;
 
-        case ALIGN_IN_FRONT_OF_GOAL:
-            //align based on the camera until we are facing the goal. head-on.
-            if (Hardware.drive.alignByCamera() == true)
-            //Once we are in position, we shoot!
-                {
-                mainState = MainState.SHOOT;
-                }
-            break;
+		case ALIGN_IN_FRONT_OF_GOAL:
+			//align based on the camera until we are facing the goal. head-on.
+			if (Hardware.drive.alignByCamera() == true)
+			//Once we are in position, we shoot!
+			{
+			mainState = MainState.SHOOT;
+			}
+			break;
 
-        case SHOOT:
-            //FIRE!!!
-            shoot();
-            mainState = MainState.DELAY_AFTER_SHOOT;
-            break;
+		case SHOOT:
+			//FIRE!!!
+			shoot();
+			mainState = MainState.DELAY_AFTER_SHOOT;
+			break;
 
-        case DELAY_AFTER_SHOOT:
-            //Check if enough time has passed for the air to have been released.
-            if (hasShot() == true)
-                {
-                mainState = MainState.DONE;
-                }
+		case DELAY_AFTER_SHOOT:
+			//Check if enough time has passed for the air to have been released.
+			if (hasShot() == true)
+			{
+			mainState = MainState.DONE;
+			}
 
-        default:
-        case DONE:
-            //clean everything up;
-            //the blood of our enemies stains quickly.
-            done();
-            break;
-        }
+		default:
+		case DONE:
+			//clean everything up;
+			//the blood of our enemies stains quickly.
+			done();
+			break;
+	}
 }
 
 /*
@@ -629,8 +629,8 @@ private static void runMainStateMachine ()
 private static void mainInit ()
 {
 
-    Hardware.kilroyTimer.reset();
-    Hardware.kilroyTimer.start();
+	Hardware.kilroyTimer.reset();
+	Hardware.kilroyTimer.start();
 }
 
 
@@ -639,8 +639,8 @@ private static void mainInit ()
  */
 private static void initDelay ()
 {
-    Hardware.delayTimer.reset();
-    Hardware.delayTimer.start();
+	Hardware.delayTimer.reset();
+	Hardware.delayTimer.start();
 
 }
 
@@ -650,25 +650,25 @@ private static void initDelay ()
  */
 private static boolean delayIsDone ()
 {
-    boolean done = false;
+	boolean done = false;
 
-    // stop.
-    Hardware.transmission.controls(0.0, 0.0);
+	// stop.
+	Hardware.transmission.controls(0.0, 0.0);
 
-    // check timer
-    if (Hardware.delayTimer.get() > delay)
-    // return true. stop and reset timer.
-        {
-        done = true;
-        Hardware.delayTimer.stop();
-        Hardware.delayTimer.reset();
-        }
+	// check timer
+	if (Hardware.delayTimer.get() > delay)
+	// return true. stop and reset timer.
+	{
+	done = true;
+	Hardware.delayTimer.stop();
+	Hardware.delayTimer.reset();
+	}
 
-    if (Hardware.pickupArm.isDown() == true)
-        {
-        }
+	if (Hardware.pickupArm.isDown() == true)
+	{
+	}
 
-    return done;
+	return done;
 
 }
 
@@ -682,19 +682,19 @@ private static boolean delayIsDone ()
  */
 private static boolean hasMovedToTape ()
 {
-    //The stateness of being on the tape.
-    boolean tapeness = false;
+	//The stateness of being on the tape.
+	boolean tapeness = false;
 
-    // Move forwards.
-    Hardware.drive.driveStraightContinuous();
+	// Move forwards.
+	Hardware.drive.driveStraightContinuous();
 
-    // simply check if we have detected the tape on either side.
-    if (Hardware.leftIR.isOn() || Hardware.rightIR.isOn())
-    // we are done here.
-        {
-        tapeness = true;
-        }
-    return tapeness;
+	// simply check if we have detected the tape on either side.
+	if (Hardware.leftIR.isOn() || Hardware.rightIR.isOn())
+	// we are done here.
+	{
+	tapeness = true;
+	}
+	return tapeness;
 }
 
 
@@ -706,35 +706,35 @@ private static boolean hasMovedToTape ()
  */
 private static boolean hasDrivenUpToGoal ()
 {
-    boolean done = false;
+	boolean done = false;
 
-    // Have we reached the distance according to drawings.
-    // OR
-    // Have we seen if we have reached cleats of the tower according to IR?
-    if ((Hardware.drive.driveStraightByInches(
-            DriveInformation.DRIVE_UP_TO_GOAL[lane]
-                    * LAB_SCALING_FACTOR,
-            true, DriveInformation.DRIVE_UP_TO_GOAL_MOTOR_RATIO[lane],
-            DriveInformation.DRIVE_UP_TO_GOAL_MOTOR_RATIO[lane]) == true)
-            ||
-            (Hardware.leftIR.isOn() || Hardware.rightIR.isOn()))
-    // We are done here.
-        {
-        done = true;
-        }
+	// Have we reached the distance according to drawings.
+	// OR
+	// Have we seen if we have reached cleats of the tower according to IR?
+	if ((Hardware.drive.driveStraightByInches(
+	        DriveInformation.DRIVE_UP_TO_GOAL[lane]
+	                * LAB_SCALING_FACTOR,
+	        true, DriveInformation.DRIVE_UP_TO_GOAL_MOTOR_RATIO[lane],
+	        DriveInformation.DRIVE_UP_TO_GOAL_MOTOR_RATIO[lane]) == true)
+	        ||
+	        (Hardware.leftIR.isOn() || Hardware.rightIR.isOn()))
+	// We are done here.
+	{
+	done = true;
+	}
 
-    // TEMPORARY PRINTS.
-    // see if we have stopped based on IR or Encoders.
-    if (done == true
-            && (Hardware.leftIR.isOn() || Hardware.rightIR.isOn()))
-        {
-        System.out.println("Stopped by Sensors");
-        }
-    else
-        {
-        System.out.println("Stopped by distance.");
-        }
-    return done;
+	// TEMPORARY PRINTS.
+	// see if we have stopped based on IR or Encoders.
+	if (done == true
+	        && (Hardware.leftIR.isOn() || Hardware.rightIR.isOn()))
+	{
+	System.out.println("Stopped by Sensors");
+	}
+	else
+	{
+	System.out.println("Stopped by distance.");
+	}
+	return done;
 }
 
 /**
@@ -745,20 +745,20 @@ private static boolean hasDrivenUpToGoal ()
 private static void shoot ()
 {
 
-    //Make sure the arm is out of the way.
-    if (Hardware.pickupArm.isClearOfArm())
-        {
+	//Make sure the arm is out of the way.
+	if (Hardware.pickupArm.isClearOfArm())
+	{
 
-        //RELEASE THE KRACKEN! I mean, the pressurized air...
-        Hardware.catapultSolenoid0.set(true);
-        Hardware.catapultSolenoid1.set(true);
-        Hardware.catapultSolenoid2.set(true);
+	//RELEASE THE KRACKEN! I mean, the pressurized air...
+	Hardware.catapultSolenoid0.set(true);
+	Hardware.catapultSolenoid1.set(true);
+	Hardware.catapultSolenoid2.set(true);
 
-        }
+	}
 
-    //set a timer so that we know when to close the solenoids.
-    Hardware.kilroyTimer.reset();
-    Hardware.kilroyTimer.start();
+	//set a timer so that we know when to close the solenoids.
+	Hardware.kilroyTimer.reset();
+	Hardware.kilroyTimer.start();
 }
 
 /**
@@ -769,16 +769,16 @@ private static void shoot ()
  */
 private static boolean hasShot ()
 {
-    //Check the time.
-    if (Hardware.kilroyTimer.get() > DELAY_TIME_AFTER_SHOOT)
-    //Close the airways, and finish.
-        {
-        Hardware.catapultSolenoid0.set(false);
-        Hardware.catapultSolenoid1.set(false);
-        Hardware.catapultSolenoid2.set(false);
-        return true;
-        }
-    return false;
+	//Check the time.
+	if (Hardware.kilroyTimer.get() > DELAY_TIME_AFTER_SHOOT)
+	//Close the airways, and finish.
+	{
+	Hardware.catapultSolenoid0.set(false);
+	Hardware.catapultSolenoid1.set(false);
+	Hardware.catapultSolenoid2.set(false);
+	return true;
+	}
+	return false;
 }
 
 /**
@@ -786,11 +786,11 @@ private static boolean hasShot ()
  */
 private static void done ()
 {
-    autonomousEnabled = false;
-    debug = false;
-    Hardware.transmission.controls(0.0, 0.0);
-    Hardware.armMotor.set(0.0);
-    Hardware.delayTimer.stop();
+	autonomousEnabled = false;
+	debug = false;
+	Hardware.transmission.controls(0.0, 0.0);
+	Hardware.armMotor.set(0.0);
+	Hardware.delayTimer.stop();
 
 }
 
@@ -808,76 +808,76 @@ private static void done ()
  */
 private static void runArmStates ()
 {
-    switch (armState)
-        {
-        case INIT_DOWN:
-            //begin moving arm down
-            Hardware.pickupArm.move(-1.0);
-            //go to periodically check.
-            armState = ArmState.MOVE_DOWN;
-            break;
-        case MOVE_DOWN:
-            //check if down.
-            if (Hardware.pickupArm
-                    .moveToPosition(ArmPosition.FULL_DOWN) == true)
-            //stop.
-                {
-                Hardware.pickupArm.move(0.0);
-                armState = ArmState.DONE;
-                }
-            break;
-        case INIT_UP:
-            //begin moving arm up.
-            Hardware.pickupArm.move(1.0);
-            //go to periodically check.
-            armState = ArmState.CHECK_UP;
-            break;
-        case CHECK_UP:
-            //check if up.
-            if (Hardware.pickupArm.isUp() == true)
-                {
-                //stop.
-                Hardware.pickupArm.move(0.0);
-                armState = ArmState.DONE;
-                }
-            break;
-        case MOVE_UP_TO_DEPOSIT:
-            //check is in up position so that we may deposit the ball.
-            if (Hardware.pickupArm
-                    .moveToPosition(ArmPosition.DEPOSIT) == true)
-            //stop, and go to deposit.
-                {
-                Hardware.pickupArm.move(0.0);
-                armState = ArmState.INIT_DEPOSIT;
-                }
-            break;
-        case INIT_DEPOSIT:
-            //spin wheels to release ball.
-            Hardware.pickupArm.pushOutBall();
-            armState = ArmState.DEPOSIT;
-            break;
-        case DEPOSIT:
-            //check if the ball is out.
-            if (Hardware.pickupArm.ballIsOut())
-            //stop rollers, and move down.
-                {
-                Hardware.pickupArm.stopIntakeArms();
-                //get out of the way.
-                armState = ArmState.INIT_DOWN;
-                }
-            break;
-        case HOLD:
-            Hardware.pickupArm.moveToPosition(ArmPosition.HOLD);
-            break;
-        default:
-        case DONE:
-            //stop running state machine.
-            runArmStates = false;
-            break;
+	switch (armState)
+	{
+		case INIT_DOWN:
+			//begin moving arm down
+			Hardware.pickupArm.move(-1.0);
+			//go to periodically check.
+			armState = ArmState.MOVE_DOWN;
+			break;
+		case MOVE_DOWN:
+			//check if down.
+			if (Hardware.pickupArm
+			        .moveToPosition(ArmPosition.FULL_DOWN) == true)
+			//stop.
+			{
+			Hardware.pickupArm.move(0.0);
+			armState = ArmState.DONE;
+			}
+			break;
+		case INIT_UP:
+			//begin moving arm up.
+			Hardware.pickupArm.move(1.0);
+			//go to periodically check.
+			armState = ArmState.CHECK_UP;
+			break;
+		case CHECK_UP:
+			//check if up.
+			if (Hardware.pickupArm.isUp() == true)
+			{
+			//stop.
+			Hardware.pickupArm.move(0.0);
+			armState = ArmState.DONE;
+			}
+			break;
+		case MOVE_UP_TO_DEPOSIT:
+			//check is in up position so that we may deposit the ball.
+			if (Hardware.pickupArm
+			        .moveToPosition(ArmPosition.DEPOSIT) == true)
+			//stop, and go to deposit.
+			{
+			Hardware.pickupArm.move(0.0);
+			armState = ArmState.INIT_DEPOSIT;
+			}
+			break;
+		case INIT_DEPOSIT:
+			//spin wheels to release ball.
+			Hardware.pickupArm.pushOutBall();
+			armState = ArmState.DEPOSIT;
+			break;
+		case DEPOSIT:
+			//check if the ball is out.
+			if (Hardware.pickupArm.ballIsOut())
+			//stop rollers, and move down.
+			{
+			Hardware.pickupArm.stopIntakeArms();
+			//get out of the way.
+			armState = ArmState.INIT_DOWN;
+			}
+			break;
+		case HOLD:
+			Hardware.pickupArm.moveToPosition(ArmPosition.HOLD);
+			break;
+		default:
+		case DONE:
+			//stop running state machine.
+			runArmStates = false;
+			break;
 
 
 
-        }
+	}
 }
 
 //TODO: Remove unecessary TODOs
@@ -889,18 +889,18 @@ private static void runArmStates ()
  */
 private static int getLane ()
 {
-    int position = Hardware.startingPositionDial.getPosition();
+	int position = Hardware.startingPositionDial.getPosition();
 
-    //-1 is returned when there is no signal. 
-    if (position == -1)
-    //Go to lane 1 by default.
-        {
-        position = 0;
-        }
+	//-1 is returned when there is no signal. 
+	if (position == -1)
+	//Go to lane 1 by default.
+	{
+	position = 0;
+	}
 
-    position++;
+	position++;
 
-    return position;
+	return position;
 }
 
 /**
@@ -909,8 +909,8 @@ private static int getLane ()
  */
 private static void resetEncoders ()
 {
-    Hardware.leftRearEncoder.reset();
-    Hardware.rightRearEncoder.reset();
+	Hardware.leftRearEncoder.reset();
+	Hardware.rightRearEncoder.reset();
 }
 
 /**
@@ -923,23 +923,23 @@ private static void resetEncoders ()
 private static boolean hasTurnedBasedOnSign (double degrees,
         double turnSpeed)
 {
-    boolean done = false;
+	boolean done = false;
 
-    if (degrees < 0)
-    //Turn right. Make degrees positive.
-        {
-        done = Hardware.drive.turnRightDegrees(-degrees, false,
-                turnSpeed,
-                -turnSpeed);
-        }
-    else
-    //Turn left the given number of degrees.
-        {
-        done = Hardware.drive.turnLeftDegrees(degrees, false,
-                -turnSpeed,
-                turnSpeed);
-        }
-    return done;
+	if (degrees < 0)
+	//Turn right. Make degrees positive.
+	{
+	done = Hardware.drive.turnRightDegrees(-degrees, false,
+	        turnSpeed,
+	        -turnSpeed);
+	}
+	else
+	//Turn left the given number of degrees.
+	{
+	done = Hardware.drive.turnLeftDegrees(degrees, false,
+	        -turnSpeed,
+	        turnSpeed);
+	}
+	return done;
 
 }
 
@@ -952,8 +952,8 @@ private static boolean hasTurnedBasedOnSign (double degrees,
  */
 private static boolean hasTurnedBasedOnSign (double degrees)
 {
-    return hasTurnedBasedOnSign(degrees,
-            DriveInformation.DEFAULT_TURN_SPEED);
+	return hasTurnedBasedOnSign(degrees,
+	        DriveInformation.DEFAULT_TURN_SPEED);
 }
 
 /**
