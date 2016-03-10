@@ -1138,7 +1138,8 @@ public boolean turnRightDegrees (final double degrees,
 	        rightJoystickInputValue));
 } // end turnRightDegrees()
 
-public boolean driveByCamera (double percentageDeadBand,
+public boolean driveByCamera (double driveDistanceInches,
+        double percentageDeadBand,
         double correctionSpeed, double adjustedCenterProportion,
         boolean savePictures)
 {
@@ -1228,6 +1229,7 @@ public boolean driveByCamera (double percentageDeadBand,
 	}
 	}
 	return false;
+
 }
 
 /**
@@ -1263,6 +1265,7 @@ public boolean alignByCamera (double percentageDeadBand,
         double correctionSpeed, double adjustedCenterProportion,
         boolean savePictures)
 {
+
 
 	//If the stupid programmers didn't give me a camera or relay before
 	//calling this, don't even try to align, it would kill me and all my
@@ -1353,6 +1356,7 @@ public boolean alignByCamera (double percentageDeadBand,
 	}
 	}
 	return false;
+
 }//end alignByCamera()
 
 /**
