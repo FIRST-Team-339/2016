@@ -117,6 +117,7 @@ public static void periodic ()
 	Hardware.transmission.setJoysticksAreReversed(true);
 	Hardware.transmission.setFirstGearPercentage(1.0);
 	Hardware.axisCamera.setHaveCamera(false);
+	printStatements();
 
 	if (Hardware.leftDriver.getTrigger() == true)
 	{
@@ -125,8 +126,8 @@ public static void periodic ()
 
 	if (testAuto == true)
 	{
-	if (Hardware.drive.driveStraightByInches(100.0, true, .5,
-	        .5))
+	if (Hardware.drive.driveStraightByInches(-20.0, true, -.5,
+	        -.5))
 	{
 	testAuto = false;
 	}
@@ -686,17 +687,17 @@ public static void printStatements ()
 
 
 	// Encoders-------------
-	//    System.out.println(
-	//            "RR distance = " + Hardware.rightRearEncoder.getDistance());
-	//    System.out.println(
-	//            "LR distance = " + Hardware.leftRearEncoder.getDistance());
-	//    //    	 System.out.println("Arm Motor = " + Hardware.armMotor.getDistance());
-	//    System.out.println(
-	//            "Right Rear Encoder Tics: "
-	//                    + Hardware.rightRearEncoder.get());
-	//    System.out.println(
-	//            "Left Rear Encoder Tics: "
-	//                    + Hardware.leftRearEncoder.get());
+	System.out.println(
+	        "RR distance = " + Hardware.rightRearEncoder.getDistance());
+	System.out.println(
+	        "LR distance = " + Hardware.leftRearEncoder.getDistance());
+	        //    //    	 System.out.println("Arm Motor = " + Hardware.armMotor.getDistance());
+	        //    System.out.println(
+	        //            "Right Rear Encoder Tics: "
+	        //                    + Hardware.rightRearEncoder.get());
+	        //    System.out.println(
+	        //            "Left Rear Encoder Tics: "
+	        //                    + Hardware.leftRearEncoder.get());
 
 
 	// Encoders-------------
