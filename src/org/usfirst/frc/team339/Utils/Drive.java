@@ -1116,7 +1116,8 @@ public boolean turnRightDegrees (final double degrees,
             rightJoystickInputValue));
 } // end turnRightDegrees()
 
-public boolean driveByCamera (double percentageDeadBand,
+public boolean driveByCamera (double driveDistanceInches,
+        double percentageDeadBand,
         double correctionSpeed, double adjustedCenterProportion,
         boolean savePictures)
 {
@@ -1135,7 +1136,8 @@ public boolean driveByCamera (double percentageDeadBand,
             }
         //If we claim to be driving by camera and we've waitied long enough
         //(a quarter second) for someone to brighten up the darkness with 
-        //the ringlight.
+        //the ringlight, and we haven't crossed the distance we want to 
+        //drive.
         if (this.cameraTimer.get() >= .25)
             {
             //try to take a picture and save it in memory and on the "hard disk"
@@ -1168,7 +1170,11 @@ public boolean driveByCamera (double percentageDeadBand,
                             Hardware.imageProcessor
                                     .getParticleAnalysisReports()[0].center_mass_x,
                             true)
-                            - adjustedCenterProportion <= -percentageDeadBand)
+                            - adjustedCenterProportion <= -percentageDeadBand
+                    && this.transmission
+                            .getRightRearEncoderDistance() < driveDistanceInches
+                    && this.transmission
+                            .getLeftRearEncoderDistance() < driveDistanceInches)
                 {
                 //turn left until it is in the zone (will be called over and
                 //over again until the blob is within the acceptable zone)
@@ -1186,14 +1192,19 @@ public boolean driveByCamera (double percentageDeadBand,
                             Hardware.imageProcessor
                                     .getParticleAnalysisReports()[0].center_mass_x,
                             true)
-                            - adjustedCenterProportion >= percentageDeadBand)
+                            - adjustedCenterProportion >= percentageDeadBand
+                    && this.transmission
+                            .getRightRearEncoderDistance() < driveDistanceInches
+                    && this.transmission
+                            .getLeftRearEncoderDistance() < driveDistanceInches)
                 {
                 //turn right until it is in the zone (will be called over and
                 //over again until the blob is within the acceptable zone)
                 this.driveContinuous(.8, .6);
                 //this.transmission.controls(-.5, .5);
                 }
-            //If the center of the blob is nestled happily in our deadzone
+            //If the center of the blob is nestled happily in our deadzone or 
+            //we're beyond our target distance
             else
                 {
                 //Stop moving
@@ -1300,8 +1311,8 @@ public boolean alignByCamera (double percentageDeadBand,
                 //over again until the blob is within the acceptable zone)
                 //TODO check and make sure this still doesn't work, then 
                 //change it back or write turn continuous method
-                this.turnLeftDegrees(2, false);
-                //this.transmission.controls(.5, -.5);
+                //this.turnLeftDegrees(2, false);
+                this.transmission.controls(.75, -.75);
                 }
             //if the center of the largest blob is to the right of our 
             //acceptable zone around the center
@@ -1315,8 +1326,8 @@ public boolean alignByCamera (double percentageDeadBand,
                 {
                 //turn right until it is in the zone (will be called over and
                 //over again until the blob is within the acceptable zone)
-                this.turnRightDegrees(2, false);
-                //this.transmission.controls(-.5, .5);
+                //this.turnRightDegrees(2, false);
+                this.transmission.controls(-.75, .75);
                 }
             //If the center of the blob is nestled happily in our deadzone
             else
