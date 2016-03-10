@@ -1274,7 +1274,7 @@ private static final boolean DEBUGGING_DEFAULT = true;
 /**
  * Factor by which to scale all distances for testing in our small lab space.
  */
-private static final double LAB_SCALING_FACTOR = .25;
+private static final double LAB_SCALING_FACTOR = 1.0;
 
 /**
  * Time to wait after releasing the solenoids before closing them back up.
