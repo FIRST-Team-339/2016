@@ -147,9 +147,11 @@ public void pullInBall (boolean override)
 	Hardware.kilroyTimer.start();
 	}
 
-	if (Hardware.armIR.isOn() == true && override == false
+	if ((Hardware.armIR.isOn() == true && override == false
 	        && armPot.get() <= DEPOSIT_POSITION
 	        && Hardware.kilroyTimer.get() > DELAY_AFTER_BALL_DETECTION)
+	        &&
+	        override == false)
 	{
 	//If we already have a ball, no need to pull one in.
 	//TODO check to make sure -1 pulls in and not the reverse.

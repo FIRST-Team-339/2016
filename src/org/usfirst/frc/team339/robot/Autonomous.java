@@ -32,6 +32,7 @@
 package org.usfirst.frc.team339.robot;
 
 import org.usfirst.frc.team339.Hardware.Hardware;
+import org.usfirst.frc.team339.Utils.ErrorMessage.PrintsTo;
 import org.usfirst.frc.team339.Utils.ManipulatorArm;
 import org.usfirst.frc.team339.Utils.ManipulatorArm.ArmPosition;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
@@ -396,7 +397,9 @@ private static void runMainStateMachine ()
 
 	if (Hardware.leftIR.isOn() || Hardware.rightIR.isOn())
 	{
-	System.out.println("An IR has turned on.");
+	Hardware.errorMessage.printError(
+	        (mainState + ": An IR has turned on."), PrintsTo.roboRIO,
+	        false);
 	}
 
 	//System.out.println("Arm Pot: " + Hardware.armPot.get());
