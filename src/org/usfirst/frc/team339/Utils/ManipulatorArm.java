@@ -96,9 +96,10 @@ public void move (double speed, boolean override)
 
     //If we're currently beyond our soft limits, don't do anything that would 
     //bring up further out of them.  Otherwise do what the user wants.
-    if ((speed > 0 && this.armPot.get() < this.MIN_SOFT_ARM_STOP)
+    if (((speed > 0 && this.armPot.get() < this.MIN_SOFT_ARM_STOP)
             || (speed < 0
                     && this.armPot.get() > this.MAX_SOFT_ARM_STOP))
+            && override == false)
         {
         //we have to give a little bit of voltage to stop the motor.
         this.stopArmMotor();
@@ -145,6 +146,7 @@ public void pullInBall (boolean override)
         Hardware.kilroyTimer.reset();
         Hardware.kilroyTimer.start();
         }
+
 
     if (Hardware.armIR.isOn() == true && override == false
             && armPot.get() <= DEPOSIT_POSITION
@@ -398,11 +400,11 @@ private final double REASONABLE_DECELERATION_ANGLE = 111.1;
 
 private final double INTAKE_SPEED = 0.5;
 
-private static final int HOLDING_POSITION = 70;
-private static final int HOLDING_POSITION_THRESHOLD = 5;
+private static final int HOLDING_POSITION = 40;
+private static final int HOLDING_POSITION_THRESHOLD = 10;
 private static final double HOLDING_SPEED = -.2;
 
 private static final int STOP_DOWN_ANGLE = 45;
-private static final double DELAY_AFTER_BALL_DETECTION = 0.08;
+private static final double DELAY_AFTER_BALL_DETECTION = 0.12;
 
 }

@@ -112,6 +112,8 @@ private static boolean testAuto = false;
 public static void periodic ()
 {
 
+    printStatements();
+
 
     if (Hardware.runningInLab == true)
         {
@@ -134,12 +136,9 @@ public static void periodic ()
                 testAuto = false;
                 }
             }
-
-
         }
     else
         {
-
 
         // block of code to move the arm
         if (Math.abs(Hardware.rightOperator
@@ -214,6 +213,136 @@ public static void periodic ()
             }
         //push out the ball if the push out button is pressed
         if (Hardware.rightOperator
+                .getRawButton(PUSH_OUT_BALL_BUTTON) == true)
+            {
+            Hardware.pickupArm.pushOutBall();
+            }
+        // If neither the pull in or the push out button are pressed, stop the
+        // intake motors
+        else
+            {
+            Hardware.pickupArm.stopIntakeArms();
+            }
+        //----------------------------
+        // block of code to fire
+        //----------------------------
+        if (Hardware.leftOperator.getTrigger() == true)
+            {
+            //Tell the code to start firing
+            fireRequested = true;
+            Hardware.armOutOfWayTimer.start();
+            }
+        //if the override button is pressed and we want to fire
+        if (Hardware.leftOperator
+                .getRawButton(FIRE_OVERRIDE_BUTTON) == true
+                && fireRequested == true)
+            {
+            //FIRE NO MATTER WHAT!!!!!
+            if (fire(3, true) == true)
+                {
+                //We've shot our ball, we don't want to fire anymore.
+                fireRequested = false;
+                }
+            }
+        // If the drivers decided they were being stupid and we don't want to fire anymore
+        if (Hardware.leftOperator
+                .getRawButton(FIRE_CANCEL_BUTTON) == true)
+            {
+            //Stop asking the code to fire
+            fireRequested = false;
+            }
+        // if we want to fire, the arm is out of the way, and we have enough pressure so we don't hurt ourselves.
+        if (fireRequested == true && Hardware.pickupArm.moveToPosition(
+                ManipulatorArm.ArmPosition.CLEAR_OF_FIRING_ARM) == true
+                && Hardware.armOutOfWayTimer
+                        .get() >= ARM_IS_OUT_OF_WAY_TIME
+                && Hardware.leftOperator
+                        .getRawButton(FIRE_OVERRIDE_BUTTON) != true)
+            {
+            // fire, if we're ready to
+            if (fire(3, false) == true)
+                {
+                // if we're done firing, drop the request
+                fireRequested = false;
+                Hardware.armOutOfWayTimer.stop();
+                Hardware.armOutOfWayTimer.reset();
+                }
+            }
+
+
+        // block of code to move the arm
+        if (Math.abs(Hardware.rightOperator
+                .getY()) >= PICKUP_ARM_CONTROL_DEADZONE)
+            {
+            // use the formula for the sign (value/abs(value)) to get the direction
+            // we want the motor to go in,
+            // and round it just in case it isn't exactly 1, then cast to an int to
+            // make the compiler happy
+            Hardware.pickupArm.moveReasonably(
+                    -(int) Math.round(Hardware.rightOperator.getY()
+                            / Math.abs(Hardware.rightOperator.getY())),
+                    Hardware.rightOperator.getRawButton(2));
+            //        Hardware.pickupArm
+            //                .moveFast((int) Math.round(Hardware.rightOperator.getY()
+            //                        / Math.abs(Hardware.rightOperator.getY())),
+            //                        Hardware.rightOperator.getRawButton(2));
+            //	Hardware.pickupArm.moveFast(1);
+
+            }
+        else
+            {
+            Hardware.pickupArm.stopArmMotor();
+            }
+        //Block of code to toggle the camera up or down
+        //If the camera is down and we press the button.
+
+        if (Hardware.cameraToggleButton.isOnCheckNow() == false)
+            {
+            //raise the camera and tell the code that it's up
+            Hardware.cameraSolenoid.set(DoubleSolenoid.Value.kForward);
+            }
+        //If the camera is up and we press the toggle button.
+        if (Hardware.cameraToggleButton.isOnCheckNow() == true)
+            {
+            //Drop the camera and tell the code that it's down
+            Hardware.cameraSolenoid.set(DoubleSolenoid.Value.kReverse);
+            }
+
+        //end raise/lower camera block
+
+        //Block of code to align us on the goal using the camera
+        if (Hardware.rightOperator.getTrigger() == true)
+            {
+            //Tell the code to align us to the camera
+            isAligningByCamera = false;//TODO true
+            }
+        //If we want to point at the goal using the camera
+        if (isAligningByCamera == true)
+            {
+            //Keep trying to point at the goal
+            if (Hardware.drive.alignByCamera(
+                    PERCENT_IMAGE_PROCESSING_DEADBAND,
+                    CAMERA_ALIGNMENT_TURNING_SPEED, 0.0, false) == true)
+                {
+                // Once we're in the center, tell the code we no longer care about
+                // steering towards the goal
+                isAligningByCamera = false;
+                }
+            }
+
+        //end alignByCameraBlock
+
+        // Block of code to pick up ball or push it out
+        //pull in the ball if the pull in button is pressed.
+        if (Hardware.rightOperator
+                .getRawButton(TAKE_IN_BALL_BUTTON) == true)
+            {
+            //TODO demystify magic argument
+            Hardware.pickupArm
+                    .pullInBall(Hardware.rightOperator.getRawButton(3));
+            }
+        //push out the ball if the push out button is pressed
+        else if (Hardware.rightOperator
                 .getRawButton(PUSH_OUT_BALL_BUTTON) == true)
             {
             Hardware.pickupArm.pushOutBall();
@@ -666,6 +795,7 @@ public static void printStatements ()
     //hits psi of 100 accurately
     //System.out.println("transducer = " + Hardware.transducer.get());
     System.out.println("Arm Pot = " + Hardware.armPot.get());
+    ;
 
     // Motor controllers-----
     // prints value of the motors
@@ -762,7 +892,7 @@ private final static double PERCENT_IMAGE_PROCESSING_DEADBAND = .20;
 
 private final static double CAMERA_ALIGNMENT_TURNING_SPEED = .45;
 
-private final static double ARM_IS_OUT_OF_WAY_TIME = .60;
+private final static double ARM_IS_OUT_OF_WAY_TIME = .55;
 
 //minimum pressure when allowed to fire
 private static final int FIRING_MIN_PSI = 90;

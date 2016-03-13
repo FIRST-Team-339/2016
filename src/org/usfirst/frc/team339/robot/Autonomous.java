@@ -32,7 +32,7 @@
 package org.usfirst.frc.team339.robot;
 
 import org.usfirst.frc.team339.Hardware.Hardware;
-import org.usfirst.frc.team339.Utils.ErrorMessage;
+import org.usfirst.frc.team339.Utils.ErrorMessage.PrintsTo;
 import org.usfirst.frc.team339.Utils.ManipulatorArm;
 import org.usfirst.frc.team339.Utils.ManipulatorArm.ArmPosition;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
@@ -150,6 +150,10 @@ private static enum MainState
 	 */
 	DRIVE_UP_TO_GOAL, // drives up the goal.
 	/**
+	 * Brakes once we are in front of the goal.
+	 */
+	STOP_IN_FRONT_OF_GOAL,
+	/**
 	 * Once we are in the shooting position, we align based on the chimera.
 	 */
 	ALIGN_IN_FRONT_OF_GOAL,
@@ -257,6 +261,8 @@ private static int lane;
 
 private static int accelerationStage = 0;
 
+private static double totalDistance = 0;
+
 /**
  * Run the arm state machine only when necessary (when true).
  */
@@ -362,6 +368,7 @@ public static void periodic ()
 	}
 
 
+
 } // end Periodic
 
 
@@ -384,11 +391,22 @@ private static void runMainStateMachine ()
 	if (debug == true)
 	// print out states.
 	{
-	System.out.println("Main State: " + mainState);
-	Teleop.printStatements();
+	//	System.out.println("Main State: " + mainState);
+	//	System.out.println("LeftIR: " + Hardware.leftIR.isOn());
+	//	System.out.println("RightIR: " + Hardware.rightIR.isOn());
+
+	if (Hardware.leftIR.isOn() || Hardware.rightIR.isOn())
+	{
 	Hardware.errorMessage.printError(
-	        "Main State: " + mainState,
-	        ErrorMessage.PrintsTo.roboRIO);
+	        (mainState + ": An IR has turned on."), PrintsTo.roboRIO,
+	        false);
+	}
+
+	//System.out.println("Arm Pot: " + Hardware.armPot.get());
+	//	Teleop.printStatements();
+	//	Hardware.errorMessage.printError(
+	//	        "Main State: " + mainState,
+	//	        ErrorMessage.PrintsTo.roboRIO);
 	//	Hardware.errorMessage.printError(
 	//	        "Left:" + Hardware.leftRearEncoder.getDistance(),
 	//	        ErrorMessage.PrintsTo.roboRIO);
@@ -463,6 +481,8 @@ private static void runMainStateMachine ()
 			//continue over the outer works unless the arm is going to get in the way.
 			{
 
+			Teleop.printStatements();
+
 			//continue over the Outer Works
 			mainState = MainState.FORWARDS_OVER_OUTER_WORKS;
 			resetEncoders();
@@ -511,6 +531,8 @@ private static void runMainStateMachine ()
 			//put up camera.
 			Hardware.cameraSolenoid.set(Value.kForward);
 
+			Teleop.printStatements();
+			resetEncoders();
 
 			//initiate the arm motion.
 			runArmStates = true;
@@ -549,6 +571,9 @@ private static void runMainStateMachine ()
 			        DriveInformation.MOTOR_RATIO_TO_A_LINE[lane]) == true))
 			// when done, proceed from Alignment line.
 			{
+
+			Teleop.printStatements();
+
 			//reset Encoders to prepare for next state.
 			resetEncoders();
 
@@ -581,6 +606,9 @@ private static void runMainStateMachine ()
 			        DriveInformation.CENTRE_TO_ALIGNMENT_LINE_MOTOR_RATIO[lane]))
 			{
 			mainState = MainState.DELAY_IF_REVERSE;
+
+			Teleop.printStatements();
+
 			Hardware.delayTimer.reset();
 			Hardware.delayTimer.start();
 			}
@@ -617,6 +645,7 @@ private static void runMainStateMachine ()
 			        DriveInformation.FORWARDS_FROM_ALIGNMENT_LINE_MOTOR_RATIO[lane],
 			        DriveInformation.FORWARDS_FROM_ALIGNMENT_LINE_MOTOR_RATIO[lane]) == true)
 			{
+			Teleop.printStatements();
 			//reset Encoders to prepare for next state.
 			resetEncoders();
 			mainState = MainState.TURN_TO_FACE_GOAL;
@@ -626,8 +655,7 @@ private static void runMainStateMachine ()
 		case TURN_TO_FACE_GOAL:
 			//Turns until we are facing the goal.
 			if (hasTurnedBasedOnSign(
-			        DriveInformation.TURN_TO_FACE_GOAL_DEGREES[lane]
-			                * LAB_SCALING_FACTOR) == true)
+			        DriveInformation.TURN_TO_FACE_GOAL_DEGREES[lane]) == true)
 			//when done move up to the batter.
 			{
 			//reset Encoders to prepare for next state
@@ -648,9 +676,15 @@ private static void runMainStateMachine ()
 			//go to shoot.
 			//TODO:No longer using align.
 			//go to align.
-			mainState = MainState.SHOOT;
+			mainState = MainState.STOP_IN_FRONT_OF_GOAL;
 			}
 			break;
+
+		case STOP_IN_FRONT_OF_GOAL:
+			if (Hardware.drive.brake(.1) == true)
+			{
+			mainState = MainState.DONE;//MainState.SHOOT;
+			}
 
 		case ALIGN_IN_FRONT_OF_GOAL:
 			//align based on the camera until we are facing the goal. head-on.
@@ -777,7 +811,7 @@ private static boolean hasDrivenUpToGoal ()
 	if ((Hardware.drive.driveStraightByInches(
 	        DriveInformation.DRIVE_UP_TO_GOAL[lane]
 	                * LAB_SCALING_FACTOR,
-	        true, DriveInformation.DRIVE_UP_TO_GOAL_MOTOR_RATIO[lane],
+	        false, DriveInformation.DRIVE_UP_TO_GOAL_MOTOR_RATIO[lane],
 	        DriveInformation.DRIVE_UP_TO_GOAL_MOTOR_RATIO[lane]) == true)
 	        ||
 	        (Hardware.leftIR.isOn() || Hardware.rightIR.isOn()))
@@ -788,16 +822,19 @@ private static boolean hasDrivenUpToGoal ()
 
 	// TEMPORARY PRINTS.
 	// see if we have stopped based on IR or Encoders.
-	if (done == true
-	        && (Hardware.leftIR.isOn() || Hardware.rightIR.isOn()))
-	{
-	System.out.println("Stopped by Sensors");
-	}
-	else
-	{
-	System.out.println("Stopped by distance.");
-	}
+	//	if (done == true
+	//	        && (Hardware.leftIR.isOn() || Hardware.rightIR.isOn()))
+	//	{
+	//	System.out.println("Stopped by Sensors");
+	//	}
+	//	else if (Hardware.leftRearEncoder
+	//	        .getDistance() >= DriveInformation.DRIVE_UP_TO_GOAL[lane] ||
+	//	        Hardware.rightRearEncoder
+	//	                .getDistance() >= DriveInformation.DRIVE_UP_TO_GOAL[lane])
+	//	{
+	//	System.out.println("Stopped by distance.");
 	return done;
+
 }
 
 /**
@@ -854,6 +891,11 @@ private static void done ()
 	Hardware.transmission.controls(0.0, 0.0);
 	Hardware.armMotor.set(0.0);
 	Hardware.delayTimer.stop();
+	Hardware.delayTimer.reset();
+
+	armState = ArmState.DONE;
+
+	System.out.println("Total Distance: " + totalDistance);
 
 }
 
@@ -972,6 +1014,8 @@ private static int getLane ()
  */
 private static void resetEncoders ()
 {
+	totalDistance += (Hardware.leftRearEncoder.getDistance()
+	        + Hardware.rightRearEncoder.get()) / 2;
 	Hardware.leftRearEncoder.reset();
 	Hardware.rightRearEncoder.reset();
 }
@@ -1077,7 +1121,7 @@ static final double[] MOTOR_RATIO_TO_OUTER_WORKS =
 static final double[] MOTOR_RATIO_TO_A_LINE =
         {
                 0.0, //PLACEHOLDER
-                0.5, //lane 1
+                0.4, //lane 1
                 0.6, //lane 2
                 0.4, //lane 3
                 0.4, //lane 4
@@ -1109,7 +1153,7 @@ static final double[] ROTATE_ON_ALIGNMENT_LINE_DISTANCE =
 static final double[] FORWARDS_FROM_ALIGNMENT_LINE_DISTANCE =
         {
                 0.0, // nothing. Not used. Arbitrary; makes it work.
-                74.7,// lane 1
+                48.57,//74.7,// lane 1
                 82.0,// lane 2
                 64.0, // lane 3
                 66.1,// lane 4
@@ -1120,11 +1164,11 @@ static final double[] FORWARDS_FROM_ALIGNMENT_LINE_DISTANCE =
 static final double[] CENTRE_TO_ALIGNMENT_LINE_MOTOR_RATIO =
         {
                 0.0,
-                1.0, //1
-                1.0, //2
+                0.4, //1
+                0.4, //2
                 .25, //3
                 .25, //4
-                1.0, //5
+                0.4, //5
                 0.25 //backup plan
         };
 
@@ -1167,7 +1211,7 @@ static final double[] TURN_TO_FACE_GOAL_DEGREES =
 static final double[] DRIVE_UP_TO_GOAL =
         {
                 0.0, // nothing. Not used. Arbitrary; makes it work.
-                62.7,// lane 1
+                97.85,//previously 62.7,// lane 1
                 52.9,// lane 2
                 0.0,// lane 3 (not neccesary)
                 0.0,// lane 4 (not neccesary)
@@ -1181,7 +1225,7 @@ static final double[] DRIVE_UP_TO_GOAL =
 static final double[] DRIVE_UP_TO_GOAL_MOTOR_RATIO =
         {
                 0.0,
-                0.35,
+                0.4,
                 0.4,
                 0.4,
                 0.4,
@@ -1207,7 +1251,7 @@ static final double[] DELAY_IF_REVERSE =
  * Distance from Outer Works checkpoint to Alignment Line.
  * The front of the robot will be touching the Lion.
  */
-private static final double DISTANCE_TO_TAPE = 17.5;
+private static final double DISTANCE_TO_TAPE = 27.5;
 
 
 /**
@@ -1218,7 +1262,7 @@ private static final double DISTANCE_TO_OUTER_WORKS = 22.75;
 /**
  * Distance to travel to get over the Outer Works.
  */
-private static final double DISTANCE_OVER_OUTER_WORKS = 96.25;
+private static final double DISTANCE_OVER_OUTER_WORKS = 98.86;
 
 /**
  * Motor ratio at which we move over outer works.
@@ -1237,7 +1281,7 @@ private static final double DISTANCE_TO_CENTRE_OF_ROBOT = 16.0;
  * Speed at which to make turns by default.
  * TODO: figure out a reasonable speed.
  */
-private static final double DEFAULT_TURN_SPEED = 0.28;
+private static final double DEFAULT_TURN_SPEED = 0.4; //previously 0.28
 
 }
 
