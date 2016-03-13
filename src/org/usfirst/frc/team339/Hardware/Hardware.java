@@ -270,7 +270,7 @@ public static CameraServer cameraServer = CameraServer.getInstance();
 public static USBCamera cam0 = new USBCamera("cam0");
 
 // Declares the Axis camera
-public static KilroyCamera axisCamera = new KilroyCamera(true);
+public static KilroyCamera axisCamera = new KilroyCamera(false);
 
 public static ImageProcessing imageProcessor = new ImageProcessing(
         Hardware.axisCamera);

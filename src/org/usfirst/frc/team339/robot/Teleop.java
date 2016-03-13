@@ -112,12 +112,13 @@ private static boolean testAuto = false;
 public static void periodic ()
 {
 
+	printStatements();
 
 	if (Hardware.runningInLab == true)
 	{
 	Hardware.transmission.setJoysticksAreReversed(true);
 	Hardware.transmission.setFirstGearPercentage(1.0);
-	Hardware.axisCamera.setHaveCamera(false);
+	//Hardware.axisCamera.setHaveCamera(false);
 	printStatements();
 
 
@@ -690,17 +691,17 @@ public static void printStatements ()
 
 
 	// Encoders-------------
-	//    System.out.println(
-	//            "RR distance = " + Hardware.rightRearEncoder.getDistance());
-	//    System.out.println(
-	//            "LR distance = " + Hardware.leftRearEncoder.getDistance());
-	//    //    	 System.out.println("Arm Motor = " + Hardware.armMotor.getDistance());
-	//    System.out.println(
-	//            "Right Rear Encoder Tics: "
-	//                    + Hardware.rightRearEncoder.get());
-	//    System.out.println(
-	//            "Left Rear Encoder Tics: "
-	//                    + Hardware.leftRearEncoder.get());
+	System.out.println(
+	        "RR distance = " + Hardware.rightRearEncoder.getDistance());
+	System.out.println(
+	        "LR distance = " + Hardware.leftRearEncoder.getDistance());
+	        //    	 System.out.println("Arm Motor = " + Hardware.armMotor.getDistance());
+	        //	System.out.println(
+	        //	        "Right Rear Encoder Tics: "
+	        //	                + Hardware.rightRearEncoder.get());
+	        //	System.out.println(
+	        //	        "Left Rear Encoder Tics: "
+	        //	                + Hardware.leftRearEncoder.get());
 
 
 	// Encoders-------------
@@ -762,7 +763,7 @@ private final static double PERCENT_IMAGE_PROCESSING_DEADBAND = .15;
 
 private final static double CAMERA_ALIGNMENT_TURNING_SPEED = .45;
 
-private final static double ARM_IS_OUT_OF_WAY_TIME = .60;
+private final static double ARM_IS_OUT_OF_WAY_TIME = .55;
 
 //minimum pressure when allowed to fire
 private static final int FIRING_MIN_PSI = 90;
