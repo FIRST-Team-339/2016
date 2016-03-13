@@ -114,11 +114,12 @@ public static void periodic ()
 
 	printStatements();
 
+
 	if (Hardware.runningInLab == true)
 	{
 	Hardware.transmission.setJoysticksAreReversed(true);
 	Hardware.transmission.setFirstGearPercentage(1.0);
-	//Hardware.axisCamera.setHaveCamera(false);
+	Hardware.axisCamera.setHaveCamera(false);
 	printStatements();
 
 
@@ -194,7 +195,7 @@ public static void periodic ()
 	//Keep trying to point at the goal
 	if (Hardware.drive.alignByCamera(
 	        PERCENT_IMAGE_PROCESSING_DEADBAND,
-	        CAMERA_ALIGNMENT_TURNING_SPEED) == true)
+	        CAMERA_ALIGNMENT_TURNING_SPEED, 0.0, false) == true)
 	{
 	// Once we're in the center, tell the code we no longer care about
 	// steering towards the goal
@@ -667,6 +668,7 @@ public static void printStatements ()
 	//hits psi of 100 accurately
 	//System.out.println("transducer = " + Hardware.transducer.get());
 	System.out.println("Arm Pot = " + Hardware.armPot.get());
+	;
 
 	// Motor controllers-----
 	// prints value of the motors
@@ -691,17 +693,17 @@ public static void printStatements ()
 
 
 	// Encoders-------------
-	//	System.out.println(
-	//	        "RR distance = " + Hardware.rightRearEncoder.getDistance());
-	//	System.out.println(
-	//	        "LR distance = " + Hardware.leftRearEncoder.getDistance());
-	//    	 System.out.println("Arm Motor = " + Hardware.armMotor.getDistance());
-	//	System.out.println(
-	//	        "Right Rear Encoder Tics: "
-	//	                + Hardware.rightRearEncoder.get());
-	//	System.out.println(
-	//	        "Left Rear Encoder Tics: "
-	//	                + Hardware.leftRearEncoder.get());
+	//    System.out.println(
+	//            "RR distance = " + Hardware.rightRearEncoder.getDistance());
+	//    System.out.println(
+	//            "LR distance = " + Hardware.leftRearEncoder.getDistance());
+	//    //    	 System.out.println("Arm Motor = " + Hardware.armMotor.getDistance());
+	//    System.out.println(
+	//            "Right Rear Encoder Tics: "
+	//                    + Hardware.rightRearEncoder.get());
+	//    System.out.println(
+	//            "Left Rear Encoder Tics: "
+	//                    + Hardware.leftRearEncoder.get());
 
 
 	// Encoders-------------
@@ -759,7 +761,7 @@ private static final int PUSH_OUT_BALL_BUTTON = 5;
 
 private static final double PICKUP_ARM_CONTROL_DEADZONE = 0.2;
 
-private final static double PERCENT_IMAGE_PROCESSING_DEADBAND = .15;
+private final static double PERCENT_IMAGE_PROCESSING_DEADBAND = .20;
 
 private final static double CAMERA_ALIGNMENT_TURNING_SPEED = .45;
 

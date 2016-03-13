@@ -1248,7 +1248,7 @@ public boolean driveByCamera (double driveDistanceInches,
  *            the center. Be careful though, if the deadband is too narrow
  *            and the speed to high, the robot will oscillate around the
  *            center or stop on the other side of the deadband.
- * @param adjustedCenterProportion
+ * @param adjustedPropotionalCenter
  *            -Double to tell to the code about where in the image we want the
  *            largest blob to be. Proportional across the image, with the left
  *            edge as -1.0, the center as 0.0, and the right edge as 1.0
@@ -1266,10 +1266,9 @@ public boolean driveByCamera (double driveDistanceInches,
  * @author Alex Kneipp
  */
 public boolean alignByCamera (double percentageDeadBand,
-        double correctionSpeed, double adjustedCenterProportion,
+        double correctionSpeed, double adjustedPropotionalCenter,
         boolean savePictures)
 {
-
 
 	//If the stupid programmers didn't give me a camera or relay before
 	//calling this, don't even try to align, it would kill me and all my
@@ -1296,10 +1295,14 @@ public boolean alignByCamera (double percentageDeadBand,
 	//try to take a picture and save it in memory and on the "hard disk"
 	try
 	{
+	if (Hardware.axisCamera.freshImage() == true)
+	{
 	Hardware.imageProcessor
-	        .updateImage(Hardware.axisCamera.getImage());
+	        .updateImage(
+	                Hardware.axisCamera.getImage());
 	if (savePictures == true)
 		Hardware.axisCamera.saveImagesSafely();
+	}
 	}
 	//This is NI yelling at us for something being wrong
 	catch (NIVisionException e)
@@ -1311,10 +1314,19 @@ public boolean alignByCamera (double percentageDeadBand,
 	//tell imageProcessor to use the image we just took to look for 
 	//blobs
 	Hardware.imageProcessor.updateParticleAnalysisReports();
-	//tell the programmers where the X coordinate of the center of 
-	//mass of the largest blob
-	//        System.out.println("CenterOfMass: " + Hardware.imageProcessor
-	//                .getParticleAnalysisReports()[0].center_mass_x);
+	/*
+	 * Tell the programmers the absolute and relative x coordinates of
+	 * the
+	 * center of mass of the largest blob.
+	 */
+	System.out
+	        .println("CenterOfMass: " + Hardware.imageProcessor
+	                .getParticleAnalysisReports()[0].center_mass_x);
+	System.out.println("Relative center of Mass "
+	        + getRelativeCameraCoordinate(
+	                Hardware.imageProcessor
+	                        .getParticleAnalysisReports()[0].center_mass_x,
+	                true));
 	//if the center of the largest blob is to the left of our 
 	//acceptable zone around the center
 	if (Hardware.imageProcessor
@@ -1323,13 +1335,13 @@ public boolean alignByCamera (double percentageDeadBand,
 	                Hardware.imageProcessor
 	                        .getParticleAnalysisReports()[0].center_mass_x,
 	                true)
-	                - adjustedCenterProportion <= -percentageDeadBand)
+	                - adjustedPropotionalCenter <= -percentageDeadBand)
 	{
 	//turn left until it is in the zone (will be called over and
 	//over again until the blob is within the acceptable zone)
 	//TODO check and make sure this still doesn't work, then 
 	//change it back or write turn continuous method
-	this.turnLeftDegrees(2, false);
+	this.turnLeftDegrees(9999.0, -.5, .5);
 	//this.transmission.controls(.5, -.5);
 	}
 	//if the center of the largest blob is to the right of our 
@@ -1340,25 +1352,30 @@ public boolean alignByCamera (double percentageDeadBand,
 	                Hardware.imageProcessor
 	                        .getParticleAnalysisReports()[0].center_mass_x,
 	                true)
-	                - adjustedCenterProportion >= percentageDeadBand)
+	                - adjustedPropotionalCenter >= percentageDeadBand)
 	{
 	//turn right until it is in the zone (will be called over and
 	//over again until the blob is within the acceptable zone)
-	this.turnRightDegrees(2, false);
+	this.turnRightDegrees(9999.0, .5, -.5);
 	//this.transmission.controls(-.5, .5);
 	}
 	//If the center of the blob is nestled happily in our deadzone
 	else
 	{
-	//Stop moving
+	//Set up for next call
 	firstTimeAlign = true;
+	//Stop and reset the camera timer for next call delay
 	this.cameraTimer.stop();
 	this.cameraTimer.reset();
+	//stop the robot
 	Hardware.transmission.controls(0.0, 0.0);
+	//tell the programmers we're done.
 	return true;
 	}
 	}
 	}
+	//final return just so we always make sure we tell the programmers 
+	//we're not done if no other instance catches it
 	return false;
 
 }//end alignByCamera()
