@@ -151,17 +151,12 @@ public void pullInBall (boolean override)
             && Hardware.kilroyTimer.get() > DELAY_AFTER_BALL_DETECTION)
         {
         //If we already have a ball, no need to pull one in.
-        //TODO check to make sure -1 pulls in and not the reverse.
         this.intakeMotor.set(0.0);
-
-
         Hardware.kilroyTimer.stop();
         }
     else
         {
         this.intakeMotor.set(-INTAKE_SPEED);
-
-
         if (Hardware.armIR.isOn() == false)
             {
             Hardware.kilroyTimer.reset();

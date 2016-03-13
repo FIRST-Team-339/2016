@@ -213,7 +213,7 @@ public static void periodic ()
                     .pullInBall(Hardware.rightOperator.getRawButton(3));
             }
         //push out the ball if the push out button is pressed
-        else if (Hardware.rightOperator
+        if (Hardware.rightOperator
                 .getRawButton(PUSH_OUT_BALL_BUTTON) == true)
             {
             Hardware.pickupArm.pushOutBall();
