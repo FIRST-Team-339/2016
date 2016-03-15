@@ -822,10 +822,10 @@ public static void printStatements ()
     // Hardware.catapultSolenoid2.get());
 
     // Encoders-------------
-    System.out.println(
-            "RR distance = " + Hardware.rightRearEncoder.getDistance());
-    System.out.println(
-            "LR distance = " + Hardware.leftRearEncoder.getDistance());
+    //    System.out.println(
+    //            "RR distance = " + Hardware.rightRearEncoder.getDistance());
+    //    System.out.println(
+    //            "LR distance = " + Hardware.leftRearEncoder.getDistance());
     //    //    	 System.out.println("Arm Motor = " + Hardware.armMotor.getDistance());
     //    System.out.println(
     //            "Right Rear Encoder Tics: "
@@ -859,9 +859,12 @@ public static void printStatements ()
     //System.out.println("Position: " +
     //Hardware.startingPositionDial.getPosition());
 
-
     // Relay-----------------
     // System.out.println(Hardware.ringLightRelay.get());
+
+    // ImageProcessing-------
+    System.out.println("Number of seen blobs:"
+            + Hardware.imageProcessor.getNumBlobs());
 } // end printStatements
 
 
