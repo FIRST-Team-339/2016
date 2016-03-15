@@ -156,7 +156,7 @@ private double
     // ------------------------------------
     // Since we are correcting the speed on this particular
     // joystick (it means that this side of the robot is
-    // ahead of the other side), then we need to multiple
+    // ahead of the other side), then we need to multiply
     // the speed by a correction factor and then make
     // sure that the resulting value is more than the
     // minimum speed that the motors need to actually
@@ -1348,14 +1348,14 @@ public boolean alignByCamera (double percentageDeadBand,
              * the
              * center of mass of the largest blob.
              */
-            System.out
-                    .println("CenterOfMass: " + Hardware.imageProcessor
-                            .getParticleAnalysisReports()[0].center_mass_x);
-            System.out.println("Relative center of Mass "
-                    + getRelativeCameraCoordinate(
-                            Hardware.imageProcessor
-                                    .getParticleAnalysisReports()[0].center_mass_x,
-                            true));
+            //            System.out
+            //                    .println("CenterOfMass: " + Hardware.imageProcessor
+            //                            .getParticleAnalysisReports()[0].center_mass_x);
+            //            System.out.println("Relative center of Mass "
+            //                    + getRelativeCameraCoordinate(
+            //                            Hardware.imageProcessor
+            //                                    .getParticleAnalysisReports()[0].center_mass_x,
+            //                            true));
             //if the center of the largest blob is to the left of our 
             //acceptable zone around the center
             if (Hardware.imageProcessor
@@ -1368,8 +1368,6 @@ public boolean alignByCamera (double percentageDeadBand,
                 {
                 //turn left until it is in the zone (will be called over and
                 //over again until the blob is within the acceptable zone)
-                //TODO check and make sure this still doesn't work, then 
-                //change it back or write turn continuous method
                 this.turnLeftDegrees(9999.0, -.5, .5);
                 //this.transmission.controls(.5, -.5);
                 }
