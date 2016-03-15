@@ -32,7 +32,6 @@
 package org.usfirst.frc.team339.robot;
 
 import org.usfirst.frc.team339.Hardware.Hardware;
-import org.usfirst.frc.team339.Utils.ErrorMessage.PrintsTo;
 import org.usfirst.frc.team339.Utils.ManipulatorArm;
 import org.usfirst.frc.team339.Utils.ManipulatorArm.ArmPosition;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
@@ -287,6 +286,8 @@ private static boolean debug;
 public static void init ()
 {
 
+	try
+	{
 	//check the Autonomous ENABLED/DISABLED switch.
 	autonomousEnabled = Hardware.autonomousEnabled.isOn();
 
@@ -335,7 +336,19 @@ public static void init ()
 	Hardware.armMotor.set(0.0);
 	Hardware.armIntakeMotor.set(0.0);
 
+	try
+	{
 	Hardware.errorMessage.clearErrorlog();
+	}
+	catch (Exception e)
+	{
+	System.out.println("clearing log is the problem");
+	}
+	}
+	catch (Exception e)
+	{
+	System.out.println("Auto init died");
+	}
 
 } // end Init
 
@@ -391,16 +404,16 @@ private static void runMainStateMachine ()
 	if (debug == true)
 	// print out states.
 	{
-	//	System.out.println("Main State: " + mainState);
+	System.out.println("Main State: " + mainState);
 	//	System.out.println("LeftIR: " + Hardware.leftIR.isOn());
 	//	System.out.println("RightIR: " + Hardware.rightIR.isOn());
 
-	if (Hardware.leftIR.isOn() || Hardware.rightIR.isOn())
-	{
-	Hardware.errorMessage.printError(
-	        (mainState + ": An IR has turned on."), PrintsTo.roboRIO,
-	        false);
-	}
+	//	if (Hardware.leftIR.isOn() || Hardware.rightIR.isOn())
+	//	{
+	////	Hardware.errorMessage.printError(
+	////	        (mainState + ": An IR has turned on."), PrintsTo.roboRIO,
+	////	        false);
+	//	}
 
 	//System.out.println("Arm Pot: " + Hardware.armPot.get());
 	//	Teleop.printStatements();
@@ -481,7 +494,7 @@ private static void runMainStateMachine ()
 			//continue over the outer works unless the arm is going to get in the way.
 			{
 
-			Teleop.printStatements();
+			//Teleop.printStatements();
 
 			//continue over the Outer Works
 			mainState = MainState.FORWARDS_OVER_OUTER_WORKS;
@@ -522,8 +535,8 @@ private static void runMainStateMachine ()
 			        DriveInformation.DISTANCE_OVER_OUTER_WORKS
 			                * LAB_SCALING_FACTOR,
 			        false,
-			        DriveInformation.OUTER_WORKS_MOTOR_RATIO,
-			        DriveInformation.OUTER_WORKS_MOTOR_RATIO) == true)
+			        DriveInformation.DRIVE_OVER_OUTER_WORKS_MOTOR_RATIOS[lane],
+			        DriveInformation.DRIVE_OVER_OUTER_WORKS_MOTOR_RATIOS[lane]) == true)
 			//put up all the things we had to put down under the low bar.
 			//begin loading the catapult.
 			{
@@ -531,7 +544,7 @@ private static void runMainStateMachine ()
 			//put up camera.
 			Hardware.cameraSolenoid.set(Value.kForward);
 
-			Teleop.printStatements();
+			//Teleop.printStatements();
 			resetEncoders();
 
 			//initiate the arm motion.
@@ -572,7 +585,7 @@ private static void runMainStateMachine ()
 			// when done, proceed from Alignment line.
 			{
 
-			Teleop.printStatements();
+			//Teleop.printStatements();
 
 			//reset Encoders to prepare for next state.
 			resetEncoders();
@@ -607,7 +620,7 @@ private static void runMainStateMachine ()
 			{
 			mainState = MainState.DELAY_IF_REVERSE;
 
-			Teleop.printStatements();
+			//Teleop.printStatements();
 
 			Hardware.delayTimer.reset();
 			Hardware.delayTimer.start();
@@ -645,7 +658,7 @@ private static void runMainStateMachine ()
 			        DriveInformation.FORWARDS_FROM_ALIGNMENT_LINE_MOTOR_RATIO[lane],
 			        DriveInformation.FORWARDS_FROM_ALIGNMENT_LINE_MOTOR_RATIO[lane]) == true)
 			{
-			Teleop.printStatements();
+			//Teleop.printStatements();
 			//reset Encoders to prepare for next state.
 			resetEncoders();
 			mainState = MainState.TURN_TO_FACE_GOAL;
@@ -658,6 +671,7 @@ private static void runMainStateMachine ()
 			        DriveInformation.TURN_TO_FACE_GOAL_DEGREES[lane]) == true)
 			//when done move up to the batter.
 			{
+			Teleop.printStatements();
 			//reset Encoders to prepare for next state
 			resetEncoders();
 			//then drive.
@@ -681,7 +695,7 @@ private static void runMainStateMachine ()
 			break;
 
 		case STOP_IN_FRONT_OF_GOAL:
-			if (Hardware.drive.brake(.1) == true)
+		//if (Hardware.drive.brake(.1) == true)
 			{
 			mainState = MainState.DONE;//MainState.SHOOT;
 			}
@@ -813,8 +827,8 @@ private static boolean hasDrivenUpToGoal ()
 	                * LAB_SCALING_FACTOR,
 	        false, DriveInformation.DRIVE_UP_TO_GOAL_MOTOR_RATIO[lane],
 	        DriveInformation.DRIVE_UP_TO_GOAL_MOTOR_RATIO[lane]) == true)
-	        ||
-	        (Hardware.leftIR.isOn() || Hardware.rightIR.isOn()))
+	//|| (Hardware.leftIR.isOn() || Hardware.rightIR.isOn())
+	)
 	// We are done here.
 	{
 	done = true;
@@ -1085,6 +1099,17 @@ private static final double[] ACCELERATION_TIMES =
                 0.6
         };
 
+private static final double[] DRIVE_OVER_OUTER_WORKS_MOTOR_RATIOS =
+        {
+                0.0,
+                0.4,
+                0.7,
+                0.7,
+                0.7,
+                0.7,
+                0.4
+        };
+
 /**
  * For each lane, decides whether or not to break on the Alignment Line
  */
@@ -1153,8 +1178,8 @@ static final double[] ROTATE_ON_ALIGNMENT_LINE_DISTANCE =
 static final double[] FORWARDS_FROM_ALIGNMENT_LINE_DISTANCE =
         {
                 0.0, // nothing. Not used. Arbitrary; makes it work.
-                48.57,//74.7,// lane 1
-                82.0,// lane 2
+                48.57,// lane 1
+                77.44,//68.0,// lane 2
                 64.0, // lane 3
                 66.1,// lane 4
                 86.5, // lane 5
@@ -1211,8 +1236,8 @@ static final double[] TURN_TO_FACE_GOAL_DEGREES =
 static final double[] DRIVE_UP_TO_GOAL =
         {
                 0.0, // nothing. Not used. Arbitrary; makes it work.
-                97.85,//previously 62.7,// lane 1
-                52.9,// lane 2
+                65.85,//previously 62.7,// lane 1
+                18.1,//52.9,// lane 2
                 0.0,// lane 3 (not neccesary)
                 0.0,// lane 4 (not neccesary)
                 12.0, // lane 5
@@ -1265,12 +1290,6 @@ private static final double DISTANCE_TO_OUTER_WORKS = 22.75;
 private static final double DISTANCE_OVER_OUTER_WORKS = 98.86;
 
 /**
- * Motor ratio at which we move over outer works.
- * TODO: possibly make into array.
- */
-private static final double OUTER_WORKS_MOTOR_RATIO = 0.4;
-
-/**
  * The distance to the central pivot point from the front of the robot.
  * We will use this so that we may rotate around a desired point at the end of a
  * distance.
@@ -1281,7 +1300,7 @@ private static final double DISTANCE_TO_CENTRE_OF_ROBOT = 16.0;
  * Speed at which to make turns by default.
  * TODO: figure out a reasonable speed.
  */
-private static final double DEFAULT_TURN_SPEED = 0.4; //previously 0.28
+private static final double DEFAULT_TURN_SPEED = 0.5; //previously 0.28
 
 }
 
