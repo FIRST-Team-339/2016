@@ -748,6 +748,38 @@ public Transmission_old (
 
 } // end Transmission
 
+//-------------------------------------------------------
+/**
+ * Check to see if we are stopped via reversing the motors
+ * by a small amount. We determine stopped in that the last
+ * 3 times to this function we have the same distance on both
+ * wheel encoders. If that is true then we set up for next
+ * time we are called and return a true, otherwise we keep
+ * track of everything and return a false. Makes a call to
+ * brake(bothMotorBrakeVoltages, bothMotorBrakeVoltages);
+ *
+ * must initialize transmission instance's encoders via initEncoders()
+ *
+ * @see initEncoders()
+ *
+ *      distancePerPulse on the encoders MUST be set for this to work.
+ * @see Transmission.setEncodersDistancePerPulse(float distance)
+ * @see 2014 brake() in Kilroy.java for original implementation.
+ * @method brake
+ * @param bothMotorBrakeVoltages
+ *            - brakeVoltage to set the left and motor(s) (in a reverse
+ *            manner)
+ *            to "stop" the motors. (Usually this is -.1)
+ * @return boolean - is or isn't stopped yet
+ * @author Bob Brown
+ * @written March 15, 2016
+ *          -------------------------------------------------------
+ */
+public boolean brake (final double bothMotorBrakeVoltages)
+{
+    return (brake(bothMotorBrakeVoltages, bothMotorBrakeVoltages));
+} // end of brake()
+
 // -------------------------------------------------------
 /**
  * Check to see if we are stopped via reversing the motors
@@ -765,8 +797,12 @@ public Transmission_old (
  * @see Transmission.setEncodersDistancePerPulse(float distance)
  * @see 2014 brake() in Kilroy.java for original implementation.
  * @method brake
- * @param brakeVoltage
- *            - brakeVoltage to set the motors (in a reverse
+ * @param lMotorBrakeVoltage
+ *            - brakeVoltage to set the left motor(s) (in a reverse
+ *            manner)
+ *            to "stop" the motors. (Usually this is -.1)
+ * @param rMotorBrakeVoltage
+ *            - brakeVoltage to set the right motor(s) (in a reverse
  *            manner)
  *            to "stop" the motors. (Usually this is -.1)
  * @return boolean - is or isn't stopped yet
@@ -774,7 +810,8 @@ public Transmission_old (
  * @written Feb 2, 2011
  *          -------------------------------------------------------
  */
-public boolean brake (final double brakeVoltage)
+public boolean brake (final double lMotorBrakeVoltage,
+        final double rMotorBrakeVoltage)
 {
 
     // UNDER PENALTY OF DEATH - don't use without calling initEncoders()
@@ -870,13 +907,13 @@ public boolean brake (final double brakeVoltage)
     // send the braking voltage backwards.
     if (this.isMecanumDrive() == true)
         {
-        this.controls(brakeVoltage, 180.0, //
+        this.controls(lMotorBrakeVoltage, 180.0, //
                 0.0);
         }
     else
         {
         // otherwise, use our 2 or 4 wheel braking method.
-        this.controls(brakeVoltage, brakeVoltage);
+        this.controls(lMotorBrakeVoltage, rMotorBrakeVoltage);
         }
     return false;
 } // end brake

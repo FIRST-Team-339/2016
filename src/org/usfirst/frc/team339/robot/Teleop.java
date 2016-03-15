@@ -112,7 +112,9 @@ private static boolean testAuto = false;
 public static void periodic ()
 {
 
+
     //printStatements();
+
 
 
     if (Hardware.runningInLab == true)
@@ -477,8 +479,10 @@ public static void periodic ()
         //End driver direction block
 
 
+
         // Print statements to test Hardware on the Robot
         //printStatements();
+
 
         // Takes Pictures based on Operator Button stuff.
         takePicture();
@@ -788,12 +792,13 @@ public static void printStatements ()
 
 
 
+
     // pots-----------------
     // System.out.println("delay pot = " + (int) Hardware.delayPot.get());
     // prints the value of the transducer- (range in code is 50)
     //hits psi of 100 accurately
     //System.out.println("transducer = " + Hardware.transducer.get());
-    System.out.println("Arm Pot = " + Hardware.armPot.get());
+    //	System.out.println("Arm Pot = " + Hardware.armPot.get());
 
     // Motor controllers-----
     // prints value of the motors
@@ -815,7 +820,6 @@ public static void printStatements ()
     // Hardware.catapultSolenoid1.get());
     // System.out.println("catapultSolenoid2 = " +
     // Hardware.catapultSolenoid2.get());
-
 
     // Encoders-------------
     System.out.println(

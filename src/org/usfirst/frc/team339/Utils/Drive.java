@@ -38,20 +38,51 @@ public Drive (Transmission_old transmission, KilroyCamera camera,
 
 /**
  * Stops the robot actively. Basically just a wrapper for the transmission's
+ * brake. Uses the default brakeSpeed in this class
+ * 
+ * @return true if we're done braking, false otherwise.
+ * @author Alex Kneipp
+ */
+public boolean brake ()
+{
+    // TODO maybe make argument a constant in the class.
+    // TODO find out ideal brakespeed.
+    return (this.brake(this.brakeSpeed));
+} // end brake()
+
+/**
+ * Stops the robot actively. Basically just a wrapper for the transmission's
  * brake.
  * 
- * @param brakeSpeed
+ * @param toBrakeSpeed
  *            The speed with which to brake, recommended to be rather low.
  * @return true if we're done braking, false otherwise.
  * @author Alex Kneipp
  */
-public boolean brake (final double brakeSpeed)
+public boolean brake (final double toBrakeSpeed)
 {
-    // TODO maybe make argument a constant in the class.
-    // TODO find out ideal brakespeed.
+    return (this.brake(toBrakeSpeed, toBrakeSpeed));
+} // end brake()
+
+/**
+ * Stops the robot actively. Basically just a wrapper for the transmission's
+ * brake.
+ * 
+ * @param lBrakeSpeed
+ *            The speed with which to brake for the left motors,
+ *            recommended to be rather low.
+ * @param rBrakeSpeed
+ *            The speed with which to brake for the right motors,
+ *            recommended to be rather low.
+ * @return true if we're done braking, false otherwise.
+ * @author Alex Kneipp
+ */
+public boolean brake (final double lBrakeSpeed,
+        final double rBrakeSpeed)
+{
     if (this.transmission.isLeftJoystickReversed() == true)
-        return (this.transmission.brake(-brakeSpeed));
-    return (this.transmission.brake(brakeSpeed));
+        return (this.transmission.brake(-lBrakeSpeed, -rBrakeSpeed));
+    return (this.transmission.brake(lBrakeSpeed, rBrakeSpeed));
 } // end brake()
 
 /**
@@ -319,7 +350,8 @@ public boolean driveByInches (final double distance,
         // if requested to brake, stop
         if (brakeAtEnd == true)
             {
-            return (this.brake(this.brakeSpeed));
+
+            return (this.brake());
             }
         // -----------------------------------
         // otherwise we are not braking, but we
@@ -926,9 +958,8 @@ public boolean turnByDegrees (final turnWhichWay whichWay,
             {
             // brake and if we're done braking, tell caller we're done
             if (brakeAtEnd == true)
-                {
-                return (this.brake(this.brakeSpeed));
-                }
+
+                return (this.brake(this.brakeSpeed, -this.brakeSpeed));
             return true;
             }
         }
@@ -948,9 +979,7 @@ public boolean turnByDegrees (final turnWhichWay whichWay,
             {
             // brake and if we're done braking, tell caller we're done
             if (brakeAtEnd == true)
-                {
-                return (this.brake(this.brakeSpeed));
-                }
+                return (this.brake(-this.brakeSpeed, this.brakeSpeed));
             return true;
             }
         }

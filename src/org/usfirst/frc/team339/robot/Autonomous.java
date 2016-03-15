@@ -289,7 +289,6 @@ public static void init ()
     try
         {
         //check the Autonomous ENABLED/DISABLED switch.
-        autonomousEnabled = Hardware.autonomousEnabled.isOn();
 
         // set the delay time based on potentiometer.
         delay = initDelayTime();
@@ -351,6 +350,7 @@ public static void init ()
         System.out.println("Auto init died");
         }
 
+
 } // end Init
 
 /**
@@ -402,12 +402,14 @@ private static int initDelayTime ()
 private static void runMainStateMachine ()
 {
 
+
     if (debug == true)
     // print out states.
         {
-        //	System.out.println("Main State: " + mainState);
+        System.out.println("Main State: " + mainState);
         //	System.out.println("LeftIR: " + Hardware.leftIR.isOn());
         //	System.out.println("RightIR: " + Hardware.rightIR.isOn());
+
 
         //	if (Hardware.leftIR.isOn() || Hardware.rightIR.isOn())
         //	{
@@ -495,6 +497,7 @@ private static void runMainStateMachine ()
             //continue over the outer works unless the arm is going to get in the way.
                 {
 
+
                 //Teleop.printStatements();
 
                 //continue over the Outer Works
@@ -542,8 +545,10 @@ private static void runMainStateMachine ()
             //begin loading the catapult.
                 {
 
+
                 //put up camera.
                 Hardware.cameraSolenoid.set(Value.kForward);
+
 
                 //Teleop.printStatements();
                 resetEncoders();
@@ -587,6 +592,7 @@ private static void runMainStateMachine ()
                 {
 
                 //Teleop.printStatements();
+
 
                 //reset Encoders to prepare for next state.
                 resetEncoders();
@@ -666,6 +672,7 @@ private static void runMainStateMachine ()
                 }
             break;
 
+
         case TURN_TO_FACE_GOAL:
             //Turns until we are facing the goal.
             if (hasTurnedBasedOnSign(
@@ -693,7 +700,9 @@ private static void runMainStateMachine ()
             //Go to align.
                 {
 
+
                 Teleop.printStatements();
+
 
                 //reset Encoders to prepare for next state.
                 resetEncoders();
@@ -1121,6 +1130,8 @@ private static final double[] DRIVE_OVER_OUTER_WORKS_MOTOR_RATIOS =
             0.4
     };
 
+
+
 /**
  * For each lane, decides whether or not to break on the Alignment Line
  */
@@ -1196,6 +1207,7 @@ static final double[] FORWARDS_FROM_ALIGNMENT_LINE_DISTANCE =
             86.5, // lane 5
             -169.0 //backup plan
     };
+
 
 static final double[] CENTRE_TO_ALIGNMENT_LINE_MOTOR_RATIO =
     {
