@@ -188,6 +188,7 @@ public void set (final double speed, final byte syncGroup)
  * @author Noah Golmant
  * @written 10 Jan 2016
  */
+@Override
 public boolean getInverted ()
 {
     return this.isInverted;
@@ -198,12 +199,13 @@ public boolean getInverted ()
  * @author Noah Golmant
  * @written 10 Jan 2016
  */
+@Override
 public void setInverted (boolean val)
 {
     this.isInverted = val;
 }
 
-@Override
+//@Override
 public void stopMotor ()
 {
     // TODO Auto-generated method stub
