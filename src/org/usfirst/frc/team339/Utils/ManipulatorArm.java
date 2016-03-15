@@ -379,32 +379,32 @@ private IRSensor hasBallSensor = null;
 private boolean ballHasBeenPreviouslyDetected = false;
 
 //default maximum arm turn speed proportion
-private final double MAX_ARM_SPEED = -1.0;
+private final double MAX_ARM_SPEED = -.8;
 //default slow arm turn speed proportion
 private double slowSpeed = .2;
 
-private double MAX_SOFT_ARM_STOP = 170.0;
-private final double MIN_SOFT_ARM_STOP = 21.0;
+private double MAX_SOFT_ARM_STOP = 210.0;
+private final double MIN_SOFT_ARM_STOP = 60.0;
 
-private final double ARM_OUT_OF_WAY_DEGREES = 130.0;
-private final double BRAKE_ARM_WITH_FORWARD_VOLTAGE_DEGREES = 120.0;
+private final double ARM_OUT_OF_WAY_DEGREES = 170.0;
+private final double BRAKE_ARM_WITH_FORWARD_VOLTAGE_DEGREES = 160.0;
 
-private final double DEPOSIT_POSITION = 145.0;
+private final double DEPOSIT_POSITION = 185.0;
 private final double DEPOSIT_POSITION_THRESHOLD = 5.0;
 
 private final double REASONABLE_UP_FACTOR = -1.0;
 private final double REASONABLE_UP_AND_OVER_FACTOR = -0.40;
 private final double REASONABLE_DOWN_FACTOR = 0.35;
 private final double REASONABLE_DOWN_UNDER_FACTOR = 0.20;
-private final double REASONABLE_DECELERATION_ANGLE = 111.1;
+private final double REASONABLE_DECELERATION_ANGLE = 151.1;
 
 private final double INTAKE_SPEED = 0.5;
 
-private static final int HOLDING_POSITION = 40;
+private static final int HOLDING_POSITION = 120;
 private static final int HOLDING_POSITION_THRESHOLD = 10;
 private static final double HOLDING_SPEED = -.2;
 
-private static final int STOP_DOWN_ANGLE = 45;
+private static final int STOP_DOWN_ANGLE = 85;
 private static final double DELAY_AFTER_BALL_DETECTION = 0.12;
 
 }

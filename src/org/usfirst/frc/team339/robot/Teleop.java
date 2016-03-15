@@ -112,7 +112,7 @@ private static boolean testAuto = false;
 public static void periodic ()
 {
 
-    printStatements();
+    //printStatements();
 
 
     if (Hardware.runningInLab == true)
@@ -120,7 +120,6 @@ public static void periodic ()
         Hardware.transmission.setJoysticksAreReversed(true);
         Hardware.transmission.setFirstGearPercentage(1.0);
         Hardware.axisCamera.setHaveCamera(false);
-        printStatements();
 
 
         if (Hardware.leftDriver.getTrigger() == true)
@@ -479,7 +478,7 @@ public static void periodic ()
 
 
         // Print statements to test Hardware on the Robot
-        printStatements();
+        //printStatements();
 
         // Takes Pictures based on Operator Button stuff.
         takePicture();
@@ -795,7 +794,6 @@ public static void printStatements ()
     //hits psi of 100 accurately
     //System.out.println("transducer = " + Hardware.transducer.get());
     System.out.println("Arm Pot = " + Hardware.armPot.get());
-    ;
 
     // Motor controllers-----
     // prints value of the motors
@@ -820,10 +818,10 @@ public static void printStatements ()
 
 
     // Encoders-------------
-    //    System.out.println(
-    //            "RR distance = " + Hardware.rightRearEncoder.getDistance());
-    //    System.out.println(
-    //            "LR distance = " + Hardware.leftRearEncoder.getDistance());
+    System.out.println(
+            "RR distance = " + Hardware.rightRearEncoder.getDistance());
+    System.out.println(
+            "LR distance = " + Hardware.leftRearEncoder.getDistance());
     //    //    	 System.out.println("Arm Motor = " + Hardware.armMotor.getDistance());
     //    System.out.println(
     //            "Right Rear Encoder Tics: "

@@ -1120,21 +1120,21 @@ public void controls (final double leftJoystickInputValue,
         if (isFourWheel // &&
         /* (this.isMecanumDrive() == true) */)// TODO commented out until it
                                               // makes sense
-            {
-            this.controls(leftJoystickInputValue,
-                    rightJoystickInputValue,
-                    this.leftSpeedController,
-                    this.leftRearSpeedController,
-                    this.oneOrRightSpeedController,
-                    this.rightRearSpeedController);
-            }
+        {
+        this.controls(leftJoystickInputValue,
+                rightJoystickInputValue,
+                this.leftSpeedController,
+                this.leftRearSpeedController,
+                this.oneOrRightSpeedController,
+                this.rightRearSpeedController);
+        }
         else
-            {
-            this.controls(leftJoystickInputValue,
-                    this.leftSpeedController,
-                    rightJoystickInputValue,
-                    this.oneOrRightSpeedController);
-            }
+        {
+        this.controls(leftJoystickInputValue,
+                this.leftSpeedController,
+                rightJoystickInputValue,
+                this.oneOrRightSpeedController);
+        }
 
 } // end Controls
 
@@ -2977,13 +2977,13 @@ public int setGear (final int gear)
             // hardware piston out.
             // --------------------------------------
             if (gear > this.getPhysicalGearToChange())
-                {
-                this.transmissionRelay.set(Relay.Value.kForward);
-                }
+            {
+            this.transmissionRelay.set(Relay.Value.kForward);
+            }
             else if (gear <= this.getPhysicalGearToChange())
-                {
-                this.transmissionRelay.set(Relay.Value.kReverse);
-                }
+            {
+            this.transmissionRelay.set(Relay.Value.kReverse);
+            }
         // --------------------------------------
         // Store the new gear number. and turn the
         // correct light ON if we have an associated
