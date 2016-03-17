@@ -1324,7 +1324,7 @@ public boolean alignByCamera (double percentageDeadBand,
             //try to take a picture and save it in memory and on the "hard disk"
             try
                 {
-                if (Hardware.axisCamera.freshImage() == true)
+                //if (Hardware.axisCamera.freshImage() == true)
                     {
                     Hardware.imageProcessor
                             .updateImage(
