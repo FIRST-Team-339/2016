@@ -60,8 +60,8 @@
 package org.usfirst.frc.team339.robot;
 
 import org.usfirst.frc.team339.Hardware.Hardware;
+import org.usfirst.frc.team339.HardwareInterfaces.DoubleSolenoid;
 import org.usfirst.frc.team339.Utils.ImageProcessing.ObjectRemoval;
-import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.Relay.Direction;
 
@@ -294,17 +294,18 @@ public void robotInit ()
 	// Set the axis camera brightness to normal
 	Hardware.axisCamera.writeBrightness(
 	        Hardware.NORMAL_AXIS_CAMERA_BRIGHTNESS);
-	// -------------------------------------
-	// USB camera initialization
-	// -------------------------------------
-	// Settings for the USB Camera
-	Hardware.cam0.setBrightness(50);
-	Hardware.cam0.setExposureAuto();
-	Hardware.cam0.setSize(160, 120);
-	Hardware.cam0.setFPS(20);
-	Hardware.cam0.setWhiteBalanceAuto();
-	Hardware.cam0.setWhiteBalanceHoldCurrent();
-	Hardware.cam0.updateSettings();
+	        // -------------------------------------
+	        // USB camera initialization
+	        // -------------------------------------
+	        // Settings for the USB Camera
+	        //TODO: uncomment camera
+	        //	Hardware.cam0.setBrightness(50);
+	        //	Hardware.cam0.setExposureAuto();
+	        //	Hardware.cam0.setSize(160, 120);
+	        //	Hardware.cam0.setFPS(20);
+	        //	Hardware.cam0.setWhiteBalanceAuto();
+	        //	Hardware.cam0.setWhiteBalanceHoldCurrent();
+	        //	Hardware.cam0.updateSettings();
 
 	// Sets FPS and Resolution of camera
 	Hardware.axisCamera.writeMaxFPS(Hardware.AXIS_FPS);
@@ -344,7 +345,8 @@ public void robotInit ()
 	}
 
 	// Starts streaming video
-	Hardware.cameraServer.startAutomaticCapture(Hardware.cam0);
+	//TODO: uncomment camera
+	//	Hardware.cameraServer.startAutomaticCapture(Hardware.cam0);
 	// Sets the hue, saturation, and luminance values for the vision
 	// processing.
 	Hardware.imageProcessor.setHSLValues(0, 255, 0, 75, 5, 141);
@@ -381,6 +383,7 @@ public void robotInit ()
 	// --------------------------------------
 	// Compressor Initialization
 	// --------------------------------------
+
 	Hardware.compressor.setClosedLoopControl(true);
 
 	// ---------------------------------------
