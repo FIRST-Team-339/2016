@@ -1379,31 +1379,29 @@ public boolean alignByCamera (double percentageDeadBand,
             Hardware.imageProcessor.updateParticleAnalysisReports();
             /*
              * Tell the programmers the absolute and relative x coordinates
-             * of
-             * the
-             * center of mass of the largest blob.
+             * of the center of mass of the largest blob.
              */
-            if (Hardware.imageProcessor
-                    .getParticleAnalysisReports().length > 0)
-                {
-                System.out
-                        .println("CenterOfMass: "
-                                + Hardware.imageProcessor
-                                        .getParticleAnalysisReports()[0].center_mass_x);
-                System.out.println("Relative x center of Mass :"
-                        + (getRelativeCameraCoordinate(
-                                Hardware.imageProcessor
-                                        .getParticleAnalysisReports()[0].center_mass_x,
-                                true)));
-                System.out.println(
-                        "Relative Center range: ("
-                                + (-percentageDeadBand / 2
-                                        + adjustedProportionalCenter)
-                                + ", "
-                                + (percentageDeadBand / 2
-                                        + adjustedProportionalCenter)
-                                + ")");
-                }
+            //            if (Hardware.imageProcessor
+            //                    .getParticleAnalysisReports().length > 0)
+            //                {
+            //                System.out
+            //                        .println("CenterOfMass: "
+            //                                + Hardware.imageProcessor
+            //                                        .getParticleAnalysisReports()[0].center_mass_x);
+            //                System.out.println("Relative x center of Mass :"
+            //                        + (getRelativeCameraCoordinate(
+            //                                Hardware.imageProcessor
+            //                                        .getParticleAnalysisReports()[0].center_mass_x,
+            //                                true)));
+            //                System.out.println(
+            //                        "Relative Center range: ("
+            //                                + (-percentageDeadBand / 2
+            //                                        + adjustedProportionalCenter)
+            //                                + ", "
+            //                                + (percentageDeadBand / 2
+            //                                        + adjustedProportionalCenter)
+            //                                + ")");
+            //                }
             //if the center of the largest blob is to the left of our 
             //acceptable zone around the center
             if (Hardware.imageProcessor
