@@ -260,6 +260,7 @@ public class Hardware
 	// Sonar/Ultrasonic
 	// -------------------------------------
 
+<<<<<<< HEAD
 	// **********************************************************
 	// roboRIO CONNECTIONS CLASSES
 	// **********************************************************
@@ -272,15 +273,42 @@ public class Hardware
 	// -------------------------------------
 	//public static CameraServer cameraServer = CameraServer.getInstance();
 	//public static USBCamera cam0 = new USBCamera("cam0");
+=======
+// **********************************************************
+// roboRIO CONNECTIONS CLASSES
+// **********************************************************
+// -------------------------------------
+// Axis/USB Camera class
+// -------------------------------------
+// -------------------------------------
+// declare the USB camera server and the
+// USB camera it serves
+// -------------------------------------
+//public static CameraServer cameraServer = CameraServer.getInstance();
+//public static USBCamera cam0 = new USBCamera("cam0");
+>>>>>>> branch 'master' of https://github.com/FIRST-Team-339/2016.git
 
+<<<<<<< HEAD
 	// Declares the Axis camera
 	public static KilroyCamera axisCamera = new KilroyCamera(true);
+=======
+// Declares the Axis camera
+public static KilroyCamera axisCamera = new KilroyCamera(true);
+>>>>>>> branch 'master' of https://github.com/FIRST-Team-339/2016.git
 
+<<<<<<< HEAD
 	public static ImageProcessing imageProcessor = new ImageProcessing(
 	        Hardware.axisCamera);
 	        // **********************************************************
 	        // DRIVER STATION CLASSES
 	        // **********************************************************
+=======
+public static ImageProcessing imageProcessor = new ImageProcessing(
+        Hardware.axisCamera);
+// **********************************************************
+// DRIVER STATION CLASSES
+// **********************************************************
+>>>>>>> branch 'master' of https://github.com/FIRST-Team-339/2016.git
 
 	// ------------------------------------
 	// DriverStations class

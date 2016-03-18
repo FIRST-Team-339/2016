@@ -189,6 +189,7 @@ public class Drive
 		        rawJoystickValue * this.getDrivingCorrectionFactor()));
 	} // end determineCorrectJoystickValue
 
+
 	/**
 	 * Drives forever (almost). (calls driveByInches(9999, false,
 	 * defaultMaxSpeed (1.0), defaultMaxSpeed (1.0))) with NO correction
@@ -1355,7 +1356,7 @@ public class Drive
 				//try to take a picture and save it in memory and on the "hard disk"
 				try
 				{
-					if (Hardware.axisCamera.freshImage() == true)
+					//if (Hardware.axisCamera.freshImage() == true)
 					{
 						Hardware.imageProcessor
 						        .updateImage(
@@ -1380,15 +1381,14 @@ public class Drive
 				 * the
 				 * center of mass of the largest blob.
 				 */
-				System.out
-				        .println("CenterOfMass: "
-				                + Hardware.imageProcessor
-				                        .getParticleAnalysisReports()[0].center_mass_x);
-				System.out.println("Relative center of Mass "
-				        + getRelativeCameraCoordinate(
-				                Hardware.imageProcessor
-				                        .getParticleAnalysisReports()[0].center_mass_x,
-				                true));
+				//            System.out
+				//                    .println("CenterOfMass: " + Hardware.imageProcessor
+				//                            .getParticleAnalysisReports()[0].center_mass_x);
+				//            System.out.println("Relative center of Mass "
+				//                    + getRelativeCameraCoordinate(
+				//                            Hardware.imageProcessor
+				//                                    .getParticleAnalysisReports()[0].center_mass_x,
+				//                            true));
 				//if the center of the largest blob is to the left of our 
 				//acceptable zone around the center
 				if (Hardware.imageProcessor
@@ -1401,8 +1401,6 @@ public class Drive
 				{
 					//turn left until it is in the zone (will be called over and
 					//over again until the blob is within the acceptable zone)
-					//TODO check and make sure this still doesn't work, then 
-					//change it back or write turn continuous method
 					this.turnLeftDegrees(9999.0, -.5, .5);
 					//this.transmission.controls(.5, -.5);
 				}
