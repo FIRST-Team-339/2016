@@ -80,9 +80,9 @@ public boolean brake (final double toBrakeSpeed)
 public boolean brake (final double lBrakeSpeed,
         final double rBrakeSpeed)
 {
-		//		if (this.transmission.isLeftJoystickReversed() == true)
-		//			return (this.transmission.brake(-lBrakeSpeed,
-		//			        -rBrakeSpeed));
+    //		if (this.transmission.isLeftJoystickReversed() == true)
+    //			return (this.transmission.brake(-lBrakeSpeed,
+    //			        -rBrakeSpeed));
     return (this.transmission.brake(lBrakeSpeed, rBrakeSpeed));
 } // end brake()
 
@@ -99,8 +99,8 @@ public boolean brake (final double lBrakeSpeed,
  * @return - double - modified joystick input value
  */
 private double
-	        compensateForReversedLeftJoystick (
-	                final double joystickInput)
+        compensateForReversedLeftJoystick (
+                final double joystickInput)
 {
     if (this.transmission.isLeftJoystickReversed() == true)
         return (-joystickInput);
@@ -120,8 +120,8 @@ private double
  * @return - double - modified joystick input value
  */
 private double
-	        compensateForReversedRightJoystick (
-	                final double joystickInput)
+        compensateForReversedRightJoystick (
+                final double joystickInput)
 {
     if (this.transmission.isRightJoystickReversed() == true)
         return (-joystickInput);
@@ -153,14 +153,14 @@ private double
  * @date 13 February 2016
  */
 private double
-	        determineCorrectedJoystickValue (
-	                final double rawJoystickValue,
+        determineCorrectedJoystickValue (
+                final double rawJoystickValue,
                 boolean drivingForward)
 {
     // ------------------------------------
     // Since we are correcting the speed on this particular
     // joystick (it means that this side of the robot is
-		// ahead of the other side), then we need to multiple
+    // ahead of the other side), then we need to multiple
     // the speed by a correction factor and then make
     // sure that the resulting value is more than the
     // minimum speed that the motors need to actually
@@ -177,14 +177,14 @@ private double
             return (Math.max(this.getMinMotorSpeed(),
                     rawJoystickValue
                             * this.getDrivingCorrectionFactor()));
-			return (Math.min(-this.getMinMotorSpeed(),
-			        rawJoystickValue *
-                this.getDrivingCorrectionFactor()));
+        return (Math.min(-this.getMinMotorSpeed(),
+                rawJoystickValue *
+                        this.getDrivingCorrectionFactor()));
         }
     if (this.transmission.isLeftJoystickReversed() == true)
-			return (Math.min(-this.getMinMotorSpeed(),
-			        rawJoystickValue *
-                this.getDrivingCorrectionFactor()));
+        return (Math.min(-this.getMinMotorSpeed(),
+                rawJoystickValue *
+                        this.getDrivingCorrectionFactor()));
     return (Math.max(this.getMinMotorSpeed(),
             rawJoystickValue * this.getDrivingCorrectionFactor()));
 } // end determineCorrectJoystickValue
@@ -376,8 +376,8 @@ public boolean driveByInches (final double distance,
 } // end driveByInches()
 
 /**
-	 * Drives straight forever (almost). (calls driveStraightByInches(9999,
-	 * false,
+ * Drives straight forever (almost). (calls driveStraightByInches(9999,
+ * false,
  * defaultMaxSpeed (1.0), defaultMaxSpeed (1.0)))
  * 
  * @author Robert Brown
@@ -391,8 +391,8 @@ public void driveStraightContinuous ()
 } // end driveStraightContinuous()
 
 /**
-	 * Drives straight forever (almost). (calls driveStraightByInches(9999,
-	 * false,
+ * Drives straight forever (almost). (calls driveStraightByInches(9999,
+ * false,
  * leftJoystickInputValue, rightJoystickInputValue))
  * 
  * @param leftJoystickInputValue
@@ -407,8 +407,8 @@ public void driveStraightContinuous (
         final double rightJoystickInputValue)
 
 {
-		this.driveStraightByInches(9999.0, false,
-		        leftJoystickInputValue,
+    this.driveStraightByInches(9999.0, false,
+            leftJoystickInputValue,
             rightJoystickInputValue);
 } // end driveStraightContinuous()
 
@@ -583,14 +583,14 @@ public double getDrivingCorrectionFactor ()
  */
 public double getForwardVelocity ()
 {
-		double speed =
-		        (((this.transmission.getLeftRearEncoderDistance() +
-		                this.transmission.getRightRearEncoderDistance())
-		                / 2 -
-		                (this.prevLeftDistance + this.prevRightDistance)
-		                        / 2))
-		                /
-            (Hardware.kilroyTimer.get() - this.prevTime);
+    double speed =
+            (((this.transmission.getLeftRearEncoderDistance() +
+                    this.transmission.getRightRearEncoderDistance())
+                    / 2 -
+                    (this.prevLeftDistance + this.prevRightDistance)
+                            / 2))
+                    /
+                    (Hardware.kilroyTimer.get() - this.prevTime);
 
     this.prevLeftDistance = this.transmission
             .getLeftRearEncoderDistance();
@@ -610,11 +610,11 @@ public double getForwardVelocity ()
 public double getRightMotorVelocity ()
 {
     // based on the "getForwardVelocity()" method
-		double speed =
-		        ((this.transmission.getRightRearEncoderDistance() -
-		                this.prevRightDistance) / 2)
-		                / (Hardware.kilroyTimer.get() -
-                    this.prevTime);
+    double speed =
+            ((this.transmission.getRightRearEncoderDistance() -
+                    this.prevRightDistance) / 2)
+                    / (Hardware.kilroyTimer.get() -
+                            this.prevTime);
 
     this.prevRightDistance = this.transmission
             .getRightRearEncoderDistance();
@@ -632,11 +632,11 @@ public double getRightMotorVelocity ()
 public double getLeftMotorVelocity ()
 {
     // based on the "getForwardVelocity()" method
-		double speed =
-		        ((this.transmission.getLeftRearEncoderDistance() -
-		                this.prevLeftDistance) / 2)
-		                / (Hardware.kilroyTimer.get() -
-                    this.prevTime);
+    double speed =
+            ((this.transmission.getLeftRearEncoderDistance() -
+                    this.prevLeftDistance) / 2)
+                    / (Hardware.kilroyTimer.get() -
+                            this.prevTime);
 
     this.prevLeftDistance = this.transmission
             .getLeftRearEncoderDistance();
@@ -791,8 +791,8 @@ public boolean hasDrivenInches (final double targetDistance)
 {
     // if either drive train is beyond the targetDistance
     if (Math.abs(this.transmission
-		        .getRightRearEncoderDistance()) >= Math
-		                .abs(targetDistance)
+            .getRightRearEncoderDistance()) >= Math
+                    .abs(targetDistance)
             ||
             Math.abs(this.transmission
                     .getLeftRearEncoderDistance()) >= Math
@@ -851,8 +851,8 @@ public double setDefaultTurnSpeed (final double newTurnSpeed)
     // make sure that the new default turn speed
     // is between 0 and 1.0
     // -----------------------------
-		this.defaultTurnSpeed =
-		        Math.min(1.0, Math.max(0.0, newTurnSpeed));
+    this.defaultTurnSpeed =
+            Math.min(1.0, Math.max(0.0, newTurnSpeed));
     return (this.getDefaultTurnSpeed());
 } // end setDefaultTurnSpeed()
 
@@ -905,8 +905,8 @@ public double setMaxSpeed (final double max)
 } // end setMaxSpeed()
 
 /**
-	 * Sets the minimum speed our motors should go. Used in Autonomous/Teleop
-	 * Init.
+ * Sets the minimum speed our motors should go. Used in Autonomous/Teleop
+ * Init.
  * 
  * @param min
  *            is a double between 0.0 and 1.0
@@ -978,9 +978,9 @@ public boolean turnByDegrees (final turnWhichWay whichWay,
             {
             // brake and if we're done braking, tell caller we're done
             if (brakeAtEnd == true)
-					System.out.println("BREAKING...");
-				return (this.brake(-this.brakeSpeed, this.brakeSpeed));
-				//return true;
+                System.out.println("BREAKING...");
+            return (this.brake(-this.brakeSpeed, this.brakeSpeed));
+            //return true;
             }
         }
     // ----------------------------------------
@@ -999,9 +999,9 @@ public boolean turnByDegrees (final turnWhichWay whichWay,
             {
             // brake and if we're done braking, tell caller we're done
             if (brakeAtEnd == true)
-					System.out.println("BREAKING...");
-				return (this.brake(this.brakeSpeed, -this.brakeSpeed));
-				//return true;
+                System.out.println("BREAKING...");
+            return (this.brake(this.brakeSpeed, -this.brakeSpeed));
+            //return true;
             }
         }
     // turn the robot
@@ -1045,10 +1045,10 @@ public boolean turnLeftDegrees (final double degrees,
         final boolean brakeAtEnd)
 {
     return (this.turnLeftDegrees(degrees, brakeAtEnd,
-		        this.getNormalizedTurnSpeed(
-		                -this.getDefaultTurnSpeed()),
-		        this.getNormalizedTurnSpeed(
-		                this.getDefaultTurnSpeed())));
+            this.getNormalizedTurnSpeed(
+                    -this.getDefaultTurnSpeed()),
+            this.getNormalizedTurnSpeed(
+                    this.getDefaultTurnSpeed())));
 } // end turnLeftDegrees()
 
 /**
@@ -1071,8 +1071,8 @@ public boolean turnLeftDegrees (final double degrees,
         final double leftJoystickInputValue,
         final double rightJoystickInputValue)
 {
-		return (this.turnLeftDegrees(degrees, true,
-		        leftJoystickInputValue,
+    return (this.turnLeftDegrees(degrees, true,
+            leftJoystickInputValue,
             rightJoystickInputValue));
 } // end turnLeftDegrees()
 
@@ -1096,8 +1096,8 @@ public boolean turnLeftDegrees (final double degrees,
  * @date 13 February 2016
  */
 public boolean turnLeftDegrees (final double degrees,
-	        final boolean brakeAtEnd,
-	        final double leftJoystickInputValue,
+        final boolean brakeAtEnd,
+        final double leftJoystickInputValue,
         final double rightJoystickInputValue)
 {
     return (this.turnByDegrees(turnWhichWay.TURN_LEFT, degrees,
@@ -1141,8 +1141,8 @@ public boolean turnRightDegrees (final double degrees,
 {
     return (this.turnRightDegrees(degrees, brakeAtEnd,
             this.getNormalizedTurnSpeed(this.getDefaultTurnSpeed()),
-		        this.getNormalizedTurnSpeed(
-		                -this.getDefaultTurnSpeed())));
+            this.getNormalizedTurnSpeed(
+                    -this.getDefaultTurnSpeed())));
 } // end turnRightDegrees()
 
 /**
@@ -1165,8 +1165,8 @@ public boolean turnRightDegrees (final double degrees,
         final double leftJoystickInputValue,
         final double rightJoystickInputValue)
 {
-		return (this.turnRightDegrees(degrees, true,
-		        leftJoystickInputValue,
+    return (this.turnRightDegrees(degrees, true,
+            leftJoystickInputValue,
             rightJoystickInputValue));
 } // end turnLeftDegrees()
 
@@ -1190,8 +1190,8 @@ public boolean turnRightDegrees (final double degrees,
  * @date 13 February 2016
  */
 public boolean turnRightDegrees (final double degrees,
-	        final boolean brakeAtEnd,
-	        final double leftJoystickInputValue,
+        final boolean brakeAtEnd,
+        final double leftJoystickInputValue,
         final double rightJoystickInputValue)
 {
     return (this.turnByDegrees(turnWhichWay.TURN_RIGHT, degrees,
@@ -1226,8 +1226,8 @@ public boolean driveByCamera (double driveDistanceInches,
             try
                 {
                 Hardware.imageProcessor
-					        .updateImage(
-					                Hardware.axisCamera.getImage());
+                        .updateImage(
+                                Hardware.axisCamera.getImage());
                 if (savePictures == true)
                     Hardware.axisCamera.saveImagesSafely();
                 }
@@ -1300,17 +1300,21 @@ public boolean driveByCamera (double driveDistanceInches,
  * 
  * @param percentageDeadBand
  *            -The percentage from the center to the edge of the image that
- *            the blob must rest within.
+ *            the blob must rest within. Splits the deadband across the
+ *            adjutedProportionalCenter. For example, a deadband of .2
+ *            (20%) with an adjustedProportionalCenter of -.5 would
+ *            return true if the center of mass of the largest blob is
+ *            between relative positions of -.6 and -.4.
  * @param correctionSpeed
  *            -The speed at which the robot should turn to get the target in
  *            the center. Be careful though, if the deadband is too narrow
  *            and the speed to high, the robot will oscillate around the
  *            center or stop on the other side of the deadband.
  * @param adjustedProportionalCenter
-	 *            -Double to tell to the code about where in the image we want
-	 *            the
-	 *            largest blob to be. Proportional across the image, with the
-	 *            left
+ *            -Double to tell to the code about where in the image we want
+ *            the
+ *            largest blob to be. Proportional across the image, with the
+ *            left
  *            edge as -1.0, the center as 0.0, and the right edge as 1.0
  * @param savePictures
  *            -Boolean to determine whether we want to save up to 10 images
@@ -1374,8 +1378,8 @@ public boolean alignByCamera (double percentageDeadBand,
             //blobs
             Hardware.imageProcessor.updateParticleAnalysisReports();
             /*
-				 * Tell the programmers the absolute and relative x coordinates
-				 * of
+             * Tell the programmers the absolute and relative x coordinates
+             * of
              * the
              * center of mass of the largest blob.
              */
@@ -1459,8 +1463,8 @@ public boolean alignByCamera (double percentageDeadBand,
 }//end alignByCamera()
 
 /**
-	 * 3 argument override method of
-	 * alignByCamera(double,double,double,boolean),
+ * 3 argument override method of
+ * alignByCamera(double,double,double,boolean),
  * presumes that the caller doesn't want to save images taken to the
  * "Hard drive." If that sounds like something you do want to do, try
  * alignByCamera(double,double,double,boolean)
@@ -1483,13 +1487,12 @@ public boolean alignByCamera (double percentageDeadBand,
 }
 
 /**
-	 * 2 argument override method of
-	 * alignByCamera(double,double,double,boolean),
+ * 2 argument override method of
+ * alignByCamera(double,double,double,boolean),
  * presumes that the caller doesn't want to save images taken to the
  * "Hard drive," and that the you don't want to align to something not
-	 * in the center of the image. If that sounds like something you do want to
-	 * do,
- * try
+ * in the center of the image. If that sounds like something you do want to
+ * do, try
  * alignByCamera(double,double,double,boolean)
  * 
  * @param percentageDeadBand
@@ -1510,12 +1513,12 @@ public boolean alignByCamera (double percentageDeadBand,
 
 
 /**
-	 * 1 argument override method of
-	 * alignByCamera(double,double,double,boolean),
+ * 1 argument override method of
+ * alignByCamera(double,double,double,boolean),
  * presumes that the caller doesn't want to save images taken to the
  * "Hard drive," that the you don't want to align to something not
-	 * in the center of the image, and that you don't want to set the turning
-	 * speed
+ * in the center of the image, and that you don't want to set the turning
+ * speed
  * for the correction. If that sounds like something you do want to do,
  * try
  * alignByCamera(double,double,double,boolean)
@@ -1534,13 +1537,13 @@ public boolean alignByCamera (double percentageDeadBand)
 }
 
 /**
-	 * No argument override method of
-	 * alignByCamera(double,double,double,boolean),
+ * No argument override method of
+ * alignByCamera(double,double,double,boolean),
  * for lazy programmers. Presumes you just want the default values,
  * cause you're lazy. If you're not lazy and you indeed do want to
  * control whether or not the alignByCamera method saves images taken,
-	 * the deadband percentage size, the turning speed of the alignment, or want
-	 * to
+ * the deadband percentage size, the turning speed of the alignment, or want
+ * to
  * align to something not in the center see the other methods with the same
  * name.
  * 
