@@ -1201,7 +1201,7 @@ public boolean turnRightDegrees (final double degrees,
 
 public boolean driveByCamera (double driveDistanceInches,
         double percentageDeadBand,
-        double correctionSpeed, double adjustedCenterProportion,
+        double correctionSpeed, double adjustedProportionalCenter,
         boolean savePictures)
 {
 
@@ -1252,8 +1252,8 @@ public boolean driveByCamera (double driveDistanceInches,
                     && getRelativeCameraCoordinate(
                             Hardware.imageProcessor
                                     .getParticleAnalysisReports()[0].center_mass_x,
-                            true)
-                            - adjustedCenterProportion <= -percentageDeadBand)
+                            true) <= ((-percentageDeadBand / 2)
+                                    + adjustedProportionalCenter))
                 {
                 //turn left until it is in the zone (will be called over and
                 //over again until the blob is within the acceptable zone)
@@ -1270,8 +1270,8 @@ public boolean driveByCamera (double driveDistanceInches,
                     && getRelativeCameraCoordinate(
                             Hardware.imageProcessor
                                     .getParticleAnalysisReports()[0].center_mass_x,
-                            true)
-                            - adjustedCenterProportion >= percentageDeadBand)
+                            true) >= ((percentageDeadBand / 2)
+                                    + adjustedProportionalCenter))
                 {
                 //turn right until it is in the zone (will be called over and
                 //over again until the blob is within the acceptable zone)
