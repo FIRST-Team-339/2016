@@ -1277,7 +1277,7 @@ public boolean driveByCamera (double driveDistanceInches,
  *            the center. Be careful though, if the deadband is too narrow
  *            and the speed to high, the robot will oscillate around the
  *            center or stop on the other side of the deadband.
- * @param adjustedProprotionalCenter
+ * @param adjustedProportionalCenter
  *            -Double to tell to the code about where in the image we want the
  *            largest blob to be. Proportional across the image, with the left
  *            edge as -1.0, the center as 0.0, and the right edge as 1.0
@@ -1295,7 +1295,7 @@ public boolean driveByCamera (double driveDistanceInches,
  * @author Alex Kneipp
  */
 public boolean alignByCamera (double percentageDeadBand,
-        double correctionSpeed, double adjustedProprotionalCenter,
+        double correctionSpeed, double adjustedProportionalCenter,
         boolean savePictures)
 {
 
@@ -1354,18 +1354,18 @@ public boolean alignByCamera (double percentageDeadBand,
                         .println("CenterOfMass: "
                                 + Hardware.imageProcessor
                                         .getParticleAnalysisReports()[0].center_mass_x);
-                System.out.println("Relative offset x center of Mass "
+                System.out.println("Relative x center of Mass :"
                         + (getRelativeCameraCoordinate(
                                 Hardware.imageProcessor
                                         .getParticleAnalysisReports()[0].center_mass_x,
                                 true)));
                 System.out.println(
                         "Relative Center range: ("
-                                + (-percentageDeadBand
-                                        + adjustedProprotionalCenter)
+                                + (-percentageDeadBand / 2
+                                        + adjustedProportionalCenter)
                                 + ", "
-                                + (percentageDeadBand
-                                        + adjustedProprotionalCenter)
+                                + (percentageDeadBand / 2
+                                        + adjustedProportionalCenter)
                                 + ")");
                 }
             //if the center of the largest blob is to the left of our 
@@ -1375,8 +1375,8 @@ public boolean alignByCamera (double percentageDeadBand,
                     && getRelativeCameraCoordinate(
                             Hardware.imageProcessor
                                     .getParticleAnalysisReports()[0].center_mass_x,
-                            true) <= -percentageDeadBand
-                                    + adjustedProprotionalCenter)
+                            true) <= ((-percentageDeadBand / 2)
+                                    + adjustedProportionalCenter))
                 {
                 //turn left until it is in the zone (will be called over and
                 //over again until the blob is within the acceptable zone)
@@ -1391,8 +1391,8 @@ public boolean alignByCamera (double percentageDeadBand,
                     && getRelativeCameraCoordinate(
                             Hardware.imageProcessor
                                     .getParticleAnalysisReports()[0].center_mass_x,
-                            true) >= percentageDeadBand
-                                    + adjustedProprotionalCenter)
+                            true) >= ((percentageDeadBand / 2)
+                                    + adjustedProportionalCenter))
                 {
                 //turn right until it is in the zone (will be called over and
                 //over again until the blob is within the acceptable zone)
