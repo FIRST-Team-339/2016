@@ -1249,11 +1249,11 @@ public boolean driveByCamera (double driveDistanceInches,
             //acceptable zone around the center
             if (Hardware.imageProcessor
                     .getParticleAnalysisReports().length > 0
-                    && getRelativeCameraCoordinate(
+                    && getRelativeXCoordinate(
                             Hardware.imageProcessor
-                                    .getParticleAnalysisReports()[0].center_mass_x,
-                            true) <= ((-percentageDeadBand / 2)
-                                    + adjustedProportionalCenter))
+                                    .getParticleAnalysisReports()[0].center_mass_x) <= ((-percentageDeadBand
+                                            / 2)
+                                            + adjustedProportionalCenter))
                 {
                 //turn left until it is in the zone (will be called over and
                 //over again until the blob is within the acceptable zone)
@@ -1267,11 +1267,11 @@ public boolean driveByCamera (double driveDistanceInches,
             //acceptable zone around the center
             else if (Hardware.imageProcessor
                     .getParticleAnalysisReports().length > 0
-                    && getRelativeCameraCoordinate(
+                    && getRelativeXCoordinate(
                             Hardware.imageProcessor
-                                    .getParticleAnalysisReports()[0].center_mass_x,
-                            true) >= ((percentageDeadBand / 2)
-                                    + adjustedProportionalCenter))
+                                    .getParticleAnalysisReports()[0].center_mass_x) >= ((percentageDeadBand
+                                            / 2)
+                                            + adjustedProportionalCenter))
                 {
                 //turn right until it is in the zone (will be called over and
                 //over again until the blob is within the acceptable zone)
@@ -1406,11 +1406,11 @@ public boolean alignByCamera (double percentageDeadBand,
             //acceptable zone around the center
             if (Hardware.imageProcessor
                     .getParticleAnalysisReports().length > 0
-                    && getRelativeCameraCoordinate(
+                    && getRelativeXCoordinate(
                             Hardware.imageProcessor
-                                    .getParticleAnalysisReports()[0].center_mass_x,
-                            true) <= ((-percentageDeadBand / 2)
-                                    + adjustedProportionalCenter))
+                                    .getParticleAnalysisReports()[0].center_mass_x) <= ((-percentageDeadBand
+                                            / 2)
+                                            + adjustedProportionalCenter))
                 {
                 //turn left until it is in the zone (will be called over and
                 //over again until the blob is within the acceptable zone)
@@ -1422,11 +1422,11 @@ public boolean alignByCamera (double percentageDeadBand,
             //acceptable zone around the center
             else if (Hardware.imageProcessor
                     .getParticleAnalysisReports().length > 0
-                    && getRelativeCameraCoordinate(
+                    && getRelativeXCoordinate(
                             Hardware.imageProcessor
-                                    .getParticleAnalysisReports()[0].center_mass_x,
-                            true) >= ((percentageDeadBand / 2)
-                                    + adjustedProportionalCenter))
+                                    .getParticleAnalysisReports()[0].center_mass_x) >= ((percentageDeadBand
+                                            / 2)
+                                            + adjustedProportionalCenter))
                 {
                 //turn right until it is in the zone (will be called over and
                 //over again until the blob is within the acceptable zone)
