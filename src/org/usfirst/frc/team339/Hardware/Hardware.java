@@ -83,7 +83,7 @@ public static final Resolution AXIS_RESOLUTION =
 // us to test in the lab once the
 // robot is bagged
 //---------------------------------
-public static boolean runningInLab = false;
+public static boolean runningInLab = true;
 // -------------------------------------
 // Private Constants
 // -------------------------------------
@@ -149,7 +149,8 @@ public static Compressor compressor = new Compressor();
 public static SingleThrowSwitch autonomousEnabled =
         new SingleThrowSwitch(
                 19);
-public static SingleThrowSwitch shootHigh = new SingleThrowSwitch(8);
+public static SingleThrowSwitch shootHigh =
+        new SingleThrowSwitch(8);
 public static SingleThrowSwitch shootLow = new SingleThrowSwitch(7);
 // Shoot high/low switch
 public static DoubleThrowSwitch noShoot = new DoubleThrowSwitch(
@@ -215,12 +216,15 @@ public static IRSensor armIR = new IRSensor(2);
 // Double Solenoids
 // ------------------------------------
 // double solenoid that moves the camera
-public static DoubleSolenoid cameraSolenoid = new DoubleSolenoid(3, 4);
 
-// ------------------------------------
-// Single Solenoids
-// ------------------------------------
-// single solenoids that control the catapult
+//TODO: Uncomment solenoids
+public static DoubleSolenoid cameraSolenoid =
+        new DoubleSolenoid(3, 4);
+//
+//// ------------------------------------
+//// Single Solenoids
+//// ------------------------------------
+//// single solenoids that control the catapult
 public static Solenoid catapultSolenoid0 = new Solenoid(0);
 public static Solenoid catapultSolenoid1 = new Solenoid(1);
 public static Solenoid catapultSolenoid2 = new Solenoid(2);
@@ -239,12 +243,14 @@ public static Solenoid catapultSolenoid2 = new Solenoid(2);
 // Potentiometers
 // -------------------------------------
 // -------------------------------------
-public static RobotPotentiometer delayPot = new RobotPotentiometer(1,
-        DELAY_POT_DEGREES);
+public static RobotPotentiometer delayPot =
+        new RobotPotentiometer(1,
+                DELAY_POT_DEGREES);
 // transducer (written as a potentiometer)
 // set to 50 to hit 100 psi accurately
-public static RobotPotentiometer transducer = new RobotPotentiometer(2,
-        TRANSDUCER_MAX_VALUE);
+public static RobotPotentiometer transducer =
+        new RobotPotentiometer(2,
+                TRANSDUCER_MAX_VALUE);
 // to be used with the manipulator arm
 public static RobotPotentiometer armPot = new RobotPotentiometer(3,
         ARM_POT_MAX_VALUE);
@@ -253,6 +259,7 @@ public static RobotPotentiometer armPot = new RobotPotentiometer(3,
 // -------------------------------------
 // Sonar/Ultrasonic
 // -------------------------------------
+
 
 // **********************************************************
 // roboRIO CONNECTIONS CLASSES
@@ -267,14 +274,18 @@ public static RobotPotentiometer armPot = new RobotPotentiometer(3,
 //public static CameraServer cameraServer = CameraServer.getInstance();
 //public static USBCamera cam0 = new USBCamera("cam0");
 
+
 // Declares the Axis camera
 public static KilroyCamera axisCamera = new KilroyCamera(true);
+
+
 
 public static ImageProcessing imageProcessor = new ImageProcessing(
         Hardware.axisCamera);
 // **********************************************************
 // DRIVER STATION CLASSES
 // **********************************************************
+
 
 // ------------------------------------
 // DriverStations class
@@ -323,8 +334,9 @@ public static Drive drive =
 // -------------------
 // Assembly classes (e.g. forklift)
 // -------------------
-public static ManipulatorArm pickupArm = new ManipulatorArm(armMotor,
-        armIntakeMotor, armPot, armIR);
+public static ManipulatorArm pickupArm =
+        new ManipulatorArm(armMotor,
+                armIntakeMotor, armPot, armIR);
 
 
 // ------------------------------------

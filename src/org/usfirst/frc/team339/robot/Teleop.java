@@ -32,6 +32,7 @@
 package org.usfirst.frc.team339.robot;
 
 import org.usfirst.frc.team339.Hardware.Hardware;
+import org.usfirst.frc.team339.HardwareInterfaces.transmission.Transmission_old.debugStateValues;
 import org.usfirst.frc.team339.Utils.Guidance;
 import org.usfirst.frc.team339.Utils.ManipulatorArm;
 import edu.wpi.first.wpilibj.CameraServer;
@@ -58,7 +59,8 @@ public static void init ()
 {
     CameraServer.getInstance().setSize(1);
     Hardware.axisCamera
-            .writeBrightness(Hardware.NORMAL_AXIS_CAMERA_BRIGHTNESS);
+		        .writeBrightness(
+		                Hardware.NORMAL_AXIS_CAMERA_BRIGHTNESS);
     // set max speed. change by gear?
     Hardware.drive.setMaxSpeed(MAXIMUM_TELEOP_SPEED);
 
@@ -74,7 +76,8 @@ public static void init ()
     isAligningByCamera = false;
     fireRequested = false;
     prepPic = false;
-    Hardware.arrowDashboard.setDirection(Guidance.Direction.neutral);
+		Hardware.arrowDashboard
+		        .setDirection(Guidance.Direction.neutral);
     Hardware.arrowDashboard.update();
 
     Hardware.catapultSolenoid0.set(false);
@@ -101,6 +104,9 @@ private static edu.wpi.first.wpilibj.DoubleSolenoid.Value Reverse;
 private static edu.wpi.first.wpilibj.DoubleSolenoid.Value Forward;
 
 private static boolean testAuto = false;
+	private static boolean testMove1IsDone = true;
+	private static boolean testMove2IsDone = false;
+	private static boolean testMove3IsDone = true;
 
 /**
  * User Periodic code for teleop mode should go here. Will be called
@@ -119,10 +125,18 @@ public static void periodic ()
 
     if (Hardware.runningInLab == true)
         {
+			Hardware.transmission
+			        .setDebugState(debugStateValues.DEBUG_ALL);
+
+			Hardware.drive.setBrakeSpeed(.30);
+
         Hardware.transmission.setJoysticksAreReversed(true);
         Hardware.transmission.setFirstGearPercentage(1.0);
         Hardware.axisCamera.setHaveCamera(false);
 
+			//			System.out.println("t1: " + testMove1IsDone);
+			//			System.out.println("t2: " + testMove2IsDone);
+			//			System.out.println("t3: " + testMove3IsDone);
 
         if (Hardware.leftDriver.getTrigger() == true)
             {
@@ -131,10 +145,36 @@ public static void periodic ()
 
         if (testAuto == true)
             {
-            if (Hardware.drive.driveStraightByInches(-20.0, true, -.5,
-                    -.5))
+				if (!testMove1IsDone)
+				{
+					System.out.print("\n" + 1 + "\n");
+					if (Hardware.drive.driveStraightByInches(12.0, true,
+					        .4, .4))
+					{
+						Autonomous.resetEncoders();
+						testMove1IsDone = true;
+					}
+				}
+				else if (!testMove2IsDone)
+				{
+					System.out.print("\n" + 2 + "\n");
+					if (Hardware.drive.turnLeftDegrees(60.0, true,
+					        -.4, .4))
+					{
+						Autonomous.resetEncoders();
+						Hardware.transmission.controls(0.0, 0.0);
+						testMove2IsDone = true;
+					}
+				}
+				else if (!testMove3IsDone)
+				{
+					System.out.print("\n" + 3 + "\n");
+					if (Hardware.drive.driveStraightByInches(6.0, true,
+					        .4, .4))
                 {
-                testAuto = false;
+						Autonomous.resetEncoders();
+						testMove3IsDone = true;
+					}
                 }
             }
         }
@@ -151,7 +191,8 @@ public static void periodic ()
             // make the compiler happy
             Hardware.pickupArm.moveReasonably(
                     -(int) Math.round(Hardware.rightOperator.getY()
-                            / Math.abs(Hardware.rightOperator.getY())),
+				                / Math.abs(
+				                        Hardware.rightOperator.getY())),
                     Hardware.rightOperator.getRawButton(2));
             //        Hardware.pickupArm
             //                .moveFast((int) Math.round(Hardware.rightOperator.getY()
@@ -172,7 +213,8 @@ public static void periodic ()
             {
             //TODO demystify magic argument
             Hardware.pickupArm
-                    .pullInBall(Hardware.rightOperator.getRawButton(3));
+				        .pullInBall(
+				                Hardware.rightOperator.getRawButton(3));
             }
         //push out the ball if the push out button is pressed
         if (Hardware.rightOperator
@@ -215,7 +257,8 @@ public static void periodic ()
             fireRequested = false;
             }
         // if we want to fire, the arm is out of the way, and we have enough pressure so we don't hurt ourselves.
-        if (fireRequested == true && Hardware.pickupArm.moveToPosition(
+			if (fireRequested == true
+			        && Hardware.pickupArm.moveToPosition(
                 ManipulatorArm.ArmPosition.CLEAR_OF_FIRING_ARM) == true
                 && Hardware.armOutOfWayTimer
                         .get() >= ARM_IS_OUT_OF_WAY_TIME
@@ -243,7 +286,8 @@ public static void periodic ()
             // make the compiler happy
             Hardware.pickupArm.moveReasonably(
                     -(int) Math.round(Hardware.rightOperator.getY()
-                            / Math.abs(Hardware.rightOperator.getY())),
+				                / Math.abs(
+				                        Hardware.rightOperator.getY())),
                     Hardware.rightOperator.getRawButton(2));
             //        Hardware.pickupArm
             //                .moveFast((int) Math.round(Hardware.rightOperator.getY()
@@ -262,13 +306,15 @@ public static void periodic ()
         if (Hardware.cameraToggleButton.isOnCheckNow() == false)
             {
             //raise the camera and tell the code that it's up
-            Hardware.cameraSolenoid.set(DoubleSolenoid.Value.kForward);
+				Hardware.cameraSolenoid
+				        .set(DoubleSolenoid.Value.kForward);
             }
         //If the camera is up and we press the toggle button.
         if (Hardware.cameraToggleButton.isOnCheckNow() == true)
             {
             //Drop the camera and tell the code that it's down
-            Hardware.cameraSolenoid.set(DoubleSolenoid.Value.kReverse);
+				Hardware.cameraSolenoid
+				        .set(DoubleSolenoid.Value.kReverse);
             }
 
         //end raise/lower camera block
@@ -293,8 +339,6 @@ public static void periodic ()
                 isAligningByCamera = false;
                 }
             }
-        System.out.println("Aligning by Camera? "
-                + (isAligningByCamera ? "Yes" : "No"));
 
         //end alignByCameraBlock
 
@@ -305,7 +349,8 @@ public static void periodic ()
             {
             //TODO demystify magic argument
             Hardware.pickupArm
-                    .pullInBall(Hardware.rightOperator.getRawButton(3));
+				        .pullInBall(
+				                Hardware.rightOperator.getRawButton(3));
             }
         //push out the ball if the push out button is pressed
         else if (Hardware.rightOperator
@@ -348,7 +393,8 @@ public static void periodic ()
             fireRequested = false;
             }
         // if we want to fire, the arm is out of the way, and we have enough pressure so we don't hurt ourselves.
-        if (fireRequested == true && Hardware.pickupArm.moveToPosition(
+			if (fireRequested == true
+			        && Hardware.pickupArm.moveToPosition(
                 ManipulatorArm.ArmPosition.CLEAR_OF_FIRING_ARM) == true
                 && Hardware.armOutOfWayTimer
                         .get() >= ARM_IS_OUT_OF_WAY_TIME
@@ -464,7 +510,8 @@ public static void periodic ()
             driveRobot();
         else if (isSpeedTesting == true)
             {
-            if (Hardware.drive.driveStraightByInches(140.0, true, -1.0,
+				if (Hardware.drive.driveStraightByInches(140.0, true,
+				        -1.0,
                     -1.0) == true)
                 {
                 isSpeedTesting = false;
@@ -517,7 +564,8 @@ public static boolean armIsUp = false;
  * @param holdState
  * @param toggle
  * 
- *            When in toggle mode, one boolean raises the arm and one lowers.
+	 *            When in toggle mode, one boolean raises the arm and one
+	 *            lowers.
  *            When not in toggle mode, only use boolean holdState. This will
  *            keep the arm up for the duration that the holdState is true.
  * 
@@ -556,14 +604,16 @@ public static boolean armIsUp = false;
  * Fires the catapult.
  * 
  * @param power
- *            -Can be 1, 2, or 3; corresponds to the amount of solenoids used to
+	 *            -Can be 1, 2, or 3; corresponds to the amount of solenoids
+	 *            used to
  *            fire.
  * @return
  *         -False if we're not yet done firing, true otherwise.
  */
 public static boolean fire (int power, boolean override)
 {
-    if (Hardware.transducer.get() >= FIRING_MIN_PSI || override == true)
+		if (Hardware.transducer.get() >= FIRING_MIN_PSI
+		        || override == true)
         {
         //        if (Hardware.pickupArm.moveToPosition(
         //                ManipulatorArm.ArmPosition.CLEAR_OF_FIRING_ARM) == true)
@@ -724,9 +774,11 @@ public static void processImage ()
 
 
 /**
- * stores print statements for future use in the print "bank", statements are
+	 * stores print statements for future use in the print "bank", statements
+	 * are
  * commented out when
- * not in use, when you write a new print statement, "deposit" the statement in
+	 * not in use, when you write a new print statement, "deposit" the statement
+	 * in
  * the "bank"
  * do not "withdraw" statements, unless directed to
  * 
