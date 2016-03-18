@@ -32,6 +32,7 @@
 package org.usfirst.frc.team339.robot;
 
 import org.usfirst.frc.team339.Hardware.Hardware;
+import org.usfirst.frc.team339.HardwareInterfaces.transmission.Transmission_old.debugStateValues;
 import org.usfirst.frc.team339.Utils.Guidance;
 import org.usfirst.frc.team339.Utils.ManipulatorArm;
 import edu.wpi.first.wpilibj.CameraServer;
@@ -103,9 +104,9 @@ public class Teleop
 	private static edu.wpi.first.wpilibj.DoubleSolenoid.Value Forward;
 
 	private static boolean testAuto = false;
-	private static boolean testMove1IsDone = false;
+	private static boolean testMove1IsDone = true;
 	private static boolean testMove2IsDone = false;
-	private static boolean testMove3IsDone = false;
+	private static boolean testMove3IsDone = true;
 
 	/**
 	 * User Periodic code for teleop mode should go here. Will be called
@@ -124,10 +125,18 @@ public class Teleop
 
 		if (Hardware.runningInLab == true)
 		{
+			Hardware.transmission
+			        .setDebugState(debugStateValues.DEBUG_ALL);
+
+			Hardware.drive.setBrakeSpeed(.30);
+
 			Hardware.transmission.setJoysticksAreReversed(true);
 			Hardware.transmission.setFirstGearPercentage(1.0);
 			Hardware.axisCamera.setHaveCamera(false);
 
+			//			System.out.println("t1: " + testMove1IsDone);
+			//			System.out.println("t2: " + testMove2IsDone);
+			//			System.out.println("t3: " + testMove3IsDone);
 
 			if (Hardware.leftDriver.getTrigger() == true)
 			{
@@ -138,25 +147,32 @@ public class Teleop
 			{
 				if (!testMove1IsDone)
 				{
-					if (Hardware.drive.driveStraightByInches(24.0, true,
+					System.out.print("\n" + 1 + "\n");
+					if (Hardware.drive.driveStraightByInches(12.0, true,
 					        .4, .4))
 					{
+						Autonomous.resetEncoders();
 						testMove1IsDone = true;
 					}
 				}
-				if (!testMove2IsDone)
+				else if (!testMove2IsDone)
 				{
-					if (Hardware.drive.turnRightDegrees(45.0, true,
-					        .4, -.4))
+					System.out.print("\n" + 2 + "\n");
+					if (Hardware.drive.turnLeftDegrees(60.0, true,
+					        -.4, .4))
 					{
+						Autonomous.resetEncoders();
+						Hardware.transmission.controls(0.0, 0.0);
 						testMove2IsDone = true;
 					}
 				}
-				if (!testMove3IsDone)
+				else if (!testMove3IsDone)
 				{
-					if (Hardware.drive.driveStraightByInches(24.0, true,
+					System.out.print("\n" + 3 + "\n");
+					if (Hardware.drive.driveStraightByInches(6.0, true,
 					        .4, .4))
 					{
+						Autonomous.resetEncoders();
 						testMove3IsDone = true;
 					}
 				}
