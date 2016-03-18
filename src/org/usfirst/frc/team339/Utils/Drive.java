@@ -1558,7 +1558,65 @@ public boolean alignByCamera ()
             DEFAULT_CAMERA_ALIGNMENT_TURNING_SPEED);
 }
 
+/**
+ * Returns the relative X coordinate given the absolute coordinate from
+ * the image processing class and the resolution of the camera from this
+ * class.
+ * 
+ * @param absoluteCoordinate
+ *            -The actual pixel coordinate you want to map, somewhere between 0
+ *            and the resolution of the camera in the X axis.
+ * @return
+ *         -A relative coordinate between -1.0 and 1.0, with 0.0 as the center
+ *         of the image, -1.0 as the far left, and 1.0 as the far right.
+ * @author Alex Kneipp
+ */
+public double getRelativeXCoordinate (double absoluteCoordinate)
+{
+    return (absoluteCoordinate - (cameraXResolution / 2))
+            / (cameraXResolution / 2);
+}
 
+/**
+ * Returns the relative Y coordinate given the absolute coordinate from
+ * the image processing class and the resolution of the camera from this
+ * class.
+ * 
+ * @param absoluteCoordinate
+ *            -The actual pixel coordinate you want to map, somewhere between 0
+ *            and the resolution of the camera in the Y axis.
+ * @return
+ *         -A relative coordinate between -1.0 and 1.0, with 0.0 as the center
+ *         of the image, -1.0 as the top, and 1.0 as the bottom.
+ * @author Alex Kneipp
+ */
+public double getRelativeYCoordinate (double absoluteCoordinate)
+{
+    return (absoluteCoordinate - (cameraYResolution / 2))
+            / (cameraYResolution / 2);
+}
+
+/**
+ * Returns the relative coordinate given the absolute coordinate from
+ * the image processing class and the resolution of the camera from this
+ * class.
+ * 
+ * @param absoluteCoordinate
+ *            -The actual pixel coordinate you want to map, somewhere between 0
+ *            and the resolution of the camera in the axis you want to map.
+ * @param isXCoordinate
+ *            -True if you want the relative coordinate relative to the x axis,
+ *            false for y.
+ * @return
+ *         -A relative coordinate between -1.0 and 1.0, with 0.0 as the center
+ *         of the image, -1.0 as the far left or top, and 1.0 as the far right
+ *         or bottom.
+ * @author Alex Kneipp
+ * @deprecated 3/18/16 by Alex Kneipp for poor design.
+ *             Use getRelativeXCoordinate(double) and
+ *             getRelativeYCoordinate(double) instead.
+ */
+@Deprecated
 public double getRelativeCameraCoordinate (
         double absoluteCoordinate,
         boolean isXCoordinate)
