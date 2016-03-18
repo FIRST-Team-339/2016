@@ -185,7 +185,7 @@ public static void periodic ()
         if (Hardware.rightOperator.getTrigger() == true)
             {
             //Tell the code to align us to the camera
-            isAligningByCamera = false;//TODO true
+            isAligningByCamera = true;
             }
         //If we want to point at the goal using the camera
         if (isAligningByCamera == true)
@@ -200,6 +200,8 @@ public static void periodic ()
                 isAligningByCamera = false;
                 }
             }
+        System.out.println("Aligning by Camera? "
+                + (isAligningByCamera ? "Yes" : "No"));
 
         //end alignByCameraBlock
 
@@ -315,7 +317,7 @@ public static void periodic ()
         if (Hardware.rightOperator.getTrigger() == true)
             {
             //Tell the code to align us to the camera
-            isAligningByCamera = false;//TODO true
+            isAligningByCamera = true;
             }
         //If we want to point at the goal using the camera
         if (isAligningByCamera == true)
@@ -323,7 +325,8 @@ public static void periodic ()
             //Keep trying to point at the goal
             if (Hardware.drive.alignByCamera(
                     PERCENT_IMAGE_PROCESSING_DEADBAND,
-                    CAMERA_ALIGNMENT_TURNING_SPEED, 0.0, false) == true)
+                    CAMERA_ALIGNMENT_TURNING_SPEED, -.46,
+                    false) == true)
                 {
                 // Once we're in the center, tell the code we no longer care about
                 // steering towards the goal
@@ -495,9 +498,9 @@ public static void periodic ()
             {
             isSpeedTesting = true;
             }
-        if (isSpeedTesting == false)
+        if (isSpeedTesting == false && isAligningByCamera == false)
             driveRobot();
-        else
+        else if (isSpeedTesting == true)
             {
             if (Hardware.drive.driveStraightByInches(140.0, true, -1.0,
                     -1.0) == true)
@@ -895,7 +898,7 @@ private static final double PICKUP_ARM_CONTROL_DEADZONE = 0.2;
 
 private final static double PERCENT_IMAGE_PROCESSING_DEADBAND = .20;
 
-private final static double CAMERA_ALIGNMENT_TURNING_SPEED = .45;
+private final static double CAMERA_ALIGNMENT_TURNING_SPEED = .35;//.45;
 
 private final static double ARM_IS_OUT_OF_WAY_TIME = .55;
 

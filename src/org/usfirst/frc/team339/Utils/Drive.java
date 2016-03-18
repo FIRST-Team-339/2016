@@ -1277,7 +1277,7 @@ public boolean driveByCamera (double driveDistanceInches,
  *            the center. Be careful though, if the deadband is too narrow
  *            and the speed to high, the robot will oscillate around the
  *            center or stop on the other side of the deadband.
- * @param adjustedPropotionalCenter
+ * @param adjustedProprotionalCenter
  *            -Double to tell to the code about where in the image we want the
  *            largest blob to be. Proportional across the image, with the left
  *            edge as -1.0, the center as 0.0, and the right edge as 1.0
@@ -1295,7 +1295,7 @@ public boolean driveByCamera (double driveDistanceInches,
  * @author Alex Kneipp
  */
 public boolean alignByCamera (double percentageDeadBand,
-        double correctionSpeed, double adjustedPropotionalCenter,
+        double correctionSpeed, double adjustedProprotionalCenter,
         boolean savePictures)
 {
 
@@ -1326,9 +1326,8 @@ public boolean alignByCamera (double percentageDeadBand,
                 {
                 //if (Hardware.axisCamera.freshImage() == true)
                     {
-                    Hardware.imageProcessor
-                            .updateImage(
-                                    Hardware.axisCamera.getImage());
+                    Hardware.imageProcessor.updateImage(
+                            Hardware.axisCamera.getImage());
                     if (savePictures == true)
                         Hardware.axisCamera.saveImagesSafely();
                     }
@@ -1348,14 +1347,27 @@ public boolean alignByCamera (double percentageDeadBand,
              * the
              * center of mass of the largest blob.
              */
-            //            System.out
-            //                    .println("CenterOfMass: " + Hardware.imageProcessor
-            //                            .getParticleAnalysisReports()[0].center_mass_x);
-            //            System.out.println("Relative center of Mass "
-            //                    + getRelativeCameraCoordinate(
-            //                            Hardware.imageProcessor
-            //                                    .getParticleAnalysisReports()[0].center_mass_x,
-            //                            true));
+            if (Hardware.imageProcessor
+                    .getParticleAnalysisReports().length > 0)
+                {
+                System.out
+                        .println("CenterOfMass: "
+                                + Hardware.imageProcessor
+                                        .getParticleAnalysisReports()[0].center_mass_x);
+                System.out.println("Relative offset x center of Mass "
+                        + (getRelativeCameraCoordinate(
+                                Hardware.imageProcessor
+                                        .getParticleAnalysisReports()[0].center_mass_x,
+                                true)));
+                System.out.println(
+                        "Relative Center range: ("
+                                + (-percentageDeadBand
+                                        + adjustedProprotionalCenter)
+                                + ", "
+                                + (percentageDeadBand
+                                        + adjustedProprotionalCenter)
+                                + ")");
+                }
             //if the center of the largest blob is to the left of our 
             //acceptable zone around the center
             if (Hardware.imageProcessor
@@ -1363,12 +1375,13 @@ public boolean alignByCamera (double percentageDeadBand,
                     && getRelativeCameraCoordinate(
                             Hardware.imageProcessor
                                     .getParticleAnalysisReports()[0].center_mass_x,
-                            true)
-                            - adjustedPropotionalCenter <= -percentageDeadBand)
+                            true) <= -percentageDeadBand
+                                    + adjustedProprotionalCenter)
                 {
                 //turn left until it is in the zone (will be called over and
                 //over again until the blob is within the acceptable zone)
-                this.turnLeftDegrees(9999.0, -.5, .5);
+                this.turnLeftDegrees(9999.0, false, correctionSpeed,
+                        -correctionSpeed);
                 //this.transmission.controls(.5, -.5);
                 }
             //if the center of the largest blob is to the right of our 
@@ -1378,12 +1391,13 @@ public boolean alignByCamera (double percentageDeadBand,
                     && getRelativeCameraCoordinate(
                             Hardware.imageProcessor
                                     .getParticleAnalysisReports()[0].center_mass_x,
-                            true)
-                            - adjustedPropotionalCenter >= percentageDeadBand)
+                            true) >= percentageDeadBand
+                                    + adjustedProprotionalCenter)
                 {
                 //turn right until it is in the zone (will be called over and
                 //over again until the blob is within the acceptable zone)
-                this.turnRightDegrees(9999.0, .5, -.5);
+                this.turnRightDegrees(9999.0, false, -correctionSpeed,
+                        correctionSpeed);
                 //this.transmission.controls(-.5, .5);
                 }
             //If the center of the blob is nestled happily in our deadzone
@@ -1396,6 +1410,11 @@ public boolean alignByCamera (double percentageDeadBand,
                 this.cameraTimer.reset();
                 //stop the robot
                 Hardware.transmission.controls(0.0, 0.0);
+                //Let the coach see normally again.
+                this.camera.writeBrightness(
+                        Hardware.NORMAL_AXIS_CAMERA_BRIGHTNESS);
+                //Turn off the ringlight because we don't need it.
+                this.ringLightRelay.set(Value.kOff);
                 //tell the programmers we're done.
                 return true;
                 }
