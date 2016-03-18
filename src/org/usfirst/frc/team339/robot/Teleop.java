@@ -164,46 +164,6 @@ public static void periodic ()
             {
             Hardware.pickupArm.stopArmMotor();
             }
-        //Block of code to toggle the camera up or down
-        //If the camera is down and we press the button.
-
-        if (Hardware.cameraToggleButton.isOnCheckNow() == false)
-            {
-            //raise the camera and tell the code that it's up
-            Hardware.cameraSolenoid.set(DoubleSolenoid.Value.kForward);
-            }
-        //If the camera is up and we press the toggle button.
-        if (Hardware.cameraToggleButton.isOnCheckNow() == true)
-            {
-            //Drop the camera and tell the code that it's down
-            Hardware.cameraSolenoid.set(DoubleSolenoid.Value.kReverse);
-            }
-
-        //end raise/lower camera block
-
-        //Block of code to align us on the goal using the camera
-        if (Hardware.rightOperator.getTrigger() == true)
-            {
-            //Tell the code to align us to the camera
-            isAligningByCamera = true;
-            }
-        //If we want to point at the goal using the camera
-        if (isAligningByCamera == true)
-            {
-            //Keep trying to point at the goal
-            if (Hardware.drive.alignByCamera(
-                    PERCENT_IMAGE_PROCESSING_DEADBAND,
-                    CAMERA_ALIGNMENT_TURNING_SPEED, 0.0, false) == true)
-                {
-                // Once we're in the center, tell the code we no longer care about
-                // steering towards the goal
-                isAligningByCamera = false;
-                }
-            }
-        System.out.println("Aligning by Camera? "
-                + (isAligningByCamera ? "Yes" : "No"));
-
-        //end alignByCameraBlock
 
         // Block of code to pick up ball or push it out
         //pull in the ball if the pull in button is pressed.
@@ -333,6 +293,8 @@ public static void periodic ()
                 isAligningByCamera = false;
                 }
             }
+        System.out.println("Aligning by Camera? "
+                + (isAligningByCamera ? "Yes" : "No"));
 
         //end alignByCameraBlock
 
@@ -898,7 +860,7 @@ private static final double PICKUP_ARM_CONTROL_DEADZONE = 0.2;
 
 private final static double PERCENT_IMAGE_PROCESSING_DEADBAND = .20;
 
-private final static double CAMERA_ALIGNMENT_TURNING_SPEED = .35;//.45;
+private final static double CAMERA_ALIGNMENT_TURNING_SPEED = .40;
 
 private final static double ARM_IS_OUT_OF_WAY_TIME = .55;
 
