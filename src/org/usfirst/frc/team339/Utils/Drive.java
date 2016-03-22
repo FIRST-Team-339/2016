@@ -1201,7 +1201,7 @@ public boolean turnRightDegrees (final double degrees,
 
 public boolean driveByCamera (double driveDistanceInches,
         double percentageDeadBand,
-        double correctionSpeed, double adjustedCenterProportion,
+        double correctionSpeed, double adjustedProportionalCenter,
         boolean savePictures)
 {
 
@@ -1249,11 +1249,11 @@ public boolean driveByCamera (double driveDistanceInches,
             //acceptable zone around the center
             if (Hardware.imageProcessor
                     .getParticleAnalysisReports().length > 0
-                    && getRelativeCameraCoordinate(
+                    && getRelativeXCoordinate(
                             Hardware.imageProcessor
-                                    .getParticleAnalysisReports()[0].center_mass_x,
-                            true)
-                            - adjustedCenterProportion <= -percentageDeadBand)
+                                    .getParticleAnalysisReports()[0].center_mass_x) <= ((-percentageDeadBand
+                                            / 2)
+                                            + adjustedProportionalCenter))
                 {
                 //turn left until it is in the zone (will be called over and
                 //over again until the blob is within the acceptable zone)
@@ -1267,11 +1267,11 @@ public boolean driveByCamera (double driveDistanceInches,
             //acceptable zone around the center
             else if (Hardware.imageProcessor
                     .getParticleAnalysisReports().length > 0
-                    && getRelativeCameraCoordinate(
+                    && getRelativeXCoordinate(
                             Hardware.imageProcessor
-                                    .getParticleAnalysisReports()[0].center_mass_x,
-                            true)
-                            - adjustedCenterProportion >= percentageDeadBand)
+                                    .getParticleAnalysisReports()[0].center_mass_x) >= ((percentageDeadBand
+                                            / 2)
+                                            + adjustedProportionalCenter))
                 {
                 //turn right until it is in the zone (will be called over and
                 //over again until the blob is within the acceptable zone)
@@ -1300,7 +1300,11 @@ public boolean driveByCamera (double driveDistanceInches,
  * 
  * @param percentageDeadBand
  *            -The percentage from the center to the edge of the image that
- *            the blob must rest within.
+ *            the blob must rest within. Splits the deadband across the
+ *            adjutedProportionalCenter. For example, a deadband of .2
+ *            (20%) with an adjustedProportionalCenter of -.5 would
+ *            return true if the center of mass of the largest blob is
+ *            between relative positions of -.6 and -.4.
  * @param correctionSpeed
  *            -The speed at which the robot should turn to get the target in
  *            the center. Be careful though, if the deadband is too narrow
@@ -1375,40 +1379,38 @@ public boolean alignByCamera (double percentageDeadBand,
             Hardware.imageProcessor.updateParticleAnalysisReports();
             /*
              * Tell the programmers the absolute and relative x coordinates
-             * of
-             * the
-             * center of mass of the largest blob.
+             * of the center of mass of the largest blob.
              */
-            if (Hardware.imageProcessor
-                    .getParticleAnalysisReports().length > 0)
-                {
-                System.out
-                        .println("CenterOfMass: "
-                                + Hardware.imageProcessor
-                                        .getParticleAnalysisReports()[0].center_mass_x);
-                System.out.println("Relative x center of Mass :"
-                        + (getRelativeCameraCoordinate(
-                                Hardware.imageProcessor
-                                        .getParticleAnalysisReports()[0].center_mass_x,
-                                true)));
-                System.out.println(
-                        "Relative Center range: ("
-                                + (-percentageDeadBand / 2
-                                        + adjustedProportionalCenter)
-                                + ", "
-                                + (percentageDeadBand / 2
-                                        + adjustedProportionalCenter)
-                                + ")");
-                }
+            //            if (Hardware.imageProcessor
+            //                    .getParticleAnalysisReports().length > 0)
+            //                {
+            //                System.out
+            //                        .println("CenterOfMass: "
+            //                                + Hardware.imageProcessor
+            //                                        .getParticleAnalysisReports()[0].center_mass_x);
+            //                System.out.println("Relative x center of Mass :"
+            //                        + (getRelativeCameraCoordinate(
+            //                                Hardware.imageProcessor
+            //                                        .getParticleAnalysisReports()[0].center_mass_x,
+            //                                true)));
+            //                System.out.println(
+            //                        "Relative Center range: ("
+            //                                + (-percentageDeadBand / 2
+            //                                        + adjustedProportionalCenter)
+            //                                + ", "
+            //                                + (percentageDeadBand / 2
+            //                                        + adjustedProportionalCenter)
+            //                                + ")");
+            //                }
             //if the center of the largest blob is to the left of our 
             //acceptable zone around the center
             if (Hardware.imageProcessor
                     .getParticleAnalysisReports().length > 0
-                    && getRelativeCameraCoordinate(
+                    && getRelativeXCoordinate(
                             Hardware.imageProcessor
-                                    .getParticleAnalysisReports()[0].center_mass_x,
-                            true) <= ((-percentageDeadBand / 2)
-                                    + adjustedProportionalCenter))
+                                    .getParticleAnalysisReports()[0].center_mass_x) <= ((-percentageDeadBand
+                                            / 2)
+                                            + adjustedProportionalCenter))
                 {
                 //turn left until it is in the zone (will be called over and
                 //over again until the blob is within the acceptable zone)
@@ -1420,11 +1422,11 @@ public boolean alignByCamera (double percentageDeadBand,
             //acceptable zone around the center
             else if (Hardware.imageProcessor
                     .getParticleAnalysisReports().length > 0
-                    && getRelativeCameraCoordinate(
+                    && getRelativeXCoordinate(
                             Hardware.imageProcessor
-                                    .getParticleAnalysisReports()[0].center_mass_x,
-                            true) >= ((percentageDeadBand / 2)
-                                    + adjustedProportionalCenter))
+                                    .getParticleAnalysisReports()[0].center_mass_x) >= ((percentageDeadBand
+                                            / 2)
+                                            + adjustedProportionalCenter))
                 {
                 //turn right until it is in the zone (will be called over and
                 //over again until the blob is within the acceptable zone)
@@ -1488,8 +1490,7 @@ public boolean alignByCamera (double percentageDeadBand,
  * presumes that the caller doesn't want to save images taken to the
  * "Hard drive," and that the you don't want to align to something not
  * in the center of the image. If that sounds like something you do want to
- * do,
- * try
+ * do, try
  * alignByCamera(double,double,double,boolean)
  * 
  * @param percentageDeadBand
@@ -1555,7 +1556,65 @@ public boolean alignByCamera ()
             DEFAULT_CAMERA_ALIGNMENT_TURNING_SPEED);
 }
 
+/**
+ * Returns the relative X coordinate given the absolute coordinate from
+ * the image processing class and the resolution of the camera from this
+ * class.
+ * 
+ * @param absoluteCoordinate
+ *            -The actual pixel coordinate you want to map, somewhere between 0
+ *            and the resolution of the camera in the X axis.
+ * @return
+ *         -A relative coordinate between -1.0 and 1.0, with 0.0 as the center
+ *         of the image, -1.0 as the far left, and 1.0 as the far right.
+ * @author Alex Kneipp
+ */
+public double getRelativeXCoordinate (double absoluteCoordinate)
+{
+    return (absoluteCoordinate - (cameraXResolution / 2))
+            / (cameraXResolution / 2);
+}
 
+/**
+ * Returns the relative Y coordinate given the absolute coordinate from
+ * the image processing class and the resolution of the camera from this
+ * class.
+ * 
+ * @param absoluteCoordinate
+ *            -The actual pixel coordinate you want to map, somewhere between 0
+ *            and the resolution of the camera in the Y axis.
+ * @return
+ *         -A relative coordinate between -1.0 and 1.0, with 0.0 as the center
+ *         of the image, -1.0 as the top, and 1.0 as the bottom.
+ * @author Alex Kneipp
+ */
+public double getRelativeYCoordinate (double absoluteCoordinate)
+{
+    return (absoluteCoordinate - (cameraYResolution / 2))
+            / (cameraYResolution / 2);
+}
+
+/**
+ * Returns the relative coordinate given the absolute coordinate from
+ * the image processing class and the resolution of the camera from this
+ * class.
+ * 
+ * @param absoluteCoordinate
+ *            -The actual pixel coordinate you want to map, somewhere between 0
+ *            and the resolution of the camera in the axis you want to map.
+ * @param isXCoordinate
+ *            -True if you want the relative coordinate relative to the x axis,
+ *            false for y.
+ * @return
+ *         -A relative coordinate between -1.0 and 1.0, with 0.0 as the center
+ *         of the image, -1.0 as the far left or top, and 1.0 as the far right
+ *         or bottom.
+ * @author Alex Kneipp
+ * @deprecated 3/18/16 by Alex Kneipp for poor design.
+ *             Use getRelativeXCoordinate(double) and
+ *             getRelativeYCoordinate(double) instead.
+ */
+@Deprecated
 public double getRelativeCameraCoordinate (
         double absoluteCoordinate,
         boolean isXCoordinate)
