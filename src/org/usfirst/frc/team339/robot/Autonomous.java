@@ -384,6 +384,7 @@ public class Autonomous
 		}
 
 
+		Teleop.printStatements();
 
 	} // end Periodic
 
@@ -490,13 +491,14 @@ public class Autonomous
 			// goes forwards to outer works.
 			if ((Hardware.drive.driveStraightByInches(
 			        DriveInformation.DISTANCE_TO_OUTER_WORKS
-			                * LAB_SCALING_FACTOR,
+			                * labScalingFactor,
 			        false,
 			        DriveInformation.MOTOR_RATIO_TO_OUTER_WORKS[lane],
 			        DriveInformation.MOTOR_RATIO_TO_OUTER_WORKS[lane])) == true)
 			//continue over the outer works unless the arm is going to get in the way.
 			{
 
+				Hardware.axisCamera.saveImagesSafely();
 				//Teleop.printStatements();
 
 				//continue over the Outer Works
@@ -536,13 +538,15 @@ public class Autonomous
 			//Drive over Outer Works.
 			if (Hardware.drive.driveStraightByInches(
 			        DriveInformation.DISTANCE_OVER_OUTER_WORKS
-			                * LAB_SCALING_FACTOR,
+			                * labScalingFactor,
 			        false,
 			        DriveInformation.DRIVE_OVER_OUTER_WORKS_MOTOR_RATIOS[lane],
 			        DriveInformation.DRIVE_OVER_OUTER_WORKS_MOTOR_RATIOS[lane]) == true)
 			//put up all the things we had to put down under the low bar.
 			//begin loading the catapult.
 			{
+
+				Hardware.axisCamera.saveImagesSafely();
 
 				//put up camera.
 				Hardware.cameraSolenoid.set(Value.kForward);
@@ -582,12 +586,13 @@ public class Autonomous
 			// Drive the distance from outer works to A-Line.
 			if ((Hardware.drive.driveStraightByInches(
 			        DriveInformation.DISTANCE_TO_TAPE
-			                * LAB_SCALING_FACTOR,
+			                * labScalingFactor,
 			        false, DriveInformation.MOTOR_RATIO_TO_A_LINE[lane],
 			        DriveInformation.MOTOR_RATIO_TO_A_LINE[lane]) == true))
 			// when done, proceed from Alignment line.
 			{
 
+				Hardware.axisCamera.saveImagesSafely();
 				//Teleop.printStatements();
 
 				//reset Encoders to prepare for next state.
@@ -623,6 +628,7 @@ public class Autonomous
 			{
 				mainState = MainState.DELAY_IF_REVERSE;
 
+				Hardware.axisCamera.saveImagesSafely();
 				//Teleop.printStatements();
 
 				Hardware.delayTimer.reset();
@@ -643,8 +649,9 @@ public class Autonomous
 			//Rotates until we are pointed at the place from whence we want to shoot.
 			if (hasTurnedBasedOnSign(
 			        DriveInformation.ROTATE_ON_ALIGNMENT_LINE_DISTANCE[lane]
-			                * LAB_SCALING_FACTOR) == true)
+			                * labScalingFactor) == true)
 			{
+				Hardware.axisCamera.saveImagesSafely();
 				//reset Encoders to prepare for next state.
 				resetEncoders();
 				//then move.
@@ -656,11 +663,12 @@ public class Autonomous
 			//Drive until we reach the line normal to the goal.
 			if (Hardware.drive.driveStraightByInches(
 			        DriveInformation.FORWARDS_FROM_ALIGNMENT_LINE_DISTANCE[lane]
-			                * LAB_SCALING_FACTOR,
+			                * labScalingFactor,
 			        true, //breaking here is preferable.
 			        DriveInformation.FORWARDS_FROM_ALIGNMENT_LINE_MOTOR_RATIO[lane],
 			        DriveInformation.FORWARDS_FROM_ALIGNMENT_LINE_MOTOR_RATIO[lane]) == true)
 			{
+				Hardware.axisCamera.saveImagesSafely();
 				//Teleop.printStatements();
 				//reset Encoders to prepare for next state.
 				resetEncoders();
@@ -674,6 +682,7 @@ public class Autonomous
 			        DriveInformation.TURN_TO_FACE_GOAL_DEGREES[lane]) == true)
 			//when done move up to the batter.
 			{
+				Hardware.axisCamera.saveImagesSafely();
 				Teleop.printStatements();
 				//reset Encoders to prepare for next state
 				resetEncoders();
@@ -687,6 +696,7 @@ public class Autonomous
 			if (hasDrivenUpToGoal() == true)
 			//Go to align.
 			{
+				Hardware.axisCamera.saveImagesSafely();
 				//reset Encoders to prepare for next state.
 				resetEncoders();
 
@@ -716,6 +726,7 @@ public class Autonomous
 			//FIRE!!!
 			shoot();
 			mainState = MainState.DELAY_AFTER_SHOOT;
+			Hardware.axisCamera.saveImagesSafely();
 			break;
 
 		case DELAY_AFTER_SHOOT:
@@ -827,7 +838,7 @@ public class Autonomous
 		// Have we seen if we have reached cleats of the tower according to IR?
 		if ((Hardware.drive.driveStraightByInches(
 		        DriveInformation.DRIVE_UP_TO_GOAL[lane]
-		                * LAB_SCALING_FACTOR,
+		                * labScalingFactor,
 		        false,
 		        DriveInformation.DRIVE_UP_TO_GOAL_MOTOR_RATIO[lane],
 		        DriveInformation.DRIVE_UP_TO_GOAL_MOTOR_RATIO[lane]) == true)
@@ -1346,7 +1357,7 @@ public class Autonomous
 	 * Factor by which to scale all distances for testing in our small lab
 	 * space.
 	 */
-	private static final double LAB_SCALING_FACTOR = 1.0;
+	public static double labScalingFactor = 1.0;
 
 	/**
 	 * Time to wait after releasing the solenoids before closing them back up.
