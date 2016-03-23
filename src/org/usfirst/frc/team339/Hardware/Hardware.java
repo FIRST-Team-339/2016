@@ -83,7 +83,7 @@ public static final Resolution AXIS_RESOLUTION =
 // us to test in the lab once the
 // robot is bagged
 //---------------------------------
-public static boolean runningInLab = false;
+public static boolean runningInLab = true;
 // -------------------------------------
 // Private Constants
 // -------------------------------------

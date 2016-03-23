@@ -234,10 +234,15 @@ public class Robot extends IterativeRobot
 			//---------------------------------
 			// for old Kilroy 16
 			//---------------------------------
-			Hardware.leftRearEncoder.setDistancePerPulse(.0197);
-			Hardware.rightRearEncoder.setDistancePerPulse(.0197);
+			//			Hardware.leftRearEncoder.setDistancePerPulse(.0197);
+			//			Hardware.rightRearEncoder.setDistancePerPulse(.0197);
+			Hardware.leftRearEncoder.setDistancePerPulse(
+			        this.distancePerTickForMotorEncoders);
+			Hardware.rightRearEncoder.setDistancePerPulse(
+			        this.distancePerTickForMotorEncoders);
 			Hardware.leftRearEncoder.reset();
 			Hardware.rightRearEncoder.reset();
+
 		}
 		else
 		{
@@ -400,6 +405,16 @@ public class Robot extends IterativeRobot
 		Hardware.catapultSolenoid0.set(false);
 		Hardware.catapultSolenoid1.set(false);
 		Hardware.catapultSolenoid2.set(false);
+
+		if (Hardware.runningInLab == true)
+		{
+			Autonomous.labScalingFactor = 0.25;
+		}
+		else
+		{
+			Autonomous.labScalingFactor = 1.0;
+		}
+
 		// =========================================================
 		// User code goes above here
 		// =========================================================
