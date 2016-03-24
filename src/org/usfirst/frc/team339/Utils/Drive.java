@@ -1200,6 +1200,18 @@ public boolean turnRightDegrees (final double degrees,
             rightJoystickInputValue));
 } // end turnRightDegrees()
 
+/**
+ * Drives forward the specified number of inches aligning to a blob sighted by
+ * the camera.
+ * 
+ * @param driveDistanceInches
+ * @param percentageDeadBand
+ * @param correctionSpeed
+ * @param adjustedProportionalCenter
+ * @param savePictures
+ * @return
+ */
+
 public boolean driveByCamera (double driveDistanceInches,
         double percentageDeadBand,
         double correctionSpeed, double adjustedProportionalCenter,
@@ -1248,12 +1260,8 @@ public boolean driveByCamera (double driveDistanceInches,
             //                .getParticleAnalysisReports()[0].center_mass_x);
             //if the center of the largest blob is to the left of our 
             //acceptable zone around the center
-            if ((this.transmission
-                    .getRightRearEncoderDistance() <= driveDistanceInches
-                    || this.transmission
-                            .getLeftRearEncoderDistance() <= driveDistanceInches)
-                    && Hardware.imageProcessor
-                            .getParticleAnalysisReports().length > 0
+            if (Hardware.imageProcessor
+                    .getParticleAnalysisReports().length > 0
                     && getRelativeXCoordinate(
                             Hardware.imageProcessor
                                     .getParticleAnalysisReports()[0].center_mass_x) <= ((-percentageDeadBand
@@ -1264,20 +1272,14 @@ public boolean driveByCamera (double driveDistanceInches,
                 //over again until the blob is within the acceptable zone)
                 //TODO check and make sure this still doesn't work, then 
                 //change it back or write turn continuous method
-                //TODO arbitrary magic Numbers
                 this.driveContinuous(
                         Math.min(correctionSpeed, defaultTurnSpeed),
                         Math.max(defaultTurnSpeed, correctionSpeed));
-                //this.transmission.controls(.5, -.5);
                 }
             //if the center of the largest blob is to the right of our 
             //acceptable zone around the center
-            else if ((this.transmission
-                    .getRightRearEncoderDistance() <= driveDistanceInches
-                    || this.transmission
-                            .getLeftRearEncoderDistance() <= driveDistanceInches)
-                    && Hardware.imageProcessor
-                            .getParticleAnalysisReports().length > 0
+            else if (Hardware.imageProcessor
+                    .getParticleAnalysisReports().length > 0
                     && getRelativeXCoordinate(
                             Hardware.imageProcessor
                                     .getParticleAnalysisReports()[0].center_mass_x) >= ((percentageDeadBand
@@ -1289,16 +1291,27 @@ public boolean driveByCamera (double driveDistanceInches,
                 this.driveContinuous(
                         Math.max(defaultTurnSpeed, correctionSpeed),
                         Math.min(correctionSpeed, defaultTurnSpeed));
-                //this.transmission.controls(-.5, .5);
                 }
-            //If the center of the blob is nestled happily in our deadzone
+            //If the blob is where we want it to be right now...
             else
                 {
-                //Stop moving
+                //drive forward as fast as we can
+                this.driveContinuous(defaultMaxSpeed, defaultMaxSpeed);
+                }
+            //If the either of the encoders are beyond our drive distance, stop and tell
+            //the code that we're done.
+            if ((this.transmission
+                    .getRightRearEncoderDistance() >= driveDistanceInches
+                    || this.transmission
+                            .getLeftRearEncoderDistance() >= driveDistanceInches))
+                {
+                //Set up for next call
                 firstTimeAlign = true;
                 this.cameraTimer.stop();
                 this.cameraTimer.reset();
+                //stop
                 Hardware.transmission.controls(0.0, 0.0);
+                //say we're done
                 return true;
                 }
             }
