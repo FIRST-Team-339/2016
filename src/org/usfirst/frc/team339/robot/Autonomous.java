@@ -462,8 +462,6 @@ public class Autonomous
 			// starts the arm movement to the floor
 			runArmStates = true;
 			armState = ArmState.MOVE_DOWN;
-			//TODO: Remove primitive stuff below.
-			//Hardware.armMotor.set(1.0);
 			// goes into initDelay
 			mainState = MainState.INIT_DELAY;
 			break;
@@ -680,10 +678,8 @@ public class Autonomous
 
 		case TURN_TO_FACE_GOAL:
 			//Turns until we are facing the goal.
-			//			if (hasTurnedBasedOnSign(
-			//			        DriveInformation.TURN_TO_FACE_GOAL_DEGREES[lane]) == true)
-			if (Hardware.drive.turnRightDegrees(60.0, false, .4,
-			        -.4) == true)
+			if (hasTurnedBasedOnSign(
+			        DriveInformation.TURN_TO_FACE_GOAL_DEGREES[lane]) == true)
 			//when done move up to the batter.
 			{
 				//Teleop.printStatements();
@@ -695,23 +691,26 @@ public class Autonomous
 				armState = ArmState.DONE;
 
 				//then drive.
-				mainState = MainState.DRIVE_UP_TO_GOAL;
+				mainState = MainState.DONE;
 			}
 			break;
 
 		case DRIVE_UP_TO_GOAL:
 			//Moves to goal. Stops to align.
-			//if (hasDrivenUpToGoal() == true)
-			if (Hardware.drive.driveStraightByInches(66.0, false, .4,
-			        .4))
+			if (((Hardware.drive.driveStraightByInches(
+			        DriveInformation.DRIVE_UP_TO_GOAL[lane]
+			                * labScalingFactor,
+			        false,
+			        DriveInformation.DRIVE_UP_TO_GOAL_MOTOR_RATIO[lane],
+			        DriveInformation.DRIVE_UP_TO_GOAL_MOTOR_RATIO[lane]) == true)
+			        || (Hardware.leftIR.isOn()
+			                || Hardware.rightIR.isOn())))
 			//Go to align.
 			{
 
 				//reset Encoders to prepare for next state.
 				resetEncoders();
 
-				//go to shoot.
-				//TODO:No longer using align.
 				//go to align.
 				mainState = MainState.ALIGN_IN_FRONT_OF_GOAL;
 			}
@@ -725,6 +724,7 @@ public class Autonomous
 
 		case ALIGN_IN_FRONT_OF_GOAL:
 			//align based on the camera until we are facing the goal. head-on.
+			//TODO: Demystify magic numbers
 			if (Hardware.drive.alignByCamera(0.1, .4, 0.0,
 			        false) == true)
 			//Once we are in position, we shoot!
@@ -878,7 +878,8 @@ public class Autonomous
 
 	/**
 	 * <b> FIRE!!! </b>
-	 * Shoots the ball. May want to add states/methods to align.
+	 * <p>
+	 * Shoots the ball.
 	 * 
 	 */
 	private static void shoot ()
@@ -1332,7 +1333,7 @@ public class Autonomous
 		 * Speed at which to make turns by default.
 		 * TODO: figure out a reasonable speed.
 		 */
-		private static final double DEFAULT_TURN_SPEED = 0.5; //previously 0.28
+		private static final double DEFAULT_TURN_SPEED = 0.4; //previously 0.28
 
 	}
 
