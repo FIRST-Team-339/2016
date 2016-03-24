@@ -45,6 +45,7 @@ public class Drive
 	 */
 	public boolean brake ()
 	{
+		System.out.println("Breaking here.");
 		// TODO maybe make argument a constant in the class.
 		// TODO find out ideal brakespeed.
 		return (this.brake(this.brakeSpeed));

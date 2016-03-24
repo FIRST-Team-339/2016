@@ -35,6 +35,7 @@ import org.usfirst.frc.team339.Hardware.Hardware;
 import org.usfirst.frc.team339.Utils.ManipulatorArm;
 import org.usfirst.frc.team339.Utils.ManipulatorArm.ArmPosition;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
+import edu.wpi.first.wpilibj.Relay;
 
 /**
  * This class contains all of the user code for the Autonomous part of the
@@ -319,6 +320,8 @@ public class Autonomous
 			Hardware.rightRearEncoder.reset();
 
 			// Sets Resolution of camera
+			Hardware.ringLightRelay.set(Relay.Value.kOff);
+
 			Hardware.axisCamera
 			        .writeBrightness(
 			                Hardware.MINIMUM_AXIS_CAMERA_BRIGHTNESS);
@@ -376,6 +379,7 @@ public class Autonomous
 		if (runArmStates == true)
 		//run the arm state machine.
 		{
+			System.out.println("\t" + armState);
 			runArmStates();
 		}
 		else
@@ -546,23 +550,25 @@ public class Autonomous
 			//begin loading the catapult.
 			{
 
-				Hardware.axisCamera.saveImagesSafely();
 
 				//put up camera.
-				Hardware.cameraSolenoid.set(Value.kForward);
+				Hardware.cameraSolenoid.set(Value.kReverse);
+
+				armState = ArmState.MOVE_UP_TO_DEPOSIT;
 
 				//Teleop.printStatements();
 				resetEncoders();
 
 				//initiate the arm motion.
 				runArmStates = true;
-				armState = ArmState.HOLD;
 
 				mainState = MainState.FORWARDS_BASED_ON_ENCODERS_OR_IR;
 			}
 			break;
 
 		case WAIT_FOR_ARM_DESCENT:
+			Hardware.transmission.controls(0.0, 0.0);
+			//System.out.println(Hardware.armPot.get());
 			if (Hardware.pickupArm.moveToPosition(
 			        ManipulatorArm.ArmPosition.FULL_DOWN) == true)
 				mainState = MainState.FORWARDS_OVER_OUTER_WORKS;
@@ -592,16 +598,15 @@ public class Autonomous
 			// when done, proceed from Alignment line.
 			{
 
-				Hardware.axisCamera.saveImagesSafely();
 				//Teleop.printStatements();
 
 				//reset Encoders to prepare for next state.
 				resetEncoders();
 
 
-
 				//We definitely don't need to rotate.
 				mainState = MainState.CENTER_TO_TAPE;
+
 			}
 			break;
 
@@ -626,9 +631,8 @@ public class Autonomous
 			        DriveInformation.CENTRE_TO_ALIGNMENT_LINE_MOTOR_RATIO[lane],
 			        DriveInformation.CENTRE_TO_ALIGNMENT_LINE_MOTOR_RATIO[lane]))
 			{
-				mainState = MainState.DELAY_IF_REVERSE;
+				mainState = MainState.FORWARDS_FROM_ALIGNMENT_LINE;
 
-				Hardware.axisCamera.saveImagesSafely();
 				//Teleop.printStatements();
 
 				Hardware.delayTimer.reset();
@@ -651,7 +655,6 @@ public class Autonomous
 			        DriveInformation.ROTATE_ON_ALIGNMENT_LINE_DISTANCE[lane]
 			                * labScalingFactor) == true)
 			{
-				Hardware.axisCamera.saveImagesSafely();
 				//reset Encoders to prepare for next state.
 				resetEncoders();
 				//then move.
@@ -664,11 +667,10 @@ public class Autonomous
 			if (Hardware.drive.driveStraightByInches(
 			        DriveInformation.FORWARDS_FROM_ALIGNMENT_LINE_DISTANCE[lane]
 			                * labScalingFactor,
-			        true, //breaking here is preferable.
+			        false,//true, //breaking here is preferable.
 			        DriveInformation.FORWARDS_FROM_ALIGNMENT_LINE_MOTOR_RATIO[lane],
 			        DriveInformation.FORWARDS_FROM_ALIGNMENT_LINE_MOTOR_RATIO[lane]) == true)
 			{
-				Hardware.axisCamera.saveImagesSafely();
 				//Teleop.printStatements();
 				//reset Encoders to prepare for next state.
 				resetEncoders();
@@ -678,14 +680,20 @@ public class Autonomous
 
 		case TURN_TO_FACE_GOAL:
 			//Turns until we are facing the goal.
-			if (hasTurnedBasedOnSign(
-			        DriveInformation.TURN_TO_FACE_GOAL_DEGREES[lane]) == true)
+			//			if (hasTurnedBasedOnSign(
+			//			        DriveInformation.TURN_TO_FACE_GOAL_DEGREES[lane]) == true)
+			if (Hardware.drive.turnRightDegrees(60.0, false, .4,
+			        -.4) == true)
 			//when done move up to the batter.
 			{
-				Hardware.axisCamera.saveImagesSafely();
-				Teleop.printStatements();
+				//Teleop.printStatements();
 				//reset Encoders to prepare for next state
 				resetEncoders();
+
+				Hardware.ringLightRelay.set(Relay.Value.kOn);
+
+				armState = ArmState.DONE;
+
 				//then drive.
 				mainState = MainState.DRIVE_UP_TO_GOAL;
 			}
@@ -693,17 +701,19 @@ public class Autonomous
 
 		case DRIVE_UP_TO_GOAL:
 			//Moves to goal. Stops to align.
-			if (hasDrivenUpToGoal() == true)
+			//if (hasDrivenUpToGoal() == true)
+			if (Hardware.drive.driveStraightByInches(66.0, false, .4,
+			        .4))
 			//Go to align.
 			{
-				Hardware.axisCamera.saveImagesSafely();
+
 				//reset Encoders to prepare for next state.
 				resetEncoders();
 
 				//go to shoot.
 				//TODO:No longer using align.
 				//go to align.
-				mainState = MainState.STOP_IN_FRONT_OF_GOAL;
+				mainState = MainState.ALIGN_IN_FRONT_OF_GOAL;
 			}
 			break;
 
@@ -715,7 +725,8 @@ public class Autonomous
 
 		case ALIGN_IN_FRONT_OF_GOAL:
 			//align based on the camera until we are facing the goal. head-on.
-			if (Hardware.drive.alignByCamera() == true)
+			if (Hardware.drive.alignByCamera(0.1, .4, 0.0,
+			        false) == true)
 			//Once we are in position, we shoot!
 			{
 				mainState = MainState.SHOOT;
@@ -842,8 +853,7 @@ public class Autonomous
 		        false,
 		        DriveInformation.DRIVE_UP_TO_GOAL_MOTOR_RATIO[lane],
 		        DriveInformation.DRIVE_UP_TO_GOAL_MOTOR_RATIO[lane]) == true)
-		//|| (Hardware.leftIR.isOn() || Hardware.rightIR.isOn())
-		)
+		        || (Hardware.leftIR.isOn() || Hardware.rightIR.isOn()))
 		// We are done here.
 		{
 			done = true;
@@ -922,6 +932,8 @@ public class Autonomous
 		Hardware.delayTimer.stop();
 		Hardware.delayTimer.reset();
 
+		Hardware.ringLightRelay.set(Relay.Value.kOff);
+
 		armState = ArmState.DONE;
 
 		System.out.println("Total Distance: " + totalDistance);
@@ -987,8 +999,8 @@ public class Autonomous
 			break;
 		case INIT_DEPOSIT:
 			//spin wheels to release ball.
-			Hardware.pickupArm.pushOutBall();
-			armState = ArmState.DEPOSIT;
+			Hardware.pickupArm.pullInBall(true);
+			//armState = ArmState.DEPOSIT;
 			break;
 		case DEPOSIT:
 			//check if the ball is out.
@@ -997,10 +1009,11 @@ public class Autonomous
 			{
 				Hardware.pickupArm.stopIntakeArms();
 				//get out of the way.
-				armState = ArmState.INIT_DOWN;
+				armState = ArmState.DONE;
 			}
 			break;
 		case HOLD:
+			Hardware.pickupArm.stopIntakeArms();
 			Hardware.pickupArm.moveToPosition(ArmPosition.HOLD);
 			break;
 		default:
