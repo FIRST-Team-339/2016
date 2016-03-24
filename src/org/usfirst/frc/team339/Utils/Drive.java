@@ -1205,11 +1205,28 @@ public boolean turnRightDegrees (final double degrees,
  * the camera.
  * 
  * @param driveDistanceInches
+ *            How far you want to drive in inches. Will stop as soon as either
+ *            side of the drive train reaches this value.
  * @param percentageDeadBand
+ *            The deadband around the "adjustedProportionalCenter" the blob is
+ *            allowed to be in before we start correcting.
+ *            The deadband is split around the center, so a deadband of .20
+ *            (20%) will allow the proportional X coordinate
+ *            of the blob to be .10 to the right or .10 to the left.
  * @param correctionSpeed
+ *            The speed to correct with. Either speed up the drivetrain opposite
+ *            the way we want to go if greater than
+ *            the defaultTurningValue, or slow down the drivetrain on the same
+ *            side if less than the defualtTurningValue.
  * @param adjustedProportionalCenter
+ *            The proportional coordinate center where we want the blobs to sit.
+ *            To find proportional coordinate take the (absoluteCoordinate -
+ *            midpoint)/midpoint
  * @param savePictures
+ *            Save the pictures taken to the RoboRio's "Hard Drive"
  * @return
+ *         True if we're done driving, false otherwise.
+ * @author Alex Kneipp
  */
 
 public boolean driveByCamera (double driveDistanceInches,
