@@ -83,7 +83,7 @@ public class Hardware
 	// us to test in the lab once the
 	// robot is bagged
 	//---------------------------------
-	public static boolean runningInLab = true;
+	public static boolean runningInLab = false;
 	// -------------------------------------
 	// Private Constants
 	// -------------------------------------

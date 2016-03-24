@@ -104,8 +104,8 @@ public class Teleop
 	private static edu.wpi.first.wpilibj.DoubleSolenoid.Value Forward;
 
 	private static boolean testAuto = false;
-	private static boolean testMove1IsDone = false;
-	private static boolean testMove2IsDone = true;
+	private static boolean testMove1IsDone = true;
+	private static boolean testMove2IsDone = false;
 	private static boolean testMove3IsDone = true;
 	private static boolean testCameraIsDone = true;
 
@@ -822,7 +822,7 @@ public class Teleop
 		// prints the value of the transducer- (range in code is 50)
 		//hits psi of 100 accurately
 		//System.out.println("transducer = " + Hardware.transducer.get());
-		//	System.out.println("Arm Pot = " + Hardware.armPot.get());
+		System.out.println("Arm Pot = " + Hardware.armPot.get());
 
 		// Motor controllers-----
 		// prints value of the motors
