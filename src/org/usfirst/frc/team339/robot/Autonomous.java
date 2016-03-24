@@ -32,6 +32,7 @@
 package org.usfirst.frc.team339.robot;
 
 import org.usfirst.frc.team339.Hardware.Hardware;
+import org.usfirst.frc.team339.HardwareInterfaces.transmission.Transmission_old.debugStateValues;
 import org.usfirst.frc.team339.Utils.ManipulatorArm;
 import org.usfirst.frc.team339.Utils.ManipulatorArm.ArmPosition;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
@@ -301,6 +302,9 @@ public class Autonomous
 			lane = getLane();
 
 			debug = DEBUGGING_DEFAULT;
+
+			Hardware.transmission
+			        .setDebugState(debugStateValues.DEBUG_ALL);
 
 			// Hardware.drive.setMaxSpeed(MAXIMUM_AUTONOMOUS_SPEED);
 
@@ -688,7 +692,7 @@ public class Autonomous
 
 				Hardware.ringLightRelay.set(Relay.Value.kOn);
 
-				armState = ArmState.DONE;
+				armState = ArmState.HOLD;
 
 				//then drive.
 				mainState = MainState.DONE;
