@@ -1248,8 +1248,12 @@ public boolean driveByCamera (double driveDistanceInches,
             //                .getParticleAnalysisReports()[0].center_mass_x);
             //if the center of the largest blob is to the left of our 
             //acceptable zone around the center
-            if (Hardware.imageProcessor
-                    .getParticleAnalysisReports().length > 0
+            if ((this.transmission
+                    .getRightRearEncoderDistance() >= driveDistanceInches
+                    || this.transmission
+                            .getLeftRearEncoderDistance() >= driveDistanceInches)
+                    && Hardware.imageProcessor
+                            .getParticleAnalysisReports().length > 0
                     && getRelativeXCoordinate(
                             Hardware.imageProcessor
                                     .getParticleAnalysisReports()[0].center_mass_x) <= ((-percentageDeadBand
@@ -1268,8 +1272,12 @@ public boolean driveByCamera (double driveDistanceInches,
                 }
             //if the center of the largest blob is to the right of our 
             //acceptable zone around the center
-            else if (Hardware.imageProcessor
-                    .getParticleAnalysisReports().length > 0
+            else if ((this.transmission
+                    .getRightRearEncoderDistance() >= driveDistanceInches
+                    || this.transmission
+                            .getLeftRearEncoderDistance() >= driveDistanceInches)
+                    && Hardware.imageProcessor
+                            .getParticleAnalysisReports().length > 0
                     && getRelativeXCoordinate(
                             Hardware.imageProcessor
                                     .getParticleAnalysisReports()[0].center_mass_x) >= ((percentageDeadBand
