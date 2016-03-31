@@ -1449,27 +1449,22 @@ public boolean alignByCamera (double percentageDeadBandX,
              * Tell the programmers the absolute and relative x coordinates
              * of the center of mass of the largest blob.
              */
-            //            if (Hardware.imageProcessor
-            //                    .getParticleAnalysisReports().length > 0)
-            //                {
-            //                System.out
-            //                        .println("CenterOfMass: "
-            //                                + Hardware.imageProcessor
-            //                                        .getParticleAnalysisReports()[0].center_mass_x);
-            //                System.out.println("Relative x center of Mass :"
-            //                        + (getRelativeCameraCoordinate(
-            //                                Hardware.imageProcessor
-            //                                        .getParticleAnalysisReports()[0].center_mass_x,
-            //                                true)));
-            //                System.out.println(
-            //                        "Relative Center range: ("
-            //                                + (-percentageDeadBand / 2
-            //                                        + adjustedProportionalCenter)
-            //                                + ", "
-            //                                + (percentageDeadBand / 2
-            //                                        + adjustedProportionalCenter)
-            //                                + ")");
-            //                }
+            if (Hardware.imageProcessor
+                    .getParticleAnalysisReports().length > 0)
+                {
+                System.out
+                        .println("CenterOfMass: "
+                                + Hardware.imageProcessor
+                                        .getParticleAnalysisReports()[0].center_mass_x);
+                System.out.println("Relative x center of Mass :"
+                        + (getRelativeCameraCoordinate(
+                                Hardware.imageProcessor
+                                        .getParticleAnalysisReports()[0].center_mass_x,
+                                true)));
+                System.out.println("Relative y center of Mass:"
+                        + getRelativeYCoordinate(Hardware.imageProcessor
+                                .getParticleAnalysisReports()[0].center_mass_y));
+                }
 
             //if we're below where we want to be on the y axis
             if (isInTurningSection == false
