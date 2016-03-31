@@ -9,6 +9,7 @@ import edu.wpi.first.wpilibj.SpeedController;
 public class ManipulatorArm
 {
 
+
 	public ManipulatorArm (SpeedController armMotorController,
 	        SpeedController intakeMotor,
 	        RobotPotentiometer armPot, IRSensor ballIsInArmSensor)
@@ -96,7 +97,7 @@ public class ManipulatorArm
 
 		//If we're currently beyond our soft limits, don't do anything that would 
 		//bring up further out of them.  Otherwise do what the user wants.
-		if (((speed > 0 && this.armPot.get() < this.MIN_SOFT_ARM_STOP)
+		if (((speed > 0 && this.armPot.get() < MIN_SOFT_ARM_STOP)
 		        || (speed < 0
 		                && this.armPot.get() > this.MAX_SOFT_ARM_STOP))
 		        && override == false)
@@ -117,7 +118,7 @@ public class ManipulatorArm
 
 	public void stopArmMotor ()
 	{
-		if (armPot.get() >= this.MIN_SOFT_ARM_STOP
+		if (armPot.get() >= MIN_SOFT_ARM_STOP
 		        && armPot
 		                .get() < BRAKE_ARM_WITH_FORWARD_VOLTAGE_DEGREES)
 		{
@@ -218,7 +219,7 @@ public class ManipulatorArm
 	 */
 	public boolean isDown ()
 	{
-		if (this.armPot.get() <= this.MIN_SOFT_ARM_STOP)
+		if (this.armPot.get() <= MIN_SOFT_ARM_STOP)
 		{
 			return true;
 		}
@@ -235,6 +236,19 @@ public class ManipulatorArm
 	public boolean isUp ()
 	{
 		if (this.armPot.get() >= MAX_SOFT_ARM_STOP)
+		{
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+	}
+
+
+	public boolean isUnderBar ()
+	{
+		if (this.armPot.get() <= UNDER_BAR_VALUE)
 		{
 			return true;
 		}
@@ -324,11 +338,11 @@ public class ManipulatorArm
 			{
 				move(MAX_ARM_SPEED);
 			}
-			else if (armPot.get() > DEPOSIT_POSITION
-			        + DEPOSIT_POSITION_THRESHOLD)
-			{
-				move(-MAX_ARM_SPEED);
-			}
+			//			else if (armPot.get() > DEPOSIT_POSITION
+			//			        + DEPOSIT_POSITION_THRESHOLD)
+			//			{
+			//				move(-MAX_ARM_SPEED);
+			//			}
 			else
 			{
 				move(0.0);
@@ -393,24 +407,24 @@ public class ManipulatorArm
 	//default slow arm turn speed proportion
 	private double slowSpeed = .2;
 
-	private double MAX_SOFT_ARM_STOP = 215.0;
-	private final double MIN_SOFT_ARM_STOP = 68.0;
+	private double MAX_SOFT_ARM_STOP = 242.0;
+	private final static double MIN_SOFT_ARM_STOP = 85.0;
 
 	private final double ARM_OUT_OF_WAY_DEGREES = 175.0;
 	private final double BRAKE_ARM_WITH_FORWARD_VOLTAGE_DEGREES = 165.0;
 
-	private final double DEPOSIT_POSITION = 190.0;
+	private final double DEPOSIT_POSITION = 230.0;
 	private final double DEPOSIT_POSITION_THRESHOLD = 5.0;
 
 	private final double REASONABLE_UP_FACTOR = -1.0;
 	private final double REASONABLE_UP_AND_OVER_FACTOR = -0.40;
 	private final double REASONABLE_DOWN_FACTOR = 0.35;
 	private final double REASONABLE_DOWN_UNDER_FACTOR = 0.20;
-	private final double REASONABLE_DECELERATION_ANGLE = 156.1;
+	private final double REASONABLE_DECELERATION_ANGLE = 174.1;
 
 	private final double INTAKE_SPEED = 0.5;
 
-	private static final int HOLDING_POSITION = 125;
+	private static final int HOLDING_POSITION = 143;
 
 	private static final int HOLDING_POSITION_THRESHOLD = 10;
 
@@ -418,5 +432,12 @@ public class ManipulatorArm
 
 	private static final int STOP_DOWN_ANGLE = 85;
 	private static final double DELAY_AFTER_BALL_DETECTION = 0.12;
+
+
+	private static final double UNDER_BAR_THRESHOLD = 0.0;
+
+	private static final double UNDER_BAR_VALUE =
+	        MIN_SOFT_ARM_STOP + UNDER_BAR_THRESHOLD;
+
 
 }
