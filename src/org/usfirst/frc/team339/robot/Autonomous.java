@@ -105,7 +105,7 @@ public class Autonomous
 		 * Else, we go until the sensors find the Alignment tape.
 		 */
 		FORWARDS_BASED_ON_ENCODERS_OR_IR, // decides based on lane whether to move
-											// to tape based on encoders or IR
+		// to tape based on encoders or IR
 		/**
 		 * Go the distance over the outer works.
 		 */
@@ -121,7 +121,7 @@ public class Autonomous
 		 * Goes forward until it senses the Alignment tape.
 		 */
 		FORWARDS_UNTIL_TAPE, // drives forwards until detection of the gaffers'
-							// tape.
+		// tape.
 
 		/**
 		 * Drives up 16 inches to put the center of the robot over the Aline.
@@ -159,6 +159,7 @@ public class Autonomous
 		 * We shoot the cannon ball.
 		 */
 		SHOOT, // adjusts its self (?) and fires the cannon ball.
+
 
 		/**
 		 * Wait to close the solenoids.
@@ -234,6 +235,7 @@ public class Autonomous
 	private static MainState mainState = MainState.INIT;
 
 	private static MainState prevState = MainState.DONE;
+
 
 	/**
 	 * Used to run arm movements in parallel to the main state machine.
@@ -416,6 +418,7 @@ public class Autonomous
 		        / Hardware.DELAY_POT_DEGREES);
 	}
 
+
 	/**
 	 * Sets the main state to INIT.
 	 */
@@ -423,6 +426,7 @@ public class Autonomous
 	{
 		mainState = MainState.INIT;
 	}
+
 
 	/**
 	 * Called periodically to run the overarching states.
@@ -442,6 +446,7 @@ public class Autonomous
 				System.out.println("Main State: " + mainState);
 			}
 
+
 		}
 
 		switch (mainState)
@@ -450,7 +455,6 @@ public class Autonomous
 			// Doesn't do much.
 			// Just a Platypus.
 			mainInit();
-
 
 			if (lane == 1 || lane == 6)
 			// lower the arm to pass beneath the bar.
@@ -464,7 +468,6 @@ public class Autonomous
 			}
 
 			break;
-
 
 		case BEGIN_LOWERING_ARM:
 			// starts the arm movement to the floor
@@ -491,6 +494,7 @@ public class Autonomous
 				Hardware.delayTimer.start();
 			}
 			break;
+
 
 		case ACCELERATE_FROM_ZERO:
 			//Allows us to slowly accelerate from zero without turning
@@ -553,6 +557,7 @@ public class Autonomous
 
 
 
+
 		case FORWARDS_OVER_OUTER_WORKS:
 			//Drive over Outer Works.
 			if (Hardware.drive.driveStraightByInches(
@@ -565,6 +570,7 @@ public class Autonomous
 			//put up all the things we had to put down under the low bar.
 			//begin loading the catapult.
 			{
+
 
 
 				//put up camera.
@@ -605,6 +611,7 @@ public class Autonomous
 				mainState = MainState.FORWARDS_OVER_OUTER_WORKS;
 			break;
 
+
 		case FORWARDS_BASED_ON_ENCODERS_OR_IR:
 			// Check if we are in lane One.
 			if (lane == 1 || lane == 6)
@@ -637,7 +644,6 @@ public class Autonomous
 
 				//Move the center of the robot to the tape.
 				mainState = MainState.CENTER_TO_TAPE;
-
 			}
 			break;
 
@@ -665,6 +671,7 @@ public class Autonomous
 				//Next, we will stop if necessary.
 				mainState = MainState.DELAY_IF_REVERSE;
 
+
 				//Teleop.printStatements();
 
 
@@ -682,6 +689,7 @@ public class Autonomous
 				mainState = MainState.ROTATE_ON_ALIGNMENT_LINE;
 			}
 			break;
+
 
 		case ROTATE_ON_ALIGNMENT_LINE:
 			//Rotates until we are pointed at the place from whence we want to shoot.
@@ -726,6 +734,7 @@ public class Autonomous
 
 				//Hold the arm up (Out of the Way).
 				armState = ArmState.HOLD;
+
 
 				Hardware.transmission.controls(0.0, 0.0);
 
@@ -788,7 +797,7 @@ public class Autonomous
 			Hardware.transmission.controls(0.0, 0.0);
 
 			//TODO: Demystify magic numbers
-			if (Hardware.drive.alignByCamera(0.2, .4, -.325,
+			if (Hardware.drive.alignByCamera(0.2, 0.2, .4, -.325, -.483,
 			        false) == true)
 			//Once we are in position, we shoot!
 			{
@@ -804,6 +813,7 @@ public class Autonomous
 				mainState = MainState.DELAY_AFTER_SHOOT;
 			}
 			break;
+
 
 		case DELAY_AFTER_SHOOT:
 			//Check if enough time has passed for the air to have been released.
@@ -824,6 +834,7 @@ public class Autonomous
 			break;
 		}
 	}
+
 
 	/*
 	 * ======================================
@@ -915,6 +926,7 @@ public class Autonomous
 
 		boolean done;
 
+
 		Hardware.transmission.controls(0.0, 0.0);
 
 		//Make sure the arm is out of the way.
@@ -940,8 +952,10 @@ public class Autonomous
 			done = false;
 		}
 
+
 		return done;
 	}
+
 
 	/**
 	 * Wait a second...
@@ -1153,6 +1167,7 @@ public class Autonomous
 	 */
 	private static final class DriveInformation
 	{
+
 
 		private static final double[] ACCELERATION_RATIOS =
 		        {
@@ -1385,6 +1400,7 @@ public class Autonomous
 		 */
 		private static final double DEFAULT_TURN_SPEED = 0.4; //previously 0.28
 
+
 	}
 
 
@@ -1399,6 +1415,7 @@ public class Autonomous
 	 * // ----------------------\___/
 	 * // ...............................|<!(r% ~@$ #3r3
 	 */
+
 
 	/**
 	 * The maximum time to wait at the beginning of the match.
