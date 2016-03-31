@@ -35,6 +35,7 @@ import org.usfirst.frc.team339.Hardware.Hardware;
 import org.usfirst.frc.team339.HardwareInterfaces.transmission.Transmission_old.debugStateValues;
 import org.usfirst.frc.team339.Utils.Guidance;
 import org.usfirst.frc.team339.Utils.ManipulatorArm;
+import org.usfirst.frc.team339.Utils.ManipulatorArm.ArmPosition;
 import edu.wpi.first.wpilibj.CameraServer;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.Relay.Value;
@@ -103,10 +104,10 @@ public class Teleop
 	private static edu.wpi.first.wpilibj.DoubleSolenoid.Value Reverse;
 	private static edu.wpi.first.wpilibj.DoubleSolenoid.Value Forward;
 
-	private static boolean testAuto = false;
-	private static boolean testMove1IsDone = true;
-	private static boolean testMove2IsDone = false;
-	private static boolean testMove3IsDone = true;
+	private static boolean testAuto = true;
+	private static boolean testMove1IsDone = false;
+	private static boolean testMove2IsDone = true;
+	private static boolean testMove3IsDone = false;
 	private static boolean testCameraIsDone = true;
 
 	/**
@@ -149,8 +150,8 @@ public class Teleop
 				if (!testMove1IsDone)
 				{
 					System.out.print("\n" + 1 + "\n");
-					if (Hardware.drive.driveStraightByInches(24.0, true,
-					        .4, .4))
+					if (Hardware.drive.driveStraightByInches(12.0, true,
+					        .9, .9))
 					{
 						Autonomous.resetEncoders();
 						testMove1IsDone = true;
@@ -158,9 +159,9 @@ public class Teleop
 				}
 				else if (!testMove2IsDone)
 				{
-					System.out.print("\n" + 2 + "\n");
-					if (Hardware.drive.turnLeftDegrees(60.0, true,
-					        -.4, .4))
+					//System.out.print("\n" + 2 + "\n");
+					if (Hardware.drive.turnRightDegrees(60.0, true,
+					        .4, -.4))
 					{
 						Autonomous.resetEncoders();
 						Hardware.transmission.controls(0.0, 0.0);
@@ -170,8 +171,8 @@ public class Teleop
 				else if (!testMove3IsDone)
 				{
 					System.out.print("\n" + 3 + "\n");
-					if (Hardware.drive.driveStraightByInches(6.0, true,
-					        .4, .4))
+					if (Hardware.drive.driveStraightByInches(12.0, true,
+					        .3, .3))
 					{
 						Autonomous.resetEncoders();
 						testMove3IsDone = true;
@@ -182,6 +183,10 @@ public class Teleop
 					//					if (Hardware.drive.driveByCamera(999.0, .2, .25,
 					//					        0.0, true))
 					//						;
+				}
+				else
+				{
+					Hardware.transmission.controls(0.0, 0.0);
 				}
 			}
 		}
@@ -327,26 +332,66 @@ public class Teleop
 			//end raise/lower camera block
 
 			//Block of code to align us on the goal using the camera
+			//Will fire the boulder when done.
 			if (Hardware.rightOperator.getTrigger() == true)
 			{
 				//Tell the code to align us to the camera
 				isAligningByCamera = true;
+				isFiringByCamera = true;
 			}
+
+			//Align, but do not fire.
+			if (Hardware.leftOperator.getRawButton(5))
+			{
+				isAligningByCamera = true;
+			}
+
 			//If we want to point at the goal using the camera
 			if (isAligningByCamera == true)
 			{
+				//check if there is a ball in the arm
+				if (Hardware.armIR.isOn() == true)
+				{
+					//move the arm to deposit position
+					//					if (Hardware.pickupArm
+					//					        .moveToPosition(ArmPosition.DEPOSIT))
+					{
+						//put the ball in the catapult
+						Hardware.pickupArm.pullInBall(true);
+					}
+				}
+
 				//Keep trying to point at the goal
 				if (Hardware.drive.alignByCamera(
 				        PERCENT_IMAGE_PROCESSING_DEADBAND,
-				        CAMERA_ALIGNMENT_TURNING_SPEED, -.46,
-				        false) == true)
+				        CAMERA_ALIGNMENT_TURNING_SPEED, -.325,
+				        false) == true)  //TODO uncomment
+				//				if (Hardware.drive.driveByCamera(24.0,
+				//				        PERCENT_IMAGE_PROCESSING_DEADBAND,
+				//				        CAMERA_ALIGNMENT_TURNING_SPEED, -.46,
+				//				        false) == true)
 				{
 					// Once we're in the center, tell the code we no longer care about
 					// steering towards the goal
 					isAligningByCamera = false;
+
+					//Using right trigger. FIRE.
+					if (isFiringByCamera == true)
+					{
+						fireRequested = true;
+						Hardware.armOutOfWayTimer.reset();
+						Hardware.armOutOfWayTimer.start();
+
+						isFiringByCamera = false;
+					}
 				}
 			}
-
+			//cancel the align request if the right operator presses buttons 10 and 11 at the same time.
+			if (Hardware.rightOperator.getRawButton(10) == true
+			        && Hardware.rightOperator.getRawButton(11) == true)
+			{
+				isAligningByCamera = false;
+			}
 			//end alignByCameraBlock
 
 			// Block of code to pick up ball or push it out
@@ -378,7 +423,9 @@ public class Teleop
 			{
 				//Tell the code to start firing
 				fireRequested = true;
+
 				Hardware.armOutOfWayTimer.start();
+
 			}
 			//if the override button is pressed and we want to fire
 			if (Hardware.leftOperator
@@ -408,13 +455,23 @@ public class Teleop
 			        && Hardware.leftOperator
 			                .getRawButton(FIRE_OVERRIDE_BUTTON) != true)
 			{
-				// fire, if we're ready to
-				if (fire(3, false) == true)
+				if (Hardware.armIR.isOn() == true)
 				{
-					// if we're done firing, drop the request
-					fireRequested = false;
-					Hardware.armOutOfWayTimer.stop();
-					Hardware.armOutOfWayTimer.reset();
+					if (Hardware.pickupArm
+					        .moveToPosition(ArmPosition.DEPOSIT))
+					{
+						Hardware.pickupArm.pullInBall(true);
+					}
+				}
+				else
+				{// fire, if we're ready to
+					if (fire(3, false) == true)
+					{
+						// if we're done firing, drop the request
+						fireRequested = false;
+						Hardware.armOutOfWayTimer.stop();
+						Hardware.armOutOfWayTimer.reset();
+					}
 				}
 			}
 
@@ -810,19 +867,20 @@ public class Teleop
 		// System.out.println("Right Operator: " + Hardware.rightOperator.getY());
 
 		// IR sensors-----------
-		//System.out.println("left IR = " + Hardware.leftIR.isOn());
-		//System.out.println("right IR = " + Hardware.rightIR.isOn());
+		//		System.out.println("left IR = " + Hardware.leftIR.isOn());
+		//		System.out.println("right IR = " + Hardware.rightIR.isOn());
 		//	System.out.println("Has ball IR = " + Hardware.armIR.isOn());
 
 
 
 
 		// pots-----------------
-		// System.out.println("delay pot = " + (int) Hardware.delayPot.get());
+		//		System.out.println(
+		//		        "delay pot = " + (int) Hardware.delayPot.get());
 		// prints the value of the transducer- (range in code is 50)
 		//hits psi of 100 accurately
 		//System.out.println("transducer = " + Hardware.transducer.get());
-		System.out.println("Arm Pot = " + Hardware.armPot.get());
+		//		System.out.println("Arm Pot = " + Hardware.armPot.get());
 
 		// Motor controllers-----
 		// prints value of the motors
@@ -846,19 +904,19 @@ public class Teleop
 		// Hardware.catapultSolenoid2.get());
 
 		// Encoders-------------
-		System.out.println(
-		        "RR distance = "
-		                + Hardware.rightRearEncoder.getDistance());
-		System.out.println(
-		        "LR distance = "
-		                + Hardware.leftRearEncoder.getDistance());
-		                //    //    	 System.out.println("Arm Motor = " + Hardware.armMotor.getDistance());
-		                //    System.out.println(
-		                //            "Right Rear Encoder Tics: "
-		                //                    + Hardware.rightRearEncoder.get());
-		                //    System.out.println(
-		                //            "Left Rear Encoder Tics: "
-		                //                    + Hardware.leftRearEncoder.get());
+		//		System.out.println(
+		//		        "RR distance = "
+		//		                + Hardware.rightRearEncoder.getDistance());
+		//		System.out.println(
+		//		        "LR distance = "
+		//		                + Hardware.leftRearEncoder.getDistance());
+		//    //    	 System.out.println("Arm Motor = " + Hardware.armMotor.getDistance());
+		//    System.out.println(
+		//            "Right Rear Encoder Tics: "
+		//                    + Hardware.rightRearEncoder.get());
+		//    System.out.println(
+		//            "Left Rear Encoder Tics: "
+		//                    + Hardware.leftRearEncoder.get());
 
 
 		// Encoders-------------
@@ -889,8 +947,8 @@ public class Teleop
 		// System.out.println(Hardware.ringLightRelay.get());
 
 		// ImageProcessing-------
-		System.out.println("Number of seen blobs:"
-		        + Hardware.imageProcessor.getNumBlobs());
+		//    System.out.println("Number of seen blobs:"
+		//            + Hardware.imageProcessor.getNumBlobs());
 	} // end printStatements
 
 
@@ -919,9 +977,9 @@ public class Teleop
 
 	private static final double PICKUP_ARM_CONTROL_DEADZONE = 0.2;
 
-	private final static double PERCENT_IMAGE_PROCESSING_DEADBAND = .20;
+	private final static double PERCENT_IMAGE_PROCESSING_DEADBAND = .15;
 
-	private final static double CAMERA_ALIGNMENT_TURNING_SPEED = .40;
+	private final static double CAMERA_ALIGNMENT_TURNING_SPEED = .55;
 
 	private final static double ARM_IS_OUT_OF_WAY_TIME = .55;
 
@@ -933,6 +991,8 @@ public class Teleop
 	// ==========================================
 
 	private static boolean isAligningByCamera = false;
+
+	private static boolean isFiringByCamera = false;
 
 	private static boolean cameraIsUp = false;
 

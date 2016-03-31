@@ -61,8 +61,10 @@ package org.usfirst.frc.team339.robot;
 
 import org.usfirst.frc.team339.Hardware.Hardware;
 import org.usfirst.frc.team339.HardwareInterfaces.DoubleSolenoid;
+import org.usfirst.frc.team339.HardwareInterfaces.transmission.Transmission_old.debugStateValues;
 import org.usfirst.frc.team339.Utils.ImageProcessing.ObjectRemoval;
 import edu.wpi.first.wpilibj.IterativeRobot;
+import edu.wpi.first.wpilibj.Relay;
 import edu.wpi.first.wpilibj.Relay.Direction;
 
 /**
@@ -169,7 +171,81 @@ public class Robot extends IterativeRobot
 		// =========================================================
 		// User code goes below here
 		// =========================================================
+		try
+		{
+			//check the Autonomous ENABLED/DISABLED switch.
+			Autonomous.autonomousEnabled =
+			        Hardware.autonomousEnabled.isOn();
 
+			// set the delay time based on potentiometer.
+			Autonomous.delay = Autonomous.initDelayTime();
+
+			// get the lane based off of startingPositionPotentiometer
+			Autonomous.lane = Autonomous.getLane();
+
+			Autonomous.debug = Autonomous.DEBUGGING_DEFAULT;
+
+			Hardware.transmission
+			        .setDebugState(debugStateValues.DEBUG_NONE);
+
+			Autonomous.initAutoState();
+			// Hardware.drive.setMaxSpeed(MAXIMUM_AUTONOMOUS_SPEED);
+
+			// -------------------------------------
+			// motor initialization
+			// -------------------------------------
+
+			Hardware.transmission.setFirstGearPercentage(1.0);
+			Hardware.transmission.setGear(1);
+			Hardware.transmission.setJoysticksAreReversed(true);
+			Hardware.transmission.setJoystickDeadbandRange(0.0);
+
+			// --------------------------------------
+			// Encoder Initialization
+			// --------------------------------------
+			Hardware.leftRearEncoder.reset();
+			Hardware.rightRearEncoder.reset();
+
+			// Sets Resolution of camera
+			Hardware.ringLightRelay.set(Relay.Value.kOff);
+
+			Hardware.axisCamera
+			        .writeBrightness(
+			                Hardware.MINIMUM_AXIS_CAMERA_BRIGHTNESS);
+
+			// ---------------------------------------
+			// turn the timer off and reset the counter
+			// so that we can use it in autonomous
+			// ---------------------------------------
+			Hardware.kilroyTimer.stop();
+			Hardware.kilroyTimer.reset();
+
+			Hardware.leftRearEncoder.reset();
+			Hardware.rightRearEncoder.reset();
+			Hardware.leftFrontMotor.set(0.0);
+			Hardware.leftRearMotor.set(0.0);
+			Hardware.rightFrontMotor.set(0.0);
+			Hardware.rightRearMotor.set(0.0);
+			Hardware.armMotor.set(0.0);
+			Hardware.armIntakeMotor.set(0.0);
+
+			Hardware.catapultSolenoid0.set(false);
+			Hardware.catapultSolenoid1.set(false);
+			Hardware.catapultSolenoid2.set(false);
+
+			try
+			{
+				Hardware.errorMessage.clearErrorlog();
+			}
+			catch (Exception e)
+			{
+				System.out.println("clearing log is the problem");
+			}
+		}
+		catch (Exception e)
+		{
+			System.out.println("Disabled init died");
+		}
 		// =========================================================
 		// User code goes above here
 		// =========================================================
@@ -358,7 +434,8 @@ public class Robot extends IterativeRobot
 		//	Hardware.cameraServer.startAutomaticCapture(Hardware.cam0);
 		// Sets the hue, saturation, and luminance values for the vision
 		// processing.
-		Hardware.imageProcessor.setHSLValues(0, 255, 0, 75, 5, 141);
+		//Hardware.imageProcessor.setHSLValues(0, 255, 0, 75, 5, 141);
+		Hardware.imageProcessor.setHSLValues(0, 231, 0, 76, 9, 105);
 		// Has us remove small objects at the intensity of 5. May have to
 		// change those values.
 		// Hardware.imageProcessor.setObjectRemoval(ObjectRemoval.BORDER);

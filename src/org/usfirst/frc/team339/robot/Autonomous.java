@@ -148,6 +148,10 @@ public class Autonomous
 		 */
 		TURN_TO_FACE_GOAL, // rotates toward the goal.
 		/**
+		 * An attempt to fix turning problem.
+		 */
+		STOP_ALL_MOTORS,
+		/**
 		 * Once we are facing the goal, we may sometimes drive forwards.
 		 */
 		DRIVE_UP_TO_GOAL, // drives up the goal.
@@ -249,17 +253,17 @@ public class Autonomous
 	/**
 	 * The boolean that decides whether or not we run autonomous.
 	 */
-	private static boolean autonomousEnabled;
+	public static boolean autonomousEnabled;
 
 	/**
 	 * Time to delay at beginning. 0-3 seconds
 	 */
-	private static double delay; // time to delay before beginning.
+	public static double delay; // time to delay before beginning.
 
 	/**
 	 * Number of our starting position, and path further on.
 	 */
-	private static int lane;
+	public static int lane;
 
 
 	private static int accelerationStage = 0;
@@ -273,7 +277,11 @@ public class Autonomous
 	/**
 	 * Prints print that it prints prints while it prints true.
 	 */
-	private static boolean debug;
+	public static boolean debug;
+
+	private static boolean oneTimePrint1 = false;
+	private static boolean oneTimePrint2 = false;
+	private static boolean oneTimePrint3 = false;
 
 	// ==========================================
 	// TUNEABLES
@@ -303,8 +311,10 @@ public class Autonomous
 
 			debug = DEBUGGING_DEFAULT;
 
+			initAutoState();
+
 			Hardware.transmission
-			        .setDebugState(debugStateValues.DEBUG_ALL);
+			        .setDebugState(debugStateValues.DEBUG_NONE);
 
 			// Hardware.drive.setMaxSpeed(MAXIMUM_AUTONOMOUS_SPEED);
 
@@ -346,6 +356,10 @@ public class Autonomous
 			Hardware.armMotor.set(0.0);
 			Hardware.armIntakeMotor.set(0.0);
 
+			Hardware.catapultSolenoid0.set(false);
+			Hardware.catapultSolenoid1.set(false);
+			Hardware.catapultSolenoid2.set(false);
+
 			try
 			{
 				Hardware.errorMessage.clearErrorlog();
@@ -383,7 +397,7 @@ public class Autonomous
 		if (runArmStates == true)
 		//run the arm state machine.
 		{
-			System.out.println("\t" + armState);
+			//System.out.println("\t" + armState);
 			runArmStates();
 		}
 		else
@@ -392,7 +406,7 @@ public class Autonomous
 		}
 
 
-		Teleop.printStatements();
+		//Teleop.printStatements();
 
 	} // end Periodic
 
@@ -400,18 +414,24 @@ public class Autonomous
 	/**
 	 * Sets the delay time in full seconds based on potentiometer.
 	 */
-	private static int initDelayTime ()
+	public static int initDelayTime ()
 	{
 		return (int) (MAXIMUM_DELAY * Hardware.delayPot.get()
 		        / Hardware.DELAY_POT_DEGREES);
 	}
 
+	public static void initAutoState ()
+	{
+		mainState = MainState.INIT;
+	}
 
 	/**
 	 * Called periodically to run the overarching states.
 	 */
 	private static void runMainStateMachine ()
 	{
+
+		//Teleop.printStatements();
 
 		if (debug == true)
 		// print out states.
@@ -471,19 +491,26 @@ public class Autonomous
 			break;
 
 		case ACCELERATE_FROM_ZERO:
+			//Allows us to slowly accelerate from zero without turning
 
+			//So long as there are more acceleration numbers in the series.
 			if (accelerationStage < DriveInformation.ACCELERATION_RATIOS.length)
 			{
+				//Drive continuously at speed increments
 				Hardware.drive.driveStraightByInches(99999, false,
 				        DriveInformation.ACCELERATION_RATIOS[accelerationStage],
 				        DriveInformation.ACCELERATION_RATIOS[accelerationStage]);
+
+				//When the time has come,
 				if (Hardware.delayTimer
 				        .get() > DriveInformation.ACCELERATION_TIMES[accelerationStage])
 				{
+					//go to next stage.
 					accelerationStage++;
 				}
 			}
 			else
+			//there are no stages left. continue onwards.
 			{
 				Hardware.delayTimer.stop();
 				Hardware.delayTimer.reset();
@@ -514,7 +541,7 @@ public class Autonomous
 				//UNLESS...
 				//When going under the low bar (lane 1), the arm must be down.
 				if ((lane == 1 || lane == 6)
-				        && (Hardware.pickupArm.isDown() == false))
+				        && (Hardware.pickupArm.isUnderBar() == false))
 				//arm is not down in time. STOP.
 				{
 					mainState = MainState.WAIT_FOR_ARM_DESCENT;
@@ -556,19 +583,32 @@ public class Autonomous
 				//put up camera.
 				Hardware.cameraSolenoid.set(Value.kReverse);
 
-				armState = ArmState.MOVE_UP_TO_DEPOSIT;
+
 
 				//Teleop.printStatements();
 				resetEncoders();
 
-				//initiate the arm motion.
+
+
+				//We are over the outer works. Start the arm back up.
+				armState = ArmState.MOVE_UP_TO_DEPOSIT;
 				runArmStates = true;
 
 				mainState = MainState.FORWARDS_BASED_ON_ENCODERS_OR_IR;
+
+
+				//temporary; stops after over outer works.
+				//3 is chosen for this arbitrarily.
+				if (lane == 3)
+				{
+					mainState = MainState.DONE;
+				}
+
 			}
 			break;
 
 		case WAIT_FOR_ARM_DESCENT:
+			//Stop during the wait. We do not want to ram the bar.
 			Hardware.transmission.controls(0.0, 0.0);
 			//System.out.println(Hardware.armPot.get());
 			if (Hardware.pickupArm.moveToPosition(
@@ -637,6 +677,7 @@ public class Autonomous
 
 				//Teleop.printStatements();
 
+
 				Hardware.delayTimer.reset();
 				Hardware.delayTimer.start();
 			}
@@ -669,7 +710,7 @@ public class Autonomous
 			if (Hardware.drive.driveStraightByInches(
 			        DriveInformation.FORWARDS_FROM_ALIGNMENT_LINE_DISTANCE[lane]
 			                * labScalingFactor,
-			        false,//true, //breaking here is preferable.
+			        true, //breaking here is preferable.
 			        DriveInformation.FORWARDS_FROM_ALIGNMENT_LINE_MOTOR_RATIO[lane],
 			        DriveInformation.FORWARDS_FROM_ALIGNMENT_LINE_MOTOR_RATIO[lane]) == true)
 			{
@@ -690,16 +731,30 @@ public class Autonomous
 				//reset Encoders to prepare for next state
 				resetEncoders();
 
-				Hardware.ringLightRelay.set(Relay.Value.kOn);
+				//Hardware.ringLightRelay.set(Relay.Value.kOn);
 
 				armState = ArmState.HOLD;
 
+				Hardware.transmission.controls(0.0, 0.0);
+
 				//then drive.
-				mainState = MainState.DONE;
+				mainState = MainState.DRIVE_UP_TO_GOAL;
 			}
 			break;
 
+
+
 		case DRIVE_UP_TO_GOAL:
+
+			if (oneTimePrint1 == false)
+			{
+				oneTimePrint1 = true;
+				System.out.println(mainState + "\n\tLeft Encoder: "
+				        + Hardware.leftRearEncoder.getDistance()
+				        + "\n\tLeft Encoder: "
+				        + Hardware.leftRearEncoder.getDistance());
+			}
+
 			//Moves to goal. Stops to align.
 			if (((Hardware.drive.driveStraightByInches(
 			        DriveInformation.DRIVE_UP_TO_GOAL[lane]
@@ -707,16 +762,34 @@ public class Autonomous
 			        false,
 			        DriveInformation.DRIVE_UP_TO_GOAL_MOTOR_RATIO[lane],
 			        DriveInformation.DRIVE_UP_TO_GOAL_MOTOR_RATIO[lane]) == true)
-			        || (Hardware.leftIR.isOn()
-			                || Hardware.rightIR.isOn())))
+			//TODO: see if IRs are a problem.
+			//			        || (Hardware.leftIR.isOn()
+			//			                || Hardware.rightIR.isOn())
+			))
 			//Go to align.
 			{
+
+				if (oneTimePrint2 == false)
+				{
+					oneTimePrint2 = true;
+					System.out.println(mainState + "\n\tLeft Encoder: "
+					        + Hardware.leftRearEncoder.getDistance()
+					        + "\n\tLeft Encoder: "
+					        + Hardware.leftRearEncoder.getDistance());
+				}
 
 				//reset Encoders to prepare for next state.
 				resetEncoders();
 
 				//go to align.
-				mainState = MainState.ALIGN_IN_FRONT_OF_GOAL;
+				mainState = MainState.DONE;
+			}
+
+			if (oneTimePrint3 == false &&
+			        (Hardware.leftIR.isOn() || Hardware.rightIR.isOn()))
+			{
+				oneTimePrint3 = true;
+				System.out.println("An IR found something.");
 			}
 			break;
 
@@ -725,11 +798,14 @@ public class Autonomous
 			{
 				mainState = MainState.DONE;//MainState.SHOOT;
 			}
+			break;
 
 		case ALIGN_IN_FRONT_OF_GOAL:
 			//align based on the camera until we are facing the goal. head-on.
+			Hardware.transmission.controls(0.0, 0.0);
+
 			//TODO: Demystify magic numbers
-			if (Hardware.drive.alignByCamera(0.1, .4, 0.0,
+			if (Hardware.drive.alignByCamera(0.2, .4, -.325,
 			        false) == true)
 			//Once we are in position, we shoot!
 			{
@@ -748,9 +824,18 @@ public class Autonomous
 			//Check if enough time has passed for the air to have been released.
 			if (hasShot() == true)
 			{
+				Hardware.catapultSolenoid0.set(false);
+				Hardware.catapultSolenoid1.set(false);
+				Hardware.catapultSolenoid2.set(false);
+
 				mainState = MainState.DONE;
 			}
+			break;
 
+		case STOP_ALL_MOTORS:
+			Hardware.transmission.controls(0.0, 0.0);
+			mainState = MainState.DRIVE_UP_TO_GOAL;
+			break;
 		default:
 		case DONE:
 			//clean everything up;
@@ -768,6 +853,8 @@ public class Autonomous
 
 	private static void mainInit ()
 	{
+
+		resetEncoders();
 
 		Hardware.kilroyTimer.reset();
 		Hardware.kilroyTimer.start();
@@ -889,6 +976,8 @@ public class Autonomous
 	private static void shoot ()
 	{
 
+		Hardware.transmission.controls(0.0, 0.0);
+
 		//Make sure the arm is out of the way.
 		if (Hardware.pickupArm.isClearOfArm())
 		{
@@ -898,6 +987,11 @@ public class Autonomous
 			Hardware.catapultSolenoid1.set(true);
 			Hardware.catapultSolenoid2.set(true);
 
+		}
+		else
+		{
+			//TODO: move arm out of way.
+			//armState = ArmState.
 		}
 
 		//set a timer so that we know when to close the solenoids.
@@ -1039,7 +1133,7 @@ public class Autonomous
 	 * 
 	 * @return lane/starting position
 	 */
-	private static int getLane ()
+	public static int getLane ()
 	{
 		int position = Hardware.startingPositionDial.getPosition();
 
@@ -1308,6 +1402,7 @@ public class Autonomous
 		                1.0
 		        };
 
+
 		/**
 		 * Distance from Outer Works checkpoint to Alignment Line.
 		 * The front of the robot will be touching the Lion.
@@ -1369,7 +1464,7 @@ public class Autonomous
 	/**
 	 * Set to true to print out print statements.
 	 */
-	private static final boolean DEBUGGING_DEFAULT = true;
+	public static final boolean DEBUGGING_DEFAULT = true;
 
 	/**
 	 * Factor by which to scale all distances for testing in our small lab
