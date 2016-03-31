@@ -1452,10 +1452,6 @@ public boolean alignByCamera (double percentageDeadBandX,
             if (Hardware.imageProcessor
                     .getParticleAnalysisReports().length > 0)
                 {
-                System.out
-                        .println("CenterOfMass: "
-                                + Hardware.imageProcessor
-                                        .getParticleAnalysisReports()[0].center_mass_x);
                 System.out.println("Relative x center of Mass :"
                         + (getRelativeCameraCoordinate(
                                 Hardware.imageProcessor
@@ -1464,6 +1460,7 @@ public boolean alignByCamera (double percentageDeadBandX,
                 System.out.println("Relative y center of Mass:"
                         + getRelativeYCoordinate(Hardware.imageProcessor
                                 .getParticleAnalysisReports()[0].center_mass_y));
+                System.out.println(this.isInTurningSection);
                 }
 
             //if we're below where we want to be on the y axis
