@@ -367,10 +367,6 @@ public static void periodic ()
                     PERCENT_IMAGE_PROCESSING_DEADBAND,
                     CAMERA_ALIGNMENT_TURNING_SPEED, -.325, -.483,
                     false) == true)  //TODO uncomment
-            //				if (Hardware.drive.driveByCamera(24.0,
-            //				        PERCENT_IMAGE_PROCESSING_DEADBAND,
-            //				        CAMERA_ALIGNMENT_TURNING_SPEED, -.46,
-            //				        false) == true)
                 {
                 // Once we're in the center, tell the code we no longer care about
                 // steering towards the goal
@@ -980,7 +976,7 @@ private static final double PICKUP_ARM_CONTROL_DEADZONE = 0.2;
 
 private final static double PERCENT_IMAGE_PROCESSING_DEADBAND = .15;
 
-private final static double CAMERA_ALIGNMENT_TURNING_SPEED = .55;
+private final static double CAMERA_ALIGNMENT_TURNING_SPEED = .47;
 
 private final static double ARM_IS_OUT_OF_WAY_TIME = .55;
 
