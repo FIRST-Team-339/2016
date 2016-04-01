@@ -58,6 +58,8 @@ public class Teleop
  */
 public static void init ()
 {
+
+    Guidance.updateBallStatus(false);
     CameraServer.getInstance().setSize(1);
     Hardware.axisCamera
             .writeBrightness(
@@ -197,9 +199,11 @@ public static void periodic ()
         if (Math.abs(Hardware.rightOperator
                 .getY()) >= PICKUP_ARM_CONTROL_DEADZONE)
             {
-            // use the formula for the sign (value/abs(value)) to get the direction
+            // use the formula for the sign (value/abs(value)) to get the
+            // direction
             // we want the motor to go in,
-            // and round it just in case it isn't exactly 1, then cast to an int to
+            // and round it just in case it isn't exactly 1, then cast to an int
+            // to
             // make the compiler happy
             Hardware.pickupArm.moveReasonably(
                     -(int) Math.round(Hardware.rightOperator.getY()
@@ -261,14 +265,16 @@ public static void periodic ()
                 fireRequested = false;
                 }
             }
-        // If the drivers decided they were being stupid and we don't want to fire anymore
+        // If the drivers decided they were being stupid and we don't want to
+        // fire anymore
         if (Hardware.leftOperator
                 .getRawButton(FIRE_CANCEL_BUTTON) == true)
             {
             //Stop asking the code to fire
             fireRequested = false;
             }
-        // if we want to fire, the arm is out of the way, and we have enough pressure so we don't hurt ourselves.
+        // if we want to fire, the arm is out of the way, and we have enough
+        // pressure so we don't hurt ourselves.
         if (fireRequested == true
                 && Hardware.pickupArm.moveToPosition(
                         ManipulatorArm.ArmPosition.CLEAR_OF_FIRING_ARM) == true
@@ -292,9 +298,11 @@ public static void periodic ()
         if (Math.abs(Hardware.rightOperator
                 .getY()) >= PICKUP_ARM_CONTROL_DEADZONE)
             {
-            // use the formula for the sign (value/abs(value)) to get the direction
+            // use the formula for the sign (value/abs(value)) to get the
+            // direction
             // we want the motor to go in,
-            // and round it just in case it isn't exactly 1, then cast to an int to
+            // and round it just in case it isn't exactly 1, then cast to an int
+            // to
             // make the compiler happy
             Hardware.pickupArm.moveReasonably(
                     -(int) Math.round(Hardware.rightOperator.getY()
@@ -368,7 +376,8 @@ public static void periodic ()
                     CAMERA_ALIGNMENT_TURNING_SPEED, -.325, -.483,
                     false) == true)  //TODO uncomment
                 {
-                // Once we're in the center, tell the code we no longer care about
+                // Once we're in the center, tell the code we no longer care
+                // about
                 // steering towards the goal
                 isAligningByCamera = false;
 
@@ -383,7 +392,8 @@ public static void periodic ()
                     }
                 }
             }
-        //cancel the align request if the right operator presses buttons 10 and 11 at the same time.
+        // cancel the align request if the right operator presses buttons 10 and
+        // 11 at the same time.
         if (Hardware.rightOperator.getRawButton(10) == true
                 && Hardware.rightOperator.getRawButton(11) == true)
             {
@@ -436,14 +446,16 @@ public static void periodic ()
                 fireRequested = false;
                 }
             }
-        // If the drivers decided they were being stupid and we don't want to fire anymore
+        // If the drivers decided they were being stupid and we don't want to
+        // fire anymore
         if (Hardware.leftOperator
                 .getRawButton(FIRE_CANCEL_BUTTON) == true)
             {
             //Stop asking the code to fire
             fireRequested = false;
             }
-        // if we want to fire, the arm is out of the way, and we have enough pressure so we don't hurt ourselves.
+        // if we want to fire, the arm is out of the way, and we have enough
+        // pressure so we don't hurt ourselves.
         if (fireRequested == true
                 && Hardware.pickupArm.moveToPosition(
                         ManipulatorArm.ArmPosition.CLEAR_OF_FIRING_ARM) == true
@@ -512,11 +524,14 @@ public static void periodic ()
         //            //tell imageProcessor to use the image we just took to look for 
         //            //blobs
         //            Hardware.imageProcessor.updateParticleAnalysisReports();
-        //            if(Hardware.imageProcessor.getParticleAnalysisReports()[0].center_mass_x <=70)
+        // if(Hardware.imageProcessor.getParticleAnalysisReports()[0].center_mass_x
+        // <=70)
         //                {
         //                Hardware.arrowDashboard.setDirection(Guidance.Direction.left);
         //                }
-        //            else if(Hardware.imageProcessor.getParticleAnalysisReports()[0].center_mass_x >= 90)
+        // else
+        // if(Hardware.imageProcessor.getParticleAnalysisReports()[0].center_mass_x
+        // >= 90)
         //                {
         //                Hardware.arrowDashboard.setDirection(Guidance.Direction.right);
         //                }
@@ -537,8 +552,11 @@ public static void periodic ()
         //    //put the arrows on the screen
         //    Hardware.arrowDashboard.update();
 
-        //If the ball is in the robot, update the driver station with that info
-        if (Hardware.armIR.get())
+
+        // If the ball is in the robot, update the driver station with
+        // that info. This will also light up the Driver Station green
+        // when it updates the status.
+        if (Hardware.armIR.isOn() == true)
             {
             Guidance.updateBallStatus(true);
             }
@@ -1009,7 +1027,8 @@ private static boolean takingUnlitImage = false;
 // brightness, turns on ringlight, starts timer
 private static boolean prepPic = false;
 
-//Stores temporarily whether firingState is true, for use in whether the arm is in the way
+// Stores temporarily whether firingState is true, for use in whether the arm is
+// in the way
 private static boolean storeFiringState;
 
 } // end class

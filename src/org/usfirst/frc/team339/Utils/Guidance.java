@@ -21,12 +21,13 @@ private static Direction direction = Direction.neutral;
  * 
  *            if the armIR senses that the robot already has
  *            a ball, send that info to the SmartDashboard.
+ *            This will also turn the Driver Station green.
  * 
  * @author Ryan McGee
  */
 public static void updateBallStatus (boolean robotHasBall)
 {
-    if (robotHasBall)
+    if (robotHasBall == true)
         {
         SmartDashboard.putBoolean("Has Ball", true);
         }
@@ -66,7 +67,7 @@ public void update ()
             break;
 
         case linedUp:
-            SmartDashboard.putBoolean("Straight", true);
+            SmartDashboard.putBoolean("Straight", false);
             SmartDashboard.putBoolean("Right", false);
             SmartDashboard.putBoolean("Left", false);
             SmartDashboard.putBoolean("Stop", false);
@@ -126,6 +127,7 @@ public static enum Direction
      */
     linedUp
     }
+
 
 }
 

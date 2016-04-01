@@ -72,7 +72,7 @@ public class Autonomous
 		 * though most things are initialized
 		 * in init().
 		 */
-		INIT, // beginning, check conditions
+		INIT,
 		/**
 		 * Sets arm to head downward.
 		 */
@@ -86,42 +86,44 @@ public class Autonomous
 		/**
 		 * Moves at a low speed while lowering arm.
 		 * If it reaches the end of the distance, and the arm is not fully down,
-		 * skips to DONE.
+		 * waits for arm descent.
 		 */
-		MOVE_TO_OUTER_WORKS,//
+		MOVE_TO_OUTER_WORKS,
+
+		/**
+		 * Wait for the arm to come down before crossing the outer works.
+		 */
+		WAIT_FOR_ARM_DESCENT,
+
 		/**
 		 * Resets and starts delay timer.
 		 */
-		INIT_DELAY,// sets delay timer.
+		INIT_DELAY,
 		/**
 		 * Waits.
 		 * Waits until the delay is up.
 		 */
-		DELAY, // waits, depending on settings.
+		DELAY,
 		/**
 		 * This state checks to see if we are in lane 1.
 		 * If so, we go until we reach an encoder distance (set to distance to
 		 * alignment tape),
 		 * Else, we go until the sensors find the Alignment tape.
 		 */
-		FORWARDS_BASED_ON_ENCODERS_OR_IR, // decides based on lane whether to move
-		// to tape based on encoders or IR
+		FORWARDS_BASED_ON_ENCODERS_OR_IR,
 		/**
 		 * Go the distance over the outer works.
 		 */
 		FORWARDS_OVER_OUTER_WORKS,
 
-
-
 		/**
 		 * Goes forward until it reaches the set distance to the Alignment tape.
 		 */
-		FORWARDS_TO_TAPE_BY_DISTANCE, // drives the distance required to the tape.
+		FORWARDS_TO_TAPE_BY_DISTANCE,
 		/**
 		 * Goes forward until it senses the Alignment tape.
 		 */
-		FORWARDS_UNTIL_TAPE, // drives forwards until detection of the gaffers'
-		// tape.
+		FORWARDS_UNTIL_TAPE,
 
 		/**
 		 * Drives up 16 inches to put the center of the robot over the Aline.
@@ -137,20 +139,20 @@ public class Autonomous
 		/**
 		 * Upon reaching the Alignment line, sometimes we must rotate.
 		 */
-		ROTATE_ON_ALIGNMENT_LINE, // rotates on the alignment line.
+		ROTATE_ON_ALIGNMENT_LINE,
 		/**
 		 * After reaching the A-line, or after rotating upon reaching it, drives
 		 * towards a position in front of the goal.
 		 */
-		FORWARDS_FROM_ALIGNMENT_LINE, // drives from the alignment line.
+		FORWARDS_FROM_ALIGNMENT_LINE,
 		/**
 		 * After reaching a spot in front of the goal, we turn to face it.
 		 */
-		TURN_TO_FACE_GOAL, // rotates toward the goal.
+		TURN_TO_FACE_GOAL,
 		/**
 		 * Once we are facing the goal, we may sometimes drive forwards.
 		 */
-		DRIVE_UP_TO_GOAL, // drives up the goal.
+		DRIVE_UP_TO_GOAL,
 		/**
 		 * Once we are in the shooting position, we align based on the chimera.
 		 */
@@ -160,16 +162,10 @@ public class Autonomous
 		 */
 		SHOOT, // adjusts its self (?) and fires the cannon ball.
 
-
 		/**
 		 * Wait to close the solenoids.
 		 */
 		DELAY_AFTER_SHOOT,
-
-		/**
-		 * Wait for the arm to come down before crossing the outer works.
-		 */
-		WAIT_FOR_ARM_DESCENT,
 
 		/**
 		 * We stop, and do nothing else.
@@ -555,7 +551,16 @@ public class Autonomous
 			}
 			break;
 
+		case WAIT_FOR_ARM_DESCENT:
+			//Stop during the wait. We do not want to ram the bar.
+			Hardware.transmission.controls(0.0, 0.0);
 
+			//Put the arm down,
+			//and when that is done, continue.
+			if (Hardware.pickupArm.moveToPosition(
+			        ManipulatorArm.ArmPosition.FULL_DOWN) == true)
+				mainState = MainState.FORWARDS_OVER_OUTER_WORKS;
+			break;
 
 
 		case FORWARDS_OVER_OUTER_WORKS:
@@ -587,6 +592,7 @@ public class Autonomous
 				armState = ArmState.MOVE_UP_TO_DEPOSIT;
 				runArmStates = true;
 
+				//decide whether to stop next by encoder distance, or when IRs detect tape.
 				mainState = MainState.FORWARDS_BASED_ON_ENCODERS_OR_IR;
 
 
@@ -600,16 +606,7 @@ public class Autonomous
 			}
 			break;
 
-		case WAIT_FOR_ARM_DESCENT:
-			//Stop during the wait. We do not want to ram the bar.
-			Hardware.transmission.controls(0.0, 0.0);
 
-			//Put the arm down,
-			//and when that is done, continue.
-			if (Hardware.pickupArm.moveToPosition(
-			        ManipulatorArm.ArmPosition.FULL_DOWN) == true)
-				mainState = MainState.FORWARDS_OVER_OUTER_WORKS;
-			break;
 
 
 		case FORWARDS_BASED_ON_ENCODERS_OR_IR:
@@ -796,8 +793,11 @@ public class Autonomous
 			//align based on the camera until we are facing the goal. head-on.
 			Hardware.transmission.controls(0.0, 0.0);
 
-			//TODO: Demystify magic numbers
-			if (Hardware.drive.alignByCamera(0.2, 0.2, .4, -.325, -.483,
+			if (Hardware.drive.alignByCamera(
+			        Autonomous.ALIGNMENT_DEADBAND,
+			        Autonomous.ALIGNMENT_DEADBAND,
+			        DriveInformation.ALIGNMENT_SPEED,
+			        ALIGNMENT_X_OFFSET, ALIGNMENT_Y_OFFSET,
 			        false) == true)
 			//Once we are in position, we shoot!
 			{
@@ -882,9 +882,6 @@ public class Autonomous
 			Hardware.delayTimer.reset();
 		}
 
-		if (Hardware.pickupArm.isDown() == true)
-		{
-		}
 
 		return done;
 
@@ -1113,8 +1110,11 @@ public class Autonomous
 	 */
 	public static void resetEncoders ()
 	{
+		//accumulate total distance. used for debugging.
 		totalDistance += (Hardware.leftRearEncoder.getDistance()
 		        + Hardware.rightRearEncoder.get()) / 2;
+
+		//reset.
 		Hardware.leftRearEncoder.reset();
 		Hardware.rightRearEncoder.reset();
 	}
@@ -1164,11 +1164,19 @@ public class Autonomous
 
 	/**
 	 * Contains distances and speeds at which to drive.
+	 * 
+	 * Note that many of these are arrays.
+	 * This is usually to determine different speeds and distances for each
+	 * lane.
+	 * 
 	 */
 	private static final class DriveInformation
 	{
 
-
+		/**
+		 * A set of motor ratios that will be used in succession
+		 * when accelerating from zero.
+		 */
 		private static final double[] ACCELERATION_RATIOS =
 		        {
 		                0.1,
@@ -1176,6 +1184,9 @@ public class Autonomous
 		                0.3
 		        };
 
+		/**
+		 * The time at which each acceleration stage will end.
+		 */
 		private static final double[] ACCELERATION_TIMES =
 		        {
 		                0.2,
@@ -1183,12 +1194,17 @@ public class Autonomous
 		                0.6
 		        };
 
+		/**
+		 * The speed at which we want to go over the outer works, for each lane.
+		 * note that it is to be low for lane 1, yet high for the others,
+		 * so as to accommodate more difficult obstacles.
+		 */
 		private static final double[] DRIVE_OVER_OUTER_WORKS_MOTOR_RATIOS =
 		        {
 		                0.0,
 		                0.4,
 		                0.7,
-		                0.7,
+		                0.8,
 		                0.7,
 		                0.7,
 		                0.4
@@ -1218,7 +1234,7 @@ public class Autonomous
 		                0.0, // nothing. Not used. Arbitrary; makes it work.
 		                0.40,//0.25, // lane 1, should be extra low.
 		                1.0, // lane 2
-		                0.4, // lane 3
+		                0.5, // lane 3
 		                0.4, // lane 4
 		                0.4, // lane 5
 		                0.4 //backup plan
@@ -1271,6 +1287,9 @@ public class Autonomous
 		                -169.0 //backup plan
 		        };
 
+		/**
+		 * Speed when we move the centre of the robot to the Alignment line.,
+		 */
 		static final double[] CENTRE_TO_ALIGNMENT_LINE_MOTOR_RATIO =
 		        {
 		                0.0,
@@ -1359,6 +1378,10 @@ public class Autonomous
 		                1.0
 		        };
 
+		/**
+		 * Should we want to stop upon going over the outer works,
+		 * this should add extra distance, for assurance.
+		 */
 		static final double[] ADDED_DISTANCE_FROM_OW =
 		        {
 		                0.0,
@@ -1398,9 +1421,12 @@ public class Autonomous
 		/**
 		 * Speed at which to make turns by default.
 		 */
-		private static final double DEFAULT_TURN_SPEED = 0.4; //previously 0.28
+		private static final double DEFAULT_TURN_SPEED = 0.4;
 
-
+		/**
+		 * Speed at which we may align by camera.
+		 */
+		private static final double ALIGNMENT_SPEED = 0.4;
 	}
 
 
@@ -1438,5 +1464,20 @@ public class Autonomous
 	 * Time to wait after releasing the solenoids before closing them back up.
 	 */
 	private static final double DELAY_TIME_AFTER_SHOOT = 1.0;
+
+	/**
+	 * Room for error when aligning by camera.
+	 */
+	private static final double ALIGNMENT_DEADBAND = 0.2;
+
+	/**
+	 * Desired X position of blob while aligning.
+	 */
+	private static final double ALIGNMENT_X_OFFSET = -3.25;
+
+	/**
+	 * Desired Y position of blob while aligning.
+	 */
+	private static final double ALIGNMENT_Y_OFFSET = -.483;
 
 } // end class
