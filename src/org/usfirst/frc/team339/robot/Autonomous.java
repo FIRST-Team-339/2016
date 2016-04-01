@@ -72,7 +72,7 @@ public class Autonomous
 		 * though most things are initialized
 		 * in init().
 		 */
-		INIT, // beginning, check conditions
+		INIT,
 		/**
 		 * Sets arm to head downward.
 		 */
@@ -86,42 +86,44 @@ public class Autonomous
 		/**
 		 * Moves at a low speed while lowering arm.
 		 * If it reaches the end of the distance, and the arm is not fully down,
-		 * skips to DONE.
+		 * waits for arm descent.
 		 */
-		MOVE_TO_OUTER_WORKS,//
+		MOVE_TO_OUTER_WORKS,
+
+		/**
+		 * Wait for the arm to come down before crossing the outer works.
+		 */
+		WAIT_FOR_ARM_DESCENT,
+
 		/**
 		 * Resets and starts delay timer.
 		 */
-		INIT_DELAY,// sets delay timer.
+		INIT_DELAY,
 		/**
 		 * Waits.
 		 * Waits until the delay is up.
 		 */
-		DELAY, // waits, depending on settings.
+		DELAY,
 		/**
 		 * This state checks to see if we are in lane 1.
 		 * If so, we go until we reach an encoder distance (set to distance to
 		 * alignment tape),
 		 * Else, we go until the sensors find the Alignment tape.
 		 */
-		FORWARDS_BASED_ON_ENCODERS_OR_IR, // decides based on lane whether to move
-											// to tape based on encoders or IR
+		FORWARDS_BASED_ON_ENCODERS_OR_IR,
 		/**
 		 * Go the distance over the outer works.
 		 */
 		FORWARDS_OVER_OUTER_WORKS,
 
-
-
 		/**
 		 * Goes forward until it reaches the set distance to the Alignment tape.
 		 */
-		FORWARDS_TO_TAPE_BY_DISTANCE, // drives the distance required to the tape.
+		FORWARDS_TO_TAPE_BY_DISTANCE,
 		/**
 		 * Goes forward until it senses the Alignment tape.
 		 */
-		FORWARDS_UNTIL_TAPE, // drives forwards until detection of the gaffers'
-							// tape.
+		FORWARDS_UNTIL_TAPE,
 
 		/**
 		 * Drives up 16 inches to put the center of the robot over the Aline.
@@ -137,28 +139,20 @@ public class Autonomous
 		/**
 		 * Upon reaching the Alignment line, sometimes we must rotate.
 		 */
-		ROTATE_ON_ALIGNMENT_LINE, // rotates on the alignment line.
+		ROTATE_ON_ALIGNMENT_LINE,
 		/**
 		 * After reaching the A-line, or after rotating upon reaching it, drives
 		 * towards a position in front of the goal.
 		 */
-		FORWARDS_FROM_ALIGNMENT_LINE, // drives from the alignment line.
+		FORWARDS_FROM_ALIGNMENT_LINE,
 		/**
 		 * After reaching a spot in front of the goal, we turn to face it.
 		 */
-		TURN_TO_FACE_GOAL, // rotates toward the goal.
-		/**
-		 * An attempt to fix turning problem.
-		 */
-		STOP_ALL_MOTORS,
+		TURN_TO_FACE_GOAL,
 		/**
 		 * Once we are facing the goal, we may sometimes drive forwards.
 		 */
-		DRIVE_UP_TO_GOAL, // drives up the goal.
-		/**
-		 * Brakes once we are in front of the goal.
-		 */
-		STOP_IN_FRONT_OF_GOAL,
+		DRIVE_UP_TO_GOAL,
 		/**
 		 * Once we are in the shooting position, we align based on the chimera.
 		 */
@@ -172,11 +166,6 @@ public class Autonomous
 		 * Wait to close the solenoids.
 		 */
 		DELAY_AFTER_SHOOT,
-
-		/**
-		 * Wait for the arm to come down before crossing the outer works.
-		 */
-		WAIT_FOR_ARM_DESCENT,
 
 		/**
 		 * We stop, and do nothing else.
@@ -240,6 +229,9 @@ public class Autonomous
 	 * The state to be executed periodically throughout Autonomous.
 	 */
 	private static MainState mainState = MainState.INIT;
+
+	private static MainState prevState = MainState.DONE;
+
 
 	/**
 	 * Used to run arm movements in parallel to the main state machine.
@@ -413,6 +405,8 @@ public class Autonomous
 
 	/**
 	 * Sets the delay time in full seconds based on potentiometer.
+	 * 
+	 * @return the seconds to delay.
 	 */
 	public static int initDelayTime ()
 	{
@@ -420,10 +414,15 @@ public class Autonomous
 		        / Hardware.DELAY_POT_DEGREES);
 	}
 
+
+	/**
+	 * Sets the main state to INIT.
+	 */
 	public static void initAutoState ()
 	{
 		mainState = MainState.INIT;
 	}
+
 
 	/**
 	 * Called periodically to run the overarching states.
@@ -433,32 +432,17 @@ public class Autonomous
 
 		//Teleop.printStatements();
 
+		//use the debug flag 
 		if (debug == true)
-		// print out states.
 		{
-			System.out.println("Main State: " + mainState);
-			//	System.out.println("LeftIR: " + Hardware.leftIR.isOn());
-			//	System.out.println("RightIR: " + Hardware.rightIR.isOn());
+			// print out states ONCE.
+			if (mainState != prevState)
+			{
+				prevState = mainState;
+				System.out.println("Main State: " + mainState);
+			}
 
-			//	if (Hardware.leftIR.isOn() || Hardware.rightIR.isOn())
-			//	{
-			////	Hardware.errorMessage.printError(
-			////	        (mainState + ": An IR has turned on."), PrintsTo.roboRIO,
-			////	        false);
-			//	}
 
-			//System.out.println("Arm Pot: " + Hardware.armPot.get());
-			//	Teleop.printStatements();
-			//	Hardware.errorMessage.printError(
-			//	        "Main State: " + mainState,
-			//	        ErrorMessage.PrintsTo.roboRIO);
-			//	Hardware.errorMessage.printError(
-			//	        "Left:" + Hardware.leftRearEncoder.getDistance(),
-			//	        ErrorMessage.PrintsTo.roboRIO);
-			//	Hardware.errorMessage.printError(
-			//	        "Right:" + Hardware.rightRearEncoder.getDistance(),
-			//	        ErrorMessage.PrintsTo.roboRIO);
-			// System.out.println("Time: " + Hardware.kilroyTimer.get());
 		}
 
 		switch (mainState)
@@ -481,7 +465,6 @@ public class Autonomous
 
 			break;
 
-
 		case BEGIN_LOWERING_ARM:
 			// starts the arm movement to the floor
 			runArmStates = true;
@@ -489,6 +472,25 @@ public class Autonomous
 			// goes into initDelay
 			mainState = MainState.INIT_DELAY;
 			break;
+
+		case INIT_DELAY:
+			// reset and start timer
+			initDelay();
+			// run DELAY state.
+			mainState = MainState.DELAY;
+			break;
+
+		case DELAY:
+			// check whether done or not until done.
+			if (delayIsDone() == true)
+			// go to move forwards while lowering arm when finished.
+			{
+				mainState = MainState.ACCELERATE_FROM_ZERO;
+				Hardware.delayTimer.reset();
+				Hardware.delayTimer.start();
+			}
+			break;
+
 
 		case ACCELERATE_FROM_ZERO:
 			//Allows us to slowly accelerate from zero without turning
@@ -549,35 +551,31 @@ public class Autonomous
 			}
 			break;
 
-		case INIT_DELAY:
-			// reset and start timer
-			initDelay();
-			// run DELAY state.
-			mainState = MainState.DELAY;
+		case WAIT_FOR_ARM_DESCENT:
+			//Stop during the wait. We do not want to ram the bar.
+			Hardware.transmission.controls(0.0, 0.0);
+
+			//Put the arm down,
+			//and when that is done, continue.
+			if (Hardware.pickupArm.moveToPosition(
+			        ManipulatorArm.ArmPosition.FULL_DOWN) == true)
+				mainState = MainState.FORWARDS_OVER_OUTER_WORKS;
 			break;
 
-		case DELAY:
-			// check whether done or not until done.
-			if (delayIsDone() == true)
-			// go to move forwards while lowering arm when finished.
-			{
-				mainState = MainState.ACCELERATE_FROM_ZERO;
-				Hardware.delayTimer.reset();
-				Hardware.delayTimer.start();
-			}
-			break;
 
 		case FORWARDS_OVER_OUTER_WORKS:
 			//Drive over Outer Works.
 			if (Hardware.drive.driveStraightByInches(
 			        DriveInformation.DISTANCE_OVER_OUTER_WORKS
-			                * labScalingFactor,
+			                * labScalingFactor
+			                + DriveInformation.ADDED_DISTANCE_FROM_OW[lane],
 			        false,
 			        DriveInformation.DRIVE_OVER_OUTER_WORKS_MOTOR_RATIOS[lane],
 			        DriveInformation.DRIVE_OVER_OUTER_WORKS_MOTOR_RATIOS[lane]) == true)
 			//put up all the things we had to put down under the low bar.
 			//begin loading the catapult.
 			{
+
 
 
 				//put up camera.
@@ -594,6 +592,7 @@ public class Autonomous
 				armState = ArmState.MOVE_UP_TO_DEPOSIT;
 				runArmStates = true;
 
+				//decide whether to stop next by encoder distance, or when IRs detect tape.
 				mainState = MainState.FORWARDS_BASED_ON_ENCODERS_OR_IR;
 
 
@@ -607,14 +606,8 @@ public class Autonomous
 			}
 			break;
 
-		case WAIT_FOR_ARM_DESCENT:
-			//Stop during the wait. We do not want to ram the bar.
-			Hardware.transmission.controls(0.0, 0.0);
-			//System.out.println(Hardware.armPot.get());
-			if (Hardware.pickupArm.moveToPosition(
-			        ManipulatorArm.ArmPosition.FULL_DOWN) == true)
-				mainState = MainState.FORWARDS_OVER_OUTER_WORKS;
-			break;
+
+
 
 		case FORWARDS_BASED_ON_ENCODERS_OR_IR:
 			// Check if we are in lane One.
@@ -646,9 +639,8 @@ public class Autonomous
 				resetEncoders();
 
 
-				//We definitely don't need to rotate.
+				//Move the center of the robot to the tape.
 				mainState = MainState.CENTER_TO_TAPE;
-
 			}
 			break;
 
@@ -673,7 +665,9 @@ public class Autonomous
 			        DriveInformation.CENTRE_TO_ALIGNMENT_LINE_MOTOR_RATIO[lane],
 			        DriveInformation.CENTRE_TO_ALIGNMENT_LINE_MOTOR_RATIO[lane]))
 			{
-				mainState = MainState.FORWARDS_FROM_ALIGNMENT_LINE;
+				//Next, we will stop if necessary.
+				mainState = MainState.DELAY_IF_REVERSE;
+
 
 				//Teleop.printStatements();
 
@@ -688,9 +682,11 @@ public class Autonomous
 			if (Hardware.delayTimer
 			        .get() >= DriveInformation.DELAY_IF_REVERSE[lane])
 			{
+				Hardware.delayTimer.stop();
 				mainState = MainState.ROTATE_ON_ALIGNMENT_LINE;
 			}
 			break;
+
 
 		case ROTATE_ON_ALIGNMENT_LINE:
 			//Rotates until we are pointed at the place from whence we want to shoot.
@@ -733,7 +729,9 @@ public class Autonomous
 
 				//Hardware.ringLightRelay.set(Relay.Value.kOn);
 
+				//Hold the arm up (Out of the Way).
 				armState = ArmState.HOLD;
+
 
 				Hardware.transmission.controls(0.0, 0.0);
 
@@ -761,11 +759,7 @@ public class Autonomous
 			                * labScalingFactor,
 			        false,
 			        DriveInformation.DRIVE_UP_TO_GOAL_MOTOR_RATIO[lane],
-			        DriveInformation.DRIVE_UP_TO_GOAL_MOTOR_RATIO[lane]) == true)
-			//TODO: see if IRs are a problem.
-			//			        || (Hardware.leftIR.isOn()
-			//			                || Hardware.rightIR.isOn())
-			))
+			        DriveInformation.DRIVE_UP_TO_GOAL_MOTOR_RATIO[lane]) == true)))
 			//Go to align.
 			{
 
@@ -793,19 +787,17 @@ public class Autonomous
 			}
 			break;
 
-		case STOP_IN_FRONT_OF_GOAL:
-		//if (Hardware.drive.brake(.1) == true)
-			{
-				mainState = MainState.DONE;//MainState.SHOOT;
-			}
-			break;
+
 
 		case ALIGN_IN_FRONT_OF_GOAL:
 			//align based on the camera until we are facing the goal. head-on.
 			Hardware.transmission.controls(0.0, 0.0);
 
-			//TODO: Demystify magic numbers
-			if (Hardware.drive.alignByCamera(0.2, .4, -.325,
+			if (Hardware.drive.alignByCamera(
+			        Autonomous.ALIGNMENT_DEADBAND,
+			        Autonomous.ALIGNMENT_DEADBAND,
+			        DriveInformation.ALIGNMENT_SPEED,
+			        ALIGNMENT_X_OFFSET, ALIGNMENT_Y_OFFSET,
 			        false) == true)
 			//Once we are in position, we shoot!
 			{
@@ -815,10 +807,13 @@ public class Autonomous
 
 		case SHOOT:
 			//FIRE!!!
-			shoot();
-			mainState = MainState.DELAY_AFTER_SHOOT;
-			Hardware.axisCamera.saveImagesSafely();
+			if (shoot() == true)
+			{
+				//go to wait a little bit, before turning off solenoids
+				mainState = MainState.DELAY_AFTER_SHOOT;
+			}
 			break;
+
 
 		case DELAY_AFTER_SHOOT:
 			//Check if enough time has passed for the air to have been released.
@@ -831,11 +826,6 @@ public class Autonomous
 				mainState = MainState.DONE;
 			}
 			break;
-
-		case STOP_ALL_MOTORS:
-			Hardware.transmission.controls(0.0, 0.0);
-			mainState = MainState.DRIVE_UP_TO_GOAL;
-			break;
 		default:
 		case DONE:
 			//clean everything up;
@@ -844,6 +834,7 @@ public class Autonomous
 			break;
 		}
 	}
+
 
 	/*
 	 * ======================================
@@ -891,9 +882,6 @@ public class Autonomous
 			Hardware.delayTimer.reset();
 		}
 
-		if (Hardware.pickupArm.isDown() == true)
-		{
-		}
 
 		return done;
 
@@ -924,57 +912,17 @@ public class Autonomous
 		return tapeness;
 	}
 
-
-
-	/**
-	 * Drives to the final shooting position.
-	 * 
-	 * @return true when complete.
-	 */
-	private static boolean hasDrivenUpToGoal ()
-	{
-		boolean done = false;
-
-		// Have we reached the distance according to drawings.
-		// OR
-		// Have we seen if we have reached cleats of the tower according to IR?
-		if ((Hardware.drive.driveStraightByInches(
-		        DriveInformation.DRIVE_UP_TO_GOAL[lane]
-		                * labScalingFactor,
-		        false,
-		        DriveInformation.DRIVE_UP_TO_GOAL_MOTOR_RATIO[lane],
-		        DriveInformation.DRIVE_UP_TO_GOAL_MOTOR_RATIO[lane]) == true)
-		        || (Hardware.leftIR.isOn() || Hardware.rightIR.isOn()))
-		// We are done here.
-		{
-			done = true;
-		}
-
-		// TEMPORARY PRINTS.
-		// see if we have stopped based on IR or Encoders.
-		//	if (done == true
-		//	        && (Hardware.leftIR.isOn() || Hardware.rightIR.isOn()))
-		//	{
-		//	System.out.println("Stopped by Sensors");
-		//	}
-		//	else if (Hardware.leftRearEncoder
-		//	        .getDistance() >= DriveInformation.DRIVE_UP_TO_GOAL[lane] ||
-		//	        Hardware.rightRearEncoder
-		//	                .getDistance() >= DriveInformation.DRIVE_UP_TO_GOAL[lane])
-		//	{
-		//	System.out.println("Stopped by distance.");
-		return done;
-
-	}
-
 	/**
 	 * <b> FIRE!!! </b>
 	 * <p>
 	 * Shoots the ball.
 	 * 
 	 */
-	private static void shoot ()
+	private static boolean shoot ()
 	{
+
+		boolean done;
+
 
 		Hardware.transmission.controls(0.0, 0.0);
 
@@ -987,17 +935,24 @@ public class Autonomous
 			Hardware.catapultSolenoid1.set(true);
 			Hardware.catapultSolenoid2.set(true);
 
+			//set a timer so that we know when to close the solenoids.
+			Hardware.kilroyTimer.reset();
+			Hardware.kilroyTimer.start();
+
+			done = true;
 		}
 		else
 		{
-			//TODO: move arm out of way.
-			//armState = ArmState.
+			//get the arm out of the way.
+			armState = ArmState.MOVE_DOWN;
+
+			done = false;
 		}
 
-		//set a timer so that we know when to close the solenoids.
-		Hardware.kilroyTimer.reset();
-		Hardware.kilroyTimer.start();
+
+		return done;
 	}
+
 
 	/**
 	 * Wait a second...
@@ -1155,8 +1110,11 @@ public class Autonomous
 	 */
 	public static void resetEncoders ()
 	{
+		//accumulate total distance. used for debugging.
 		totalDistance += (Hardware.leftRearEncoder.getDistance()
 		        + Hardware.rightRearEncoder.get()) / 2;
+
+		//reset.
 		Hardware.leftRearEncoder.reset();
 		Hardware.rightRearEncoder.reset();
 	}
@@ -1206,12 +1164,19 @@ public class Autonomous
 
 	/**
 	 * Contains distances and speeds at which to drive.
-	 *
-	 * TODO: Figure out reasonable speeds, etc.
+	 * 
+	 * Note that many of these are arrays.
+	 * This is usually to determine different speeds and distances for each
+	 * lane.
+	 * 
 	 */
 	private static final class DriveInformation
 	{
 
+		/**
+		 * A set of motor ratios that will be used in succession
+		 * when accelerating from zero.
+		 */
 		private static final double[] ACCELERATION_RATIOS =
 		        {
 		                0.1,
@@ -1219,6 +1184,9 @@ public class Autonomous
 		                0.3
 		        };
 
+		/**
+		 * The time at which each acceleration stage will end.
+		 */
 		private static final double[] ACCELERATION_TIMES =
 		        {
 		                0.2,
@@ -1226,12 +1194,17 @@ public class Autonomous
 		                0.6
 		        };
 
+		/**
+		 * The speed at which we want to go over the outer works, for each lane.
+		 * note that it is to be low for lane 1, yet high for the others,
+		 * so as to accommodate more difficult obstacles.
+		 */
 		private static final double[] DRIVE_OVER_OUTER_WORKS_MOTOR_RATIOS =
 		        {
 		                0.0,
 		                0.4,
 		                0.7,
-		                0.7,
+		                0.8,
 		                0.7,
 		                0.7,
 		                0.4
@@ -1261,7 +1234,7 @@ public class Autonomous
 		                0.0, // nothing. Not used. Arbitrary; makes it work.
 		                0.40,//0.25, // lane 1, should be extra low.
 		                1.0, // lane 2
-		                0.4, // lane 3
+		                0.5, // lane 3
 		                0.4, // lane 4
 		                0.4, // lane 5
 		                0.4 //backup plan
@@ -1314,6 +1287,9 @@ public class Autonomous
 		                -169.0 //backup plan
 		        };
 
+		/**
+		 * Speed when we move the centre of the robot to the Alignment line.,
+		 */
 		static final double[] CENTRE_TO_ALIGNMENT_LINE_MOTOR_RATIO =
 		        {
 		                0.0,
@@ -1402,6 +1378,20 @@ public class Autonomous
 		                1.0
 		        };
 
+		/**
+		 * Should we want to stop upon going over the outer works,
+		 * this should add extra distance, for assurance.
+		 */
+		static final double[] ADDED_DISTANCE_FROM_OW =
+		        {
+		                0.0,
+		                0.0,
+		                0.0,
+		                12.0,
+		                0.0,
+		                0.0,
+		                0.0
+		        };
 
 		/**
 		 * Distance from Outer Works checkpoint to Alignment Line.
@@ -1430,10 +1420,13 @@ public class Autonomous
 
 		/**
 		 * Speed at which to make turns by default.
-		 * TODO: figure out a reasonable speed.
 		 */
-		private static final double DEFAULT_TURN_SPEED = 0.4; //previously 0.28
+		private static final double DEFAULT_TURN_SPEED = 0.4;
 
+		/**
+		 * Speed at which we may align by camera.
+		 */
+		private static final double ALIGNMENT_SPEED = 0.4;
 	}
 
 
@@ -1449,11 +1442,6 @@ public class Autonomous
 	 * // ...............................|<!(r% ~@$ #3r3
 	 */
 
-	/**
-	 * Always 1.0. Do not change. The code depends on it.
-	 * TODO: Actually, we are not currently using this.
-	 */
-	private static final double MAXIMUM_AUTONOMOUS_SPEED = 1.0;
 
 	/**
 	 * The maximum time to wait at the beginning of the match.
@@ -1476,5 +1464,20 @@ public class Autonomous
 	 * Time to wait after releasing the solenoids before closing them back up.
 	 */
 	private static final double DELAY_TIME_AFTER_SHOOT = 1.0;
+
+	/**
+	 * Room for error when aligning by camera.
+	 */
+	private static final double ALIGNMENT_DEADBAND = 0.2;
+
+	/**
+	 * Desired X position of blob while aligning.
+	 */
+	private static final double ALIGNMENT_X_OFFSET = -3.25;
+
+	/**
+	 * Desired Y position of blob while aligning.
+	 */
+	private static final double ALIGNMENT_Y_OFFSET = -.483;
 
 } // end class

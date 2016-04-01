@@ -372,7 +372,8 @@ public static void periodic ()
             // Keep trying to point at the goal
             if (Hardware.drive.alignByCamera(
                     PERCENT_IMAGE_PROCESSING_DEADBAND,
-                    CAMERA_ALIGNMENT_TURNING_SPEED, -.325,
+                    PERCENT_IMAGE_PROCESSING_DEADBAND,
+                    CAMERA_ALIGNMENT_TURNING_SPEED, -.325, -.483,
                     false) == true)  // TODO uncomment
             // if (Hardware.drive.driveByCamera(24.0,
             // PERCENT_IMAGE_PROCESSING_DEADBAND,
@@ -886,7 +887,7 @@ public static void printStatements ()
     // IR sensors-----------
     // System.out.println("left IR = " + Hardware.leftIR.isOn());
     // System.out.println("right IR = " + Hardware.rightIR.isOn());
-    System.out.println("Has ball IR = " + Hardware.armIR.isOn());
+    //System.out.println("Has ball IR = " + Hardware.armIR.isOn());
 
 
 
