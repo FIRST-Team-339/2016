@@ -58,15 +58,19 @@ public class Teleop
  */
 public static void init ()
 {
-
+    // Initial set up so the screen doesn't start green after Teleop starts
     Guidance.updateBallStatus(false);
+    // Tell USB camera handler that we only have one USB camera
     CameraServer.getInstance().setSize(1);
+    //Make sure the camera isn't really dark
     Hardware.axisCamera
             .writeBrightness(
                     Hardware.NORMAL_AXIS_CAMERA_BRIGHTNESS);
-    // set max speed. change by gear?
+    // set max speed.
     Hardware.drive.setMaxSpeed(MAXIMUM_TELEOP_SPEED);
-
+    //Set up the transmission class so it knows how to drive.  Kind of
+    //like driver's ed for Robots.  I wish my drivers ed class was this
+    //short and painless...
     Hardware.transmission.setGear(1);
     Hardware.transmission
             .setFirstGearPercentage(Robot.FIRST_GEAR_PERCENTAGE);
@@ -74,20 +78,29 @@ public static void init ()
             .setSecondGearPercentage(Robot.SECOND_GEAR_PERCENTAGE);
     Hardware.transmission.setJoystickDeadbandRange(.20);
     Hardware.transmission.setJoysticksAreReversed(false);
+    //make sure we don't start Teleop off with the ringlight on
     Hardware.ringLightRelay.set(Value.kOff);
-
+    //Make sure we don't start off aligningByCamera, firing, or taking
+    //a picture.  That would be a nasty suprise:
+    //"ENABLING"
+    //*SHOOM*
+    //*Newly severed head flies out of pit from firing arm*
+    //*SPLAT*
+    //"I guess the Industrial Safety Award is out the window"
     isAligningByCamera = false;
     fireRequested = false;
     prepPic = false;
+    //Make sure when we enable we're not telling the drivers to do
+    //anything yet
     Hardware.arrowDashboard
             .setDirection(Guidance.Direction.neutral);
     Hardware.arrowDashboard.update();
-
+    //Turn off all the solenoids before we really start anything
     Hardware.catapultSolenoid0.set(false);
     Hardware.catapultSolenoid1.set(false);
     Hardware.catapultSolenoid2.set(false);
 
-    // armEncoder needs to be set to 0
+    //Reset all timers, encoders, and stop all the motors.
     Hardware.delayTimer.reset();
     Hardware.rightRearEncoder.reset();
     Hardware.leftRearEncoder.reset();
@@ -121,8 +134,7 @@ private static boolean testCameraIsDone = true;
  */
 public static void periodic ()
 {
-
-
+    //Print out any data we want from the hardware elements.
     printStatements();
 
 
