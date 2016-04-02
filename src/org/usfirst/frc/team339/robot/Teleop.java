@@ -391,7 +391,6 @@ public static void periodic ()
             fireRequested = true;
 
             Hardware.armOutOfWayTimer.start();
-
             }
         //if the override button is pressed and we want to fire
         if (Hardware.leftOperator
@@ -527,12 +526,6 @@ public static void periodic ()
 
         //End driver direction block
 
-
-
-        // Print statements to test Hardware on the Robot
-        //printStatements();
-
-
         // Takes Pictures based on Operator Button stuff.
         takePicture();
 
@@ -540,12 +533,15 @@ public static void periodic ()
         // Driving the Robot
 
         //TODO delete all conditionals.
+        //If we want to run a speed test, tell the code that
         if (Hardware.leftDriver.getRawButton(8) == true)
             {
             isSpeedTesting = true;
             }
+        //Only let the drivers drive if we're not speed testing or aligning by camera
         if (isSpeedTesting == false && isAligningByCamera == false)
             driveRobot();
+        //if we want to run a speed test, run it until we're done.
         else if (isSpeedTesting == true)
             {
             if (Hardware.drive.driveStraightByInches(140.0, true,
@@ -555,10 +551,6 @@ public static void periodic ()
                 isSpeedTesting = false;
                 }
             }
-
-        //    runCameraSolenoid(Hardware.rightOperator.getRawButton(11),
-        //            Hardware.rightOperator.getRawButton(10), false, true);
-
         }
 } // end Periodic
 
@@ -569,7 +561,6 @@ private static boolean isSpeedTesting = false;
 /**
  * Hand the transmission class the joystick values and motor controllers for
  * four wheel drive.
- * 
  */
 public static void driveRobot ()
 {
@@ -590,54 +581,6 @@ public static void driveRobot ()
         }
 }
 
-
-public static boolean armIsUp = false;
-
-/**
- * ^^^Bring the boolean armIsUp
- * if method is moved to a different class.^^^
- * 
- * @param upState
- * @param downState
- * @param holdState
- * @param toggle
- * 
- *            When in toggle mode, one boolean raises the arm and one
- *            lowers.
- *            When not in toggle mode, only use boolean holdState. This will
- *            keep the arm up for the duration that the holdState is true.
- * 
- *            NOTE: if a parameter is not applicable, set it to false.
- * 
- * 
- * 
- * @author Ryan McGee
- * @written 2/13/16
- * 
- */
-//public static void runCameraSolenoid (boolean upState,
-//        boolean downState, boolean holdState, boolean toggle)
-//{
-//    if (upState && toggle == true && armIsUp == false)
-//        {
-//        Hardware.cameraSolenoid.set(DoubleSolenoid.Value.kForward);
-//        armIsUp = true;
-//        }
-//    else if (downState && toggle == true && armIsUp == true)
-//        {
-//        Hardware.cameraSolenoid.set(DoubleSolenoid.Value.kReverse);
-//        armIsUp = false;
-//        }
-//    else if (holdState && toggle == false)
-//        {
-//        Hardware.cameraSolenoid.set(DoubleSolenoid.Value.kForward);
-//        }
-//    else
-//        {
-//        Hardware.cameraSolenoid.set(DoubleSolenoid.Value.kReverse);
-//        }
-//}
-
 /**
  * Fires the catapult.
  * 
@@ -650,17 +593,22 @@ public static boolean armIsUp = false;
  */
 public static boolean fire (int power, boolean override)
 {
+    //If we have enough pressure to fire or we want to ignore the
+    //transducer and FIRE ANYWAY, fire.  Otherwise wait until we can.
     if (Hardware.transducer.get() >= FIRING_MIN_PSI
             || override == true)
         {
-        //        if (Hardware.pickupArm.moveToPosition(
-        //                ManipulatorArm.ArmPosition.CLEAR_OF_FIRING_ARM) == true)
-        //            {
+        //if (Hardware.pickupArm.moveToPosition(
+        //      ManipulatorArm.ArmPosition.CLEAR_OF_FIRING_ARM) == true)
+        //{
         if (firstTimeFireRun == true)
             {
+            //start the timer and don't run this block of code again
             Hardware.fireTimer.start();
             firstTimeFireRun = false;
             }
+        //Fire with the number of solenoids that corresponds to the power
+        //argument to this function
         switch (power)
             {
             case 1:
@@ -680,16 +628,20 @@ public static boolean fire (int power, boolean override)
         //            }
         }
     //TODO reduce time to minimum possible
+    //wait until we're done firing
     if (Hardware.fireTimer.get() >= .5)
         {
+        //Release the solenoids, and then set up for the next time run
         Hardware.catapultSolenoid0.set(false);
         Hardware.catapultSolenoid1.set(false);
         Hardware.catapultSolenoid2.set(false);
         Hardware.fireTimer.stop();
         Hardware.fireTimer.reset();
         firstTimeFireRun = true;
+        //Tell the code we're done firing
         return true;
         }
+    //We're not done firing yet, keep calling me please!
     return false;
 
 }
@@ -784,32 +736,6 @@ public static void takePicture ()
 } // end Periodic
 
 static boolean hasBegunTurning = true;
-
-/**
- * 
- * Processes images with the Axis Camera for use in autonomous when
- * trying to score. Will eventually be moved to a Shoot class when
- * one is made.
- * 
- * @author Marlene McGraw
- * @written 2/6/16
- * 
- */
-public static void processImage ()
-{
-
-    // If we took a picture, we set the boolean to true to prevent
-    // taking more pictures and create an image processor to process
-    // images.
-    // processingImage = true;
-    // Hardware.imageProcessor.processImage();
-    // System.out.println("Length: " +
-    // Hardware.imageProcessor.reports.length);
-    // System.out.println("Center of Mass Y: ");
-
-}
-// End processImage
-
 
 /**
  * stores print statements for future use in the print "bank", statements
