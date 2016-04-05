@@ -410,27 +410,36 @@ public class ManipulatorArm
 	private double MAX_SOFT_ARM_STOP = 242.0;
 	private final static double MIN_SOFT_ARM_STOP = 85.0;
 
-	private final double ARM_OUT_OF_WAY_DEGREES = 175.0;
-	private final double BRAKE_ARM_WITH_FORWARD_VOLTAGE_DEGREES = 165.0;
+	private final double ARM_OUT_OF_WAY_DEGREES =
+	        0.573 * (MAX_SOFT_ARM_STOP - MIN_SOFT_ARM_STOP)
+	                + MIN_SOFT_ARM_STOP;//175.0;
+	private final double BRAKE_ARM_WITH_FORWARD_VOLTAGE_DEGREES =
+	        0.510 * (MAX_SOFT_ARM_STOP - MIN_SOFT_ARM_STOP)
+	                + MIN_SOFT_ARM_STOP;//165.0;
 
-	private final double DEPOSIT_POSITION = 230.0;
+	private final double DEPOSIT_POSITION =
+	        0.924 * (MAX_SOFT_ARM_STOP - MIN_SOFT_ARM_STOP)
+	                + MIN_SOFT_ARM_STOP;//230.0;
 	private final double DEPOSIT_POSITION_THRESHOLD = 5.0;
 
 	private final double REASONABLE_UP_FACTOR = -1.0;
 	private final double REASONABLE_UP_AND_OVER_FACTOR = -0.40;
 	private final double REASONABLE_DOWN_FACTOR = 0.35;
 	private final double REASONABLE_DOWN_UNDER_FACTOR = 0.20;
-	private final double REASONABLE_DECELERATION_ANGLE = 174.1;
+	private final double REASONABLE_DECELERATION_ANGLE =
+	        0.55 * (MAX_SOFT_ARM_STOP - MIN_SOFT_ARM_STOP)
+	                + MIN_SOFT_ARM_STOP;//174.1;
 
 	private final double INTAKE_SPEED = 0.5;
 
-	private static final int HOLDING_POSITION = 143;
+	private final double HOLDING_POSITION =
+	        0.349 * (MAX_SOFT_ARM_STOP - MIN_SOFT_ARM_STOP)
+	                + MIN_SOFT_ARM_STOP;//143;
 
 	private static final int HOLDING_POSITION_THRESHOLD = 10;
 
 	private static final double HOLDING_SPEED = -.2;
 
-	private static final int STOP_DOWN_ANGLE = 85;
 	private static final double DELAY_AFTER_BALL_DETECTION = 0.12;
 
 

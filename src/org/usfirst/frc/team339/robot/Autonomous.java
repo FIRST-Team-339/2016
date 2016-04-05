@@ -13,7 +13,7 @@
 // MODIFIED BY:
 // ABSTRACT:
 // This file is where almost all code for Kilroy will be
-// written. All of these functions are functions that should
+// written. Some of these functions are functions that should
 // override methods in the base class (IterativeRobot). The
 // functions are as follows:
 // -----------------------------------------------------
@@ -38,31 +38,35 @@ import org.usfirst.frc.team339.Utils.ManipulatorArm.ArmPosition;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.Relay;
 
-/**
- * This class contains all of the user code for the Autonomous part of the
- * match, namely, the Init and Periodic code
- *
- * @author Nathanial Lydick
- * @written Jan 13, 2015
- */
 
 /**
- * A new and improved Autonomous class.
- * The class <b>beautifully</b> uses state machines in order to periodically
+ * An Autonomous class.
+ * This class <b>beautifully</b> uses state machines in order to periodically
  * execute instructions during the Autonomous period.
  * 
+ * This class contains all of the user code for the Autonomous part
+ * of the
+ * match, namely, the Init and Periodic code
+ * 
  * TODO: "make it worky".
+ * 
  * 
  * @author Michael Andrzej Klaczynski
  * @written at the eleventh stroke of midnight, the 28th of January,
  *          Year of our LORD 2016. Rewritten ever thereafter.
- * 
+ *
+ * @author Nathanial Lydick
+ * @written Jan 13, 2015
  */
 public class Autonomous
 {
 
 	/**
 	 * The overarching states of autonomous mode.
+	 * Each state represents a set of instructions the robot must execute
+	 * periodically at a given time.
+	 * These states are mainly used in the runMainStateMachine() method
+	 * 
 	 */
 	private static enum MainState
 	{
@@ -71,99 +75,142 @@ public class Autonomous
 		 * Initializes things if necessary,
 		 * though most things are initialized
 		 * in init().
+		 * Proceeds to INIT_DELAY, or BEGIN_LOWERING_ARM, if in lane 1 or 6.
 		 */
 		INIT,
 		/**
 		 * Sets arm to head downward.
+		 * Used at the beginning for going under the low bar.
+		 * Proceeds to INIT_DELAY
 		 */
 		BEGIN_LOWERING_ARM,
 
 		/**
-		 * slowly increase speed from 0;
+		 * Resets and starts delay timer.
+		 * Proceeds to DELAY.
+		 */
+		INIT_DELAY,
+
+		/**
+		 * Waits.
+		 * Waits until the delay is up.
+		 * Proceeds to ACCELERATE_FROM_ZERO.
+		 */
+		DELAY,
+
+		/**
+		 * Slowly increases speed from 0;
+		 * Used at the start, as sudden movements can cause unpredictable
+		 * turning.
+		 * Proceeds to MOVE_TO_OUTER_WORKS.
 		 */
 		ACCELERATE_FROM_ZERO,
 
 		/**
-		 * Moves at a low speed while lowering arm.
+		 * Moves to outer works at a lane-specific speed.
+		 * Proceeds to FORWARDS_OVER_OUTER_WORKS.
+		 * <p>
+		 * UNLESS we are in lanes 1 0r 6. Then,
 		 * If it reaches the end of the distance, and the arm is not fully down,
-		 * waits for arm descent.
+		 * proceeds to WAIT_FOR_ARM_DESCENT.
 		 */
 		MOVE_TO_OUTER_WORKS,
 
 		/**
 		 * Wait for the arm to come down before crossing the outer works.
+		 * Proceeds to FORWARDS_OVER_OUTER_WORKS.
 		 */
 		WAIT_FOR_ARM_DESCENT,
 
 		/**
-		 * Resets and starts delay timer.
-		 */
-		INIT_DELAY,
-		/**
-		 * Waits.
-		 * Waits until the delay is up.
-		 */
-		DELAY,
-		/**
-		 * This state checks to see if we are in lane 1.
-		 * If so, we go until we reach an encoder distance (set to distance to
-		 * alignment tape),
-		 * Else, we go until the sensors find the Alignment tape.
-		 */
-		FORWARDS_BASED_ON_ENCODERS_OR_IR,
-		/**
-		 * Go the distance over the outer works.
+		 * Go the distance over the outer works at lane-specific speed.
+		 * Proceeds to FORWARDS_BASED_ON_ENCODERS_OR_IR.
+		 * TODO: Continuing after this point has been temporarily disabled for
+		 * lane 3.
 		 */
 		FORWARDS_OVER_OUTER_WORKS,
 
 		/**
+		 * This state checks to see if we are in lane 1 (or "6").
+		 * If so, we go until we reach an encoder distance (set to distance to
+		 * alignment tape),
+		 * Else, we go until the sensors find the Alignment tape.
+		 * Proceeds to FORWARDS_TO_TAPE_BY_DISTANCE or FORWARDS_UNTIL_TAPE
+		 */
+		FORWARDS_BASED_ON_ENCODERS_OR_IR,
+
+
+		/**
 		 * Goes forward until it reaches the set distance to the Alignment tape.
+		 * Proceeds to CENTER_TO_TAPE.
 		 */
 		FORWARDS_TO_TAPE_BY_DISTANCE,
+
 		/**
 		 * Goes forward until it senses the Alignment tape.
+		 * Proceeds to CENTER_TO_TAPE.
 		 */
 		FORWARDS_UNTIL_TAPE,
 
 		/**
-		 * Drives up 16 inches to put the center of the robot over the Aline.
+		 * Drives up 16 inches to put the center of the robot over the Alignment
+		 * line.
+		 * Brakes in lanes 3 and 4 for turning.
+		 * Proceeds to DELAY_IF_REVERSE.
 		 */
 		CENTER_TO_TAPE,
 
 		/**
 		 * If we are in backup plan (lane 6), start a delay so that we can
 		 * reverse.
+		 * TODO: this is untested.
+		 * Proceeds to ROTATE_ON_ALIGNMENT_LINE.
 		 */
 		DELAY_IF_REVERSE,
 
 		/**
 		 * Upon reaching the Alignment line, sometimes we must rotate.
+		 * The angle of rotation is lane-specific. In lanes 1, 2, and 5,
+		 * this is set to zero.
+		 * Proceeds to FORWARDS_FROM_ALIGNMENT_LINE.
 		 */
 		ROTATE_ON_ALIGNMENT_LINE,
+
 		/**
 		 * After reaching the A-line, or after rotating upon reaching it, drives
 		 * towards a position in front of the goal.
+		 * Distance is lane-specific.
+		 * Proceeds to TURN_TO_FACE_GOAL.
 		 */
 		FORWARDS_FROM_ALIGNMENT_LINE,
 		/**
 		 * After reaching a spot in front of the goal, we turn to face it.
+		 * Angle is pre-set and lane-specific.
+		 * Proceeds to DRIVE_UP_TO_GOAL.
 		 */
 		TURN_TO_FACE_GOAL,
+
 		/**
 		 * Once we are facing the goal, we may sometimes drive forwards.
+		 * Distance is lane-specific. In lanes 3 & 4, distance is zero.
 		 */
+
 		DRIVE_UP_TO_GOAL,
 		/**
 		 * Once we are in the shooting position, we align based on the chimera.
+		 * Proceeds to SHOOT.
 		 */
 		ALIGN_IN_FRONT_OF_GOAL,
-		/**
-		 * We shoot the cannon ball.
-		 */
-		SHOOT, // adjusts its self (?) and fires the cannon ball.
 
 		/**
-		 * Wait to close the solenoids.
+		 * We shoot the cannon ball.
+		 * Proceeds to DELAY_AFTER_SHOOT.
+		 */
+		SHOOT,
+
+		/**
+		 * Wait to close the solenoids, allowing the catapult to rest.
+		 * Proceeds to DONE.
 		 */
 		DELAY_AFTER_SHOOT,
 
@@ -174,9 +221,8 @@ public class Autonomous
 	}
 
 	/**
-	 * 
 	 * States to run arm movements in parallel.
-	 *
+	 * Used by the runArm() state machine.
 	 */
 	private static enum ArmState
 	{
@@ -257,20 +303,29 @@ public class Autonomous
 	 */
 	public static int lane;
 
-
+	/**
+	 * The current index in the Acceleration arrays.
+	 */
 	private static int accelerationStage = 0;
 
+	/**
+	 * The sum of all encoder distances before reset.
+	 */
 	private static double totalDistance = 0;
 
 	/**
 	 * Run the arm state machine only when necessary (when true).
 	 */
 	private static boolean runArmStates = false;
+
 	/**
 	 * Prints print that it prints prints while it prints true.
 	 */
 	public static boolean debug;
 
+	//the following are for testing and debugging.
+	//created to print a statement only once in the run of the program.
+	//TODO: remove.
 	private static boolean oneTimePrint1 = false;
 	private static boolean oneTimePrint2 = false;
 	private static boolean oneTimePrint3 = false;
@@ -301,10 +356,13 @@ public class Autonomous
 			// get the lane based off of startingPositionPotentiometer
 			lane = getLane();
 
-			debug = DEBUGGING_DEFAULT;
+			//Enable debugging prints.
+			debug = DEBUGGING_DEFAULT; //true
 
+			//set Auto state to INIT.
 			initAutoState();
 
+			//do not print from transmission
 			Hardware.transmission
 			        .setDebugState(debugStateValues.DEBUG_NONE);
 
@@ -318,6 +376,13 @@ public class Autonomous
 			Hardware.transmission.setGear(1);
 			Hardware.transmission.setJoysticksAreReversed(true);
 			Hardware.transmission.setJoystickDeadbandRange(0.0);
+
+			Hardware.leftFrontMotor.set(0.0);
+			Hardware.leftRearMotor.set(0.0);
+			Hardware.rightFrontMotor.set(0.0);
+			Hardware.rightRearMotor.set(0.0);
+			Hardware.armMotor.set(0.0);
+			Hardware.armIntakeMotor.set(0.0);
 
 			// --------------------------------------
 			// Encoder Initialization
@@ -339,18 +404,16 @@ public class Autonomous
 			Hardware.kilroyTimer.stop();
 			Hardware.kilroyTimer.reset();
 
-			Hardware.leftRearEncoder.reset();
-			Hardware.rightRearEncoder.reset();
-			Hardware.leftFrontMotor.set(0.0);
-			Hardware.leftRearMotor.set(0.0);
-			Hardware.rightFrontMotor.set(0.0);
-			Hardware.rightRearMotor.set(0.0);
-			Hardware.armMotor.set(0.0);
-			Hardware.armIntakeMotor.set(0.0);
+			//----------------------------------------
+			//Solenoid Initialization
+			//----------------------------------------
 
 			Hardware.catapultSolenoid0.set(false);
 			Hardware.catapultSolenoid1.set(false);
 			Hardware.catapultSolenoid2.set(false);
+
+			//clear error log, so as not to take up space needlessly.
+			//this can be buggy, hence the try/catch.
 
 			try
 			{
@@ -393,12 +456,11 @@ public class Autonomous
 			runArmStates();
 		}
 		else
+		//if not, we do not want the arm to move.
 		{
 			Hardware.pickupArm.stopArmMotor();
 		}
 
-
-		//Teleop.printStatements();
 
 	} // end Periodic
 
@@ -410,6 +472,7 @@ public class Autonomous
 	 */
 	public static int initDelayTime ()
 	{
+		//scales ratio of degrees turned by our maximum delay.
 		return (int) (MAXIMUM_DELAY * Hardware.delayPot.get()
 		        / Hardware.DELAY_POT_DEGREES);
 	}
@@ -426,11 +489,18 @@ public class Autonomous
 
 	/**
 	 * Called periodically to run the overarching states.
+	 * The state machine works by periodically executing a switch statement,
+	 * which is based off of the value of the enum, mainState.
+	 * A case that corresponds to a value of the enum is referred to as a
+	 * "state."
+	 * A state, therefore, is executed periodically until its end conditions are
+	 * met, at which point it changes the value of mainState, thereby proceeding
+	 * to the next state.
+	 * <p>
+	 * For information on the individual states, @see MainState.
 	 */
 	private static void runMainStateMachine ()
 	{
-
-		//Teleop.printStatements();
 
 		//use the debug flag 
 		if (debug == true)
@@ -452,6 +522,7 @@ public class Autonomous
 			// Just a Platypus.
 			mainInit();
 
+			//if we are in a lane that goes beneath the low bar,
 			if (lane == 1 || lane == 6)
 			// lower the arm to pass beneath the bar.
 			{
@@ -483,9 +554,11 @@ public class Autonomous
 		case DELAY:
 			// check whether done or not until done.
 			if (delayIsDone() == true)
-			// go to move forwards while lowering arm when finished.
+			// go to move forwards when finished.
 			{
 				mainState = MainState.ACCELERATE_FROM_ZERO;
+
+				//start a timer for ACCELERATE.
 				Hardware.delayTimer.reset();
 				Hardware.delayTimer.start();
 			}
@@ -514,8 +587,10 @@ public class Autonomous
 			else
 			//there are no stages left. continue onwards.
 			{
+				//stop timer.
 				Hardware.delayTimer.stop();
 				Hardware.delayTimer.reset();
+				//continue forwards at regular speed.
 				mainState = MainState.MOVE_TO_OUTER_WORKS;
 			}
 
@@ -532,9 +607,6 @@ public class Autonomous
 			        DriveInformation.MOTOR_RATIO_TO_OUTER_WORKS[lane])) == true)
 			//continue over the outer works unless the arm is going to get in the way.
 			{
-
-				Hardware.axisCamera.saveImagesSafely();
-				//Teleop.printStatements();
 
 				//continue over the Outer Works
 				mainState = MainState.FORWARDS_OVER_OUTER_WORKS;
@@ -559,7 +631,10 @@ public class Autonomous
 			//and when that is done, continue.
 			if (Hardware.pickupArm.moveToPosition(
 			        ManipulatorArm.ArmPosition.FULL_DOWN) == true)
+			{
+				//drive over the outer works.
 				mainState = MainState.FORWARDS_OVER_OUTER_WORKS;
+			}
 			break;
 
 
@@ -576,17 +651,11 @@ public class Autonomous
 			//begin loading the catapult.
 			{
 
-
-
 				//put up camera.
 				Hardware.cameraSolenoid.set(Value.kReverse);
 
-
-
 				//Teleop.printStatements();
 				resetEncoders();
-
-
 
 				//We are over the outer works. Start the arm back up.
 				armState = ArmState.MOVE_UP_TO_DEPOSIT;
@@ -594,7 +663,6 @@ public class Autonomous
 
 				//decide whether to stop next by encoder distance, or when IRs detect tape.
 				mainState = MainState.FORWARDS_BASED_ON_ENCODERS_OR_IR;
-
 
 				//temporary; stops after over outer works.
 				//3 is chosen for this arbitrarily.
@@ -669,9 +737,7 @@ public class Autonomous
 				mainState = MainState.DELAY_IF_REVERSE;
 
 
-				//Teleop.printStatements();
-
-
+				//start timer for the coming delay.
 				Hardware.delayTimer.reset();
 				Hardware.delayTimer.start();
 			}
@@ -679,10 +745,14 @@ public class Autonomous
 
 		case DELAY_IF_REVERSE:
 
+			//when the delay is up,
 			if (Hardware.delayTimer
 			        .get() >= DriveInformation.DELAY_IF_REVERSE[lane])
+			//continue driving.
 			{
+				//stop the timer
 				Hardware.delayTimer.stop();
+				//rotate, possibly
 				mainState = MainState.ROTATE_ON_ALIGNMENT_LINE;
 			}
 			break;
@@ -710,9 +780,9 @@ public class Autonomous
 			        DriveInformation.FORWARDS_FROM_ALIGNMENT_LINE_MOTOR_RATIO[lane],
 			        DriveInformation.FORWARDS_FROM_ALIGNMENT_LINE_MOTOR_RATIO[lane]) == true)
 			{
-				//Teleop.printStatements();
 				//reset Encoders to prepare for next state.
 				resetEncoders();
+				//turn once more.
 				mainState = MainState.TURN_TO_FACE_GOAL;
 			}
 			break;
@@ -723,7 +793,6 @@ public class Autonomous
 			        DriveInformation.TURN_TO_FACE_GOAL_DEGREES[lane]) == true)
 			//when done move up to the batter.
 			{
-				//Teleop.printStatements();
 				//reset Encoders to prepare for next state
 				resetEncoders();
 
@@ -744,6 +813,8 @@ public class Autonomous
 
 		case DRIVE_UP_TO_GOAL:
 
+			//print encoders once
+			//TODO: remove.
 			if (oneTimePrint1 == false)
 			{
 				oneTimePrint1 = true;
@@ -779,6 +850,7 @@ public class Autonomous
 				mainState = MainState.DONE;
 			}
 
+			//print IR values once if they are on.
 			if (oneTimePrint3 == false &&
 			        (Hardware.leftIR.isOn() || Hardware.rightIR.isOn()))
 			{
@@ -819,10 +891,13 @@ public class Autonomous
 			//Check if enough time has passed for the air to have been released.
 			if (hasShot() == true)
 			{
+				//This block will close all solenoids,
+				//allowing the catapult to go back down.
 				Hardware.catapultSolenoid0.set(false);
 				Hardware.catapultSolenoid1.set(false);
 				Hardware.catapultSolenoid2.set(false);
 
+				//finish it.
 				mainState = MainState.DONE;
 			}
 			break;
@@ -838,15 +913,17 @@ public class Autonomous
 
 	/*
 	 * ======================================
-	 * MAIN AUTONOMOUS STATE METHODS
+	 * AUTONOMOUS UTILITY METHODS
 	 * ======================================
 	 */
 
 	private static void mainInit ()
 	{
 
+		//start at zero.
 		resetEncoders();
 
+		//start the timer.
 		Hardware.kilroyTimer.reset();
 		Hardware.kilroyTimer.start();
 	}
@@ -921,9 +998,10 @@ public class Autonomous
 	private static boolean shoot ()
 	{
 
+		//to be returned true if done.
 		boolean done;
 
-
+		//Turn off motors. We do NOT want to move.
 		Hardware.transmission.controls(0.0, 0.0);
 
 		//Make sure the arm is out of the way.
@@ -939,17 +1017,23 @@ public class Autonomous
 			Hardware.kilroyTimer.reset();
 			Hardware.kilroyTimer.start();
 
+			//stop arm motion.
+			runArmStates = false;
+
+			//is finished.
 			done = true;
 		}
 		else
 		{
 			//get the arm out of the way.
+			runArmStates = true;
 			armState = ArmState.MOVE_DOWN;
 
+			//continue until it is done.
 			done = false;
 		}
 
-
+		//true if done.
 		return done;
 	}
 
@@ -979,18 +1063,27 @@ public class Autonomous
 	 */
 	private static void done ()
 	{
+		//after autonomous is disabled, the state machine will stop.
+		//this code will run but once.
 		autonomousEnabled = false;
+
+		//stop printing debug statements.
 		debug = false;
+
+		//turn off all motors.
 		Hardware.transmission.controls(0.0, 0.0);
+
+		//including the arm.
+		//end any surviving arm motions.
+		armState = ArmState.DONE;
 		Hardware.armMotor.set(0.0);
+
+		//reset delay timer
 		Hardware.delayTimer.stop();
 		Hardware.delayTimer.reset();
 
+		//turn off ringlight.
 		Hardware.ringLightRelay.set(Relay.Value.kOff);
-
-		armState = ArmState.DONE;
-
-		System.out.println("Total Distance: " + totalDistance);
 
 	}
 
@@ -1017,11 +1110,12 @@ public class Autonomous
 			armState = ArmState.MOVE_DOWN;
 			break;
 		case MOVE_DOWN:
-			//check if down.
+			//move to down position.
 			if (Hardware.pickupArm
 			        .moveToPosition(ArmPosition.FULL_DOWN) == true)
-			//stop.
+			//if done, stop.
 			{
+				//stop the motor.
 				Hardware.pickupArm.move(0.0);
 				armState = ArmState.DONE;
 			}
@@ -1052,23 +1146,28 @@ public class Autonomous
 			}
 			break;
 		case INIT_DEPOSIT:
-			//spin wheels to release ball.
+			//spin wheels to release ball. Uses override.
 			Hardware.pickupArm.pullInBall(true);
-			//armState = ArmState.DEPOSIT;
+			armState = ArmState.DEPOSIT;
 			break;
 		case DEPOSIT:
 			//check if the ball is out.
 			if (Hardware.pickupArm.ballIsOut())
 			//stop rollers, and move down.
 			{
+				//stop the intake motors.
 				Hardware.pickupArm.stopIntakeArms();
-				//get out of the way.
+
+				//TODO: get arms out of the way.
 				armState = ArmState.DONE;
 			}
 			break;
 		case HOLD:
+			//do not move the intake motors.
 			Hardware.pickupArm.stopIntakeArms();
+			//keep the arms in holding position
 			Hardware.pickupArm.moveToPosition(ArmPosition.HOLD);
+			//note: no end conditions, unless if the state is manually changed.
 			break;
 		default:
 		case DONE:
@@ -1090,6 +1189,7 @@ public class Autonomous
 	 */
 	public static int getLane ()
 	{
+		//get the value from the six-position switch.
 		int position = Hardware.startingPositionDial.getPosition();
 
 		//-1 is returned when there is no signal. 
@@ -1099,6 +1199,7 @@ public class Autonomous
 			position = 0;
 		}
 
+		//increment by one, to correspond to lane #.
 		position++;
 
 		return position;
@@ -1125,10 +1226,21 @@ public class Autonomous
 	 * COUNTERCLOCKWISE.
 	 * Kilroy must turn along different paths.
 	 * You must use this to be versatile.
+	 * 
+	 * @param degrees
+	 *            is the number of degrees to be turned. A positive value will
+	 *            turn left, while a negative value will turn right.
+	 * 
+	 * @param turnSpeed
+	 *            will be passed into both motors, one positive, one negative,
+	 *            depending on the direction of the turn.
+	 * 
+	 * @return true when the turn is finished.
 	 */
 	private static boolean hasTurnedBasedOnSign (double degrees,
 	        double turnSpeed)
 	{
+		//the value of done will be returned.
 		boolean done = false;
 
 		if (degrees < 0)
@@ -1155,6 +1267,12 @@ public class Autonomous
 	 * COUNTERCLOCKWISE.
 	 * Kilroy must turn along different paths.
 	 * You must use this to be versatile.
+	 * 
+	 * @param degrees
+	 *            is the number of degrees to be turned. A positive value will
+	 *            turn left, while a negative value will turn right.
+	 * 
+	 * @return true when the turn is finished.
 	 */
 	private static boolean hasTurnedBasedOnSign (double degrees)
 	{
@@ -1168,7 +1286,22 @@ public class Autonomous
 	 * Note that many of these are arrays.
 	 * This is usually to determine different speeds and distances for each
 	 * lane.
+	 * Such arrays will follow the following format:
 	 * 
+	 * </p>
+	 * [0]: placeholder, so that the index will match up with the lane number
+	 * </p>
+	 * [1]: lane 1
+	 * </p>
+	 * [2]: lane 2
+	 * </p>
+	 * [3]: lane 3
+	 * </p>
+	 * [4]: lane 4
+	 * </p>
+	 * [5]: lane 5
+	 * </p>
+	 * [6]: "lane 6" -- not a real lane, but can serve as an alternate strategy.
 	 */
 	private static final class DriveInformation
 	{
@@ -1176,6 +1309,9 @@ public class Autonomous
 		/**
 		 * A set of motor ratios that will be used in succession
 		 * when accelerating from zero.
+		 * 
+		 * Index here does not correspond to lane, but rather order of
+		 * execution.
 		 */
 		private static final double[] ACCELERATION_RATIOS =
 		        {
@@ -1186,6 +1322,9 @@ public class Autonomous
 
 		/**
 		 * The time at which each acceleration stage will end.
+		 * 
+		 * Index here does not correspond to lane, but rather order of
+		 * execution.
 		 */
 		private static final double[] ACCELERATION_TIMES =
 		        {
@@ -1202,7 +1341,7 @@ public class Autonomous
 		private static final double[] DRIVE_OVER_OUTER_WORKS_MOTOR_RATIOS =
 		        {
 		                0.0,
-		                0.4,
+		                0.4,//not much is required for the low bar.
 		                0.7,
 		                0.8,
 		                0.7,
@@ -1216,12 +1355,12 @@ public class Autonomous
 		private static final boolean[] BREAK_ON_ALIGNMENT_LINE =
 		        {
 		                false, // A placeholder, allowing lane to line up with index.
-		                false, //lane 1
-		                false, //lane 2
-		                true, // lane 3
-		                true, // lane 4
-		                false, // lane 5
-		                true //backup plan
+		                false, //
+		                false, //
+		                true, // true in lanes 3 and 4, 
+		                true, // because we mean to turn next.
+		                false, // 
+		                true //or go backwards.
 		        };
 
 		/**
@@ -1265,8 +1404,8 @@ public class Autonomous
 		                0.0, // nothing. Not used. Arbitrary; makes it work.
 		                0.0, // lane 1 (not neccesary)
 		                0.0, // lane 2 (not neccesary)
-		                -20, // lane 3
-		                24.8, // lane 4
+		                -72.85,//-20, // lane 3
+		                64.24,//24.8, // lane 4
 		                0.0, // lane 5 (not neccesary)
 		                0.0 //backup plan
 		        };
@@ -1281,9 +1420,9 @@ public class Autonomous
 		                0.0, // nothing. Not used. Arbitrary; makes it work.
 		                48.57,// lane 1
 		                77.44,//68.0,// lane 2
-		                64.0, // lane 3
-		                66.1,// lane 4
-		                86.5, // lane 5
+		                66.14,//64.0, // lane 3
+		                63.2,//66.1,// lane 4
+		                85.8, // lane 5
 		                -169.0 //backup plan
 		        };
 
@@ -1325,8 +1464,8 @@ public class Autonomous
 		                0.0, // makes it so the indexes line up with the lane #
 		                -60.0,// lane 1
 		                -60.0,// lane 2
-		                20.0,// lane 3
-		                -24.85,// lane 4
+		                72.85,//20.0,// lane 3
+		                -64.24,//-24.85,// lane 4
 		                60, // lane 5
 		                -90.0 //backup plan
 		        };
@@ -1346,7 +1485,7 @@ public class Autonomous
 		                18.1,//52.9,// lane 2
 		                0.0,// lane 3 (not neccesary)
 		                0.0,// lane 4 (not neccesary)
-		                12.0, // lane 5
+		                32.8,//12.0, // lane 5
 		                0.0 //backup plan
 		        };
 
@@ -1375,7 +1514,7 @@ public class Autonomous
 		                0.0,
 		                0.0,
 		                0.0,
-		                1.0
+		                1.0//only used in "lane 6."
 		        };
 
 		/**
@@ -1387,7 +1526,7 @@ public class Autonomous
 		                0.0,
 		                0.0,
 		                0.0,
-		                12.0,
+		                12.0,//Further driving is disabled in this lane, so this is to be sure we are all the way over.
 		                0.0,
 		                0.0,
 		                0.0
