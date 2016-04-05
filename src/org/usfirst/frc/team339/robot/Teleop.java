@@ -353,8 +353,7 @@ public static void periodic ()
             //Keep trying to point at the goal
             if (Hardware.drive.alignByCamera(
                     PERCENT_IMAGE_PROCESSING_DEADBAND,
-                    PERCENT_IMAGE_PROCESSING_DEADBAND,
-                    CAMERA_ALIGNMENT_TURNING_SPEED, -.325, -.483,
+                    CAMERA_ALIGNMENT_TURNING_SPEED, -.325, //-.483,
                     false) == true)  //TODO uncomment
                 {
                 // Once we're in the center, tell the code we no longer care
