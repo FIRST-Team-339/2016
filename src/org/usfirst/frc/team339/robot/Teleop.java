@@ -58,15 +58,19 @@ public class Teleop
  */
 public static void init ()
 {
-
+    // Initial set up so the screen doesn't start green after Teleop starts
     Guidance.updateBallStatus(false);
+    // Tell USB camera handler that we only have one USB camera
     CameraServer.getInstance().setSize(1);
+    //Make sure the camera isn't really dark
     Hardware.axisCamera
             .writeBrightness(
                     Hardware.NORMAL_AXIS_CAMERA_BRIGHTNESS);
-    // set max speed. change by gear?
+    // set max speed.
     Hardware.drive.setMaxSpeed(MAXIMUM_TELEOP_SPEED);
-
+    //Set up the transmission class so it knows how to drive.  Kind of
+    //like driver's ed for Robots.  I wish my drivers ed class was this
+    //short and painless...
     Hardware.transmission.setGear(1);
     Hardware.transmission
             .setFirstGearPercentage(Robot.FIRST_GEAR_PERCENTAGE);
@@ -74,20 +78,29 @@ public static void init ()
             .setSecondGearPercentage(Robot.SECOND_GEAR_PERCENTAGE);
     Hardware.transmission.setJoystickDeadbandRange(.20);
     Hardware.transmission.setJoysticksAreReversed(false);
+    //make sure we don't start Teleop off with the ringlight on
     Hardware.ringLightRelay.set(Value.kOff);
-
+    //Make sure we don't start off aligningByCamera, firing, or taking
+    //a picture.  That would be a nasty suprise:
+    //"ENABLING"
+    //*SHOOM*
+    //*Newly severed head flies out of pit from firing arm*
+    //*SPLAT*
+    //"I guess the Industrial Safety Award is out the window"
     isAligningByCamera = false;
     fireRequested = false;
     prepPic = false;
+    //Make sure when we enable we're not telling the drivers to do
+    //anything yet
     Hardware.arrowDashboard
             .setDirection(Guidance.Direction.neutral);
     Hardware.arrowDashboard.update();
-
+    //Turn off all the solenoids before we really start anything
     Hardware.catapultSolenoid0.set(false);
     Hardware.catapultSolenoid1.set(false);
     Hardware.catapultSolenoid2.set(false);
 
-    // armEncoder needs to be set to 0
+    //Reset all timers, encoders, and stop all the motors.
     Hardware.delayTimer.reset();
     Hardware.rightRearEncoder.reset();
     Hardware.leftRearEncoder.reset();
@@ -121,19 +134,16 @@ private static boolean testCameraIsDone = true;
  */
 public static void periodic ()
 {
-
-
+    //Print out any data we want from the hardware elements.
     printStatements();
 
 
-
+    //If we're running tests in the lab, NOT at competition
     if (Hardware.runningInLab == true)
         {
         Hardware.transmission
                 .setDebugState(debugStateValues.DEBUG_ALL);
-
         Hardware.drive.setBrakeSpeed(.30);
-
         Hardware.transmission.setJoysticksAreReversed(true);
         Hardware.transmission.setFirstGearPercentage(1.0);
         Hardware.axisCamera.setHaveCamera(false);
@@ -141,12 +151,13 @@ public static void periodic ()
         //			System.out.println("t1: " + testMove1IsDone);
         //			System.out.println("t2: " + testMove2IsDone);
         //			System.out.println("t3: " + testMove3IsDone);
-
+        //if we hit the left driver trigger in the lab
         if (Hardware.leftDriver.getTrigger() == true)
             {
+            //tell the code to start testing autonomous
             testAuto = true;
             }
-
+        //Test certain aspects of autonomous
         if (testAuto == true)
             {
             if (!testMove1IsDone)
@@ -182,20 +193,20 @@ public static void periodic ()
                 }
             else if (!testCameraIsDone)
                 {
-                //					if (Hardware.drive.driveByCamera(999.0, .2, .25,
-                //					        0.0, true))
-                //						;
+                //if (Hardware.drive.driveByCamera(999.0, .2, .25,
+                //      0.0, true));
                 }
             else
                 {
+                //Stop
                 Hardware.transmission.controls(0.0, 0.0);
                 }
             }
         }
+    //If we don't have the runningInLab flag set to true
     else
         {
-
-        // block of code to move the arm
+        // Begin arm movement code
         if (Math.abs(Hardware.rightOperator
                 .getY()) >= PICKUP_ARM_CONTROL_DEADZONE)
             {
@@ -210,24 +221,22 @@ public static void periodic ()
                             / Math.abs(
                                     Hardware.rightOperator.getY())),
                     Hardware.rightOperator.getRawButton(2));
-            //        Hardware.pickupArm
-            //                .moveFast((int) Math.round(Hardware.rightOperator.getY()
-            //                        / Math.abs(Hardware.rightOperator.getY())),
-            //                        Hardware.rightOperator.getRawButton(2));
-            //	Hardware.pickupArm.moveFast(1);
 
             }
         else
             {
+            //If the arm control joystick isn't beyond our deadzone, stop the arm.
             Hardware.pickupArm.stopArmMotor();
             }
+        //End arm movement code
 
-        // Block of code to pick up ball or push it out
+        //Begin Ball manipulation code
         //pull in the ball if the pull in button is pressed.
         if (Hardware.rightOperator
                 .getRawButton(TAKE_IN_BALL_BUTTON) == true)
             {
-            //TODO demystify magic argument
+            //if they press the 3rd button on the rightOperator joystick
+            //override the pickup mechanism
             Hardware.pickupArm
                     .pullInBall(
                             Hardware.rightOperator.getRawButton(3));
@@ -293,50 +302,21 @@ public static void periodic ()
                 }
             }
 
-
-        // block of code to move the arm
-        if (Math.abs(Hardware.rightOperator
-                .getY()) >= PICKUP_ARM_CONTROL_DEADZONE)
-            {
-            // use the formula for the sign (value/abs(value)) to get the
-            // direction
-            // we want the motor to go in,
-            // and round it just in case it isn't exactly 1, then cast to an int
-            // to
-            // make the compiler happy
-            Hardware.pickupArm.moveReasonably(
-                    -(int) Math.round(Hardware.rightOperator.getY()
-                            / Math.abs(
-                                    Hardware.rightOperator.getY())),
-                    Hardware.rightOperator.getRawButton(2));
-            //        Hardware.pickupArm
-            //                .moveFast((int) Math.round(Hardware.rightOperator.getY()
-            //                        / Math.abs(Hardware.rightOperator.getY())),
-            //                        Hardware.rightOperator.getRawButton(2));
-            //	Hardware.pickupArm.moveFast(1);
-
-            }
-        else
-            {
-            Hardware.pickupArm.stopArmMotor();
-            }
-        //Block of code to toggle the camera up or down
+        //Begin raise/lower camera block
         //If the camera is down and we press the button.
-
         if (Hardware.cameraToggleButton.isOnCheckNow() == false)
             {
-            //raise the camera and tell the code that it's up
+            //raise the camera
             Hardware.cameraSolenoid
                     .set(DoubleSolenoid.Value.kForward);
             }
         //If the camera is up and we press the toggle button.
         if (Hardware.cameraToggleButton.isOnCheckNow() == true)
             {
-            //Drop the camera and tell the code that it's down
+            //Drop the camera
             Hardware.cameraSolenoid
                     .set(DoubleSolenoid.Value.kReverse);
             }
-
         //end raise/lower camera block
 
         //Block of code to align us on the goal using the camera
@@ -345,6 +325,7 @@ public static void periodic ()
             {
             //Tell the code to align us to the camera
             isAligningByCamera = true;
+            //Tell the code we want to fire when we're done
             isFiringByCamera = true;
             }
 
@@ -381,7 +362,7 @@ public static void periodic ()
                 // steering towards the goal
                 isAligningByCamera = false;
 
-                //Using right trigger. FIRE.
+                //If using right trigger. FIRE.
                 if (isFiringByCamera == true)
                     {
                     fireRequested = true;
@@ -401,28 +382,6 @@ public static void periodic ()
             }
         //end alignByCameraBlock
 
-        // Block of code to pick up ball or push it out
-        //pull in the ball if the pull in button is pressed.
-        if (Hardware.rightOperator
-                .getRawButton(TAKE_IN_BALL_BUTTON) == true)
-            {
-            //TODO demystify magic argument
-            Hardware.pickupArm
-                    .pullInBall(
-                            Hardware.rightOperator.getRawButton(3));
-            }
-        //push out the ball if the push out button is pressed
-        else if (Hardware.rightOperator
-                .getRawButton(PUSH_OUT_BALL_BUTTON) == true)
-            {
-            Hardware.pickupArm.pushOutBall();
-            }
-        // If neither the pull in or the push out button are pressed, stop the
-        // intake motors
-        else
-            {
-            Hardware.pickupArm.stopIntakeArms();
-            }
         //----------------------------
         // block of code to fire
         //----------------------------
