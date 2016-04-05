@@ -201,9 +201,9 @@ public class ManipulatorArm
 	}
 
 	/**
-	 * Stops the intake arms.
+	 * Stops the intake motors.
 	 */
-	public void stopIntakeArms ()
+	public void stopIntakeMotors ()
 	{
 		this.intakeMotor.set(0.0);
 	}
