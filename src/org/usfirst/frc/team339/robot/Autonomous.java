@@ -1156,7 +1156,7 @@ public class Autonomous
 			//stop rollers, and move down.
 			{
 				//stop the intake motors.
-				Hardware.pickupArm.stopIntakeArms();
+				Hardware.pickupArm.stopIntakeMotors();
 
 				//TODO: get arms out of the way.
 				armState = ArmState.DONE;
@@ -1164,7 +1164,7 @@ public class Autonomous
 			break;
 		case HOLD:
 			//do not move the intake motors.
-			Hardware.pickupArm.stopIntakeArms();
+			Hardware.pickupArm.stopIntakeMotors();
 			//keep the arms in holding position
 			Hardware.pickupArm.moveToPosition(ArmPosition.HOLD);
 			//note: no end conditions, unless if the state is manually changed.

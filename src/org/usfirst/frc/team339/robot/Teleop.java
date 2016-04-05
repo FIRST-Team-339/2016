@@ -251,7 +251,7 @@ public static void periodic ()
         // intake motors
         else
             {
-            Hardware.pickupArm.stopIntakeArms();
+            Hardware.pickupArm.stopIntakeMotors();
             }
         //----------------------------
         // block of code to fire
