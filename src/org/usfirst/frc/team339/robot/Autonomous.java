@@ -867,9 +867,8 @@ public class Autonomous
 
 			if (Hardware.drive.alignByCamera(
 			        Autonomous.ALIGNMENT_DEADBAND,
-			        Autonomous.ALIGNMENT_DEADBAND,
 			        DriveInformation.ALIGNMENT_SPEED,
-			        ALIGNMENT_X_OFFSET, ALIGNMENT_Y_OFFSET,
+			        ALIGNMENT_X_OFFSET,
 			        false) == true)
 			//Once we are in position, we shoot!
 			{
@@ -1095,7 +1094,6 @@ public class Autonomous
 
 
 
-
 	/**
 	 * A separate state machine, used to run arm movements in parallel.
 	 */
@@ -1157,7 +1155,6 @@ public class Autonomous
 			{
 				//stop the intake motors.
 				Hardware.pickupArm.stopIntakeMotors();
-
 				//TODO: get arms out of the way.
 				armState = ArmState.DONE;
 			}
@@ -1174,7 +1171,6 @@ public class Autonomous
 			//stop running state machine.
 			runArmStates = false;
 			break;
-
 
 
 		}
