@@ -1258,12 +1258,12 @@ public boolean testingAlignByCamera (double percentageDeadBandX,
         if (firstTimeAlign == true)
             {
             this.cameraTimer.start();
-
-            savedCameraValue = Hardware.cameraSolenoid.get(); //TODO delete this for more elegant flow
-            //TODO don't reference hardware in general purpose class.
-            Hardware.cameraSolenoid
-                    .set(DoubleSolenoid.Value.kReverse);
-
+            //TODO removed to minimize problems with the method in the
+            //future
+            //            savedCameraValue = Hardware.cameraSolenoid.get(); //TODO delete this for more elegant flow
+            //            //TODO don't reference hardware in general purpose class.
+            //            Hardware.cameraSolenoid
+            //                    .set(DoubleSolenoid.Value.kReverse);
             //turn down the lights
             this.camera.writeBrightness(
                     Hardware.MINIMUM_AXIS_CAMERA_BRIGHTNESS);
@@ -1273,7 +1273,7 @@ public boolean testingAlignByCamera (double percentageDeadBandX,
             Hardware.leftRearEncoder.reset();
             firstTimeAlign = false;
             }
-        //If we claim to be driving by camera and we've waitied long enough
+        //If we claim to be driving by camera and we've waited long enough
         //(a quarter second) for someone to brighten up the darkness with 
         //the ringlight.
         if (isDoneAligning == false)
@@ -1283,6 +1283,9 @@ public boolean testingAlignByCamera (double percentageDeadBandX,
                 //try to take a picture and save it in memory and on the "hard disk"
                 try
                     {
+                    //Only bother taking and processing 
+                    //an image if we have a new one
+                    //to take.
                     if (Hardware.axisCamera.freshImage() == true)
                         {
                         Hardware.imageProcessor.updateImage(
@@ -1330,10 +1333,12 @@ public boolean testingAlignByCamera (double percentageDeadBandX,
                                 .getParticleAnalysisReports().length > 0
                         && getRelativeYCoordinate(
                                 Hardware.imageProcessor
-                                        .getParticleAnalysisReports()[0].center_mass_y) <= ((-percentageDeadBandY
+                                        .getParticleAnalysisReports()[0].center_mass_y) >= ((percentageDeadBandY
                                                 / 2)
                                                 + adjustedProportionalYCenter))
                     {
+
+                    //drive forward
                     //if (isInTurningSection == false)
                         {
                         if (this.transmission
@@ -1361,11 +1366,12 @@ public boolean testingAlignByCamera (double percentageDeadBandX,
                                 .getParticleAnalysisReports().length > 0
                         && getRelativeYCoordinate(
                                 Hardware.imageProcessor
-                                        .getParticleAnalysisReports()[0].center_mass_y) >= ((percentageDeadBandY
+                                        .getParticleAnalysisReports()[0].center_mass_y) <= ((-percentageDeadBandY
                                                 / 2)
                                                 + adjustedProportionalYCenter))
                     {
                     //if (isInTurningSection == false)
+                    //back up
                         {
                         if (this.transmission
                                 .isLeftJoystickReversed() == false
@@ -1435,6 +1441,8 @@ public boolean testingAlignByCamera (double percentageDeadBandX,
                                 correctionSpeed);
                         }
                     }
+                //if the blob is in our X deadzone and we're trying to
+                //turn, tell the method we're done aligning.
                 else
                     {
                     if (isInTurningSection == true)
@@ -1476,6 +1484,13 @@ public boolean testingAlignByCamera (double percentageDeadBandX,
 
 boolean isDoneAligning = false;
 boolean isInTurningSection = false;
+
+//TODO rewrite alignByCamera to use a state machine, the way it is right
+//now is pretty messy.
+private enum alignByCameraStates
+    {
+
+    }
 
 /**
  * Drives forward the specified number of inches aligning to a blob sighted
