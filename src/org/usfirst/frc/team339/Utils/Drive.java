@@ -1276,100 +1276,110 @@ public boolean testingAlignByCamera (double percentageDeadBandX,
         //If we claim to be driving by camera and we've waitied long enough
         //(a quarter second) for someone to brighten up the darkness with 
         //the ringlight.
-        if (this.cameraTimer.get() >= .50)
+        if (isDoneAligning == false)
             {
-            //try to take a picture and save it in memory and on the "hard disk"
-            try
+            if (this.cameraTimer.get() >= .50)
                 {
-                //if (Hardware.axisCamera.freshImage() == true)
+                //try to take a picture and save it in memory and on the "hard disk"
+                try
                     {
-                    if (Hardware.axisCamera.freshImage())
+                    if (Hardware.axisCamera.freshImage() == true)
+                        {
                         Hardware.imageProcessor.updateImage(
                                 Hardware.axisCamera.getImage());
-                    //                      if (savePictures == true)
-                    //                          Hardware.axisCamera.saveImagesSafely();
+                        //tell imageProcessor to use the image we just took to look for 
+                        //blobs
+                        Hardware.imageProcessor
+                                .updateParticleAnalysisReports();
+                        }
                     }
-                }
-            //This is NI yelling at us for something being wrong
-            catch (NIVisionException e)
-                {
-                //if something wrong happens, tell the stupid programmers 
-                //who let it happen more information about where it came from
-                e.printStackTrace();
-                }
-            //tell imageProcessor to use the image we just took to look for 
-            //blobs
-            Hardware.imageProcessor.updateParticleAnalysisReports();
-            /*
-             * Tell the programmers the absolute and relative x coordinates
-             * of the center of mass of the largest blob.
-             */
-            if (Hardware.imageProcessor
-                    .getParticleAnalysisReports().length > 0)
-                {
-                System.out.println("Relative x center of Mass :"
-                        + (getRelativeCameraCoordinate(
-                                Hardware.imageProcessor
-                                        .getParticleAnalysisReports()[0].center_mass_x,
-                                true)));
-                System.out.println("Relative y center of Mass:"
-                        + getRelativeYCoordinate(Hardware.imageProcessor
-                                .getParticleAnalysisReports()[0].center_mass_y));
-                //System.out.println(this.isInTurningSection);
-                }
+                //This is NI yelling at us for something being wrong
+                catch (NIVisionException e)
+                    {
+                    //if something wrong happens, tell the stupid programmers 
+                    //who let it happen more information about where it came from
+                    e.printStackTrace();
+                    }
 
-            //If we haven't pressed the cancel button.
-            if ((Hardware.rightOperator.getRawButton(10) == true
-                    && Hardware.rightOperator
-                            .getRawButton(11) == true) == false)
-                {
-                //if we're below where we want to be on the y axis
+                /*
+                 * Tell the programmers the absolute and relative x coordinates
+                 * of the center of mass of the largest blob.
+                 */
                 if (Hardware.imageProcessor
-                        .getParticleAnalysisReports().length > 0
+                        .getParticleAnalysisReports().length > 0)
+                    {
+                    System.out.println("Relative x center of Mass :"
+                            + (getRelativeCameraCoordinate(
+                                    Hardware.imageProcessor
+                                            .getParticleAnalysisReports()[0].center_mass_x,
+                                    true)));
+                    System.out.println("Relative y center of Mass:"
+                            + getRelativeYCoordinate(
+                                    Hardware.imageProcessor
+                                            .getParticleAnalysisReports()[0].center_mass_y));
+                    System.out.println(
+                            "isInTurningSection" + isInTurningSection);
+                    }
+
+                //if we're below where we want to be on the y axis
+                if ((Hardware.rightOperator.getRawButton(10) == false
+                        && Hardware.rightOperator
+                                .getRawButton(11) == false)
+                        && isInTurningSection == false
+                        && Hardware.imageProcessor
+                                .getParticleAnalysisReports().length > 0
                         && getRelativeYCoordinate(
                                 Hardware.imageProcessor
-                                        .getParticleAnalysisReports()[0].center_mass_y) <= ((-percentageDeadBandY
+                                        .getParticleAnalysisReports()[0].center_mass_y) >= ((-percentageDeadBandY
                                                 / 2)
-                                                + adjustedProportionalYCenter)
-                        && isInTurningSection == false)
+                                                + adjustedProportionalYCenter))
                     {
-                    //TODO check drive direction
-                    if (this.transmission
-                            .isLeftJoystickReversed() == true
-                            || this.transmission
-                                    .isRightJoystickReversed() == true)
+                    //if (isInTurningSection == false)
                         {
-                        this.driveContinuous(correctionSpeed,
-                                correctionSpeed);
-                        }
-                    else
-                        {
-                        this.driveContinuous(-correctionSpeed,
-                                -correctionSpeed);
+                        if (this.transmission
+                                .isLeftJoystickReversed() == true
+                                || this.transmission
+                                        .isRightJoystickReversed() == true)
+                            {
+                            this.driveContinuous(correctionSpeed,
+                                    correctionSpeed);
+                            }
+                        else
+                            {
+                            this.driveContinuous(-correctionSpeed,
+                                    -correctionSpeed);
+                            }
                         }
                     }
                 //If we're above where we want to be in the Y axis
-                else if (Hardware.imageProcessor
-                        .getParticleAnalysisReports().length > 0
+                else if ((Hardware.rightOperator
+                        .getRawButton(10) == false
+                        && Hardware.rightOperator
+                                .getRawButton(11) == false)
+                        && isInTurningSection == false
+                        && Hardware.imageProcessor
+                                .getParticleAnalysisReports().length > 0
                         && getRelativeYCoordinate(
                                 Hardware.imageProcessor
-                                        .getParticleAnalysisReports()[0].center_mass_y) >= ((percentageDeadBandY
+                                        .getParticleAnalysisReports()[0].center_mass_y) <= ((percentageDeadBandY
                                                 / 2)
-                                                + adjustedProportionalYCenter)
-                        && isInTurningSection == false)
+                                                + adjustedProportionalYCenter))
                     {
-                    if (this.transmission
-                            .isLeftJoystickReversed() == false
-                            || this.transmission
-                                    .isRightJoystickReversed() == false)
+                    //if (isInTurningSection == false)
                         {
-                        this.driveContinuous(-correctionSpeed,
-                                -correctionSpeed);
-                        }
-                    else
-                        {
-                        this.driveContinuous(correctionSpeed,
-                                correctionSpeed);
+                        if (this.transmission
+                                .isLeftJoystickReversed() == false
+                                || this.transmission
+                                        .isRightJoystickReversed() == false)
+                            {
+                            this.driveContinuous(-correctionSpeed,
+                                    -correctionSpeed);
+                            }
+                        else
+                            {
+                            this.driveContinuous(correctionSpeed,
+                                    correctionSpeed);
+                            }
                         }
                     }
                 else
@@ -1380,87 +1390,83 @@ public boolean testingAlignByCamera (double percentageDeadBandX,
                 //if the center of the largest blob is to the left of our 
                 //acceptable zone around the center
                 //TODO Hardware references for canceling, fix this.
-                if (Hardware.imageProcessor
-                        .getParticleAnalysisReports().length > 0
+                if ((Hardware.rightOperator.getRawButton(10) == false
+                        && Hardware.rightOperator
+                                .getRawButton(11) == false)
+                        && isInTurningSection == true
+                        && Hardware.imageProcessor
+                                .getParticleAnalysisReports().length > 0
                         && getRelativeXCoordinate(
                                 Hardware.imageProcessor
-                                        .getParticleAnalysisReports()[0].center_mass_x) <= ((-percentageDeadBandX
+                                        .getParticleAnalysisReports()[0].center_mass_x) >= ((-percentageDeadBandX
                                                 / 2)
-                                                + adjustedProportionalXCenter)
-                        && isInTurningSection == true)
+                                                + adjustedProportionalXCenter))
                     {
                     //turn left until it is in the zone (will be called over and
                     //over again until the blob is within the acceptable zone)
-                    this.turnLeftDegrees(9999.0, false, correctionSpeed,
-                            -correctionSpeed);
+                    //if (isInTurningSection == true)
+                        {
+                        this.turnLeftDegrees(9999.0, false,
+                                correctionSpeed,
+                                -correctionSpeed);
+                        }
                     }
                 //if the center of the largest blob is to the right of our 
                 //acceptable zone around the center
-                else if (Hardware.imageProcessor
-                        .getParticleAnalysisReports().length > 0
+                else if ((Hardware.rightOperator
+                        .getRawButton(10) == false
+                        && Hardware.rightOperator
+                                .getRawButton(11) == false)
+                        && isInTurningSection == true
+                        && Hardware.imageProcessor
+                                .getParticleAnalysisReports().length > 0
                         && getRelativeXCoordinate(
                                 Hardware.imageProcessor
                                         .getParticleAnalysisReports()[0].center_mass_x) >= ((percentageDeadBandX
                                                 / 2)
-                                                + adjustedProportionalXCenter)
-                        && isInTurningSection == true)
+                                                + adjustedProportionalXCenter))
                     {
                     //turn right until it is in the zone (will be called over and
                     //over again until the blob is within the acceptable zone)
-                    this.turnRightDegrees(9999.0, false,
-                            -correctionSpeed,
-                            correctionSpeed);
+                    //if (isInTurningSection == true)
+                        {
+                        this.turnRightDegrees(9999.0, false,
+                                -correctionSpeed,
+                                correctionSpeed);
+                        }
                     }
                 else
                     {
-                    //Set up for next call
-                    firstTimeAlign = true;
-                    this.isInTurningSection = false;
-                    //Stop and reset the camera timer for next call delay
-                    this.cameraTimer.stop();
-                    this.cameraTimer.reset();
-
-                    Hardware.cameraSolenoid.set(savedCameraValue);//TODO hardware reference.
-
-                    //stop the robot
-                    Hardware.transmission.controls(0.0, 0.0);
-                    //save the image of us when we're in alignment.
-                    if (savePictures == true)
-                        Hardware.axisCamera.saveImagesSafely();
-                    //Let the coach see normally again.
-                    this.camera.writeBrightness(
-                            Hardware.NORMAL_AXIS_CAMERA_BRIGHTNESS);
-                    //Turn off the ringlight because we don't need it.
-                    this.ringLightRelay.set(Value.kOff);
-                    //tell the programmers we're done.
-                    return true;
+                    if (isInTurningSection == true)
+                        isDoneAligning = true;
                     }
                 //If the center of the blob is nestled happily in our deadzone
                 }
-            else
-                {
-                //Set up for next call
-                firstTimeAlign = true;
-                this.isInTurningSection = false;
-                //Stop and reset the camera timer for next call delay
-                this.cameraTimer.stop();
-                this.cameraTimer.reset();
+            }
+        else
+            {
+            //Set up for next call
+            firstTimeAlign = true;
+            this.isInTurningSection = false;
+            this.isDoneAligning = false;
+            //Stop and reset the camera timer for next call delay
+            this.cameraTimer.stop();
+            this.cameraTimer.reset();
 
-                Hardware.cameraSolenoid.set(savedCameraValue);//TODO hardware reference.
+            Hardware.cameraSolenoid.set(savedCameraValue);//TODO hardware reference.
 
-                //stop the robot
-                Hardware.transmission.controls(0.0, 0.0);
-                //save the image of us when we're in alignment.
-                if (savePictures == true)
-                    Hardware.axisCamera.saveImagesSafely();
-                //Let the coach see normally again.
-                this.camera.writeBrightness(
-                        Hardware.NORMAL_AXIS_CAMERA_BRIGHTNESS);
-                //Turn off the ringlight because we don't need it.
-                this.ringLightRelay.set(Value.kOff);
-                //tell the programmers we're done.
-                return true;
-                }
+            //stop the robot
+            Hardware.transmission.controls(0.0, 0.0);
+            //save the image of us when we're in alignment.
+            if (savePictures == true)
+                Hardware.axisCamera.saveImagesSafely();
+            //Let the coach see normally again.
+            this.camera.writeBrightness(
+                    Hardware.NORMAL_AXIS_CAMERA_BRIGHTNESS);
+            //Turn off the ringlight because we don't need it.
+            this.ringLightRelay.set(Value.kOff);
+            //tell the programmers we're done.
+            return true;
             }
         }
     //final return just so we always make sure we tell the programmers 
@@ -1468,6 +1474,7 @@ public boolean testingAlignByCamera (double percentageDeadBandX,
     return false;
 }//end alignByCamera()
 
+boolean isDoneAligning = false;
 boolean isInTurningSection = false;
 
 /**
