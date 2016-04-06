@@ -94,7 +94,7 @@ public static void init ()
     //anything yet
     Hardware.arrowDashboard
             .setDirection(Guidance.Direction.neutral);
-    Hardware.arrowDashboard.update();
+    // Hardware.arrowDashboard.update();
     //Turn off all the solenoids before we really start anything
     Hardware.catapultSolenoid0.set(false);
     Hardware.catapultSolenoid1.set(false);
@@ -124,6 +124,7 @@ private static boolean testMove1IsDone = false;
 private static boolean testMove2IsDone = true;
 private static boolean testMove3IsDone = false;
 private static boolean testCameraIsDone = true;
+private static boolean testingAlignByCamera = false;//@DELETE
 
 /**
  * User Periodic code for teleop mode should go here. Will be called
@@ -206,6 +207,20 @@ public static void periodic ()
     //If we don't have the runningInLab flag set to true
     else
         {
+        if (Hardware.leftOperator.getRawButton(8))
+            {
+            testingAlignByCamera = true;
+            }
+        if (testingAlignByCamera == true)
+            {
+            if (Hardware.drive.testingAlignByCamera(.2, .2, .55, -.325,
+                    -.483, true) == true)
+                {
+                testingAlignByCamera = false;
+                }
+            }
+        //@DELETE        
+
         // Begin arm movement code
         if (Math.abs(Hardware.rightOperator
                 .getY()) >= PICKUP_ARM_CONTROL_DEADZONE)
@@ -543,7 +558,8 @@ public static void periodic ()
             {
             isSpeedTesting = true;
             }
-        if (isSpeedTesting == false && isAligningByCamera == false)
+        if (isSpeedTesting == false && isAligningByCamera == false
+                && testingAlignByCamera == false)
             driveRobot();
         else if (isSpeedTesting == true)
             {
@@ -877,19 +893,19 @@ public static void printStatements ()
     // Hardware.catapultSolenoid2.get());
 
     // Encoders-------------
-    //		System.out.println(
-    //		        "RR distance = "
-    //		                + Hardware.rightRearEncoder.getDistance());
-    //		System.out.println(
-    //		        "LR distance = "
-    //		                + Hardware.leftRearEncoder.getDistance());
+    // System.out.println(
+    //       "RR distance = "
+    //             + Hardware.rightRearEncoder.getDistance());
+    // System.out.println(
+    //       "LR distance = "
+    //             + Hardware.leftRearEncoder.getDistance());
     //    //    	 System.out.println("Arm Motor = " + Hardware.armMotor.getDistance());
-    //    System.out.println(
-    //            "Right Rear Encoder Tics: "
-    //                    + Hardware.rightRearEncoder.get());
-    //    System.out.println(
-    //            "Left Rear Encoder Tics: "
-    //                    + Hardware.leftRearEncoder.get());
+    //System.out.println(
+    //      "Right Rear Encoder Tics: "
+    //            + Hardware.rightRearEncoder.get());
+    //System.out.println(
+    ///       "Left Rear Encoder Tics: "
+    //             + Hardware.leftRearEncoder.get());
 
 
     // Encoders-------------
