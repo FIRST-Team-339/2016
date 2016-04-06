@@ -1309,16 +1309,16 @@ public boolean testingAlignByCamera (double percentageDeadBandX,
                         .getParticleAnalysisReports().length > 0)
                     {
                     System.out.println("Relative x center of Mass :"
-                            + (getRelativeCameraCoordinate(
+                            + (getRelativeXCoordinate(
                                     Hardware.imageProcessor
-                                            .getParticleAnalysisReports()[0].center_mass_x,
-                                    true)));
+                                            .getParticleAnalysisReports()[0].center_mass_x)));
                     System.out.println("Relative y center of Mass:"
                             + getRelativeYCoordinate(
                                     Hardware.imageProcessor
                                             .getParticleAnalysisReports()[0].center_mass_y));
                     System.out.println(
-                            "isInTurningSection" + isInTurningSection);
+                            "isInTurningSection = "
+                                    + isInTurningSection);
                     }
 
                 //if we're below where we want to be on the y axis
@@ -1330,7 +1330,7 @@ public boolean testingAlignByCamera (double percentageDeadBandX,
                                 .getParticleAnalysisReports().length > 0
                         && getRelativeYCoordinate(
                                 Hardware.imageProcessor
-                                        .getParticleAnalysisReports()[0].center_mass_y) >= ((-percentageDeadBandY
+                                        .getParticleAnalysisReports()[0].center_mass_y) <= ((-percentageDeadBandY
                                                 / 2)
                                                 + adjustedProportionalYCenter))
                     {
@@ -1361,7 +1361,7 @@ public boolean testingAlignByCamera (double percentageDeadBandX,
                                 .getParticleAnalysisReports().length > 0
                         && getRelativeYCoordinate(
                                 Hardware.imageProcessor
-                                        .getParticleAnalysisReports()[0].center_mass_y) <= ((percentageDeadBandY
+                                        .getParticleAnalysisReports()[0].center_mass_y) >= ((percentageDeadBandY
                                                 / 2)
                                                 + adjustedProportionalYCenter))
                     {
