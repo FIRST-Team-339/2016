@@ -48,7 +48,9 @@ package org.usfirst.frc.team339.HardwareInterfaces.transmission;
  *          -------------------------------------------------------
  */
 import java.util.Vector;
+import org.usfirst.frc.team339.Hardware.Hardware;
 import org.usfirst.frc.team339.HardwareInterfaces.PIDVelocityController;
+import org.usfirst.frc.team339.Utils.ErrorMessage.PrintsTo;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.Relay;
@@ -1838,6 +1840,12 @@ public final class Transmission_old
 			{
 				controllerSide = 'R';
 			}
+			//TODO: remove errorMessage. Actually, burn ErrorMessages, and let it rise like a pheonix.
+			Hardware.errorMessage.printError(
+			        joystickSide + controllerSide + " Joy = " +
+			                joystickInputValue,
+			        PrintsTo.roboRIO,
+			        false);
 			System.out
 			        .println(joystickSide + controllerSide + " Joy = " +
 			                joystickInputValue);

@@ -33,6 +33,7 @@ package org.usfirst.frc.team339.robot;
 
 import org.usfirst.frc.team339.Hardware.Hardware;
 import org.usfirst.frc.team339.HardwareInterfaces.transmission.Transmission_old.debugStateValues;
+import org.usfirst.frc.team339.Utils.ErrorMessage.PrintsTo;
 import org.usfirst.frc.team339.Utils.ManipulatorArm;
 import org.usfirst.frc.team339.Utils.ManipulatorArm.ArmPosition;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
@@ -326,9 +327,10 @@ public class Autonomous
 	//the following are for testing and debugging.
 	//created to print a statement only once in the run of the program.
 	//TODO: remove.
-	private static boolean oneTimePrint1 = false;
-	private static boolean oneTimePrint2 = false;
-	private static boolean oneTimePrint3 = false;
+	private static boolean oneTimePrint1 = true;
+	private static boolean oneTimePrint2 = true;
+	private static boolean oneTimePrint3 = true;
+	private static boolean oneTimePrint4 = false;
 
 	// ==========================================
 	// TUNEABLES
@@ -344,6 +346,7 @@ public class Autonomous
 	 */
 	public static void init ()
 	{
+
 
 		try
 		{
@@ -462,6 +465,7 @@ public class Autonomous
 		}
 
 
+
 	} // end Periodic
 
 
@@ -510,6 +514,9 @@ public class Autonomous
 			{
 				prevState = mainState;
 				System.out.println("Main State: " + mainState);
+				Hardware.errorMessage.printError(
+				        "MainState" + mainState, PrintsTo.roboRIO,
+				        false);
 			}
 
 
@@ -598,6 +605,26 @@ public class Autonomous
 
 		case MOVE_TO_OUTER_WORKS:
 
+			if (oneTimePrint4 == false)
+			{
+				Hardware.transmission
+				        .setDebugState(debugStateValues.DEBUG_ALL);
+				Hardware.errorMessage.printError("Left: "
+				        + Hardware.leftRearEncoder.getDistance(),
+				        PrintsTo.roboRIO,
+				        false);
+				Hardware.errorMessage.printError("Right: "
+				        + Hardware.leftRearEncoder.getDistance(),
+				        PrintsTo.roboRIO,
+				        false);
+				oneTimePrint4 = true;
+			}
+			else
+			{
+				Hardware.transmission
+				        .setDebugState(debugStateValues.DEBUG_NONE);
+			}
+
 			// goes forwards to outer works.
 			if ((Hardware.drive.driveStraightByInches(
 			        DriveInformation.DISTANCE_TO_OUTER_WORKS
@@ -624,6 +651,9 @@ public class Autonomous
 			break;
 
 		case WAIT_FOR_ARM_DESCENT:
+			Hardware.transmission
+			        .setDebugState(debugStateValues.DEBUG_NONE);
+
 			//Stop during the wait. We do not want to ram the bar.
 			Hardware.transmission.controls(0.0, 0.0);
 
@@ -678,6 +708,7 @@ public class Autonomous
 
 
 		case FORWARDS_BASED_ON_ENCODERS_OR_IR:
+
 			// Check if we are in lane One.
 			if (lane == 1 || lane == 6)
 			// If so, move forwards the distance to the A-tape.
@@ -1083,6 +1114,9 @@ public class Autonomous
 
 		//turn off ringlight.
 		Hardware.ringLightRelay.set(Relay.Value.kOff);
+
+		Hardware.transmission
+		        .setDebugState(debugStateValues.DEBUG_NONE);
 
 	}
 
