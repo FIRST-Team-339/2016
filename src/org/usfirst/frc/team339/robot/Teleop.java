@@ -214,16 +214,19 @@ public static void periodic ()
         if (Hardware.leftOperator.getRawButton(8))
             {
             testingAlignByCamera = true;
+            fireRequested = true;
+            Hardware.armOutOfWayTimer.reset();
+            Hardware.armOutOfWayTimer.start();
             }
         if (testingAlignByCamera == true)
             {
-            if (Hardware.drive.alignByCameraStateMachine(.2, .2,
+            if (Hardware.drive.alignByCameraStateMachine(.15, .10,
                     -.325,
                     -.483, .55,
-                    Hardware.rightOperator.getRawButton(10) == false
+                    Hardware.rightOperator.getRawButton(10) == true
                             && Hardware.rightOperator
-                                    .getRawButton(11) == false,
-                    true, true) == true)
+                                    .getRawButton(11) == true,
+                    true, false) == true)
                 {
                 testingAlignByCamera = false;
                 }
@@ -868,7 +871,7 @@ public static void printStatements ()
     // IR sensors-----------
     //		System.out.println("left IR = " + Hardware.leftIR.isOn());
     //		System.out.println("right IR = " + Hardware.rightIR.isOn());
-    //	System.out.println("Has ball IR = " + Hardware.armIR.isOn());
+    //System.out.println("Has ball IR = " + Hardware.armIR.isOn());
 
 
 
@@ -879,7 +882,7 @@ public static void printStatements ()
     // prints the value of the transducer- (range in code is 50)
     //hits psi of 100 accurately
     //System.out.println("transducer = " + Hardware.transducer.get());
-    //		System.out.println("Arm Pot = " + Hardware.armPot.get());
+    //System.out.println("Arm Pot = " + Hardware.armPot.get());
 
     // Motor controllers-----
     // prints value of the motors
@@ -904,19 +907,19 @@ public static void printStatements ()
 
 
     // Encoders-------------
-    // System.out.println(
-    //       "RR distance = "
-    //             + Hardware.rightRearEncoder.getDistance());
-    // System.out.println(
-    //       "LR distance = "
-    //             + Hardware.leftRearEncoder.getDistance());
-    //    //    	 System.out.println("Arm Motor = " + Hardware.armMotor.getDistance());
-    //System.out.println(
-    //      "Right Rear Encoder Tics: "
-    //            + Hardware.rightRearEncoder.get());
-    //System.out.println(
-    ///       "Left Rear Encoder Tics: "
-    //             + Hardware.leftRearEncoder.get());
+
+    //    System.out.println(
+    //            "Right Rear Encoder Tics: "
+    //                    + Hardware.rightRearEncoder.get());
+    //    System.out.println(
+    //            "Left Rear Encoder Tics: "
+    //                    + Hardware.leftRearEncoder.get());
+    //    System.out.println(
+    //            "RR distance = "
+    //                    + Hardware.rightRearEncoder.getDistance());
+    //    System.out.println(
+    //            "LR distance = "
+    //                    + Hardware.leftRearEncoder.getDistance());
 
 
     // Encoders-------------

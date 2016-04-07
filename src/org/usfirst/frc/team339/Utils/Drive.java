@@ -1584,7 +1584,7 @@ public boolean alignByCameraStateMachine (double percentageDeadbandX,
             else
                 {
                 currentState =
-                        alignByCameraStates.CHECK_X_AXIS_CORRECTNESS;
+                        alignByCameraStates.QUIT;
                 }
             break;
         case CHECK_X_AXIS_CORRECTNESS:
@@ -1614,7 +1614,8 @@ public boolean alignByCameraStateMachine (double percentageDeadbandX,
             //if the blob is in our x deadzone
             else
                 {
-                currentState = alignByCameraStates.QUIT;
+                currentState =
+                        alignByCameraStates.CHECK_Y_AXIS_CORRECTNESS;
                 }
             break;
         case DRIVE_FORWARD:
@@ -1707,7 +1708,7 @@ public boolean alignByCameraStateMachine (double percentageDeadbandX,
 
 alignByCameraStates currentState = alignByCameraStates.BEGINNING_SETUP;
 alignByCameraStates returnToState =
-        alignByCameraStates.CHECK_Y_AXIS_CORRECTNESS;
+        alignByCameraStates.CHECK_X_AXIS_CORRECTNESS;
 
 //TODO rewrite alignByCamera to use a state machine, the way it is right
 //now is pretty messy.
