@@ -1781,10 +1781,10 @@ public alignByCameraReturn alignByCameraStateMachine (
             this.transmission.controls(0.0, 0.0);
             //save the image of us when we're in alignment.
             //Let the coach see normally again.
-            this.camera.writeBrightness(
-                    Hardware.NORMAL_AXIS_CAMERA_BRIGHTNESS);
+            //            this.camera.writeBrightness(
+            //                    Hardware.NORMAL_AXIS_CAMERA_BRIGHTNESS);
             //Turn off the ringlight because we don't need it.
-            this.ringLightRelay.set(Value.kOff);
+            //this.ringLightRelay.set(Value.kOff);
             //tell the programmers we're done.
             if (cancelAlign == true)
                 {
@@ -2166,10 +2166,10 @@ public boolean alignByCamera (double percentageDeadBand,
                 if (savePictures == true)
                     Hardware.axisCamera.saveImagesSafely();
                 //Let the coach see normally again.
-                this.camera.writeBrightness(
-                        Hardware.NORMAL_AXIS_CAMERA_BRIGHTNESS);
+                //                this.camera.writeBrightness(
+                //                        Hardware.NORMAL_AXIS_CAMERA_BRIGHTNESS);
                 //Turn off the ringlight because we don't need it.
-                this.ringLightRelay.set(Value.kOff);
+                //this.ringLightRelay.set(Value.kOff);
                 //tell the programmers we're done.
                 return true;
                 }
