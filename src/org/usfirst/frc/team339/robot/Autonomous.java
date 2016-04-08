@@ -33,6 +33,7 @@ package org.usfirst.frc.team339.robot;
 
 import org.usfirst.frc.team339.Hardware.Hardware;
 import org.usfirst.frc.team339.HardwareInterfaces.transmission.Transmission_old.debugStateValues;
+import org.usfirst.frc.team339.Utils.Drive;
 import org.usfirst.frc.team339.Utils.ErrorMessage.PrintsTo;
 import org.usfirst.frc.team339.Utils.ManipulatorArm;
 import org.usfirst.frc.team339.Utils.ManipulatorArm.ArmPosition;
@@ -202,6 +203,11 @@ public class Autonomous
 		 * Proceeds to SHOOT.
 		 */
 		ALIGN_IN_FRONT_OF_GOAL,
+
+		/**
+		 * Navigate the rest of the way by camera.
+		 */
+		DRIVE_BY_CAMERA,
 
 		/**
 		 * We shoot the cannon ball.
@@ -513,6 +519,9 @@ public class Autonomous
 			if (mainState != prevState)
 			{
 				prevState = mainState;
+				System.out
+				        .println("Legnth: " + Hardware.kilroyTimer.get()
+				                + " seconds.\n");
 				System.out.println("Main State: " + mainState);
 				Hardware.errorMessage.printError(
 				        "MainState" + mainState, PrintsTo.roboRIO,
@@ -685,6 +694,9 @@ public class Autonomous
 				Hardware.cameraSolenoid.set(Value.kReverse);
 
 				//Teleop.printStatements();
+				//                System.out.println("Encoders: "
+				//                        + Hardware.leftRearEncoder.getDistance() + "\t"
+				//                        + Hardware.rightRearEncoder.getDistance());
 				resetEncoders();
 
 				//We are over the outer works. Start the arm back up.
@@ -699,6 +711,11 @@ public class Autonomous
 				if (lane == 3)
 				{
 					mainState = MainState.DONE;
+				}
+
+				if (DriveInformation.SKIP_TO_DRIVE_BY_CAMERA[lane] == true)
+				{
+					mainState = MainState.DRIVE_BY_CAMERA;
 				}
 
 			}
@@ -896,15 +913,32 @@ public class Autonomous
 			//align based on the camera until we are facing the goal. head-on.
 			Hardware.transmission.controls(0.0, 0.0);
 
-			if (Hardware.drive.alignByCamera(
-			        Autonomous.ALIGNMENT_DEADBAND,
-			        DriveInformation.ALIGNMENT_SPEED,
-			        ALIGNMENT_X_OFFSET,
-			        false) == true)
-			//Once we are in position, we shoot!
+		//			if (Hardware.drive.alignByCamera(
+		//			        Autonomous.ALIGNMENT_DEADBAND,
+		//			        DriveInformation.ALIGNMENT_SPEED,
+		//			        ALIGNMENT_X_OFFSET,
+		//			        false) == true)
+		//Once we are in position, we shoot!
+		{
+			mainState = MainState.SHOOT;
+		}
+			break;
+
+		case DRIVE_BY_CAMERA:
+
+			if (Hardware.drive.alignByCameraStateMachine(
+			        CAMERA_ALIGN_X_DEADBAND,
+			        CAMERA_ALIGN_Y_DEADBAND,
+			        CAMERA_X_AXIS_ADJUSTED_PROPORTIONAL_CENTER,
+			        CAMERA_Y_AXIS_ADJUSTED_PROPORTIONAL_CENTER,
+			        ALIGN_BY_CAMERA_TURNING_SPEED,
+			        ALIGN_BY_CAMERA_DRIVE_SPEED,
+			        false,
+			        false, false) == Drive.alignByCameraReturn.DONE)
 			{
 				mainState = MainState.SHOOT;
 			}
+
 			break;
 
 		case SHOOT:
@@ -1276,14 +1310,14 @@ public class Autonomous
 		if (degrees < 0)
 		//Turn right. Make degrees positive.
 		{
-			done = Hardware.drive.turnRightDegrees(-degrees, false,
+			done = Hardware.drive.turnRightDegrees(-degrees, true,
 			        turnSpeed,
 			        -turnSpeed);
 		}
 		else
 		//Turn left the given number of degrees.
 		{
-			done = Hardware.drive.turnLeftDegrees(degrees, false,
+			done = Hardware.drive.turnLeftDegrees(degrees, true,
 			        -turnSpeed,
 			        turnSpeed);
 		}
@@ -1371,11 +1405,11 @@ public class Autonomous
 		private static final double[] DRIVE_OVER_OUTER_WORKS_MOTOR_RATIOS =
 		        {
 		                0.0,
-		                0.4,//not much is required for the low bar.
-		                0.7,
+		                0.5,//not much is required for the low bar.
+		                0.5,
 		                0.8,
-		                0.7,
-		                0.7,
+		                0.5,
+		                0.5,
 		                0.4
 		        };
 
@@ -1393,6 +1427,17 @@ public class Autonomous
 		                true //or go backwards.
 		        };
 
+		static final boolean[] SKIP_TO_DRIVE_BY_CAMERA =
+		        {
+		                false,
+		                false,
+		                false,
+		                false,
+		                true, //lane 4.
+		                false,
+		                false
+		        };
+
 		/**
 		 * The motor controller values for moving to the outer works.
 		 * As these are initial speeds, keep them low, to go easy on the motors.
@@ -1401,12 +1446,12 @@ public class Autonomous
 		static final double[] MOTOR_RATIO_TO_OUTER_WORKS =
 		        {
 		                0.0, // nothing. Not used. Arbitrary; makes it work.
-		                0.40,//0.25, // lane 1, should be extra low.
+		                0.50,//0.25, // lane 1, should be extra low.
 		                1.0, // lane 2
 		                0.5, // lane 3
-		                0.4, // lane 4
-		                0.4, // lane 5
-		                0.4 //backup plan
+		                0.5, // lane 4
+		                0.5, // lane 5
+		                0.5 //backup plan
 		        };
 
 		/**
@@ -1416,11 +1461,11 @@ public class Autonomous
 		static final double[] MOTOR_RATIO_TO_A_LINE =
 		        {
 		                0.0, //PLACEHOLDER
-		                0.4, //lane 1
-		                0.6, //lane 2
+		                0.5, //lane 1
+		                0.5, //lane 2
 		                0.4, //lane 3
 		                0.4, //lane 4
-		                0.6,  //lane 5
+		                0.5,  //lane 5
 		                0.0 //backup plan
 		        };
 
@@ -1462,11 +1507,11 @@ public class Autonomous
 		static final double[] CENTRE_TO_ALIGNMENT_LINE_MOTOR_RATIO =
 		        {
 		                0.0,
-		                0.4, //1
-		                0.4, //2
+		                0.5, //1
+		                0.5, //2
 		                .25, //3
 		                .25, //4
-		                0.4, //5
+		                0.5, //5
 		                0.25 //backup plan
 		        };
 
@@ -1478,11 +1523,11 @@ public class Autonomous
 		static final double[] FORWARDS_FROM_ALIGNMENT_LINE_MOTOR_RATIO =
 		        {
 		                0.0, // nothing. A Placeholder.
-		                0.4, //lane 1
-		                0.4, //lane 2
-		                0.3, //lane 3
-		                0.3, //lane 4
-		                0.4,  //lane 5
+		                0.5, //lane 1
+		                0.5, //lane 2
+		                0.7, //lane 3
+		                0.7, //lane 4
+		                0.5,  //lane 5
 		                -0.5 //backup plan
 		        };
 
@@ -1525,11 +1570,11 @@ public class Autonomous
 		static final double[] DRIVE_UP_TO_GOAL_MOTOR_RATIO =
 		        {
 		                0.0,
-		                0.4,
-		                0.4,
-		                0.4,
-		                0.4,
-		                0.4,
+		                0.50,
+		                0.5,
+		                0.5,
+		                0.5,
+		                0.5,
 		                0.0
 		        };
 
@@ -1556,8 +1601,8 @@ public class Autonomous
 		                0.0,
 		                0.0,
 		                0.0,
-		                12.0,//Further driving is disabled in this lane, so this is to be sure we are all the way over.
-		                0.0,
+		                48.0,//Further driving is disabled in this lane, so this is to be sure we are all the way over.
+		                60.0,
 		                0.0,
 		                0.0
 		        };
@@ -1572,12 +1617,12 @@ public class Autonomous
 		/**
 		 * Distance to get the front of the robot to the Outer Works.
 		 */
-		private static final double DISTANCE_TO_OUTER_WORKS = 22.75;
+		private static final double DISTANCE_TO_OUTER_WORKS = 16.75;//prev. 22.75;
 
 		/**
 		 * Distance to travel to get over the Outer Works.
 		 */
-		private static final double DISTANCE_OVER_OUTER_WORKS = 98.86;
+		private static final double DISTANCE_OVER_OUTER_WORKS = 104.86;//prev. 98.86;
 
 		/**
 		 * The distance to the central pivot point from the front of the robot.
@@ -1590,12 +1635,12 @@ public class Autonomous
 		/**
 		 * Speed at which to make turns by default.
 		 */
-		private static final double DEFAULT_TURN_SPEED = 0.4;
+		private static final double DEFAULT_TURN_SPEED = 0.55;
 
 		/**
 		 * Speed at which we may align by camera.
 		 */
-		private static final double ALIGNMENT_SPEED = 0.4;
+		private static final double ALIGNMENT_SPEED = 0.9;
 	}
 
 
@@ -1634,19 +1679,19 @@ public class Autonomous
 	 */
 	private static final double DELAY_TIME_AFTER_SHOOT = 1.0;
 
-	/**
-	 * Room for error when aligning by camera.
-	 */
-	private static final double ALIGNMENT_DEADBAND = 0.2;
 
-	/**
-	 * Desired X position of blob while aligning.
-	 */
-	private static final double ALIGNMENT_X_OFFSET = -3.25;
+	private static final double CAMERA_ALIGN_Y_DEADBAND = .10;
 
-	/**
-	 * Desired Y position of blob while aligning.
-	 */
-	private static final double ALIGNMENT_Y_OFFSET = -.483;
+	private static final double CAMERA_ALIGN_X_DEADBAND = .125;
+
+	private static final double CAMERA_X_AXIS_ADJUSTED_PROPORTIONAL_CENTER =
+	        -.30;
+
+	private static final double CAMERA_Y_AXIS_ADJUSTED_PROPORTIONAL_CENTER =
+	        -.192;
+
+	private static final double ALIGN_BY_CAMERA_TURNING_SPEED = .5;
+
+	private static final double ALIGN_BY_CAMERA_DRIVE_SPEED = .45;
 
 } // end class

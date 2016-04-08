@@ -197,7 +197,7 @@ public class ManipulatorArm
 	 */
 	public boolean ballIsOut ()
 	{
-		return !this.hasBallSensor.get();
+		return !this.hasBallSensor.isOn();
 	}
 
 	/**
@@ -411,7 +411,7 @@ public class ManipulatorArm
 	private final static double MIN_SOFT_ARM_STOP = 85.0;
 
 	private final double ARM_OUT_OF_WAY_DEGREES =
-	        0.573 * (MAX_SOFT_ARM_STOP - MIN_SOFT_ARM_STOP)
+	        0.701 * (MAX_SOFT_ARM_STOP - MIN_SOFT_ARM_STOP)
 	                + MIN_SOFT_ARM_STOP;//175.0;
 	private final double BRAKE_ARM_WITH_FORWARD_VOLTAGE_DEGREES =
 	        0.510 * (MAX_SOFT_ARM_STOP - MIN_SOFT_ARM_STOP)
@@ -443,7 +443,7 @@ public class ManipulatorArm
 	private static final double DELAY_AFTER_BALL_DETECTION = 0.12;
 
 
-	private static final double UNDER_BAR_THRESHOLD = 0.0;
+	private static final double UNDER_BAR_THRESHOLD = 2.0;
 
 	private static final double UNDER_BAR_VALUE =
 	        MIN_SOFT_ARM_STOP + UNDER_BAR_THRESHOLD;
