@@ -402,9 +402,8 @@ public class Autonomous
 			// Sets Resolution of camera
 			Hardware.ringLightRelay.set(Relay.Value.kOff);
 
-			Hardware.axisCamera
-			        .writeBrightness(
-			                Hardware.MINIMUM_AXIS_CAMERA_BRIGHTNESS);
+			Hardware.axisCamera.writeBrightness(
+			        Hardware.MINIMUM_AXIS_CAMERA_BRIGHTNESS);
 
 			// ---------------------------------------
 			// turn the timer off and reset the counter

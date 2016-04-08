@@ -40,6 +40,7 @@ import org.usfirst.frc.team339.Utils.ManipulatorArm;
 import org.usfirst.frc.team339.Utils.ManipulatorArm.ArmPosition;
 import edu.wpi.first.wpilibj.CameraServer;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
+import edu.wpi.first.wpilibj.Relay;
 import edu.wpi.first.wpilibj.Relay.Value;
 
 /**
@@ -64,10 +65,10 @@ public class Teleop
 		Guidance.updateBallStatus(false);
 		// Tell USB camera handler that we only have one USB camera
 		CameraServer.getInstance().setSize(1);
-		//Make sure the camera isn't really dark
-		Hardware.axisCamera
-		        .writeBrightness(
-		                Hardware.NORMAL_AXIS_CAMERA_BRIGHTNESS);
+		//Make sure the camera is really dark
+		Hardware.axisCamera.writeBrightness(
+		        Hardware.MINIMUM_AXIS_CAMERA_BRIGHTNESS);
+
 		// set max speed.
 		Hardware.drive.setMaxSpeed(MAXIMUM_TELEOP_SPEED);
 		//Set up the transmission class so it knows how to drive.  Kind of
@@ -485,6 +486,7 @@ public class Teleop
 						Hardware.armOutOfWayTimer.reset();
 					}
 				}
+
 			}
 
 
@@ -606,6 +608,30 @@ public class Teleop
 
 			//    runCameraSolenoid(Hardware.rightOperator.getRawButton(11),
 			//            Hardware.rightOperator.getRawButton(10), false, true);
+
+			if (Hardware.leftOperator.getRawButton(9))
+			{
+				Hardware.axisCamera.writeBrightness(
+				        Hardware.NORMAL_AXIS_CAMERA_BRIGHTNESS);
+			}
+			else
+			{
+				Hardware.axisCamera.writeBrightness(
+				        Hardware.MINIMUM_AXIS_CAMERA_BRIGHTNESS);
+			}
+
+
+			//If the camera is up,
+			if (Hardware.cameraSolenoid
+			        .get() == DoubleSolenoid.Value.kReverse)
+			//the light is on.
+			{
+				Hardware.ringLightRelay.set(Relay.Value.kOn);
+			}
+			else
+			{
+				Hardware.ringLightRelay.set(Relay.Value.kOff);
+			}
 
 		}
 	} // end Periodic

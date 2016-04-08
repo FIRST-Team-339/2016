@@ -1534,6 +1534,7 @@ public class Drive
 			currentState = alignByCameraStates.QUIT;
 		}
 		if (printDebugInfo == true)
+			;
 		{
 			System.out.println("Align State:" + currentState);
 		}
@@ -1572,7 +1573,7 @@ public class Drive
 			}
 			break;
 		case WAIT_FOR_LIGHT_AND_CAMERA:
-			if (this.cameraTimer.get() >= .50)
+			if (this.cameraTimer.get() >= .10)
 			{
 				if (savePictures)
 				{
@@ -1649,6 +1650,7 @@ public class Drive
 			break;
 		case CHECK_X_AXIS_CORRECTNESS:
 			//if the center of our largest blob is to the left of our desired deadzone
+			//TODO: Fix
 			if (Hardware.imageProcessor
 			        .getParticleAnalysisReports().length > 0
 			        && getRelativeXCoordinate(
@@ -1656,6 +1658,14 @@ public class Drive
 			                        .getParticleAnalysisReports()[0].center_mass_x) >= ((-percentageDeadbandX
 			                                / 2)
 			                                + adjustedProportionalCenterX))
+			//--MAK
+			//			if (Hardware.imageProcessor
+			//			        .getParticleAnalysisReports().length > 0
+			//			        && getRelativeXCoordinate(
+			//			                Hardware.imageProcessor
+			//			                        .getParticleAnalysisReports()[0].center_mass_x) <= ((-percentageDeadbandX
+			//			                                / 2)
+			//			                                + adjustedProportionalCenterX))
 			{
 				currentState = alignByCameraStates.ALIGN_LEFT;
 			}
