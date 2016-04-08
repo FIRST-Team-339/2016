@@ -367,9 +367,11 @@ public void robotInit ()
     // -------------------------------------
     // AXIS camera initialization
     // -------------------------------------
-    // Set the axis camera brightness to normal
+		// Set the axis camera brightness to dark
+		//    Hardware.axisCamera.writeBrightness(
+		//            Hardware.NORMAL_AXIS_CAMERA_BRIGHTNESS);
     Hardware.axisCamera.writeBrightness(
-            Hardware.NORMAL_AXIS_CAMERA_BRIGHTNESS);
+		        Hardware.MINIMUM_AXIS_CAMERA_BRIGHTNESS);
     // -------------------------------------
     // USB camera initialization
     // -------------------------------------

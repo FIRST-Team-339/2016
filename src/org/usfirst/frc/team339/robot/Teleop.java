@@ -33,12 +33,14 @@ package org.usfirst.frc.team339.robot;
 
 import org.usfirst.frc.team339.Hardware.Hardware;
 import org.usfirst.frc.team339.HardwareInterfaces.transmission.Transmission_old.debugStateValues;
+import org.usfirst.frc.team339.Utils.Drive;
 import org.usfirst.frc.team339.Utils.ErrorMessage.PrintsTo;
 import org.usfirst.frc.team339.Utils.Guidance;
 import org.usfirst.frc.team339.Utils.ManipulatorArm;
 import org.usfirst.frc.team339.Utils.ManipulatorArm.ArmPosition;
 import edu.wpi.first.wpilibj.CameraServer;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
+import edu.wpi.first.wpilibj.Relay;
 import edu.wpi.first.wpilibj.Relay.Value;
 
 /**
@@ -63,10 +65,9 @@ public static void init ()
     Guidance.updateBallStatus(false);
     // Tell USB camera handler that we only have one USB camera
     CameraServer.getInstance().setSize(1);
-    //Make sure the camera is really dark
-    Hardware.axisCamera
-            .writeBrightness(
-                    Hardware.MINIMUM_AXIS_CAMERA_BRIGHTNESS);
+		//Make sure the camera is really dark
+		Hardware.axisCamera.writeBrightness(
+		        Hardware.MINIMUM_AXIS_CAMERA_BRIGHTNESS);
     // set max speed.
     Hardware.drive.setMaxSpeed(MAXIMUM_TELEOP_SPEED);
     //Set up the transmission class so it knows how to drive.  Kind of
@@ -214,21 +215,30 @@ public static void periodic ()
         if (Hardware.leftOperator.getRawButton(8))
             {
             testingAlignByCamera = true;
+			}
+			if (testingAlignByCamera == true)
+			{
+				currentCameraReturn =
+				        Hardware.drive.alignByCameraStateMachine(
+				                CAMERA_ALIGN_X_DEADBAND,
+				                CAMERA_ALIGN_Y_DEADBAND,
+				                CAMERA_X_AXIS_ADJUSTED_PROPORTIONAL_CENTER,
+				                CAMERA_Y_AXIS_ADJUSTED_PROPORTIONAL_CENTER,
+				                ALIGN_BY_CAMERA_TURNING_SPEED,
+				                ALIGN_BY_CAMERA_DRIVE_SPEED,
+				                Hardware.rightOperator
+				                        .getRawButton(10) == true
+				                        && Hardware.rightOperator
+				                                .getRawButton(
+				                                        11) == true,
+				                true, true);
+				if (currentCameraReturn == Drive.alignByCameraReturn.DONE)
+				{
+					testingAlignByCamera = false;
             }
-        if (testingAlignByCamera == true)
-            {
-            if (Hardware.drive.alignByCameraStateMachine(.125, .10,
-                    -.30,
-                    -.192, .65,
-                    Hardware.rightOperator.getRawButton(10) == true
-                            && Hardware.rightOperator
-                                    .getRawButton(11) == true,
-                    true, true) == true)
+			else if (currentCameraReturn == Drive.alignByCameraReturn.CANCELLED)
                 {
                 testingAlignByCamera = false;
-                fireRequested = true;
-                Hardware.armOutOfWayTimer.reset();
-                Hardware.armOutOfWayTimer.start();
                 }
             }
         //@DELETE        
@@ -375,8 +385,8 @@ public static void periodic ()
             if (Hardware.armIR.isOn() == true)
                 {
                 //move the arm to deposit position
-                //					if (Hardware.pickupArm
-                //					        .moveToPosition(ArmPosition.DEPOSIT))
+					if (Hardware.pickupArm
+					        .moveToPosition(ArmPosition.DEPOSIT))
                     {
                     //put the ball in the catapult
                     Hardware.pickupArm.pullInBall(true);
@@ -582,7 +592,8 @@ public static void periodic ()
             }
         if (isSpeedTesting == false && isAligningByCamera == false
                 && testingAlignByCamera == false
-                && isFiringByCamera == false && fireRequested == false)
+			        && isFiringByCamera == false
+			        && fireRequested == false)
             driveRobot();
         else if (isSpeedTesting == true)
             {
@@ -597,7 +608,31 @@ public static void periodic ()
         //    runCameraSolenoid(Hardware.rightOperator.getRawButton(11),
         //            Hardware.rightOperator.getRawButton(10), false, true);
 
+			if (Hardware.leftOperator.getRawButton(9))
+			{
+				Hardware.axisCamera.writeBrightness(
+				        Hardware.NORMAL_AXIS_CAMERA_BRIGHTNESS);
         }
+			else
+			{
+				Hardware.axisCamera.writeBrightness(
+				        Hardware.MINIMUM_AXIS_CAMERA_BRIGHTNESS);
+			}
+
+
+			//If the camera is up,
+			if (Hardware.cameraSolenoid
+			        .get() == DoubleSolenoid.Value.kReverse)
+			//the light is on.
+			{
+				Hardware.ringLightRelay.set(Relay.Value.kOn);
+			}
+			else
+			{
+				Hardware.ringLightRelay.set(Relay.Value.kOff);
+			}
+
+		}
 } // end Periodic
 
 private static boolean isSpeedTesting = false;
@@ -924,12 +959,12 @@ public static void printStatements ()
     //    System.out.println(
     //            "Left Rear Encoder Tics: "
     //                    + Hardware.leftRearEncoder.get());
-    System.out.println(
-            "RR distance = "
-                    + Hardware.rightRearEncoder.getDistance());
-    System.out.println(
-            "LR distance = "
-                    + Hardware.leftRearEncoder.getDistance());
+		//		System.out.println(
+		//		        "RR distance = "
+		//		                + Hardware.rightRearEncoder.getDistance());
+		//		System.out.println(
+		//		        "LR distance = "
+		//		                + Hardware.leftRearEncoder.getDistance());
 
 
     // Encoders-------------
@@ -973,6 +1008,19 @@ public static void printStatements ()
 
 private static final double MAXIMUM_TELEOP_SPEED = 1.0;
 
+	private static final double CAMERA_ALIGN_Y_DEADBAND = .10;
+
+	private static final double CAMERA_ALIGN_X_DEADBAND = .125;
+
+	private static final double CAMERA_X_AXIS_ADJUSTED_PROPORTIONAL_CENTER =
+	        -.30;
+
+	private static final double CAMERA_Y_AXIS_ADJUSTED_PROPORTIONAL_CENTER =
+	        -.192;
+
+	private static final double ALIGN_BY_CAMERA_TURNING_SPEED = .5;
+
+	private static final double ALIGN_BY_CAMERA_DRIVE_SPEED = .45;
 // right driver 3
 private static final int GEAR_UPSHIFT_JOYSTICK_BUTTON = 3;
 // right driver 2
@@ -992,9 +1040,9 @@ private static final double PICKUP_ARM_CONTROL_DEADZONE = 0.2;
 
 private final static double PERCENT_IMAGE_PROCESSING_DEADBAND = .17;
 
-private final static double CAMERA_ALIGNMENT_TURNING_SPEED = .65;
+private final static double CAMERA_ALIGNMENT_TURNING_SPEED = .50;
 
-private final static double ARM_IS_OUT_OF_WAY_TIME = .55;
+private final static double ARM_IS_OUT_OF_WAY_TIME = .10;
 
 //minimum pressure when allowed to fire
 private static final int FIRING_MIN_PSI = 90;
@@ -1004,6 +1052,9 @@ private static final int FIRING_MIN_PSI = 90;
 // ==========================================
 
 private static boolean isAligningByCamera = false;
+
+	private static Drive.alignByCameraReturn currentCameraReturn =
+	        Drive.alignByCameraReturn.WORKING;
 
 private static boolean isFiringByCamera = false;
 

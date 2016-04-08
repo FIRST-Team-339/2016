@@ -411,7 +411,7 @@ private double MAX_SOFT_ARM_STOP = 242.0;
 private final static double MIN_SOFT_ARM_STOP = 85.0;
 
 private final double ARM_OUT_OF_WAY_DEGREES =
-        0.573 * (MAX_SOFT_ARM_STOP - MIN_SOFT_ARM_STOP)
+	        0.701 * (MAX_SOFT_ARM_STOP - MIN_SOFT_ARM_STOP)
                 + MIN_SOFT_ARM_STOP;//175.0;
 private final double BRAKE_ARM_WITH_FORWARD_VOLTAGE_DEGREES =
         0.510 * (MAX_SOFT_ARM_STOP - MIN_SOFT_ARM_STOP)

@@ -33,6 +33,7 @@ package org.usfirst.frc.team339.robot;
 
 import org.usfirst.frc.team339.Hardware.Hardware;
 import org.usfirst.frc.team339.HardwareInterfaces.transmission.Transmission_old.debugStateValues;
+import org.usfirst.frc.team339.Utils.Drive;
 import org.usfirst.frc.team339.Utils.ErrorMessage.PrintsTo;
 import org.usfirst.frc.team339.Utils.ManipulatorArm;
 import org.usfirst.frc.team339.Utils.ManipulatorArm.ArmPosition;
@@ -204,6 +205,11 @@ private static enum MainState
     ALIGN_IN_FRONT_OF_GOAL,
 
     /**
+		 * Navigate the rest of the way by camera.
+		 */
+		DRIVE_BY_CAMERA,
+
+		/**
      * We shoot the cannon ball.
      * Proceeds to DELAY_AFTER_SHOOT.
      */
@@ -396,8 +402,7 @@ public static void init ()
         // Sets Resolution of camera
         Hardware.ringLightRelay.set(Relay.Value.kOff);
 
-        Hardware.axisCamera
-                .writeBrightness(
+			Hardware.axisCamera.writeBrightness(
                         Hardware.MINIMUM_AXIS_CAMERA_BRIGHTNESS);
 
         // ---------------------------------------
@@ -513,8 +518,9 @@ private static void runMainStateMachine ()
         if (mainState != prevState)
             {
             prevState = mainState;
-            System.out.println("Legnth: " + Hardware.kilroyTimer.get()
-                    + " seconds.\n");
+				System.out
+				        .println("Legnth: " + Hardware.kilroyTimer.get()
+				                + " seconds.\n");
             System.out.println("Main State: " + mainState);
             Hardware.errorMessage.printError(
                     "MainState" + mainState, PrintsTo.roboRIO,
@@ -706,7 +712,12 @@ private static void runMainStateMachine ()
                     mainState = MainState.DONE;
                     }
 
+				if (DriveInformation.SKIP_TO_DRIVE_BY_CAMERA[lane] == true)
+				{
+					mainState = MainState.DRIVE_BY_CAMERA;
                 }
+
+			}
             break;
 
 
@@ -901,16 +912,33 @@ private static void runMainStateMachine ()
             //align based on the camera until we are facing the goal. head-on.
             Hardware.transmission.controls(0.0, 0.0);
 
-            if (Hardware.drive.alignByCamera(
-                    Autonomous.ALIGNMENT_DEADBAND,
-                    DriveInformation.ALIGNMENT_SPEED,
-                    ALIGNMENT_X_OFFSET,
-                    false) == true)
+		//			if (Hardware.drive.alignByCamera(
+		//			        Autonomous.ALIGNMENT_DEADBAND,
+		//			        DriveInformation.ALIGNMENT_SPEED,
+		//			        ALIGNMENT_X_OFFSET,
+		//			        false) == true)
             //Once we are in position, we shoot!
                 {
                 mainState = MainState.SHOOT;
                 }
             break;
+
+		case DRIVE_BY_CAMERA:
+
+			if (Hardware.drive.alignByCameraStateMachine(
+			        CAMERA_ALIGN_X_DEADBAND,
+			        CAMERA_ALIGN_Y_DEADBAND,
+			        CAMERA_X_AXIS_ADJUSTED_PROPORTIONAL_CENTER,
+			        CAMERA_Y_AXIS_ADJUSTED_PROPORTIONAL_CENTER,
+			        ALIGN_BY_CAMERA_TURNING_SPEED,
+			        ALIGN_BY_CAMERA_DRIVE_SPEED,
+			        false,
+			        false, false) == Drive.alignByCameraReturn.DONE)
+			{
+				mainState = MainState.SHOOT;
+			}
+
+			break;
 
         case SHOOT:
             //FIRE!!!
@@ -1398,6 +1426,17 @@ private static final boolean[] BREAK_ON_ALIGNMENT_LINE =
             true //or go backwards.
     };
 
+		static final boolean[] SKIP_TO_DRIVE_BY_CAMERA =
+		        {
+		                false,
+		                false,
+		                false,
+		                false,
+		                true, //lane 4.
+		                false,
+		                false
+		        };
+
 /**
  * The motor controller values for moving to the outer works.
  * As these are initial speeds, keep them low, to go easy on the motors.
@@ -1561,8 +1600,8 @@ static final double[] ADDED_DISTANCE_FROM_OW =
             0.0,
             0.0,
             0.0,
-            48.0,//Further driving is disabled in this lane, so this is to be sure we are all the way over.
-            0.0,
+		    48.0,//Further driving is disabled in this lane, so this is to be sure we are all the way over.
+		    60.0,
             0.0,
             0.0
     };
@@ -1639,19 +1678,19 @@ public static double labScalingFactor = 1.0;
  */
 private static final double DELAY_TIME_AFTER_SHOOT = 1.0;
 
-/**
- * Room for error when aligning by camera.
- */
-private static final double ALIGNMENT_DEADBAND = 0.2;
 
-/**
- * Desired X position of blob while aligning.
- */
-private static final double ALIGNMENT_X_OFFSET = -3.25;
+	private static final double CAMERA_ALIGN_Y_DEADBAND = .10;
 
-/**
- * Desired Y position of blob while aligning.
- */
-private static final double ALIGNMENT_Y_OFFSET = -.483;
+	private static final double CAMERA_ALIGN_X_DEADBAND = .125;
+
+	private static final double CAMERA_X_AXIS_ADJUSTED_PROPORTIONAL_CENTER =
+	        -.30;
+
+	private static final double CAMERA_Y_AXIS_ADJUSTED_PROPORTIONAL_CENTER =
+	        -.192;
+
+	private static final double ALIGN_BY_CAMERA_TURNING_SPEED = .5;
+
+	private static final double ALIGN_BY_CAMERA_DRIVE_SPEED = .45;
 
 } // end class

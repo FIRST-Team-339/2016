@@ -84,6 +84,31 @@ public KilroyCamera (boolean hasCamera)
         }
 }
 
+
+	/**
+	 * ---------------------------------------------
+	 * Clear all images previously taken. This will
+	 * actually remove the entire directory, because
+	 * we always remake the directory before populating
+	 * any image
+	 */
+	public void clearAllImages ()
+	{
+		try
+		{
+			//rm -rf removes a directory
+			Runtime.getRuntime()
+			        .exec("/bin/rm -rf /home/lvuser/images");
+			// saves new file
+		}  // end try
+		catch (final IOException e)
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} // catch any errors
+
+	} // end clearAllImages
+
 public boolean freshImage ()
 {
     if (this.haveCamera)
@@ -234,7 +259,8 @@ public void saveImage (String fileName)
     // Pre-creates the directory for images in all cases
     try
         {
-        Runtime.getRuntime().exec("/bin/mkdir -p /home/lvuser/images");
+			Runtime.getRuntime()
+			        .exec("/bin/mkdir -p /home/lvuser/images");
         // saves new file
         }
     catch (final IOException e)

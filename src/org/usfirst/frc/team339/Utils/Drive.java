@@ -1484,36 +1484,48 @@ public boolean turnRightDegrees (final double degrees,
 //
 //boolean isDoneAligning = false;
 //boolean isInTurningSection = false;
-/**
- * Aligns the robot to the goal based on camera input. First turns to face the
- * goal and then drives forward or back to bring the goal into the desired Y
- * deadband.
- * 
- * @param percentageDeadbandX
- *            -The deadband around "adjustedProportionalCenterX" that the blob
- *            is allowed to be in so the robot doesn't infinitely oscillate
- *            around the goal. Splits the deadband around the adjusted center,
- *            so a call with center 0.0 and deadband percentage .20 would allow
- *            the blob to be between -.10 and .10.
- * @param percentageDeadbandY
- *            -The deadband around "adjustedProportionalCenterY" that the blob
- *            is allowed to be within so the robot doesn't oscillate forward and
- *            back infinitely, like it's doing some strange robotic charlston.
- *            Splits the deadband across the adjustedProportionalYCenter, so a
- *            call with center 0.0 and deadband .20 would allow the blob to be
- *            within (-0.1,0.1).
- * @param adjustedProportionalCenterX
- *            -the
- * @param adjustedProportionalCenterY
- * @param correctionSpeed
- * @param cancelAlign
- * @param savePictures
- * @param printDebugInfo
- * @return
- */
-public boolean alignByCameraStateMachine (double percentageDeadbandX,
-        double percentageDeadbandY, double adjustedProportionalCenterX,
-        double adjustedProportionalCenterY, double correctionSpeed,
+	/**
+	 * Aligns the robot to the goal based on camera input. First turns to face
+	 * the
+	 * goal and then drives forward or back to bring the goal into the desired Y
+	 * deadband.
+	 * 
+	 * @param percentageDeadbandX
+	 *            -The deadband around "adjustedProportionalCenterX" that the
+	 *            blob
+	 *            is allowed to be in so the robot doesn't infinitely oscillate
+	 *            around the goal. Splits the deadband around the adjusted
+	 *            center,
+	 *            so a call with center 0.0 and deadband percentage .20 would
+	 *            allow
+	 *            the blob to be between -.10 and .10.
+	 * @param percentageDeadbandY
+	 *            -The deadband around "adjustedProportionalCenterY" that the
+	 *            blob
+	 *            is allowed to be within so the robot doesn't oscillate forward
+	 *            and
+	 *            back infinitely, like it's doing some strange robotic
+	 *            charlston.
+	 *            Splits the deadband across the adjustedProportionalYCenter, so
+	 *            a
+	 *            call with center 0.0 and deadband .20 would allow the blob to
+	 *            be
+	 *            within (-0.1,0.1).
+	 * @param adjustedProportionalCenterX
+	 *            -the
+	 * @param adjustedProportionalCenterY
+	 * @param turningCorrectionSpeed
+	 * @param cancelAlign
+	 * @param savePictures
+	 * @param printDebugInfo
+	 * @return
+	 */
+	public alignByCameraReturn alignByCameraStateMachine (
+	        double percentageDeadbandX,
+	        double percentageDeadbandY,
+	        double adjustedProportionalCenterX,
+	        double adjustedProportionalCenterY,
+	        double turningCorrectionSpeed, double driveCorrectionSpeed,
         boolean cancelAlign, boolean savePictures,
         boolean printDebugInfo)
 {
@@ -1528,8 +1540,8 @@ public boolean alignByCameraStateMachine (double percentageDeadbandX,
     switch (currentState)
         {
         case BEGINNING_SETUP:
-            this.savedGear = this.transmission.getGear();
-            this.transmission.setGear(1);
+			this.savedGear = this.transmission.getGear();
+			this.transmission.setGear(2);
             this.cameraTimer.start();
             //turn down the lights
             this.camera.writeBrightness(
@@ -1560,7 +1572,7 @@ public boolean alignByCameraStateMachine (double percentageDeadbandX,
                 }
             break;
         case WAIT_FOR_LIGHT_AND_CAMERA:
-            if (this.cameraTimer.get() >= .50)
+            if (this.cameraTimer.get() >= .01)
                 {
                 if (savePictures)
                     {
@@ -1637,6 +1649,7 @@ public boolean alignByCameraStateMachine (double percentageDeadbandX,
             break;
         case CHECK_X_AXIS_CORRECTNESS:
             //if the center of our largest blob is to the left of our desired deadzone
+			//TODO: Fix
             if (Hardware.imageProcessor
                     .getParticleAnalysisReports().length > 0
                     && getRelativeXCoordinate(
@@ -1644,6 +1657,14 @@ public boolean alignByCameraStateMachine (double percentageDeadbandX,
                                     .getParticleAnalysisReports()[0].center_mass_x) >= ((-percentageDeadbandX
                                             / 2)
                                             + adjustedProportionalCenterX))
+			//--MAK
+			//			if (Hardware.imageProcessor
+			//			        .getParticleAnalysisReports().length > 0
+			//			        && getRelativeXCoordinate(
+			//			                Hardware.imageProcessor
+			//			                        .getParticleAnalysisReports()[0].center_mass_x) <= ((-percentageDeadbandX
+			//			                                / 2)
+			//			                                + adjustedProportionalCenterX))
                 {
                 currentState = alignByCameraStates.ALIGN_LEFT;
                 }
@@ -1676,13 +1697,13 @@ public boolean alignByCameraStateMachine (double percentageDeadbandX,
                     || this.transmission
                             .isRightJoystickReversed() == true)
                 {
-                this.driveContinuous(correctionSpeed,
-                        correctionSpeed);
+				this.driveContinuous(driveCorrectionSpeed,
+				        driveCorrectionSpeed);
                 }
             else
                 {
-                this.driveContinuous(-correctionSpeed,
-                        -correctionSpeed);
+				this.driveContinuous(-driveCorrectionSpeed,
+				        -driveCorrectionSpeed);
                 }
             //We've started moving, now we need to take another image to see where we are now.
             currentState = alignByCameraStates.TAKE_AND_PROCESS_IMAGE;
@@ -1696,13 +1717,13 @@ public boolean alignByCameraStateMachine (double percentageDeadbandX,
                     || this.transmission
                             .isRightJoystickReversed() == false)
                 {
-                this.driveContinuous(-correctionSpeed,
-                        -correctionSpeed);
+				this.driveContinuous(-driveCorrectionSpeed,
+				        -driveCorrectionSpeed);
                 }
             else
                 {
-                this.driveContinuous(correctionSpeed,
-                        correctionSpeed);
+				this.driveContinuous(driveCorrectionSpeed,
+				        driveCorrectionSpeed);
                 }
             //We've started moving, now we need to take another image to see where we are now.
             currentState = alignByCameraStates.TAKE_AND_PROCESS_IMAGE;
@@ -1713,8 +1734,8 @@ public boolean alignByCameraStateMachine (double percentageDeadbandX,
             //turn right until it is in the zone (will be called over and
             //over again until the blob is within the acceptable zone)
             this.turnRightDegrees(9999.0, false,
-                    -correctionSpeed,
-                    correctionSpeed);
+			        -turningCorrectionSpeed,
+			        turningCorrectionSpeed);
             currentState = alignByCameraStates.TAKE_AND_PROCESS_IMAGE;
             returnToState =
                     alignByCameraStates.CHECK_X_AXIS_CORRECTNESS;
@@ -1723,8 +1744,8 @@ public boolean alignByCameraStateMachine (double percentageDeadbandX,
             //turn left until it is in the zone (will be called over and
             //over again until the blob is within the acceptable zone)
             this.turnLeftDegrees(9999.0, false,
-                    correctionSpeed,
-                    -correctionSpeed);
+			        turningCorrectionSpeed,
+			        -turningCorrectionSpeed);
             currentState = alignByCameraStates.TAKE_AND_PROCESS_IMAGE;
             returnToState =
                     alignByCameraStates.CHECK_X_AXIS_CORRECTNESS;
@@ -1750,14 +1771,32 @@ public boolean alignByCameraStateMachine (double percentageDeadbandX,
             //Turn off the ringlight because we don't need it.
             this.ringLightRelay.set(Value.kOff);
             //tell the programmers we're done.
-            return true;
+			if (cancelAlign == true)
+			{
+				return alignByCameraReturn.CANCELLED;
+			}
+			return alignByCameraReturn.DONE;
         }
-    return false;
+		return alignByCameraReturn.WORKING;
 }
 
-alignByCameraStates currentState = alignByCameraStates.BEGINNING_SETUP;
+	alignByCameraStates currentState =
+	        alignByCameraStates.BEGINNING_SETUP;
 alignByCameraStates returnToState =
         alignByCameraStates.CHECK_X_AXIS_CORRECTNESS;
+
+	public static enum alignByCameraReturn
+	{
+		//returns this if the user cancelled the align
+		//returning this makes the method sad :'(
+		CANCELLED,
+		//returns this if we're still working on aligning,
+		//Basically the method saying "JESUS!  Be patient!"
+		WORKING,
+		//returns this if the method is done!
+		//Basically: "ARRAY!"
+		DONE;
+	}
 
 //TODO rewrite alignByCamera to use a state machine, the way it is right
 //now is pretty messy.
@@ -1836,6 +1875,8 @@ public boolean driveByCamera (double driveDistanceInches,
             //turn down the lights
             this.camera.writeBrightness(
                     Hardware.MINIMUM_AXIS_CAMERA_BRIGHTNESS);
+				this.savedGear = this.transmission.getGear(); //TODO shared var
+				this.transmission.setGear(2);
             //Woah, that's too dark! Someone turn on the ringlight!
             this.ringLightRelay.set(Value.kOn);
             firstRunDriveByCamera = false;
@@ -1924,6 +1965,7 @@ public boolean driveByCamera (double driveDistanceInches,
                 this.cameraTimer.reset();
                 //stop
                 Hardware.transmission.controls(0.0, 0.0);
+					this.transmission.setGear(savedGear);
                 //say we're done
                 return true;
                 }
@@ -1982,9 +2024,9 @@ public boolean alignByCamera (double percentageDeadBand,
         if (firstTimeAlign == true)
             {
             this.cameraTimer.start();
-            this.savedGear = this.transmission.getGear();
-            this.transmission.setGear(1);
-            //savedCameraValue = Hardware.cameraSolenoid.get(); //TODO delete this for more elegant flow
+				this.savedGear = this.transmission.getGear();
+				this.transmission.setGear(2);
+				//savedCameraValue = Hardware.cameraSolenoid.get(); //TODO delete this for more elegant flow
             //TODO don't reference hardware in general purpose class.
             //Hardware.cameraSolenoid
             //      .set(DoubleSolenoid.Value.kReverse);
