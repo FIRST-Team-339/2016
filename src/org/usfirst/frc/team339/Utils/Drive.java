@@ -1620,7 +1620,13 @@ public alignByCameraReturn alignByCameraStateMachine (
                     for (int i = 0; i < Hardware.imageProcessor
                             .getParticleAnalysisReports().length; i++)
                         {
-
+                        if (Hardware.imageProcessor
+                                .getParticleAnalysisReports()[i].boundingRectWidth > widestBlobWidth)
+                            {
+                            widestBlobWidth = Hardware.imageProcessor
+                                    .getParticleAnalysisReports()[i].boundingRectWidth;
+                            widestBlobIndex = i;
+                            }
                         }
                     }
                 //starts off as CHECK_Y_AXIS_CORRECTNESS, then changes when we start turn correcting
@@ -1633,7 +1639,7 @@ public alignByCameraReturn alignByCameraStateMachine (
                     .getParticleAnalysisReports().length > 0
                     && getRelativeYCoordinate(
                             Hardware.imageProcessor
-                                    .getParticleAnalysisReports()[0].center_mass_y) >= ((percentageDeadbandY
+                                    .getParticleAnalysisReports()[widestBlobIndex].center_mass_y) >= ((percentageDeadbandY
                                             / 2)
                                             + adjustedProportionalCenterY))
                 {
@@ -1644,7 +1650,7 @@ public alignByCameraReturn alignByCameraStateMachine (
                     .getParticleAnalysisReports().length > 0
                     && getRelativeYCoordinate(
                             Hardware.imageProcessor
-                                    .getParticleAnalysisReports()[0].center_mass_y) <= ((-percentageDeadbandY
+                                    .getParticleAnalysisReports()[widestBlobIndex].center_mass_y) <= ((-percentageDeadbandY
                                             / 2)
                                             + adjustedProportionalCenterY))
                 {
@@ -1659,20 +1665,19 @@ public alignByCameraReturn alignByCameraStateMachine (
             break;
         case CHECK_X_AXIS_CORRECTNESS:
             //if the center of our largest blob is to the left of our desired deadzone
-			//TODO: This is wrong. Fix. --MAK
+            //TODO: This is wrong. Fix. --MAK
             if (Hardware.imageProcessor
                     .getParticleAnalysisReports().length > 0
                     && getRelativeXCoordinate(
                             Hardware.imageProcessor
-                                    .getParticleAnalysisReports()[0].center_mass_x) >= ((-percentageDeadbandX
+                                    .getParticleAnalysisReports()[widestBlobIndex].center_mass_x) >= ((-percentageDeadbandX
                                             / 2)
                                             + adjustedProportionalCenterX))
             //--MAK
             //			if (Hardware.imageProcessor
             //			        .getParticleAnalysisReports().length > 0
             //			        && getRelativeXCoordinate(
-            //			                Hardware.imageProcessor
-            //			                        .getParticleAnalysisReports()[0].center_mass_x) <= ((-percentageDeadbandX
+            //			                Hardware.imageProcessor.getParticleAnalysisReports()[widestBlobIndex].center_mass_x) <= ((-percentageDeadbandX
             //			                                / 2)
             //			                                + adjustedProportionalCenterX))
                 {
@@ -1684,7 +1689,7 @@ public alignByCameraReturn alignByCameraStateMachine (
                     .getParticleAnalysisReports().length > 0
                     && getRelativeXCoordinate(
                             Hardware.imageProcessor
-                                    .getParticleAnalysisReports()[0].center_mass_x) >= ((percentageDeadbandX
+                                    .getParticleAnalysisReports()[widestBlobIndex].center_mass_x) >= ((percentageDeadbandX
                                             / 2)
                                             + adjustedProportionalCenterX))
                 {
