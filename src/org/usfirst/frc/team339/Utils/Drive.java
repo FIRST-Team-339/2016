@@ -1534,7 +1534,6 @@ public class Drive
 			currentState = alignByCameraStates.QUIT;
 		}
 		if (printDebugInfo == true)
-			;
 		{
 			System.out.println("Align State:" + currentState);
 		}
@@ -1658,6 +1657,7 @@ public class Drive
 			                        .getParticleAnalysisReports()[0].center_mass_x) >= ((-percentageDeadbandX
 			                                / 2)
 			                                + adjustedProportionalCenterX))
+
 			//--MAK
 			//			if (Hardware.imageProcessor
 			//			        .getParticleAnalysisReports().length > 0
