@@ -1659,7 +1659,7 @@ public alignByCameraReturn alignByCameraStateMachine (
             break;
         case CHECK_X_AXIS_CORRECTNESS:
             //if the center of our largest blob is to the left of our desired deadzone
-            //TODO: Fix
+			//TODO: This is wrong. Fix. --MAK
             if (Hardware.imageProcessor
                     .getParticleAnalysisReports().length > 0
                     && getRelativeXCoordinate(
