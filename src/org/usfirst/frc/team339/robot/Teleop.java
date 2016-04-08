@@ -63,10 +63,10 @@ public static void init ()
     Guidance.updateBallStatus(false);
     // Tell USB camera handler that we only have one USB camera
     CameraServer.getInstance().setSize(1);
-    //Make sure the camera isn't really dark
+    //Make sure the camera is really dark
     Hardware.axisCamera
             .writeBrightness(
-                    Hardware.NORMAL_AXIS_CAMERA_BRIGHTNESS);
+                    Hardware.MINIMUM_AXIS_CAMERA_BRIGHTNESS);
     // set max speed.
     Hardware.drive.setMaxSpeed(MAXIMUM_TELEOP_SPEED);
     //Set up the transmission class so it knows how to drive.  Kind of
@@ -214,21 +214,21 @@ public static void periodic ()
         if (Hardware.leftOperator.getRawButton(8))
             {
             testingAlignByCamera = true;
-            fireRequested = true;
-            Hardware.armOutOfWayTimer.reset();
-            Hardware.armOutOfWayTimer.start();
             }
         if (testingAlignByCamera == true)
             {
-            if (Hardware.drive.alignByCameraStateMachine(.15, .10,
-                    -.325,
-                    -.483, .55,
+            if (Hardware.drive.alignByCameraStateMachine(.125, .10,
+                    -.30,
+                    -.192, .65,
                     Hardware.rightOperator.getRawButton(10) == true
                             && Hardware.rightOperator
                                     .getRawButton(11) == true,
-                    true, false) == true)
+                    true, true) == true)
                 {
                 testingAlignByCamera = false;
+                fireRequested = true;
+                Hardware.armOutOfWayTimer.reset();
+                Hardware.armOutOfWayTimer.start();
                 }
             }
         //@DELETE        
@@ -250,7 +250,8 @@ public static void periodic ()
                     Hardware.rightOperator.getRawButton(2));
 
             }
-        else
+        else if (isAligningByCamera == false
+                && testingAlignByCamera == false)
             {
             //If the arm control joystick isn't beyond our deadzone, stop the arm.
             Hardware.pickupArm.stopArmMotor();
@@ -269,14 +270,15 @@ public static void periodic ()
                             Hardware.rightOperator.getRawButton(3));
             }
         //push out the ball if the push out button is pressed
-        if (Hardware.rightOperator
+        else if (Hardware.rightOperator
                 .getRawButton(PUSH_OUT_BALL_BUTTON) == true)
             {
             Hardware.pickupArm.pushOutBall();
             }
         // If neither the pull in or the push out button are pressed, stop the
         // intake motors
-        else
+        else if (isAligningByCamera == false
+                && testingAlignByCamera == false)
             {
             Hardware.pickupArm.stopIntakeMotors();
             }
@@ -336,6 +338,7 @@ public static void periodic ()
             //raise the camera
             Hardware.cameraSolenoid
                     .set(DoubleSolenoid.Value.kForward);
+            Hardware.ringLightRelay.set(Value.kOn);
             }
         //If the camera is up and we press the toggle button.
         if (Hardware.cameraToggleButton.isOnCheckNow() == true)
@@ -343,8 +346,11 @@ public static void periodic ()
             //Drop the camera
             Hardware.cameraSolenoid
                     .set(DoubleSolenoid.Value.kReverse);
+            Hardware.ringLightRelay.set(Value.kOff);
             }
         //end raise/lower camera block
+
+
 
         //Block of code to align us on the goal using the camera
         //Will fire the boulder when done.
@@ -380,7 +386,7 @@ public static void periodic ()
             //Keep trying to point at the goal
             if (Hardware.drive.alignByCamera(
                     PERCENT_IMAGE_PROCESSING_DEADBAND,
-                    CAMERA_ALIGNMENT_TURNING_SPEED, -.325, //-.483,
+                    CAMERA_ALIGNMENT_TURNING_SPEED, -.30, //-.483,
                     false) == true)  //TODO uncomment
                 {
                 // Once we're in the center, tell the code we no longer care
@@ -428,6 +434,7 @@ public static void periodic ()
             if (fire(3, true) == true)
                 {
                 //We've shot our ball, we don't want to fire anymore.
+                isFiringByCamera = false;
                 fireRequested = false;
                 }
             }
@@ -437,6 +444,7 @@ public static void periodic ()
                 .getRawButton(FIRE_CANCEL_BUTTON) == true)
             {
             //Stop asking the code to fire
+            isFiringByCamera = false;
             fireRequested = false;
             }
         // if we want to fire, the arm is out of the way, and we have enough
@@ -463,6 +471,7 @@ public static void periodic ()
                     {
                     // if we're done firing, drop the request
                     fireRequested = false;
+                    isFiringByCamera = false;
                     Hardware.armOutOfWayTimer.stop();
                     Hardware.armOutOfWayTimer.reset();
                     }
@@ -572,7 +581,8 @@ public static void periodic ()
             isSpeedTesting = true;
             }
         if (isSpeedTesting == false && isAligningByCamera == false
-                && testingAlignByCamera == false)
+                && testingAlignByCamera == false
+                && isFiringByCamera == false && fireRequested == false)
             driveRobot();
         else if (isSpeedTesting == true)
             {
@@ -708,7 +718,7 @@ public static boolean fire (int power, boolean override)
         //            }
         }
     //TODO reduce time to minimum possible
-    if (Hardware.fireTimer.get() >= .5)
+    if (Hardware.fireTimer.get() >= .5)//.5
         {
         Hardware.catapultSolenoid0.set(false);
         Hardware.catapultSolenoid1.set(false);
@@ -914,12 +924,12 @@ public static void printStatements ()
     //    System.out.println(
     //            "Left Rear Encoder Tics: "
     //                    + Hardware.leftRearEncoder.get());
-    //    System.out.println(
-    //            "RR distance = "
-    //                    + Hardware.rightRearEncoder.getDistance());
-    //    System.out.println(
-    //            "LR distance = "
-    //                    + Hardware.leftRearEncoder.getDistance());
+    System.out.println(
+            "RR distance = "
+                    + Hardware.rightRearEncoder.getDistance());
+    System.out.println(
+            "LR distance = "
+                    + Hardware.leftRearEncoder.getDistance());
 
 
     // Encoders-------------
@@ -980,9 +990,9 @@ private static final int PUSH_OUT_BALL_BUTTON = 5;
 
 private static final double PICKUP_ARM_CONTROL_DEADZONE = 0.2;
 
-private final static double PERCENT_IMAGE_PROCESSING_DEADBAND = .15;
+private final static double PERCENT_IMAGE_PROCESSING_DEADBAND = .17;
 
-private final static double CAMERA_ALIGNMENT_TURNING_SPEED = .47;
+private final static double CAMERA_ALIGNMENT_TURNING_SPEED = .65;
 
 private final static double ARM_IS_OUT_OF_WAY_TIME = .55;
 

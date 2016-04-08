@@ -284,11 +284,12 @@ public void saveImage (String fileName)
 public void saveImagesSafely ()
 {
     // calls saveImage and assigns image number
-    this.saveImage("Image" + (imageNumber % 10));
+    this.saveImage("Image" + (imageNumber % 25));
     // increments imageNumber
     imageNumber++;
 
 }
+
 
 
 // -------------------------------------------------------
