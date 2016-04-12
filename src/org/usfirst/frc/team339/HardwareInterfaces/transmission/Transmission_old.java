@@ -2213,6 +2213,18 @@ public final class Transmission_old
 	} // end getPrimarySpeedController
 
 	// -------------------------------------------------------
+	//TODO comment well.
+	public void resetAllEncoders ()
+	{
+		if (this.rightRearMotorEncoder != null)
+			this.rightRearMotorEncoder.reset();
+		if (this.leftRearMotorEncoder != null)
+			this.leftRearMotorEncoder.reset();
+		if (this.oneOrRightMotorEncoder != null)
+			this.oneOrRightMotorEncoder.reset();
+		if (this.leftMotorEncoder != null)
+			this.leftMotorEncoder.reset();
+	}
 
 	// TODO put in order
 	// TODO consider get encoder methods

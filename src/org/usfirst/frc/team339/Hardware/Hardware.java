@@ -28,6 +28,7 @@ import org.usfirst.frc.team339.Utils.ErrorMessage;
 import org.usfirst.frc.team339.Utils.Guidance;
 import org.usfirst.frc.team339.Utils.ImageProcessing;
 import org.usfirst.frc.team339.Utils.ManipulatorArm;
+import edu.wpi.first.wpilibj.CameraServer;
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -41,6 +42,7 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.VictorSP;
 import edu.wpi.first.wpilibj.vision.AxisCamera;
 import edu.wpi.first.wpilibj.vision.AxisCamera.Resolution;
+import edu.wpi.first.wpilibj.vision.USBCamera;
 
 // -------------------------------------------------------
 /**
@@ -271,8 +273,9 @@ public class Hardware
 	// declare the USB camera server and the
 	// USB camera it serves
 	// -------------------------------------
-	//public static CameraServer cameraServer = CameraServer.getInstance();
-	//public static USBCamera cam0 = new USBCamera("cam0");
+	public static CameraServer cameraServer =
+	        CameraServer.getInstance();
+	public static USBCamera cam0 = new USBCamera("cam0"); //AHK @cameratesting
 
 
 	// Declares the Axis camera
