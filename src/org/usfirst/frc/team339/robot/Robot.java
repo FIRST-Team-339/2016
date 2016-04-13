@@ -423,7 +423,7 @@ public class Robot extends IterativeRobot
 
 		// Starts streaming video
 		//TODO add back in
-		Hardware.cameraServer.startAutomaticCapture(Hardware.cam0);//AHK @cameratesting
+		//Hardware.cameraServer.startAutomaticCapture(Hardware.cam0);//AHK @cameratesting
 		// Sets the hue, saturation, and luminance values for the vision
 		// processing.
 		//Hardware.imageProcessor.setHSLValues(0, 255, 0, 75, 5, 141);
@@ -598,6 +598,9 @@ public class Robot extends IterativeRobot
 		// =========================================================
 		// User code goes below here
 		// =========================================================
+
+		System.out
+		        .println(Hardware.ultrasonic.getRefinedDistanceValue());
 
 		// =========================================================
 		// User code goes above here
