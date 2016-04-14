@@ -205,11 +205,11 @@ private static enum MainState
     ALIGN_IN_FRONT_OF_GOAL,
 
     /**
-		 * Navigate the rest of the way by camera.
-		 */
-		DRIVE_BY_CAMERA,
+     * Navigate the rest of the way by camera.
+     */
+    DRIVE_BY_CAMERA,
 
-		/**
+    /**
      * We shoot the cannon ball.
      * Proceeds to DELAY_AFTER_SHOOT.
      */
@@ -372,8 +372,8 @@ public static void init ()
         initAutoState();
 
         //do not print from transmission
-        Hardware.transmission
-                .setDebugState(debugStateValues.DEBUG_NONE);
+        Hardware.transmission.setDebugState(
+                debugStateValues.DEBUG_NONE);
 
         // Hardware.drive.setMaxSpeed(MAXIMUM_AUTONOMOUS_SPEED);
 
@@ -402,8 +402,8 @@ public static void init ()
         // Sets Resolution of camera
         Hardware.ringLightRelay.set(Relay.Value.kOff);
 
-			Hardware.axisCamera.writeBrightness(
-                        Hardware.MINIMUM_AXIS_CAMERA_BRIGHTNESS);
+        Hardware.axisCamera.writeBrightness(
+                Hardware.MINIMUM_AXIS_CAMERA_BRIGHTNESS);
 
         // ---------------------------------------
         // turn the timer off and reset the counter
@@ -415,10 +415,18 @@ public static void init ()
         //----------------------------------------
         //Solenoid Initialization
         //----------------------------------------
-
         Hardware.catapultSolenoid0.set(false);
         Hardware.catapultSolenoid1.set(false);
         Hardware.catapultSolenoid2.set(false);
+
+        //----------------------------------------
+        // setup things to run on the field or in
+        // the lab
+        //----------------------------------------
+        if (Hardware.runningInLab == true)
+            labScalingFactor = 0.4;
+        else
+            labScalingFactor = 1.0;
 
         //clear error log, so as not to take up space needlessly.
         //this can be buggy, hence the try/catch.
@@ -455,6 +463,11 @@ public static void periodic ()
         //runs the overarching state machine.
         runMainStateMachine();
         }
+    //-------------------------------
+    // otherwise stop processing now
+    //-------------------------------
+    else
+        return;
 
     // Czecks if we are running any arm functions.
     if (runArmStates == true)
@@ -468,9 +481,6 @@ public static void periodic ()
         {
         Hardware.pickupArm.stopArmMotor();
         }
-
-
-
 } // end Periodic
 
 
@@ -482,8 +492,8 @@ public static void periodic ()
 public static int initDelayTime ()
 {
     //scales ratio of degrees turned by our maximum delay.
-    return (int) (MAXIMUM_DELAY * Hardware.delayPot.get()
-            / Hardware.DELAY_POT_DEGREES);
+    return (int) (MAXIMUM_DELAY * Hardware.delayPot.get() /
+            Hardware.DELAY_POT_DEGREES);
 }
 
 
@@ -518,16 +528,13 @@ private static void runMainStateMachine ()
         if (mainState != prevState)
             {
             prevState = mainState;
-				System.out
-				        .println("Legnth: " + Hardware.kilroyTimer.get()
-				                + " seconds.\n");
+            System.out.println("Legnth: " + Hardware.kilroyTimer.get() +
+                    " seconds.\n");
             System.out.println("Main State: " + mainState);
             Hardware.errorMessage.printError(
                     "MainState" + mainState, PrintsTo.roboRIO,
                     false);
             }
-
-
         }
 
     switch (mainState)
@@ -538,7 +545,7 @@ private static void runMainStateMachine ()
             mainInit();
 
             //if we are in a lane that goes beneath the low bar,
-            if (lane == 1 || lane == 6)
+            if (DriveInformation.BRING_ARM_DOWN_BEFORE_DEFENSES[lane] == true)
             // lower the arm to pass beneath the bar.
                 {
                 mainState = MainState.BEGIN_LOWERING_ARM;
@@ -592,8 +599,7 @@ private static void runMainStateMachine ()
                         DriveInformation.ACCELERATION_RATIOS[accelerationStage]);
 
                 //When the time has come,
-                if (Hardware.delayTimer
-                        .get() > DriveInformation.ACCELERATION_TIMES[accelerationStage])
+                if (Hardware.delayTimer.get() > DriveInformation.ACCELERATION_TIMES[accelerationStage])
                     {
                     //go to next stage.
                     accelerationStage++;
@@ -615,31 +621,31 @@ private static void runMainStateMachine ()
 
             if (oneTimePrint4 == false)
                 {
-                Hardware.transmission
-                        .setDebugState(debugStateValues.DEBUG_ALL);
-                Hardware.errorMessage.printError("Left: "
-                        + Hardware.leftRearEncoder.getDistance(),
+                Hardware.transmission.setDebugState(
+                        debugStateValues.DEBUG_ALL);
+                Hardware.errorMessage.printError("Left: " +
+                        Hardware.leftRearEncoder.getDistance(),
                         PrintsTo.roboRIO,
                         false);
-                Hardware.errorMessage.printError("Right: "
-                        + Hardware.leftRearEncoder.getDistance(),
+                Hardware.errorMessage.printError("Right: " +
+                        Hardware.leftRearEncoder.getDistance(),
                         PrintsTo.roboRIO,
                         false);
                 oneTimePrint4 = true;
                 }
             else
                 {
-                Hardware.transmission
-                        .setDebugState(debugStateValues.DEBUG_NONE);
+                Hardware.transmission.setDebugState(
+                        debugStateValues.DEBUG_NONE);
                 }
 
             // goes forwards to outer works.
-            if ((Hardware.drive.driveStraightByInches(
-                    DriveInformation.DISTANCE_TO_OUTER_WORKS
-                            * labScalingFactor,
+            if (Hardware.drive.driveStraightByInches(
+                    DriveInformation.DISTANCE_TO_OUTER_WORKS *
+                            labScalingFactor,
                     false,
                     DriveInformation.MOTOR_RATIO_TO_OUTER_WORKS[lane],
-                    DriveInformation.MOTOR_RATIO_TO_OUTER_WORKS[lane])) == true)
+                    DriveInformation.MOTOR_RATIO_TO_OUTER_WORKS[lane]) == true)
             //continue over the outer works unless the arm is going to get in the way.
                 {
 
@@ -648,9 +654,9 @@ private static void runMainStateMachine ()
                 resetEncoders();
 
                 //UNLESS...
-                //When going under the low bar (lane 1), the arm must be down.
-                if ((lane == 1 || lane == 6)
-                        && (Hardware.pickupArm.isUnderBar() == false))
+                // if we are in a lane that goes beneath the low bar,
+                if ((DriveInformation.BRING_ARM_DOWN_BEFORE_DEFENSES[lane] == true) &&
+                        (Hardware.pickupArm.isUnderBar() == false))
                 //arm is not down in time. STOP.
                     {
                     mainState = MainState.WAIT_FOR_ARM_DESCENT;
@@ -659,8 +665,8 @@ private static void runMainStateMachine ()
             break;
 
         case WAIT_FOR_ARM_DESCENT:
-            Hardware.transmission
-                    .setDebugState(debugStateValues.DEBUG_NONE);
+            Hardware.transmission.setDebugState(
+                    debugStateValues.DEBUG_NONE);
 
             //Stop during the wait. We do not want to ram the bar.
             Hardware.transmission.controls(0.0, 0.0);
@@ -679,9 +685,9 @@ private static void runMainStateMachine ()
         case FORWARDS_OVER_OUTER_WORKS:
             //Drive over Outer Works.
             if (Hardware.drive.driveStraightByInches(
-                    DriveInformation.DISTANCE_OVER_OUTER_WORKS
-                            * labScalingFactor
-                            + DriveInformation.ADDED_DISTANCE_FROM_OW[lane],
+                    DriveInformation.DISTANCE_OVER_OUTER_WORKS *
+                            labScalingFactor +
+                            DriveInformation.ADDED_DISTANCE_FROM_OW[lane],
                     false,
                     DriveInformation.DRIVE_OVER_OUTER_WORKS_MOTOR_RATIOS[lane],
                     DriveInformation.DRIVE_OVER_OUTER_WORKS_MOTOR_RATIOS[lane]) == true)
@@ -691,6 +697,8 @@ private static void runMainStateMachine ()
 
                 //put up camera.
                 Hardware.cameraSolenoid.set(Value.kReverse);
+
+                Hardware.ringLightRelay.set(Relay.Value.kOn);
 
                 //Teleop.printStatements();
                 //                System.out.println("Encoders: "
@@ -712,12 +720,12 @@ private static void runMainStateMachine ()
                     mainState = MainState.DONE;
                     }
 
-				if (DriveInformation.SKIP_TO_DRIVE_BY_CAMERA[lane] == true)
-				{
-					mainState = MainState.DRIVE_BY_CAMERA;
-                }
+                if (DriveInformation.SKIP_TO_DRIVE_BY_CAMERA[lane] == true)
+                    {
+                    mainState = MainState.DRIVE_BY_CAMERA;
+                    }
 
-			}
+                }
             break;
 
 
@@ -741,8 +749,8 @@ private static void runMainStateMachine ()
         case FORWARDS_TO_TAPE_BY_DISTANCE:
             // Drive the distance from outer works to A-Line.
             if ((Hardware.drive.driveStraightByInches(
-                    DriveInformation.DISTANCE_TO_TAPE
-                            * labScalingFactor,
+                    DriveInformation.DISTANCE_TO_TAPE *
+                            labScalingFactor,
                     false, DriveInformation.MOTOR_RATIO_TO_A_LINE[lane],
                     DriveInformation.MOTOR_RATIO_TO_A_LINE[lane]) == true))
             // when done, proceed from Alignment line.
@@ -793,8 +801,7 @@ private static void runMainStateMachine ()
         case DELAY_IF_REVERSE:
 
             //when the delay is up,
-            if (Hardware.delayTimer
-                    .get() >= DriveInformation.DELAY_IF_REVERSE[lane])
+            if (Hardware.delayTimer.get() >= DriveInformation.DELAY_IF_REVERSE[lane])
             //continue driving.
                 {
                 //stop the timer
@@ -808,8 +815,8 @@ private static void runMainStateMachine ()
         case ROTATE_ON_ALIGNMENT_LINE:
             //Rotates until we are pointed at the place from whence we want to shoot.
             if (hasTurnedBasedOnSign(
-                    DriveInformation.ROTATE_ON_ALIGNMENT_LINE_DISTANCE[lane]
-                            * labScalingFactor) == true)
+                    DriveInformation.ROTATE_ON_ALIGNMENT_LINE_DISTANCE[lane] *
+                            labScalingFactor) == true)
                 {
                 //reset Encoders to prepare for next state.
                 resetEncoders();
@@ -821,8 +828,8 @@ private static void runMainStateMachine ()
         case FORWARDS_FROM_ALIGNMENT_LINE:
             //Drive until we reach the line normal to the goal.
             if (Hardware.drive.driveStraightByInches(
-                    DriveInformation.FORWARDS_FROM_ALIGNMENT_LINE_DISTANCE[lane]
-                            * labScalingFactor,
+                    DriveInformation.FORWARDS_FROM_ALIGNMENT_LINE_DISTANCE[lane] *
+                            labScalingFactor,
                     true, //breaking here is preferable.
                     DriveInformation.FORWARDS_FROM_ALIGNMENT_LINE_MOTOR_RATIO[lane],
                     DriveInformation.FORWARDS_FROM_ALIGNMENT_LINE_MOTOR_RATIO[lane]) == true)
@@ -856,8 +863,6 @@ private static void runMainStateMachine ()
                 }
             break;
 
-
-
         case DRIVE_UP_TO_GOAL:
 
             //print encoders once
@@ -865,16 +870,16 @@ private static void runMainStateMachine ()
             if (oneTimePrint1 == false)
                 {
                 oneTimePrint1 = true;
-                System.out.println(mainState + "\n\tLeft Encoder: "
-                        + Hardware.leftRearEncoder.getDistance()
-                        + "\n\tLeft Encoder: "
-                        + Hardware.leftRearEncoder.getDistance());
+                System.out.println(mainState + "\n\tLeft Encoder: " +
+                        Hardware.leftRearEncoder.getDistance() +
+                        "\n\tLeft Encoder: " +
+                        Hardware.leftRearEncoder.getDistance());
                 }
 
             //Moves to goal. Stops to align.
             if (((Hardware.drive.driveStraightByInches(
-                    DriveInformation.DRIVE_UP_TO_GOAL[lane]
-                            * labScalingFactor,
+                    DriveInformation.DRIVE_UP_TO_GOAL[lane] *
+                            labScalingFactor,
                     false,
                     DriveInformation.DRIVE_UP_TO_GOAL_MOTOR_RATIO[lane],
                     DriveInformation.DRIVE_UP_TO_GOAL_MOTOR_RATIO[lane]) == true)))
@@ -884,61 +889,60 @@ private static void runMainStateMachine ()
                 if (oneTimePrint2 == false)
                     {
                     oneTimePrint2 = true;
-                    System.out.println(mainState + "\n\tLeft Encoder: "
-                            + Hardware.leftRearEncoder.getDistance()
-                            + "\n\tLeft Encoder: "
-                            + Hardware.leftRearEncoder.getDistance());
+                    System.out.println(mainState +
+                            "\n\tLeft Encoder: " +
+                            Hardware.leftRearEncoder.getDistance() +
+                            "\n\tLeft Encoder: " +
+                            Hardware.leftRearEncoder.getDistance());
                     }
 
                 //reset Encoders to prepare for next state.
                 resetEncoders();
 
                 //go to align.
-                mainState = MainState.DONE;
+                mainState = MainState.ALIGN_IN_FRONT_OF_GOAL;
                 }
 
             //print IR values once if they are on.
-            if (oneTimePrint3 == false &&
-                    (Hardware.leftIR.isOn() || Hardware.rightIR.isOn()))
-                {
-                oneTimePrint3 = true;
-                System.out.println("An IR found something.");
-                }
+            //            if (oneTimePrint3 == false &&
+            //                    (Hardware.leftIR.isOn() || Hardware.rightIR.isOn()))
+            //                {
+            //                oneTimePrint3 = true;
+            //                System.out.println("An IR found something.");
+            //                }
             break;
-
-
 
         case ALIGN_IN_FRONT_OF_GOAL:
             //align based on the camera until we are facing the goal. head-on.
-            Hardware.transmission.controls(0.0, 0.0);
+            //Hardware.transmission.controls(0.0, 0.0);
 
-		//			if (Hardware.drive.alignByCamera(
-		//			        Autonomous.ALIGNMENT_DEADBAND,
-		//			        DriveInformation.ALIGNMENT_SPEED,
-		//			        ALIGNMENT_X_OFFSET,
-		//			        false) == true)
+            if (Hardware.drive.alignByCamera(
+                    Autonomous.CAMERA_ALIGN_X_DEADBAND,
+                    DriveInformation.ALIGNMENT_SPEED,
+                    CAMERA_X_AXIS_ADJUSTED_PROPORTIONAL_CENTER,
+                    true) == Drive.alignByCameraReturn.DONE)
             //Once we are in position, we shoot!
                 {
                 mainState = MainState.SHOOT;
                 }
             break;
 
-		case DRIVE_BY_CAMERA:
+        case DRIVE_BY_CAMERA:
 
-			if (Hardware.drive.alignByCameraStateMachine(
-			        CAMERA_ALIGN_X_DEADBAND,
-			        CAMERA_ALIGN_Y_DEADBAND,
-			        CAMERA_X_AXIS_ADJUSTED_PROPORTIONAL_CENTER,
-			        CAMERA_Y_AXIS_ADJUSTED_PROPORTIONAL_CENTER,
-			        ALIGN_BY_CAMERA_TURNING_SPEED,
-			        ALIGN_BY_CAMERA_DRIVE_SPEED,
-			        false,
-			        false, false) == Drive.alignByCameraReturn.DONE)
-			{
-				mainState = MainState.SHOOT;
-			}
+            if (Hardware.drive.alignByCameraStateMachine(
+                    CAMERA_ALIGN_X_DEADBAND,
+                    CAMERA_ALIGN_Y_DEADBAND,
+                    CAMERA_X_AXIS_ADJUSTED_PROPORTIONAL_CENTER,
+                    CAMERA_Y_AXIS_ADJUSTED_PROPORTIONAL_CENTER,
+                    ALIGN_BY_CAMERA_TURNING_SPEED,
+                    ALIGN_BY_CAMERA_DRIVE_SPEED,
+                    false,
+                    false, false) == Drive.alignByCameraReturn.DONE)
+                {
+                mainState = MainState.SHOOT;
+                }
 
-			break;
+            break;
 
         case SHOOT:
             //FIRE!!!
@@ -948,7 +952,6 @@ private static void runMainStateMachine ()
                 mainState = MainState.DELAY_AFTER_SHOOT;
                 }
             break;
-
 
         case DELAY_AFTER_SHOOT:
             //Check if enough time has passed for the air to have been released.
@@ -964,6 +967,7 @@ private static void runMainStateMachine ()
                 mainState = MainState.DONE;
                 }
             break;
+
         default:
         case DONE:
             //clean everything up;
@@ -979,7 +983,6 @@ private static void runMainStateMachine ()
  * AUTONOMOUS UTILITY METHODS
  * ======================================
  */
-
 private static void mainInit ()
 {
 
@@ -1021,13 +1024,8 @@ private static boolean delayIsDone ()
         Hardware.delayTimer.stop();
         Hardware.delayTimer.reset();
         }
-
-
     return done;
-
 }
-
-
 
 /**
  * Drives, and
@@ -1100,7 +1098,6 @@ private static boolean shoot ()
     return done;
 }
 
-
 /**
  * Wait a second...
  * Close the solenoids.
@@ -1148,9 +1145,7 @@ private static void done ()
     //turn off ringlight.
     Hardware.ringLightRelay.set(Relay.Value.kOff);
 
-    Hardware.transmission
-            .setDebugState(debugStateValues.DEBUG_NONE);
-
+    Hardware.transmission.setDebugState(debugStateValues.DEBUG_NONE);
 }
 
 /*
@@ -1174,10 +1169,11 @@ private static void runArmStates ()
             //go to periodically check.
             armState = ArmState.MOVE_DOWN;
             break;
+
         case MOVE_DOWN:
             //move to down position.
-            if (Hardware.pickupArm
-                    .moveToPosition(ArmPosition.FULL_DOWN) == true)
+            if (Hardware.pickupArm.moveToPosition(
+                    ArmPosition.FULL_DOWN) == true)
             //if done, stop.
                 {
                 //stop the motor.
@@ -1185,12 +1181,14 @@ private static void runArmStates ()
                 armState = ArmState.DONE;
                 }
             break;
+
         case INIT_UP:
             //begin moving arm up.
             Hardware.pickupArm.move(1.0);
             //go to periodically check.
             armState = ArmState.CHECK_UP;
             break;
+
         case CHECK_UP:
             //check if up.
             if (Hardware.pickupArm.isUp() == true)
@@ -1200,21 +1198,24 @@ private static void runArmStates ()
                 armState = ArmState.DONE;
                 }
             break;
+
         case MOVE_UP_TO_DEPOSIT:
             //check is in up position so that we may deposit the ball.
-            if (Hardware.pickupArm
-                    .moveToPosition(ArmPosition.DEPOSIT) == true)
+            if (Hardware.pickupArm.moveToPosition(
+                    ArmPosition.DEPOSIT) == true)
             //stop, and go to deposit.
                 {
                 Hardware.pickupArm.move(0.0);
                 armState = ArmState.INIT_DEPOSIT;
                 }
             break;
+
         case INIT_DEPOSIT:
             //spin wheels to release ball. Uses override.
             Hardware.pickupArm.pullInBall(true);
             armState = ArmState.DEPOSIT;
             break;
+
         case DEPOSIT:
             //check if the ball is out.
             if (Hardware.pickupArm.ballIsOut())
@@ -1226,6 +1227,7 @@ private static void runArmStates ()
                 armState = ArmState.DONE;
                 }
             break;
+
         case HOLD:
             //do not move the intake motors.
             Hardware.pickupArm.stopIntakeMotors();
@@ -1233,13 +1235,12 @@ private static void runArmStates ()
             Hardware.pickupArm.moveToPosition(ArmPosition.HOLD);
             //note: no end conditions, unless if the state is manually changed.
             break;
+
         default:
         case DONE:
             //stop running state machine.
             runArmStates = false;
             break;
-
-
         }
 }
 
@@ -1275,8 +1276,8 @@ public static int getLane ()
 public static void resetEncoders ()
 {
     //accumulate total distance. used for debugging.
-    totalDistance += (Hardware.leftRearEncoder.getDistance()
-            + Hardware.rightRearEncoder.get()) / 2;
+    totalDistance += (Hardware.leftRearEncoder.getDistance() +
+            Hardware.rightRearEncoder.get()) / 2;
 
     //reset.
     Hardware.leftRearEncoder.reset();
@@ -1321,7 +1322,6 @@ private static boolean hasTurnedBasedOnSign (double degrees,
                 turnSpeed);
         }
     return done;
-
 }
 
 /**
@@ -1377,11 +1377,11 @@ private static final class DriveInformation
  * execution.
  */
 private static final double[] ACCELERATION_RATIOS =
-    {
-            0.1,
-            0.2,
-            0.3
-    };
+        {
+                0.1,
+                0.2,
+                0.3
+        };
 
 /**
  * The time at which each acceleration stage will end.
@@ -1390,11 +1390,11 @@ private static final double[] ACCELERATION_RATIOS =
  * execution.
  */
 private static final double[] ACCELERATION_TIMES =
-    {
-            0.2,
-            0.4,
-            0.6
-    };
+        {
+                0.2,
+                0.4,
+                0.6
+        };
 
 /**
  * The speed at which we want to go over the outer works, for each lane.
@@ -1402,147 +1402,157 @@ private static final double[] ACCELERATION_TIMES =
  * so as to accommodate more difficult obstacles.
  */
 private static final double[] DRIVE_OVER_OUTER_WORKS_MOTOR_RATIOS =
-    {
-            0.0,
-            0.5,//not much is required for the low bar.
-            0.5,
-            0.8,
-            0.5,
-            0.5,
-            0.4
-    };
+        {
+                0.0,
+                0.5,//not much is required for the low bar.
+                0.5,
+                0.8,
+                0.5,
+                0.5,
+                0.4
+        };
 
+private static final boolean[] BRING_ARM_DOWN_BEFORE_DEFENSES =
+        {
+                false, // a placeholder, allowing lane to line up with index
+                true,  // lane 1 - bring arm down
+                false, // lane 2
+                false, // lane 3
+                false, // lane 4
+                false, // lane 5
+                true   // lane 6 - bring arm down
+        };
 /**
  * For each lane, decides whether or not to break on the Alignment Line
  */
 private static final boolean[] BREAK_ON_ALIGNMENT_LINE =
-    {
-            false, // A placeholder, allowing lane to line up with index.
-            false, //
-            false, //
-            true, // true in lanes 3 and 4, 
-            true, // because we mean to turn next.
-            false, // 
-            true //or go backwards.
-    };
+        {
+                false, // A placeholder, allowing lane to line up with index.
+                false, //
+                false, //
+                true, // true in lanes 3 and 4, 
+                true, // because we mean to turn next.
+                false, // 
+                true //or go backwards.
+        };
 
-		static final boolean[] SKIP_TO_DRIVE_BY_CAMERA =
-		        {
-		                false,
-		                false,
-		                false,
-		                false,
-		                true, //lane 4.
-		                false,
-		                false
-		        };
+private static final boolean[] SKIP_TO_DRIVE_BY_CAMERA =
+        {
+                false,
+                false,
+                false,
+                false,
+                true, //lane 4.
+                false,
+                false
+        };
 
 /**
  * The motor controller values for moving to the outer works.
  * As these are initial speeds, keep them low, to go easy on the motors.
  * Lane is indicated by index.
  */
-static final double[] MOTOR_RATIO_TO_OUTER_WORKS =
-    {
-            0.0, // nothing. Not used. Arbitrary; makes it work.
-            0.50,//0.25, // lane 1, should be extra low.
-            1.0, // lane 2
-            0.5, // lane 3
-            0.5, // lane 4
-            0.5, // lane 5
-            0.5 //backup plan
-    };
+private static final double[] MOTOR_RATIO_TO_OUTER_WORKS =
+        {
+                0.0, // nothing. Not used. Arbitrary; makes it work.
+                0.50,//0.25, // lane 1, should be extra low.
+                1.0, // lane 2
+                0.5, // lane 3
+                0.5, // lane 4
+                0.5, // lane 5
+                0.5 //backup plan
+        };
 
 /**
  * "Speeds" at which to drive from the Outer Works to the Alignment
  * Line.
  */
-static final double[] MOTOR_RATIO_TO_A_LINE =
-    {
-            0.0, //PLACEHOLDER
-            0.5, //lane 1
-            0.5, //lane 2
-            0.4, //lane 3
-            0.4, //lane 4
-            0.5,  //lane 5
-            0.0 //backup plan
-    };
+private static final double[] MOTOR_RATIO_TO_A_LINE =
+        {
+                0.0, //PLACEHOLDER
+                0.5, //lane 1
+                0.5, //lane 2
+                0.4, //lane 3
+                0.4, //lane 4
+                0.5,  //lane 5
+                0.0 //backup plan
+        };
 
 /**
  * Distances to rotate upon reaching alignment line.
  * Lane is indicated by index.
  * Set to Zero for 1, 2, and 5.
  */
-static final double[] ROTATE_ON_ALIGNMENT_LINE_DISTANCE =
-    {
-            0.0, // nothing. Not used. Arbitrary; makes it work.
-            0.0, // lane 1 (not neccesary)
-            0.0, // lane 2 (not neccesary)
-            -72.85,//-20, // lane 3
-            64.24,//24.8, // lane 4
-            0.0, // lane 5 (not neccesary)
-            0.0 //backup plan
-    };
+private static final double[] ROTATE_ON_ALIGNMENT_LINE_DISTANCE =
+        {
+                0.0, // nothing. Not used. Arbitrary; makes it work.
+                0.0, // lane 1 (not neccesary)
+                0.0, // lane 2 (not neccesary)
+                -72.85,//-20, // lane 3
+                64.24,//24.8, // lane 4
+                0.0, // lane 5 (not neccesary)
+                0.0 //backup plan
+        };
 
 /**
  * Distances to drive after reaching alignment tape.
  * Lane is indicated by index.
  * 16 inchworms added inevitably, to start from centre of robot.
  */
-static final double[] FORWARDS_FROM_ALIGNMENT_LINE_DISTANCE =
-    {
-            0.0, // nothing. Not used. Arbitrary; makes it work.
-            48.57,// lane 1
-            77.44,//68.0,// lane 2
-            66.14,//64.0, // lane 3
-            63.2,//66.1,// lane 4
-            85.8, // lane 5
-            -169.0 //backup plan
-    };
+private static final double[] FORWARDS_FROM_ALIGNMENT_LINE_DISTANCE =
+        {
+                0.0, // nothing. Not used. Arbitrary; makes it work.
+                36.57,// lane 1 //48.57
+                77.44,//68.0,// lane 2
+                66.14,//64.0, // lane 3
+                63.2,//66.1,// lane 4
+                85.8, // lane 5
+                -169.0 //backup plan
+        };
 
 /**
  * Speed when we move the centre of the robot to the Alignment line.,
  */
-static final double[] CENTRE_TO_ALIGNMENT_LINE_MOTOR_RATIO =
-    {
-            0.0,
-            0.5, //1
-            0.5, //2
-            .25, //3
-            .25, //4
-            0.5, //5
-            0.25 //backup plan
-    };
+private static final double[] CENTRE_TO_ALIGNMENT_LINE_MOTOR_RATIO =
+        {
+                0.0,
+                0.5, //1
+                0.5, //2
+                .25, //3
+                .25, //4
+                0.5, //5
+                0.25 //backup plan
+        };
 
 /**
  * "Speeds" at which to drive from the A-Line to the imaginary line
  * normal to
  * the goal.
  */
-static final double[] FORWARDS_FROM_ALIGNMENT_LINE_MOTOR_RATIO =
-    {
-            0.0, // nothing. A Placeholder.
-            0.5, //lane 1
-            0.5, //lane 2
-            0.7, //lane 3
-            0.7, //lane 4
-            0.5,  //lane 5
-            -0.5 //backup plan
-    };
+private static final double[] FORWARDS_FROM_ALIGNMENT_LINE_MOTOR_RATIO =
+        {
+                0.0, // nothing. A Placeholder.
+                0.5, //lane 1
+                0.5, //lane 2
+                0.7, //lane 3
+                0.7, //lane 4
+                0.5,  //lane 5
+                -0.5 //backup plan
+        };
 
 /**
  * Distances to rotate to face goal.
  */
-static final double[] TURN_TO_FACE_GOAL_DEGREES =
-    {
-            0.0, // makes it so the indexes line up with the lane #
-            -60.0,// lane 1
-            -60.0,// lane 2
-            72.85,//20.0,// lane 3
-            -64.24,//-24.85,// lane 4
-            60, // lane 5
-            -90.0 //backup plan
-    };
+private static final double[] TURN_TO_FACE_GOAL_DEGREES =
+        {
+                0.0, // makes it so the indexes line up with the lane #
+                -60.0,// lane 1  //-60
+                -60.0,// lane 2
+                72.85,//20.0,// lane 3
+                -64.24,//-24.85,// lane 4
+                60, // lane 5
+                -90.0 //backup plan
+        };
 
 
 /**
@@ -1552,59 +1562,60 @@ static final double[] TURN_TO_FACE_GOAL_DEGREES =
  * probably just
  * use the IR to sense the cleets at the bottom of the tower.
  */
-static final double[] DRIVE_UP_TO_GOAL =
-    {
-            0.0, // nothing. Not used. Arbitrary; makes it work.
-            65.85,//previously 62.7,// lane 1
-            18.1,//52.9,// lane 2
-            0.0,// lane 3 (not neccesary)
-            0.0,// lane 4 (not neccesary)
-            32.8,//12.0, // lane 5
-            0.0 //backup plan
-    };
+private static final double[] DRIVE_UP_TO_GOAL =
+        {
+                0.0, // nothing. Not used. Arbitrary; makes it work.
+                53.85,//previously 62.7//65.85,// lane 1
+                18.1,//52.9,// lane 2
+                0.0,// lane 3 (not neccesary)
+                0.0,// lane 4 (not neccesary)
+                32.8,//12.0, // lane 5
+                0.0 //backup plan
+        };
 
 /**
  * "Speeds" at which to drive to the Batter.
  */
-static final double[] DRIVE_UP_TO_GOAL_MOTOR_RATIO =
-    {
-            0.0,
-            0.50,
-            0.5,
-            0.5,
-            0.5,
-            0.5,
-            0.0
-    };
+private static final double[] DRIVE_UP_TO_GOAL_MOTOR_RATIO =
+        {
+                0.0,
+                0.50,
+                0.5,
+                0.5,
+                0.5,
+                0.5,
+                0.0
+        };
 
 /**
  * Time to delay at A-line. Only used if reversing.
  */
-static final double[] DELAY_IF_REVERSE =
-    {
-            0.0,
-            0.0,
-            0.0,
-            0.0,
-            0.0,
-            0.0,
-            1.0//only used in "lane 6."
-    };
+private static final double[] DELAY_IF_REVERSE =
+        {
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0//only used in "lane 6."
+        };
 
 /**
  * Should we want to stop upon going over the outer works,
  * this should add extra distance, for assurance.
  */
-static final double[] ADDED_DISTANCE_FROM_OW =
-    {
-            0.0,
-            0.0,
-            0.0,
-		    48.0,//Further driving is disabled in this lane, so this is to be sure we are all the way over.
-		    60.0,
-            0.0,
-            0.0
-    };
+private static final double[] ADDED_DISTANCE_FROM_OW =
+        {
+                0.0,
+                0.0,
+                0.0,
+                48.0,// Further driving is disabled in this lane, 
+                // so this is to be sure we are all the way over.
+                60.0,
+                0.0,
+                0.0
+        };
 
 /**
  * Distance from Outer Works checkpoint to Alignment Line.
@@ -1616,12 +1627,12 @@ private static final double DISTANCE_TO_TAPE = 27.5;
 /**
  * Distance to get the front of the robot to the Outer Works.
  */
-private static final double DISTANCE_TO_OUTER_WORKS = 16.75;//prev. 22.75;
+private static final double DISTANCE_TO_OUTER_WORKS = 16.75; //prev. 22.75;
 
 /**
  * Distance to travel to get over the Outer Works.
  */
-private static final double DISTANCE_OVER_OUTER_WORKS = 104.86;//prev. 98.86;
+private static final double DISTANCE_OVER_OUTER_WORKS = 104.86; //prev. 98.86;
 
 /**
  * The distance to the central pivot point from the front of the robot.
@@ -1639,7 +1650,7 @@ private static final double DEFAULT_TURN_SPEED = 0.55;
 /**
  * Speed at which we may align by camera.
  */
-private static final double ALIGNMENT_SPEED = 0.9;
+private static final double ALIGNMENT_SPEED = 0.5;
 }
 
 
@@ -1679,18 +1690,18 @@ public static double labScalingFactor = 1.0;
 private static final double DELAY_TIME_AFTER_SHOOT = 1.0;
 
 
-	private static final double CAMERA_ALIGN_Y_DEADBAND = .10;
+private static final double CAMERA_ALIGN_Y_DEADBAND = .10;
 
-	private static final double CAMERA_ALIGN_X_DEADBAND = .125;
+private static final double CAMERA_ALIGN_X_DEADBAND = .125;
 
-	private static final double CAMERA_X_AXIS_ADJUSTED_PROPORTIONAL_CENTER =
-	        -.30;
+private static final double CAMERA_X_AXIS_ADJUSTED_PROPORTIONAL_CENTER =
+        -.375;
 
-	private static final double CAMERA_Y_AXIS_ADJUSTED_PROPORTIONAL_CENTER =
-	        -.192;
+private static final double CAMERA_Y_AXIS_ADJUSTED_PROPORTIONAL_CENTER =
+        -.192;
 
-	private static final double ALIGN_BY_CAMERA_TURNING_SPEED = .5;
+private static final double ALIGN_BY_CAMERA_TURNING_SPEED = .55;
 
-	private static final double ALIGN_BY_CAMERA_DRIVE_SPEED = .45;
+private static final double ALIGN_BY_CAMERA_DRIVE_SPEED = .45;
 
 } // end class

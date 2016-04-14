@@ -22,6 +22,7 @@ import org.usfirst.frc.team339.HardwareInterfaces.MomentarySwitch;
 import org.usfirst.frc.team339.HardwareInterfaces.RobotPotentiometer;
 import org.usfirst.frc.team339.HardwareInterfaces.SingleThrowSwitch;
 import org.usfirst.frc.team339.HardwareInterfaces.SixPositionSwitch;
+import org.usfirst.frc.team339.HardwareInterfaces.UltraSonic;
 import org.usfirst.frc.team339.HardwareInterfaces.transmission.Transmission_old;
 import org.usfirst.frc.team339.Utils.Drive;
 import org.usfirst.frc.team339.Utils.ErrorMessage;
@@ -259,6 +260,8 @@ public static RobotPotentiometer armPot = new RobotPotentiometer(3,
 // -------------------------------------
 // Sonar/Ultrasonic
 // -------------------------------------
+	public static UltraSonic ultrasonic = new UltraSonic(4, 0.57);
+
 
 
 // **********************************************************
@@ -271,8 +274,9 @@ public static RobotPotentiometer armPot = new RobotPotentiometer(3,
 // declare the USB camera server and the
 // USB camera it serves
 // -------------------------------------
-//public static CameraServer cameraServer = CameraServer.getInstance();
-//public static USBCamera cam0 = new USBCamera("cam0");
+	//	public static CameraServer cameraServer =
+	//	        CameraServer.getInstance();
+	//	public static USBCamera cam0 = new USBCamera("cam0"); //AHK @cameratesting
 
 
 // Declares the Axis camera
