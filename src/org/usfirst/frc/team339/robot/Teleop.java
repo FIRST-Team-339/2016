@@ -624,17 +624,18 @@ public static void periodic ()
                 .getRawButton(BRAKE_JOYSTICK_BUTTON_FIVE) == true)
             {
             Hardware.transmission.setJoystickDeadbandRange(0.0);
-            Hardware.drive
-                    .driveContinuous(LEFT_MOTOR_BRAKE_SPEED,
-                            RIGHT_MOTOR_BRAKE_SPEED);
-            if (Hardware.leftDriver
-                    .getRawButton(BRAKE_JOYSTICK_BUTTON_FOUR) == true)
-                {
-                Hardware.transmission.setJoystickDeadbandRange(0.0);
-                Hardware.drive.driveContinuous(LEFT_MOTOR_BRAKE_SPEED,
-                        RIGHT_MOTOR_BRAKE_SPEED);
-                }
+            Hardware.drive.driveContinuous(LEFT_MOTOR_BRAKE_SPEED,
+                    RIGHT_MOTOR_BRAKE_SPEED);
             }
+
+        else if (Hardware.leftDriver
+                .getRawButton(BRAKE_JOYSTICK_BUTTON_FOUR) == true)
+            {
+            Hardware.transmission.setJoystickDeadbandRange(0.0);
+            Hardware.drive.driveContinuous(LEFT_MOTOR_BRAKE_SPEED,
+                    RIGHT_MOTOR_BRAKE_SPEED);
+            }
+
         //drive the robot with the joysticks
 
 
@@ -1090,9 +1091,9 @@ private final static double CAMERA_ALIGNMENT_TURNING_SPEED = .50;//.55
 
 private final static double ARM_IS_OUT_OF_WAY_TIME = .10;
 
-private final static double RIGHT_MOTOR_BRAKE_SPEED = 0.13;
+private final static double RIGHT_MOTOR_BRAKE_SPEED = 0.12;
 
-private final static double LEFT_MOTOR_BRAKE_SPEED = 0.13;
+private final static double LEFT_MOTOR_BRAKE_SPEED = 0.12;
 
 //minimum pressure when allowed to fire
 private static final int FIRING_MIN_PSI = 90;
