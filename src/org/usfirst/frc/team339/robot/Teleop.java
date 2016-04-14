@@ -603,12 +603,34 @@ public static void periodic ()
 
 
         // Driving the Robot
+        // If we press the break button, motors are set to 0.13
+        //TODO: set motor values to negative
+        if (Hardware.leftDriver
+                .getRawButton(BRAKE_JOYSTICK_BUTTON_FIVE) == true)
+            {
+            Hardware.transmission.setJoystickDeadbandRange(0.0);
+            Hardware.drive
+                    .driveContinuous(LEFT_MOTOR_BRAKE_SPEED,
+                            RIGHT_MOTOR_BRAKE_SPEED);
+            if (Hardware.leftDriver
+                    .getRawButton(BRAKE_JOYSTICK_BUTTON_FOUR) == true)
+                {
+                Hardware.transmission.setJoystickDeadbandRange(0.0);
+                Hardware.drive.driveContinuous(LEFT_MOTOR_BRAKE_SPEED,
+                        RIGHT_MOTOR_BRAKE_SPEED);
+                }
+            }
+        //drive the robot with the joysticks
 
 
         //TODO delete all conditionals.
         if (/* isSpeedTesting == false && */ isAligningByCamera == false
                 /* && testingAlignByCamera == false */
-                && fireRequested == false)
+                && fireRequested == false && Hardware.leftDriver
+                        .getRawButton(
+                                BRAKE_JOYSTICK_BUTTON_FIVE) == false
+                && Hardware.leftDriver.getRawButton(
+                        BRAKE_JOYSTICK_BUTTON_FOUR) == false)
             driveRobot();
 
         //    runCameraSolenoid(Hardware.rightOperator.getRawButton(11),
@@ -652,19 +674,10 @@ public static void periodic ()
  */
 public static void driveRobot ()
 {
-    // If we press the break button, motors are set to 0.1.
-    if (Hardware.rightDriver
-            .getRawButton(BRAKE_JOYSTICK_BUTTON) == true)
-        {
-        Hardware.drive
-                .brake(LEFT_MOTOR_BRAKE_SPEED, RIGHT_MOTOR_BRAKE_SPEED);
-        }
-    //drive the robot with the joysticks
-    else
-        {
-        Hardware.transmission.controls(Hardware.leftDriver.getY(),
-                Hardware.rightDriver.getY());
-        }
+
+    Hardware.transmission.controls(Hardware.leftDriver.getY(),
+            Hardware.rightDriver.getY());
+
     // If we're pressing the upshift button, shift up.
     if (Hardware.rightDriver
             .getRawButton(GEAR_UPSHIFT_JOYSTICK_BUTTON) == true)
@@ -1044,11 +1057,13 @@ private static final double ALIGN_BY_CAMERA_DRIVE_SPEED = .45;
 private static final int GEAR_UPSHIFT_JOYSTICK_BUTTON = 3;
 // right driver 2
 private static final int GEAR_DOWNSHIFT_JOYSTICK_BUTTON = 2;
-// right driver 5
-private static final int BRAKE_JOYSTICK_BUTTON = 5;
+// left driver 4
+private static final int BRAKE_JOYSTICK_BUTTON_FOUR = 4;
+// left driver 5
+private static final int BRAKE_JOYSTICK_BUTTON_FIVE = 5;
 // left operator 2
 private static final int CAMERA_TOGGLE_BUTTON = 2;
-// Right operator 2
+// Right operator 2 
 private static final int FIRE_OVERRIDE_BUTTON = 4;
 // Left operator 3
 private static final int FIRE_CANCEL_BUTTON = 3;
@@ -1065,9 +1080,9 @@ private final static double CAMERA_ALIGNMENT_TURNING_SPEED = .50;//.55
 
 private final static double ARM_IS_OUT_OF_WAY_TIME = .10;
 
-private final static double RIGHT_MOTOR_BRAKE_SPEED = 0.1;
+private final static double RIGHT_MOTOR_BRAKE_SPEED = 0.13;
 
-private final static double LEFT_MOTOR_BRAKE_SPEED = 0.1;
+private final static double LEFT_MOTOR_BRAKE_SPEED = 0.13;
 
 //minimum pressure when allowed to fire
 private static final int FIRING_MIN_PSI = 90;
