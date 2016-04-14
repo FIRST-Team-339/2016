@@ -65,7 +65,7 @@ public static void init ()
     Guidance.updateBallStatus(false);
     // Tell USB camera handler that we only have one USB camera
     CameraServer.getInstance().setSize(1);//AHK @cameratesting
-    // Make sure the camera is really dark
+    //Make sure the camera is really dark
     Hardware.axisCamera.writeBrightness(
             Hardware.MINIMUM_AXIS_CAMERA_BRIGHTNESS);
     // set max speed.
@@ -100,7 +100,11 @@ public static void init ()
     //anything yet
     Hardware.arrowDashboard
             .setDirection(Guidance.Direction.neutral);
-    // Hardware.arrowDashboard.update();
+            // Hardware.arrowDashboard.update();
+
+    //Starts testing speed.
+
+
     //Turn off all the solenoids before we really start anything
     Hardware.catapultSolenoid0.set(false);
     Hardware.catapultSolenoid1.set(false);
@@ -133,6 +137,12 @@ private static boolean testMove3IsDone = true;
 private static boolean testCameraIsDone = true;
 //private static boolean testingAlignByCamera = false;//@DELETE
 
+//static Timer speedTesterTimer = new Timer();
+//static SpeedTester speedTester = new SpeedTester(
+//        Hardware.rightRearEncoder, speedTesterTimer);
+//static double speedTestValue;
+//static boolean speedTesting = true;
+
 /**
  * User Periodic code for teleop mode should go here. Will be called
  * periodically at a regular rate while the robot is in teleop mode.
@@ -143,7 +153,11 @@ private static boolean testCameraIsDone = true;
 public static void periodic ()
 {
     //Print out any data we want from the hardware elements.
-    printStatements();
+    //speedTester.watchJoystick(Hardware.rightDriver.getY());
+    //    if (speedTestValue != 0)
+    //        {
+    //        System.out.println("Speed: " + speedTestValue);
+    //        }
 
     Hardware.errorMessage.printError("test12", PrintsTo.roboRIO);
 
@@ -432,6 +446,7 @@ public static void periodic ()
                     fireRequested = true;
                     Hardware.armOutOfWayTimer.reset();
                     Hardware.armOutOfWayTimer.start();
+
                     isFiringByCamera = false;
                     }
                 }
@@ -674,10 +689,8 @@ public static void periodic ()
  */
 public static void driveRobot ()
 {
-
     Hardware.transmission.controls(Hardware.leftDriver.getY(),
             Hardware.rightDriver.getY());
-
     // If we're pressing the upshift button, shift up.
     if (Hardware.rightDriver
             .getRawButton(GEAR_UPSHIFT_JOYSTICK_BUTTON) == true)
@@ -690,9 +703,6 @@ public static void driveRobot ()
         {
         Hardware.transmission.downshift(1);
         }
-
-
-
 }
 
 
