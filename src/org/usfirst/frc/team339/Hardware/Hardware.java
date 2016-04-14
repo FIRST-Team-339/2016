@@ -260,7 +260,7 @@ public class Hardware
 	// -------------------------------------
 	// Sonar/Ultrasonic
 	// -------------------------------------
-	public static UltraSonic ultrasonic = new UltraSonic(4, 0.57);
+	public static UltraSonic ultrasonic = new UltraSonic(4, 0.050548);
 
 
 
