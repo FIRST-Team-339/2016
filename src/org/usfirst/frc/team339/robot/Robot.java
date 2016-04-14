@@ -367,11 +367,11 @@ public void robotInit ()
     // -------------------------------------
     // AXIS camera initialization
     // -------------------------------------
-		// Set the axis camera brightness to dark
-		//    Hardware.axisCamera.writeBrightness(
-		//            Hardware.NORMAL_AXIS_CAMERA_BRIGHTNESS);
+    // Set the axis camera brightness to dark
+    //    Hardware.axisCamera.writeBrightness(
+    //            Hardware.NORMAL_AXIS_CAMERA_BRIGHTNESS);
     Hardware.axisCamera.writeBrightness(
-		        Hardware.MINIMUM_AXIS_CAMERA_BRIGHTNESS);
+            Hardware.MINIMUM_AXIS_CAMERA_BRIGHTNESS);
     // -------------------------------------
     // USB camera initialization
     // -------------------------------------
@@ -614,5 +614,5 @@ private final double distancePerTickForMotorEncoders = 0.0745033113;
 // 
 public static final double JOYSTICK_DEADBAND_ZONE = 0.20;
 public static final double FIRST_GEAR_PERCENTAGE = 0.5;
-public static final double SECOND_GEAR_PERCENTAGE = 0.85;//previously 0.7;
+public static final double SECOND_GEAR_PERCENTAGE = 1.0;//previously 0.7;//.85
 } // end class

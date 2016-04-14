@@ -99,6 +99,10 @@ public static void init ()
     Hardware.arrowDashboard
             .setDirection(Guidance.Direction.neutral);
     // Hardware.arrowDashboard.update();
+
+    //Starts testing speed.
+
+
     //Turn off all the solenoids before we really start anything
     Hardware.catapultSolenoid0.set(false);
     Hardware.catapultSolenoid1.set(false);
@@ -131,6 +135,12 @@ private static boolean testMove3IsDone = false;
 private static boolean testCameraIsDone = true;
 private static boolean testingAlignByCamera = false;//@DELETE
 
+//static Timer speedTesterTimer = new Timer();
+//static SpeedTester speedTester = new SpeedTester(
+//        Hardware.rightRearEncoder, speedTesterTimer);
+//static double speedTestValue;
+//static boolean speedTesting = true;
+
 /**
  * User Periodic code for teleop mode should go here. Will be called
  * periodically at a regular rate while the robot is in teleop mode.
@@ -141,7 +151,11 @@ private static boolean testingAlignByCamera = false;//@DELETE
 public static void periodic ()
 {
     //Print out any data we want from the hardware elements.
-    printStatements();
+    //speedTester.watchJoystick(Hardware.rightDriver.getY());
+    //    if (speedTestValue != 0)
+    //        {
+    //        System.out.println("Speed: " + speedTestValue);
+    //        }
 
     Hardware.errorMessage.printError("test12", PrintsTo.roboRIO);
 
@@ -595,7 +609,7 @@ public static void periodic ()
         if (isSpeedTesting == false && isAligningByCamera == false
                 && testingAlignByCamera == false
                 && isFiringByCamera == false
-                && fireRequested == false)
+                && fireRequested == false /* && speedTesting */)
             driveRobot();
         else if (isSpeedTesting == true)
             {
