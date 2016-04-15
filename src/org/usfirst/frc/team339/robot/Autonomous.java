@@ -274,6 +274,9 @@ public class Autonomous
 	}
 
 
+	private static final double MAXIMUM_ULTRASONIC_SLOPE = 0;
+
+
 	// ==========================================
 	// AUTO STATES
 	// ==========================================
@@ -320,7 +323,7 @@ public class Autonomous
 	 */
 	private static double totalDistance = 0;
 
-	private static int[] ultrasonicDistances = new int[30];
+	private static double[] ultrasonicDistances = new double[30];
 
 	private static int ultrasonicDistancesIndex = 0;
 
@@ -1333,6 +1336,25 @@ public class Autonomous
 			        turnSpeed);
 		}
 		return done;
+	}
+
+	private static boolean isGettingCloserToWall (double point)
+	{
+		ultrasonicDistances[ultrasonicDistancesIndex] = (int) point;
+
+		if (ultrasonicDistancesIndex == ultrasonicDistances.length - 1)
+		{
+			if (getRegressionSlopeOfArray(
+			        ultrasonicDistances) < MAXIMUM_ULTRASONIC_SLOPE)
+			{
+				ultrasonicDistances = new double[30];
+				ultrasonicDistancesIndex = 0;
+
+				return true;
+			}
+		}
+
+		return false;
 	}
 
 	/**
