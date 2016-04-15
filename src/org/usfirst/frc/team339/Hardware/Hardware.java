@@ -283,7 +283,7 @@ public class Hardware
 
 
 	// Declares the Axis camera
-	public static KilroyCamera axisCamera = new KilroyCamera(true);
+	public static KilroyCamera axisCamera = new KilroyCamera(false);
 
 
 
