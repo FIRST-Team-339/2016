@@ -78,6 +78,8 @@ public static final int AXIS_FPS = 15;
 public static final Resolution AXIS_RESOLUTION =
         AxisCamera.Resolution.k320x240;
 
+	public static final double ULTRASONIC_SCALING_FACTOR = 0.050548;
+
 //---------------------------------
 // denote whether we are running in
 // the lab or not.  This will allow
@@ -260,7 +262,8 @@ public static RobotPotentiometer armPot = new RobotPotentiometer(3,
 // -------------------------------------
 // Sonar/Ultrasonic
 // -------------------------------------
-public static UltraSonic ultrasonic = new UltraSonic(4, 0.57);
+	public static UltraSonic ultrasonic =
+	        new UltraSonic(4, ULTRASONIC_SCALING_FACTOR);
 
 
 

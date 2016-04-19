@@ -135,6 +135,7 @@ private static boolean testMove1IsDone = true;
 private static boolean testMove2IsDone = false;
 private static boolean testMove3IsDone = true;
 private static boolean testCameraIsDone = true;
+private static boolean isTurning180Degrees = false;
 private static boolean testingAlignByCamera = false;//@DELETE
 
 //static Timer speedTesterTimer = new Timer();
@@ -153,11 +154,7 @@ private static boolean testingAlignByCamera = false;//@DELETE
 public static void periodic ()
 {
     //Print out any data we want from the hardware elements.
-    //speedTester.watchJoystick(Hardware.rightDriver.getY());
-    //    if (speedTestValue != 0)
-    //        {
-    //        System.out.println("Speed: " + speedTestValue);
-    //        }
+    printStatements();
 
     Hardware.errorMessage.printError("test12", PrintsTo.roboRIO);
 
@@ -293,10 +290,31 @@ public static void periodic ()
         else if (isAligningByCamera == false
         /* && testingAlignByCamera == false */)
             {
-            //If the arm control joystick isn't beyond our deadzone, stop the arm.
+            // If the arm control joystick isn't beyond our deadzone, stop the
+            // arm.
             Hardware.pickupArm.stopArmMotor();
             }
         //End arm movement code
+
+        // When the driver hits button 2, the robot will turn 180
+        // degrees to the right so we can drive back through the Sally
+        // Port.
+        if (Hardware.leftDriver.getRawButton(2))
+            {
+            isTurning180Degrees = true;
+            }
+
+        // If we've turned 180 degrees (going at 60% power and braking
+        // at the end), we set the boolean back to false and reset
+        // the encoders.
+        if (isTurning180Degrees == true &&
+                Hardware.drive.turnLeftDegrees(180, true, -.6,
+                        .6) == true)
+            {
+            isTurning180Degrees = false;
+            Hardware.leftRearEncoder.reset();
+            Hardware.rightRearEncoder.reset();
+            }
 
         //Begin Ball manipulation code
         //pull in the ball if the pull in button is pressed.
@@ -631,12 +649,35 @@ public static void periodic ()
 
 
         // Driving the Robot
+        // If we press the break button, motors are set to 0.13
+        //TODO: set motor values to negative
+        if (Hardware.leftDriver
+                .getRawButton(BRAKE_JOYSTICK_BUTTON_FIVE) == true)
+            {
+            Hardware.transmission.setJoystickDeadbandRange(0.0);
+            Hardware.drive.driveContinuous(LEFT_MOTOR_BRAKE_SPEED,
+                    RIGHT_MOTOR_BRAKE_SPEED);
+            }
 
+        else if (Hardware.leftDriver
+                .getRawButton(BRAKE_JOYSTICK_BUTTON_FOUR) == true)
+            {
+            Hardware.transmission.setJoystickDeadbandRange(0.0);
+            Hardware.drive.driveContinuous(LEFT_MOTOR_BRAKE_SPEED_TWO,
+                    RIGHT_MOTOR_BRAKE_SPEED_TWO);
+            }
+
+        //drive the robot with the joysticks
 
         //TODO delete all conditionals.
         if (/* isSpeedTesting == false && */ isAligningByCamera == false
                 && testingAlignByCamera == false
-                && fireRequested == false /* && speedTesting */)
+                && fireRequested == false && Hardware.leftDriver
+                        .getRawButton(
+                                BRAKE_JOYSTICK_BUTTON_FIVE) == false
+                && Hardware.leftDriver.getRawButton(
+                        BRAKE_JOYSTICK_BUTTON_FOUR) == false
+                && isTurning180Degrees == false)
             {
             driveRobot();
             }
@@ -679,19 +720,8 @@ public static void periodic ()
  */
 public static void driveRobot ()
 {
-    // If we press the break button, motors are set to 0.1.
-    if (Hardware.rightDriver
-            .getRawButton(BRAKE_JOYSTICK_BUTTON) == true)
-        {
-        Hardware.drive
-                .brake(LEFT_MOTOR_BRAKE_SPEED, RIGHT_MOTOR_BRAKE_SPEED);
-        }
-    //drive the robot with the joysticks
-    else
-        {
         Hardware.transmission.controls(Hardware.leftDriver.getY(),
                 Hardware.rightDriver.getY());
-        }
     // If we're pressing the upshift button, shift up.
     if (Hardware.rightDriver
             .getRawButton(GEAR_UPSHIFT_JOYSTICK_BUTTON) == true)
@@ -1068,8 +1098,10 @@ private static final double ALIGN_BY_CAMERA_DRIVE_SPEED = .45;
 private static final int GEAR_UPSHIFT_JOYSTICK_BUTTON = 3;
 // right driver 2
 private static final int GEAR_DOWNSHIFT_JOYSTICK_BUTTON = 2;
-// right driver 5
-private static final int BRAKE_JOYSTICK_BUTTON = 5;
+// left driver 4
+private static final int BRAKE_JOYSTICK_BUTTON_FOUR = 4;
+// left driver 5
+private static final int BRAKE_JOYSTICK_BUTTON_FIVE = 5;
 // left operator 2
 private static final int CAMERA_TOGGLE_BUTTON = 2;
 // Right operator 2
@@ -1089,9 +1121,13 @@ private final static double CAMERA_ALIGNMENT_TURNING_SPEED = .50;//.55
 
 private final static double ARM_IS_OUT_OF_WAY_TIME = .10;
 
-private final static double RIGHT_MOTOR_BRAKE_SPEED = 0.1;
+private final static double RIGHT_MOTOR_BRAKE_SPEED = 0.12;
 
-private final static double LEFT_MOTOR_BRAKE_SPEED = 0.1;
+private final static double RIGHT_MOTOR_BRAKE_SPEED_TWO = -0.12;
+
+private final static double LEFT_MOTOR_BRAKE_SPEED = 0.12;
+
+private final static double LEFT_MOTOR_BRAKE_SPEED_TWO = -0.12;
 
 //minimum pressure when allowed to fire
 private static final int FIRING_MIN_PSI = 90;
