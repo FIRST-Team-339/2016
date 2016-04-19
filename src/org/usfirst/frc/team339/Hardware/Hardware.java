@@ -85,7 +85,7 @@ public static final double ULTRASONIC_SCALING_FACTOR = 0.050548;
 // us to test in the lab once the
 // robot is bagged
 // ---------------------------------
-public static boolean runningInLab = true; // @TODO SET THIS BACK
+public static boolean runningInLab = false;
 // -------------------------------------
 // Private Constants
 // -------------------------------------
@@ -276,7 +276,7 @@ public static UltraSonic ultrasonic = new UltraSonic(4,
 
 
 // Declares the Axis camera
-public static KilroyCamera axisCamera = new KilroyCamera(false);
+public static KilroyCamera axisCamera = new KilroyCamera(true);
 
 
 
