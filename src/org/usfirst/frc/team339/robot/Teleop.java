@@ -135,7 +135,7 @@ private static boolean testMove1IsDone = true;
 private static boolean testMove2IsDone = false;
 private static boolean testMove3IsDone = true;
 private static boolean testCameraIsDone = true;
-//private static boolean testingAlignByCamera = false;//@DELETE
+private static boolean testingAlignByCamera = false;//@DELETE
 
 //static Timer speedTesterTimer = new Timer();
 //static SpeedTester speedTester = new SpeedTester(
@@ -203,9 +203,9 @@ public static void periodic ()
                 //		{
                 //						//Autonomous.resetEncoders();
                 //						Hardware.transmission.controls(0.0, 0.0);
-                    testMove2IsDone = true;
+                testMove2IsDone = true;
                 //			}
-                    }
+                }
             else if (!testMove3IsDone)
                 {
                 System.out.print("\n" + 3 + "\n");
@@ -231,39 +231,46 @@ public static void periodic ()
     //If we don't have the runningInLab flag set to true
     else
         {
-        //			if (Hardware.leftOperator.getRawButton(8))
-        //			{
-        //				testingAlignByCamera = false;
-        //			}
-        //			if (testingAlignByCamera == true)
-        //			{
-        //				currentCameraReturn =
-        //				        Hardware.drive.alignByCameraStateMachine(
-        //				                CAMERA_ALIGN_X_DEADBAND,
-        //				                CAMERA_ALIGN_Y_DEADBAND,
-        //				                CAMERA_X_AXIS_ADJUSTED_PROPORTIONAL_CENTER,
-        //				                CAMERA_Y_AXIS_ADJUSTED_PROPORTIONAL_CENTER,
-        //				                ALIGN_BY_CAMERA_TURNING_SPEED,
-        //				                ALIGN_BY_CAMERA_DRIVE_SPEED,
-        //				                (Hardware.rightOperator
-        //				                        .getRawButton(10) == true
-        //				                        && Hardware.rightOperator
-        //				                                .getRawButton(
-        //				                                        11) == true),
-        //				                true, true);
-        //				if (currentCameraReturn == Drive.alignByCameraReturn.DONE)
-        //				{
-        //					testingAlignByCamera = false;
-        //					fireRequested = true;
-        //					Hardware.armOutOfWayTimer.stop();
-        //					Hardware.armOutOfWayTimer.reset();
-        //					Hardware.armOutOfWayTimer.start();
-        //				}
-        //				else if (currentCameraReturn == Drive.alignByCameraReturn.CANCELLED)
-        //				{
-        //					testingAlignByCamera = false;
-        //				}
-        //			}
+        if (Hardware.leftOperator.getRawButton(8))
+            {
+            testingAlignByCamera = true;//@FALSE
+            }
+        if (testingAlignByCamera == true)
+            {
+            currentCameraReturn =
+                    Hardware.drive.alignByCameraStateMachine(
+                            CAMERA_ALIGN_X_DEADBAND,
+                            CAMERA_ALIGN_Y_DEADBAND,
+                            CAMERA_X_AXIS_ADJUSTED_PROPORTIONAL_CENTER,
+                            CAMERA_Y_AXIS_ADJUSTED_PROPORTIONAL_CENTER,
+                            ALIGN_BY_CAMERA_TURNING_SPEED,
+                            ALIGN_BY_CAMERA_DRIVE_SPEED,
+                            (Hardware.rightOperator
+                                    .getRawButton(10) == true
+                                    && Hardware.rightOperator
+                                            .getRawButton(
+                                                    11) == true),
+                            true, true);
+            if (currentCameraReturn == Drive.alignByCameraReturn.DONE)
+                {
+                isFiringByCamera = false;
+                testingAlignByCamera = false;
+                fireRequested = true;
+                Hardware.armOutOfWayTimer.stop();
+                Hardware.armOutOfWayTimer.reset();
+                Hardware.armOutOfWayTimer.start();
+                currentCameraReturn = Drive.alignByCameraReturn.WORKING;
+                }
+            else if (currentCameraReturn == Drive.alignByCameraReturn.CANCELLED)
+                {
+                isFiringByCamera = false;
+                currentCameraReturn = Drive.alignByCameraReturn.WORKING;
+                testingAlignByCamera = false;
+                fireRequested = false;
+                Hardware.armOutOfWayTimer.stop();
+                Hardware.armOutOfWayTimer.reset();
+                }
+            }
         //@DELETE        
 
         // Begin arm movement code
@@ -414,7 +421,7 @@ public static void periodic ()
                 {
                 //move the arm to deposit position
                 if (Hardware.pickupArm
-                        .moveToPosition(ArmPosition.DEPOSIT))
+                        .moveToPosition(ArmPosition.DEPOSIT) == true)
                     {
                     //put the ball in the catapult
                     Hardware.pickupArm.pullInBall(true);
@@ -449,14 +456,20 @@ public static void periodic ()
 
                     isFiringByCamera = false;
                     }
+                currentCameraReturn = Drive.alignByCameraReturn.WORKING;
+                }
+            // cancel the align request if the right operator presses buttons 10 and
+            // 11 at the same time.
+            if (currentCameraReturn == Drive.alignByCameraReturn.CANCELLED)
+                {
+                isAligningByCamera = false;
+                currentCameraReturn = Drive.alignByCameraReturn.WORKING;
+                //testingAlignByCamera = false;
+                fireRequested = false;
+                isFiringByCamera = false;
                 }
             }
-        // cancel the align request if the right operator presses buttons 10 and
-        // 11 at the same time.
-        if (currentCameraReturn == Drive.alignByCameraReturn.CANCELLED)
-            {
-            isAligningByCamera = false;
-            }
+
         //end alignByCameraBlock
 
         //----------------------------
@@ -622,12 +635,11 @@ public static void periodic ()
 
         //TODO delete all conditionals.
         if (/* isSpeedTesting == false && */ isAligningByCamera == false
-                /* && testingAlignByCamera == false */
+                && testingAlignByCamera == false
                 && fireRequested == false /* && speedTesting */)
+            {
             driveRobot();
-
-        //    runCameraSolenoid(Hardware.rightOperator.getRawButton(11),
-        //            Hardware.rightOperator.getRawButton(10), false, true);
+            }
 
         if (Hardware.leftOperator.getRawButton(9))
             {
@@ -677,8 +689,8 @@ public static void driveRobot ()
     //drive the robot with the joysticks
     else
         {
-    Hardware.transmission.controls(Hardware.leftDriver.getY(),
-            Hardware.rightDriver.getY());
+        Hardware.transmission.controls(Hardware.leftDriver.getY(),
+                Hardware.rightDriver.getY());
         }
     // If we're pressing the upshift button, shift up.
     if (Hardware.rightDriver

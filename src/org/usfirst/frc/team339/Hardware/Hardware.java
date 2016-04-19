@@ -260,7 +260,7 @@ public static RobotPotentiometer armPot = new RobotPotentiometer(3,
 // -------------------------------------
 // Sonar/Ultrasonic
 // -------------------------------------
-	public static UltraSonic ultrasonic = new UltraSonic(4, 0.57);
+public static UltraSonic ultrasonic = new UltraSonic(4, 0.57);
 
 
 
@@ -274,13 +274,13 @@ public static RobotPotentiometer armPot = new RobotPotentiometer(3,
 // declare the USB camera server and the
 // USB camera it serves
 // -------------------------------------
-	//	public static CameraServer cameraServer =
-	//	        CameraServer.getInstance();
-	//	public static USBCamera cam0 = new USBCamera("cam0"); //AHK @cameratesting
+//	public static CameraServer cameraServer =
+//	        CameraServer.getInstance();
+//	public static USBCamera cam0 = new USBCamera("cam0"); //AHK @cameratesting
 
 
 // Declares the Axis camera
-public static KilroyCamera axisCamera = new KilroyCamera(false);
+public static KilroyCamera axisCamera = new KilroyCamera(true);
 
 
 
