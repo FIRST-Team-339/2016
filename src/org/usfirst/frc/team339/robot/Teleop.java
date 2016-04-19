@@ -100,7 +100,7 @@ public static void init ()
     // anything yet
     Hardware.arrowDashboard
             .setDirection(Guidance.Direction.neutral);
-    // Hardware.arrowDashboard.update();
+            // Hardware.arrowDashboard.update();
 
     //Starts testing speed.
 
@@ -649,8 +649,8 @@ public static void periodic ()
                 .getRawButton(BRAKE_JOYSTICK_BUTTON_FOUR) == true)
             {
             Hardware.transmission.setJoystickDeadbandRange(0.0);
-            Hardware.drive.driveContinuous(LEFT_MOTOR_BRAKE_SPEED,
-                    RIGHT_MOTOR_BRAKE_SPEED);
+            Hardware.drive.driveContinuous(LEFT_MOTOR_BRAKE_SPEED_TWO,
+                    RIGHT_MOTOR_BRAKE_SPEED_TWO);
             }
 
         //drive the robot with the joysticks
@@ -658,7 +658,7 @@ public static void periodic ()
         // TODO delete all conditionals.
         if (/* isSpeedTesting == false && */ isAligningByCamera == false
                 /* && testingAlignByCamera == false */
-                && fireRequested == false  && Hardware.leftDriver
+                && fireRequested == false && Hardware.leftDriver
                         .getRawButton(
                                 BRAKE_JOYSTICK_BUTTON_FIVE) == false
                 && Hardware.leftDriver.getRawButton(
@@ -707,8 +707,8 @@ public static void periodic ()
  */
 public static void driveRobot ()
 {
-        Hardware.transmission.controls(Hardware.leftDriver.getY(),
-                Hardware.rightDriver.getY());
+    Hardware.transmission.controls(Hardware.leftDriver.getY(),
+            Hardware.rightDriver.getY());
     // If we're pressing the upshift button, shift up.
     if (Hardware.rightDriver
             .getRawButton(GEAR_UPSHIFT_JOYSTICK_BUTTON) == true)
@@ -1075,9 +1075,11 @@ private static final double CAMERA_ALIGN_Y_DEADBAND = .10;
 
 private static final double CAMERA_ALIGN_X_DEADBAND = .13;
 
-private static final double CAMERA_X_AXIS_ADJUSTED_PROPORTIONAL_CENTER = -.375;
+private static final double CAMERA_X_AXIS_ADJUSTED_PROPORTIONAL_CENTER =
+        -.375;
 
-private static final double CAMERA_Y_AXIS_ADJUSTED_PROPORTIONAL_CENTER = -.192;
+private static final double CAMERA_Y_AXIS_ADJUSTED_PROPORTIONAL_CENTER =
+        -.192;
 
 private static final double ALIGN_BY_CAMERA_TURNING_SPEED = .5;
 
@@ -1111,7 +1113,11 @@ private final static double ARM_IS_OUT_OF_WAY_TIME = .10;
 
 private final static double RIGHT_MOTOR_BRAKE_SPEED = 0.12;
 
+private final static double RIGHT_MOTOR_BRAKE_SPEED_TWO = -0.12;
+
 private final static double LEFT_MOTOR_BRAKE_SPEED = 0.12;
+
+private final static double LEFT_MOTOR_BRAKE_SPEED_TWO = -0.12;
 
 // minimum pressure when allowed to fire
 private static final int FIRING_MIN_PSI = 90;
@@ -1122,7 +1128,8 @@ private static final int FIRING_MIN_PSI = 90;
 
 private static boolean isAligningByCamera = false;
 
-private static Drive.alignByCameraReturn currentCameraReturn = Drive.alignByCameraReturn.WORKING;
+private static Drive.alignByCameraReturn currentCameraReturn =
+        Drive.alignByCameraReturn.WORKING;
 
 private static boolean isFiringByCamera = false;
 
