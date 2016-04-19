@@ -100,9 +100,9 @@ public static void init ()
     // anything yet
     Hardware.arrowDashboard
             .setDirection(Guidance.Direction.neutral);
-    // Hardware.arrowDashboard.update();
+            // Hardware.arrowDashboard.update();
 
-    //Starts testing speed.
+    // Starts testing speed.
 
 
     // Turn off all the solenoids before we really start anything
@@ -138,11 +138,11 @@ private static boolean testCameraIsDone = true;
 private static boolean isTurning180Degrees = false;
 // private static boolean testingAlignByCamera = false;//@DELETE
 
-//static Timer speedTesterTimer = new Timer();
-//static SpeedTester speedTester = new SpeedTester(
-//        Hardware.rightRearEncoder, speedTesterTimer);
-//static double speedTestValue;
-//static boolean speedTesting = true;
+// static Timer speedTesterTimer = new Timer();
+// static SpeedTester speedTester = new SpeedTester(
+// Hardware.rightRearEncoder, speedTesterTimer);
+// static double speedTestValue;
+// static boolean speedTesting = true;
 
 /**
  * User Periodic code for teleop mode should go here. Will be called
@@ -168,62 +168,87 @@ public static void periodic ()
         Hardware.transmission.setFirstGearPercentage(1.0);
         Hardware.axisCamera.setHaveCamera(false);
 
+        // When the driver hits button 2, the robot will turn 180
+        // degrees to the right so we can drive back through the Sally
+        // Port.
+        if (Hardware.leftDriver.getRawButton(2))
+            {
+            Hardware.leftRearEncoder.reset();
+            Hardware.rightRearEncoder.reset();
+            isTurning180Degrees = true;
+            System.out.println("Turning 180 Degrees? " +
+                    isTurning180Degrees);
+            }
+
+        // If we've turned 180 degrees (going at 60% power and braking
+        // at the end), we set the boolean back to false and reset
+        // the encoders.
+        if (isTurning180Degrees == true)
+            {
+            if (Hardware.drive.turnLeftDegrees(180, false, -.6,
+                    .6) == true)
+                {
+                isTurning180Degrees = false;
+                Hardware.leftRearEncoder.reset();
+                Hardware.rightRearEncoder.reset();
+                }
+            }
 
         // System.out.println("t1: " + testMove1IsDone);
         // System.out.println("t2: " + testMove2IsDone);
         // System.out.println("t3: " + testMove3IsDone);
         // if we hit the left driver trigger in the lab
-        if (Hardware.leftDriver.getTrigger() == true)
-            {
-            // tell the code to start testing autonomous
-            testAuto = true;
-            }
-        // Test certain aspects of autonomous
-        if (testAuto == true)
-            {
-            if (!testMove1IsDone)
-                {
-                System.out.print("\n" + 1 + "\n");
-                if (Hardware.drive.driveStraightByInches(12.0, true,
-                        .9, .9))
-                    {
-                    Autonomous.resetEncoders();
-                    testMove1IsDone = true;
-                    }
-                }
-            else if (!testMove2IsDone && (Hardware.leftIR.isOn()
-                    || Hardware.rightIR.isOn()))
-                {
-                System.out.println("IR Detected.");
-                // if (Hardware.drive.turnLeftDegrees(60.0, true,
-                // -.55, .55))
-                // {
-                // //Autonomous.resetEncoders();
-                // Hardware.transmission.controls(0.0, 0.0);
-                testMove2IsDone = true;
-                // }
-                }
-            else if (!testMove3IsDone)
-                {
-                System.out.print("\n" + 3 + "\n");
-                if (Hardware.drive.driveStraightByInches(12.0, true,
-                        .3, .3))
-                    {
-                    Autonomous.resetEncoders();
-                    testMove3IsDone = true;
-                    }
-                }
-            else if (!testCameraIsDone)
-                {
-                // if (Hardware.drive.driveByCamera(999.0, .2, .25,
-                // 0.0, true));
-                }
-            else
-                {
-                // Stop
-                Hardware.transmission.controls(0.0, 0.0);
-                }
-            }
+        // if (Hardware.leftDriver.getTrigger() == true)
+        // {
+        // // tell the code to start testing autonomous
+        // testAuto = true;
+        // }
+        // // Test certain aspects of autonomous
+        // if (testAuto == true)
+        // {
+        // if (!testMove1IsDone)
+        // {
+        // System.out.print("\n" + 1 + "\n");
+        // if (Hardware.drive.driveStraightByInches(12.0, true,
+        // .9, .9))
+        // {
+        // Autonomous.resetEncoders();
+        // testMove1IsDone = true;
+        // }
+        // }
+        // else if (!testMove2IsDone && (Hardware.leftIR.isOn()
+        // || Hardware.rightIR.isOn()))
+        // {
+        // System.out.println("IR Detected.");
+        // // if (Hardware.drive.turnLeftDegrees(60.0, true,
+        // // -.55, .55))
+        // // {
+        // // //Autonomous.resetEncoders();
+        // // Hardware.transmission.controls(0.0, 0.0);
+        // testMove2IsDone = true;
+        // // }
+        // }
+        // else if (!testMove3IsDone)
+        // {
+        // System.out.print("\n" + 3 + "\n");
+        // if (Hardware.drive.driveStraightByInches(12.0, true,
+        // .3, .3))
+        // {
+        // Autonomous.resetEncoders();
+        // testMove3IsDone = true;
+        // }
+        // }
+        // else if (!testCameraIsDone)
+        // {
+        // // if (Hardware.drive.driveByCamera(999.0, .2, .25,
+        // // 0.0, true));
+        // }
+        // else
+        // {
+        // // Stop
+        // Hardware.transmission.controls(0.0, 0.0);
+        // }
+        // }
         }
     // If we don't have the runningInLab flag set to true
     else
@@ -294,19 +319,25 @@ public static void periodic ()
         // Port.
         if (Hardware.leftDriver.getRawButton(2))
             {
+            Hardware.leftRearEncoder.reset();
+            Hardware.rightRearEncoder.reset();
             isTurning180Degrees = true;
+            System.out.println("Turning 180 Degrees? " +
+                    isTurning180Degrees);
             }
 
         // If we've turned 180 degrees (going at 60% power and braking
         // at the end), we set the boolean back to false and reset
         // the encoders.
-        if (isTurning180Degrees == true &&
-                Hardware.drive.turnLeftDegrees(180, true, -.6,
-                        .6) == true)
+        if (isTurning180Degrees == true)
             {
-            isTurning180Degrees = false;
-            Hardware.leftRearEncoder.reset();
-            Hardware.rightRearEncoder.reset();
+            if (Hardware.drive.turnLeftDegrees(180, true, -.6,
+                    .6) == true)
+                {
+                isTurning180Degrees = false;
+                Hardware.leftRearEncoder.reset();
+                Hardware.rightRearEncoder.reset();
+                }
             }
 
         // Begin Ball manipulation code
@@ -636,7 +667,7 @@ public static void periodic ()
 
         // Driving the Robot
         // If we press the break button, motors are set to 0.13
-        //TODO: set motor values to negative
+        // TODO: set motor values to negative
         if (Hardware.leftDriver
                 .getRawButton(BRAKE_JOYSTICK_BUTTON_FIVE) == true)
             {
@@ -653,12 +684,12 @@ public static void periodic ()
                     RIGHT_MOTOR_BRAKE_SPEED);
             }
 
-        //drive the robot with the joysticks
+        // drive the robot with the joysticks
 
         // TODO delete all conditionals.
         if (/* isSpeedTesting == false && */ isAligningByCamera == false
                 /* && testingAlignByCamera == false */
-                && fireRequested == false  && Hardware.leftDriver
+                && fireRequested == false && Hardware.leftDriver
                         .getRawButton(
                                 BRAKE_JOYSTICK_BUTTON_FIVE) == false
                 && Hardware.leftDriver.getRawButton(
@@ -707,8 +738,8 @@ public static void periodic ()
  */
 public static void driveRobot ()
 {
-        Hardware.transmission.controls(Hardware.leftDriver.getY(),
-                Hardware.rightDriver.getY());
+    Hardware.transmission.controls(Hardware.leftDriver.getY(),
+            Hardware.rightDriver.getY());
     // If we're pressing the upshift button, shift up.
     if (Hardware.rightDriver
             .getRawButton(GEAR_UPSHIFT_JOYSTICK_BUTTON) == true)
