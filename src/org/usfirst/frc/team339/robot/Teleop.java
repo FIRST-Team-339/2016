@@ -100,9 +100,9 @@ public static void init ()
     // anything yet
     Hardware.arrowDashboard
             .setDirection(Guidance.Direction.neutral);
-    // Hardware.arrowDashboard.update();
+            // Hardware.arrowDashboard.update();
 
-    // Starts testing speed.
+    //Starts testing speed.
 
 
     // Turn off all the solenoids before we really start anything
@@ -136,13 +136,13 @@ private static boolean testMove2IsDone = false;
 private static boolean testMove3IsDone = true;
 private static boolean testCameraIsDone = true;
 private static boolean isTurning180Degrees = false;
-private static boolean testingAlignByCamera = false;//@DELETE
+// private static boolean testingAlignByCamera = false;//@DELETE
 
-// static Timer speedTesterTimer = new Timer();
-// static SpeedTester speedTester = new SpeedTester(
-// Hardware.rightRearEncoder, speedTesterTimer);
-// static double speedTestValue;
-// static boolean speedTesting = true;
+//static Timer speedTesterTimer = new Timer();
+//static SpeedTester speedTester = new SpeedTester(
+//        Hardware.rightRearEncoder, speedTesterTimer);
+//static double speedTestValue;
+//static boolean speedTesting = true;
 
 /**
  * User Periodic code for teleop mode should go here. Will be called
@@ -167,6 +167,7 @@ public static void periodic ()
         Hardware.transmission.setJoysticksAreReversed(true);
         Hardware.transmission.setFirstGearPercentage(1.0);
         Hardware.axisCamera.setHaveCamera(false);
+
 
         // System.out.println("t1: " + testMove1IsDone);
         // System.out.println("t2: " + testMove2IsDone);
@@ -653,27 +654,34 @@ public static void periodic ()
 
 
         // Driving the Robot
-        // If we press the break button, motors are set to 0.13
-        // TODO: set motor values to negative
+        // If we press the brake button, robot brakes
+
+        //if (Hardware.leftDriver
+        //        .getRawButton(BRAKE_JOYSTICK_BUTTON_FIVE) == true)
+        //    {
+        //    Hardware.transmission.setJoystickDeadbandRange(0.0);
+        //    Hardware.drive.driveContinuous(LEFT_MOTOR_BRAKE_SPEED,
+        //            RIGHT_MOTOR_BRAKE_SPEED);
+        //    }
+
+        //else if (Hardware.leftDriver
+        //        .getRawButton(BRAKE_JOYSTICK_BUTTON_FOUR) == true)
+        //    {
+        //    Hardware.transmission.setJoystickDeadbandRange(0.0);
+        //    Hardware.drive.driveContinuous(LEFT_MOTOR_BRAKE_SPEED_TWO,
+        //            RIGHT_MOTOR_BRAKE_SPEED_TWO);
+        //    }
+
+        //when brake button is pressed motor values reverse
         if (Hardware.leftDriver
                 .getRawButton(BRAKE_JOYSTICK_BUTTON_FIVE) == true)
             {
             Hardware.transmission.setJoystickDeadbandRange(0.0);
-            Hardware.drive.driveContinuous(LEFT_MOTOR_BRAKE_SPEED,
-                    RIGHT_MOTOR_BRAKE_SPEED);
+
             }
+        //drive the robot with the joysticks
 
-        else if (Hardware.leftDriver
-                .getRawButton(BRAKE_JOYSTICK_BUTTON_FOUR) == true)
-            {
-            Hardware.transmission.setJoystickDeadbandRange(0.0);
-            Hardware.drive.driveContinuous(LEFT_MOTOR_BRAKE_SPEED_TWO,
-                    RIGHT_MOTOR_BRAKE_SPEED_TWO);
-            }
-
-        // drive the robot with the joysticks
-
-        // TODO delete all conditionals.
+        // TODO delete all conditionals. Fix brake
         if (/* isSpeedTesting == false && */ isAligningByCamera == false
                 && testingAlignByCamera == false
                 && fireRequested == false && Hardware.leftDriver
@@ -1128,13 +1136,13 @@ private final static double CAMERA_ALIGNMENT_TURNING_SPEED = .50;// .55
 
 private final static double ARM_IS_OUT_OF_WAY_TIME = .10;
 
-private final static double RIGHT_MOTOR_BRAKE_SPEED = 0.12;
+//private final static double RIGHT_MOTOR_BRAKE_SPEED = 0.12;
 
-private final static double RIGHT_MOTOR_BRAKE_SPEED_TWO = -0.12;
+//private final static double RIGHT_MOTOR_BRAKE_SPEED_TWO = -0.12;
 
-private final static double LEFT_MOTOR_BRAKE_SPEED = 0.12;
+//private final static double LEFT_MOTOR_BRAKE_SPEED = 0.12;
 
-private final static double LEFT_MOTOR_BRAKE_SPEED_TWO = -0.12;
+//private final static double LEFT_MOTOR_BRAKE_SPEED_TWO = -0.12;
 
 // minimum pressure when allowed to fire
 private static final int FIRING_MIN_PSI = 90;
@@ -1142,6 +1150,8 @@ private static final int FIRING_MIN_PSI = 90;
 // ==========================================
 // TUNEABLES
 // ==========================================
+
+private static boolean testingAlignByCamera = false;
 
 private static boolean isAligningByCamera = false;
 
