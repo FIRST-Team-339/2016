@@ -75,7 +75,8 @@ public static final int MINIMUM_AXIS_CAMERA_BRIGHTNESS = 6;
 public static final int AXIS_FPS = 15;
 
 
-public static final Resolution AXIS_RESOLUTION = AxisCamera.Resolution.k320x240;
+public static final Resolution AXIS_RESOLUTION =
+        AxisCamera.Resolution.k320x240;
 
 public static final double ULTRASONIC_SCALING_FACTOR = 0.050548;
 
@@ -148,8 +149,9 @@ public static Compressor compressor = new Compressor();
 /**
  * A physical switch that decides whether or not to run autonomous.
  */
-public static SingleThrowSwitch autonomousEnabled = new SingleThrowSwitch(
-        19);
+public static SingleThrowSwitch autonomousEnabled =
+        new SingleThrowSwitch(
+                19);
 public static SingleThrowSwitch shootHigh = new SingleThrowSwitch(8);
 public static SingleThrowSwitch shootLow = new SingleThrowSwitch(7);
 // Shoot high/low switch
@@ -160,8 +162,9 @@ public static DoubleThrowSwitch noShoot = new DoubleThrowSwitch(
  * Displays the starting position.
  * Position 0 on the switch corresponds to position 1, 1 to 2, etc.
  */
-public static SixPositionSwitch startingPositionDial = new SixPositionSwitch(
-        14, 15, 16, 17, 18, 21, true);
+public static SixPositionSwitch startingPositionDial =
+        new SixPositionSwitch(
+                14, 15, 16, 17, 18, 21, true);
 
 // ------------------------------------
 // Gear Tooth Sensors
@@ -194,7 +197,6 @@ public static Encoder rightRearEncoder = new Encoder(3, 4);
 // -------------------------------------
 public static IRSensor rightIR = new IRSensor(1);
 public static IRSensor leftIR = new IRSensor(0);
-
 public static IRSensor armIR = new IRSensor(2);
 
 // ====================================
@@ -282,9 +284,9 @@ public static KilroyCamera axisCamera = new KilroyCamera(true);
 
 public static ImageProcessing imageProcessor = new ImageProcessing(
         Hardware.axisCamera);
-        // **********************************************************
-        // DRIVER STATION CLASSES
-        // **********************************************************
+// **********************************************************
+// DRIVER STATION CLASSES
+// **********************************************************
 
 
 // ------------------------------------
@@ -350,12 +352,16 @@ public static final Timer cameraInTeleopTimer = new Timer();
 public static final ErrorMessage errorMessage = new ErrorMessage(
         false /* append timelog */);
 
-public static final MotorSafetyHelper leftRearMotorSafety = new MotorSafetyHelper(
-        leftRearMotor);
-public static final MotorSafetyHelper rightRearMotorSafety = new MotorSafetyHelper(
-        rightRearMotor);
-public static final MotorSafetyHelper leftFrontMotorSafety = new MotorSafetyHelper(
-        leftFrontMotor);
-public static final MotorSafetyHelper rightFrontMotorSafety = new MotorSafetyHelper(
-        rightFrontMotor);
+public static final MotorSafetyHelper leftRearMotorSafety =
+        new MotorSafetyHelper(
+                leftRearMotor);
+public static final MotorSafetyHelper rightRearMotorSafety =
+        new MotorSafetyHelper(
+                rightRearMotor);
+public static final MotorSafetyHelper leftFrontMotorSafety =
+        new MotorSafetyHelper(
+                leftFrontMotor);
+public static final MotorSafetyHelper rightFrontMotorSafety =
+        new MotorSafetyHelper(
+                rightFrontMotor);
 } // end class
