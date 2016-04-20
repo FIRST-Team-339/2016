@@ -86,7 +86,7 @@ public static final double ULTRASONIC_SCALING_FACTOR = 0.050548;
 // us to test in the lab once the
 // robot is bagged
 // ---------------------------------
-public static boolean runningInLab = true; // @TODO SET BACK TO FALSE
+public static boolean runningInLab = false;
 // -------------------------------------
 // Private Constants
 // -------------------------------------
