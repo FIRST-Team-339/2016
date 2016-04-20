@@ -1348,12 +1348,16 @@ public class Autonomous
 	 * Tells us if we are getting any closer to a thing after being given 55
 	 * points.
 	 * 
+	 * 
+	 * 
 	 * @param point
 	 *            is given one-at-a-time.
 	 * @return true if closer.
 	 */
 	private static boolean isGettingCloserToWall (double point)
 	{
+		//TODO: Demystify magic numbers.
+
 		//return true if we are closer.
 		boolean isCloser = false;
 
