@@ -427,7 +427,8 @@ public void robotInit ()
     // Sets the hue, saturation, and luminance values for the vision
     // processing.
     //Hardware.imageProcessor.setHSLValues(0, 255, 0, 75, 5, 141);
-    Hardware.imageProcessor.setHSLValues(0, 115, 0, 69, 17, 44);
+    //Hardware.imageProcessor.setHSLValues(0, 115, 0, 69, 17, 44);
+    Hardware.imageProcessor.setHSLValues(73, 132, 110, 255, 9, 47);
     // Has us remove small objects at the intensity of 5. May have to
     // change those values.
     // Hardware.imageProcessor.setObjectRemoval(ObjectRemoval.BORDER);

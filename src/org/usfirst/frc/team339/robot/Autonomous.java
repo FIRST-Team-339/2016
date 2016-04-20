@@ -323,9 +323,14 @@ public class Autonomous
 	 */
 	private static double totalDistance = 0;
 
-	private static double[] ultrasonicDistances = new double[30];
+	/**
+	 * Array of distances collected from ultrasonic
+	 */
+	private static double[] ultrasonicDistances;
 
 	private static int ultrasonicDistancesIndex = 0;
+
+	private static int pointCollectionIntervalCheck = 0;
 
 	/**
 	 * Run the arm state machine only when necessary (when true).
@@ -377,6 +382,9 @@ public class Autonomous
 
 			//set Auto state to INIT.
 			initAutoState();
+
+			ultrasonicDistances =
+			        new double[ULTRASONIC_POINTS_REQUIRED];
 
 			//do not print from transmission
 			Hardware.transmission.setDebugState(
@@ -470,11 +478,6 @@ public class Autonomous
 			//runs the overarching state machine.
 			runMainStateMachine();
 		}
-		//-------------------------------
-		// otherwise stop processing now
-		//-------------------------------
-		else
-			return;
 
 		// Czecks if we are running any arm functions.
 		if (runArmStates == true)
@@ -488,6 +491,15 @@ public class Autonomous
 		{
 			Hardware.pickupArm.stopArmMotor();
 		}
+
+
+
+		if (isGettingCloserToWall(
+		        Hardware.ultrasonic.getRefinedDistanceValue()))
+		{
+			System.out.println("Closer...");
+		}
+
 	} // end Periodic
 
 
@@ -1338,23 +1350,55 @@ public class Autonomous
 		return done;
 	}
 
+	/**
+	 * Tells us if we are getting any closer to a thing after being given 55
+	 * points.
+	 * 
+	 * 
+	 * 
+	 * @param point
+	 *            is given one-at-a-time.
+	 * @return true if closer.
+	 */
 	private static boolean isGettingCloserToWall (double point)
 	{
-		ultrasonicDistances[ultrasonicDistancesIndex] = (int) point;
 
-		if (ultrasonicDistancesIndex == ultrasonicDistances.length - 1)
+		//return true if we are closer.
+		boolean isCloser = false;
+
+		//We do not take a point every iteration. Only every 11th point.
+		//We end up with 5 point for each check.
+		pointCollectionIntervalCheck++;
+		if (pointCollectionIntervalCheck == ITERATIONS_PER_POINT)
 		{
-			if (getRegressionSlopeOfArray(
-			        ultrasonicDistances) < MAXIMUM_ULTRASONIC_SLOPE)
-			{
-				ultrasonicDistances = new double[30];
-				ultrasonicDistancesIndex = 0;
+			//reset
+			pointCollectionIntervalCheck = 0;
 
-				return true;
+			//add the point to the array
+			ultrasonicDistances[ultrasonicDistancesIndex] = (int) point;
+			ultrasonicDistancesIndex++;
+
+			//if the array is full, check the slope.
+			if (ultrasonicDistancesIndex == ultrasonicDistances.length)
+			{
+
+				//if the slope is negative, we are getting closer.
+				if (getRegressionSlopeOfArray(
+				        ultrasonicDistances) < MAXIMUM_ULTRASONIC_SLOPE)
+				{
+					//and so, we will return true.
+					isCloser = true;
+				}
+				//reset the array.
+				ultrasonicDistances =
+				        new double[ULTRASONIC_POINTS_REQUIRED];
+				ultrasonicDistancesIndex = 0;
 			}
+
 		}
 
-		return false;
+
+		return isCloser;
 	}
 
 	/**
@@ -1362,16 +1406,19 @@ public class Autonomous
 	 * 
 	 * @param data
 	 *            in which index is the x axis.
-	 * @return slope
+	 * @return slope technically is in inches per fifth of a second.
 	 */
 	private static double getRegressionSlopeOfArray (double[] data)
 	{
 
+		/*
+		 * Formula: (Sigma --> E)
+		 * E ((x-(mean x))(y-(mean y))) / E ((x-(mean x))^2)
+		 */
+
 		int slope;
 		int ySum = 0;
 		int xSum = 0;
-		int xdSum = 0;
-		int xSquareSum = 0;
 		int bigN = data.length;
 
 		//sum all values for regression calculation
@@ -1379,13 +1426,21 @@ public class Autonomous
 		{
 			ySum += data[i];
 			xSum += i;
-			xdSum += i * data[i];
-			xSquareSum = i * i;
+		}
+
+		int xBar = xSum / bigN;
+		int yBar = ySum / bigN;
+
+		int numeratorSum = 0;
+		int denomenatorSum = 0;
+		for (int i = 0; i < data.length; i++)
+		{
+			numeratorSum += ((i - xBar) * (data[i] - yBar));
+			denomenatorSum += ((i - xBar) * (i - xBar));
 		}
 
 		//calculate regression line slope
-		slope = ((bigN * xdSum) - (xSum * ySum))
-		        / ((bigN * xSquareSum) - (xSum * xSum));
+		slope = numeratorSum / denomenatorSum;
 
 		return slope;
 
@@ -1770,5 +1825,9 @@ public class Autonomous
 	private static final double ALIGN_BY_CAMERA_TURNING_SPEED = .55;
 
 	private static final double ALIGN_BY_CAMERA_DRIVE_SPEED = .45;
+
+	private static final int ULTRASONIC_POINTS_REQUIRED = 5;
+
+	private static final int ITERATIONS_PER_POINT = 11;
 
 } // end class
