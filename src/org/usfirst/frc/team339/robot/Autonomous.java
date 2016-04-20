@@ -323,7 +323,7 @@ public class Autonomous
 	 */
 	private static double totalDistance = 0;
 
-	private static double[] ultrasonicDistances = new double[5];
+	private static double[] ultrasonicDistances;
 
 	private static int ultrasonicDistancesIndex = 0;
 
@@ -379,6 +379,9 @@ public class Autonomous
 
 			//set Auto state to INIT.
 			initAutoState();
+
+			ultrasonicDistances =
+			        new double[ULTRASONIC_POINTS_REQUIRED];
 
 			//do not print from transmission
 			Hardware.transmission.setDebugState(
@@ -1356,7 +1359,6 @@ public class Autonomous
 	 */
 	private static boolean isGettingCloserToWall (double point)
 	{
-		//TODO: Demystify magic numbers.
 
 		//return true if we are closer.
 		boolean isCloser = false;
@@ -1364,7 +1366,7 @@ public class Autonomous
 		//We do not take a point every iteration. Only every 11th point.
 		//We end up with 5 point for each check.
 		pointCollectionIntervalCheck++;
-		if (pointCollectionIntervalCheck == 11)
+		if (pointCollectionIntervalCheck == ITERATIONS_PER_POINT)
 		{
 			//reset
 			pointCollectionIntervalCheck = 0;
@@ -1385,7 +1387,8 @@ public class Autonomous
 					isCloser = true;
 				}
 				//reset the array.
-				ultrasonicDistances = new double[5];
+				ultrasonicDistances =
+				        new double[ULTRASONIC_POINTS_REQUIRED];
 				ultrasonicDistancesIndex = 0;
 			}
 
@@ -1819,5 +1822,9 @@ public class Autonomous
 	private static final double ALIGN_BY_CAMERA_TURNING_SPEED = .55;
 
 	private static final double ALIGN_BY_CAMERA_DRIVE_SPEED = .45;
+
+	private static final int ULTRASONIC_POINTS_REQUIRED = 5;
+
+	private static final int ITERATIONS_PER_POINT = 11;
 
 } // end class
