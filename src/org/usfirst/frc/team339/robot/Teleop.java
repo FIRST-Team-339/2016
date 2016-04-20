@@ -677,7 +677,6 @@ public static void periodic ()
                 .getRawButton(BRAKE_JOYSTICK_BUTTON_FIVE) == true)
             {
             Hardware.transmission.setJoystickDeadbandRange(0.0);
-
             }
         //drive the robot with the joysticks
 
