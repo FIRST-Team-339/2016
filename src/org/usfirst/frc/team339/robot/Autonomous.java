@@ -323,6 +323,9 @@ public class Autonomous
 	 */
 	private static double totalDistance = 0;
 
+	/**
+	 * Array of distances collected from ultrasonic
+	 */
 	private static double[] ultrasonicDistances;
 
 	private static int ultrasonicDistancesIndex = 0;

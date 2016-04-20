@@ -318,14 +318,18 @@ public boolean driveByInches (final double distance,
         System.out.println("Right Distance: " +
                 Hardware.rightRearEncoder.getDistance());
 
-        if (this.transmission.getRightRearEncoderDistance() == this.transmission.getLeftRearEncoderDistance())
+        if (this.transmission
+                .getRightRearEncoderDistance() == this.transmission
+                        .getLeftRearEncoderDistance())
             {
             System.out.println(
                     "Left Joystick: " + leftJoystickInputValue);
             System.out.println("Right Joystick: " +
                     rightJoystickInputValue);
             }
-        else if ((this.transmission.getRightRearEncoderDistance()) < (this.transmission.getLeftRearEncoderDistance()))
+        else if ((this.transmission
+                .getRightRearEncoderDistance()) < (this.transmission
+                        .getLeftRearEncoderDistance()))
             {
             System.out.println("Left Joystick: " +
                     leftJoystickInputValue);
@@ -493,11 +497,15 @@ public boolean driveStraightByInches (final double distance,
     double leftJoystickValue = leftJoystickInputValue;
     double rightJoystickValue = rightJoystickInputValue;
 
-    if (this.transmission.getRightRearEncoderDistance() == this.transmission.getLeftRearEncoderDistance())
+    if (this.transmission
+            .getRightRearEncoderDistance() == this.transmission
+                    .getLeftRearEncoderDistance())
         return (this.driveByInches(distance, brakeAtEnd,
                 leftJoystickInputValue, rightJoystickInputValue));
     // if the left drive train is ahead of the right drive train
-    else if ((this.transmission.getRightRearEncoderDistance()) < (this.transmission.getLeftRearEncoderDistance()))
+    else if ((this.transmission
+            .getRightRearEncoderDistance()) < (this.transmission
+                    .getLeftRearEncoderDistance()))
         {
         if (this.transmission.getRightRearEncoderDistance() > 0)
             leftJoystickValue = determineCorrectedJoystickValue(
@@ -576,7 +584,8 @@ public double getForwardVelocity ()
                     this.transmission.getRightRearEncoderDistance()) /
                     2 -
                     (this.prevLeftDistance + this.prevRightDistance) /
-                            2)) /
+                            2))
+                    /
                     (Hardware.kilroyTimer.get() - this.prevTime);
 
     this.prevLeftDistance =
@@ -747,10 +756,11 @@ public double getRotationalVelocity ()
             this.transmission.getLeftRearEncoderDistance()) +
             Math.abs(
                     this.transmission.getRightRearEncoderDistance()) /
-                    2 - ((Math.abs(this.prevLeftDistance) +
-                            Math.abs(this.prevRightDistance)) /
-                            2) / (Hardware.kilroyTimer.get() -
-                                    this.prevTime)));
+                    2
+            - ((Math.abs(this.prevLeftDistance) +
+                    Math.abs(this.prevRightDistance)) /
+                    2) / (Hardware.kilroyTimer.get() -
+                            this.prevTime)));
 
     this.prevLeftDistance =
             this.transmission.getLeftRearEncoderDistance();
@@ -775,11 +785,14 @@ public boolean hasDrivenInches (final double targetDistance)
 {
     // if either drive train is beyond the targetDistance
     if (Math.abs(
-            this.transmission.getRightRearEncoderDistance()) >= Math.abs(
-                    targetDistance) ||
+            this.transmission.getRightRearEncoderDistance()) >= Math
+                    .abs(
+                            targetDistance)
+            ||
             Math.abs(
-                    this.transmission.getLeftRearEncoderDistance()) >= Math.abs(
-                            targetDistance))
+                    this.transmission
+                            .getLeftRearEncoderDistance()) >= Math.abs(
+                                    targetDistance))
         // we're done
         return true;
     return false;
@@ -950,10 +963,14 @@ public boolean turnByDegrees (final turnWhichWay whichWay,
     // ----------------------------------------
     if (whichWay == turnWhichWay.TURN_RIGHT)
         {
-        if (this.transmission.getRightRearEncoderDistance() <= -(turnInRadians *
-                this.ROBOT_TURNING_RADIUS) ||
-                this.transmission.getLeftRearEncoderDistance() >= (turnInRadians *
-                        this.ROBOT_TURNING_RADIUS))
+        if (this.transmission
+                .getRightRearEncoderDistance() <= -(turnInRadians *
+                        this.ROBOT_TURNING_RADIUS)
+                ||
+                this.transmission
+                        .getLeftRearEncoderDistance() >= (turnInRadians
+                                *
+                                this.ROBOT_TURNING_RADIUS))
             {
             // brake and if we're done braking, tell caller we're done
             if (brakeAtEnd == true)
@@ -970,10 +987,14 @@ public boolean turnByDegrees (final turnWhichWay whichWay,
     // ----------------------------------------
     else
         {
-        if (this.transmission.getRightRearEncoderDistance() >= (turnInRadians *
-                this.ROBOT_TURNING_RADIUS) ||
-                this.transmission.getLeftRearEncoderDistance() <= -(turnInRadians *
-                        this.ROBOT_TURNING_RADIUS))
+        if (this.transmission
+                .getRightRearEncoderDistance() >= (turnInRadians *
+                        this.ROBOT_TURNING_RADIUS)
+                ||
+                this.transmission
+                        .getLeftRearEncoderDistance() <= -(turnInRadians
+                                *
+                                this.ROBOT_TURNING_RADIUS))
             {
             // brake and if we're done braking, tell caller we're done
             if (brakeAtEnd == true)
@@ -1522,10 +1543,10 @@ public alignByCameraReturn alignByCameraStateMachine (
             //Woah, that's too dark! Someone turn on the ringlight!
             this.ringLightRelay.set(Value.kOn);
             this.transmission.resetAllEncoders();
+            //firstTimeAlign = false;
             //TODO I don't think this is actually necessary.
             //Hardware.rightRearEncoder.reset();
             //Hardware.leftRearEncoder.reset();
-            firstTimeAlign = false;
             currentState =
                     alignByCameraStates.LOAD_BALL;
             break;
@@ -1544,7 +1565,8 @@ public alignByCameraReturn alignByCameraStateMachine (
                 currentState =
                         alignByCameraStates.TAKE_AND_PROCESS_IMAGE;
                 }
-            if (Hardware.cameraSolenoid.get() != DoubleSolenoid.Value.kReverse)
+            if (Hardware.cameraSolenoid
+                    .get() != DoubleSolenoid.Value.kReverse)
                 {
                 Hardware.cameraSolenoid.set(
                         DoubleSolenoid.Value.kReverse);
@@ -1569,7 +1591,8 @@ public alignByCameraReturn alignByCameraStateMachine (
                             Hardware.axisCamera.getImage());
                     //tell imageProcessor to use the image we just took to look for 
                     //blobs
-                    Hardware.imageProcessor.updateParticleAnalysisReports();
+                    Hardware.imageProcessor
+                            .updateParticleAnalysisReports();
                     if (savePictures)
                         {
                         this.camera.saveImagesSafely();
@@ -1582,26 +1605,32 @@ public alignByCameraReturn alignByCameraStateMachine (
                 }
             finally
                 {
-                if (Hardware.imageProcessor.getParticleAnalysisReports().length > 0)
+                if (Hardware.imageProcessor
+                        .getParticleAnalysisReports().length > 0)
                     {
                     if (printDebugInfo == true)
                         {
                         System.out.println(
                                 "Largest blob X center of mass" +
                                         this.getRelativeXCoordinate(
-                                                Hardware.imageProcessor.getParticleAnalysisReports()[0].center_mass_x));
+                                                Hardware.imageProcessor
+                                                        .getParticleAnalysisReports()[0].center_mass_x));
                         System.out.println(
                                 "Largest blob Y center of mass" +
                                         this.getRelativeYCoordinate(
-                                                Hardware.imageProcessor.getParticleAnalysisReports()[0].center_mass_y));
+                                                Hardware.imageProcessor
+                                                        .getParticleAnalysisReports()[0].center_mass_y));
                         }
                     for (int i =
-                            0; i < Hardware.imageProcessor.getParticleAnalysisReports().length; i++)
+                            0; i < Hardware.imageProcessor
+                                    .getParticleAnalysisReports().length; i++)
                         {
-                        if (Hardware.imageProcessor.getParticleAnalysisReports()[i].boundingRectWidth > widestBlobWidth)
+                        if (Hardware.imageProcessor
+                                .getParticleAnalysisReports()[i].boundingRectWidth > widestBlobWidth)
                             {
                             widestBlobWidth =
-                                    Hardware.imageProcessor.getParticleAnalysisReports()[i].boundingRectWidth;
+                                    Hardware.imageProcessor
+                                            .getParticleAnalysisReports()[i].boundingRectWidth;
                             widestBlobIndex = i;
                             }
                         }
@@ -1612,18 +1641,26 @@ public alignByCameraReturn alignByCameraStateMachine (
             break;
         case CHECK_Y_AXIS_CORRECTNESS:
             //if the blob is below our y deadzone
-            if (Hardware.imageProcessor.getParticleAnalysisReports().length > 0 &&
+            if (Hardware.imageProcessor
+                    .getParticleAnalysisReports().length > 0 &&
                     getRelativeYCoordinate(
-                            Hardware.imageProcessor.getParticleAnalysisReports()[widestBlobIndex].center_mass_y) >= ((percentageDeadbandY /
-                                    2) + adjustedProportionalCenterY))
+                            Hardware.imageProcessor
+                                    .getParticleAnalysisReports()[widestBlobIndex].center_mass_y) >= ((percentageDeadbandY
+                                            /
+                                            2)
+                                            + adjustedProportionalCenterY))
                 {
                 currentState = alignByCameraStates.DRIVE_FORWARD;
                 }
             //if the blob is above our y deadzone
-            else if (Hardware.imageProcessor.getParticleAnalysisReports().length > 0 &&
+            else if (Hardware.imageProcessor
+                    .getParticleAnalysisReports().length > 0 &&
                     getRelativeYCoordinate(
-                            Hardware.imageProcessor.getParticleAnalysisReports()[widestBlobIndex].center_mass_y) <= ((-percentageDeadbandY /
-                                    2) + adjustedProportionalCenterY))
+                            Hardware.imageProcessor
+                                    .getParticleAnalysisReports()[widestBlobIndex].center_mass_y) <= ((-percentageDeadbandY
+                                            /
+                                            2)
+                                            + adjustedProportionalCenterY))
                 {
                 currentState = alignByCameraStates.DRIVE_BACKWARD;
                 }
@@ -1632,17 +1669,21 @@ public alignByCameraReturn alignByCameraStateMachine (
                 {
                 currentState =
                         alignByCameraStates.QUIT;
-                if (Hardware.imageProcessor.getParticleAnalysisReports().length > 0)
+                if (Hardware.imageProcessor
+                        .getParticleAnalysisReports().length > 0)
                     {
                     System.out.println(
                             "Y Deadzone = (" + (((-percentageDeadbandY /
                                     2) + adjustedProportionalCenterY) *
                                     120 + 120) + ", " +
                                     (((percentageDeadbandY / 2) +
-                                            adjustedProportionalCenterY) *
-                                            120 + 120) + ")");
+                                            adjustedProportionalCenterY)
+                                            *
+                                            120 + 120)
+                                    + ")");
                     System.out.println("Y axis center of mass:" +
-                            Hardware.imageProcessor.getParticleAnalysisReports()[widestBlobIndex].center_mass_y);
+                            Hardware.imageProcessor
+                                    .getParticleAnalysisReports()[widestBlobIndex].center_mass_y);
                     }
                 }
             break;
@@ -1657,36 +1698,48 @@ public alignByCameraReturn alignByCameraStateMachine (
             //			                                / 2)
             //			                                + adjustedProportionalCenterX))
             //--MAK
-            if (Hardware.imageProcessor.getParticleAnalysisReports().length > 0 &&
+            if (Hardware.imageProcessor
+                    .getParticleAnalysisReports().length > 0 &&
                     getRelativeXCoordinate(
-                            Hardware.imageProcessor.getParticleAnalysisReports()[widestBlobIndex].center_mass_x) <= ((-percentageDeadbandX /
-                                    2) + adjustedProportionalCenterX))
+                            Hardware.imageProcessor
+                                    .getParticleAnalysisReports()[widestBlobIndex].center_mass_x) <= ((-percentageDeadbandX
+                                            /
+                                            2)
+                                            + adjustedProportionalCenterX))
                 {
                 currentState = alignByCameraStates.ALIGN_LEFT;
                 }
             //if the center of the largest blob is to the right of our 
             //acceptable zone around the center
-            else if (Hardware.imageProcessor.getParticleAnalysisReports().length > 0 &&
+            else if (Hardware.imageProcessor
+                    .getParticleAnalysisReports().length > 0 &&
                     getRelativeXCoordinate(
-                            Hardware.imageProcessor.getParticleAnalysisReports()[widestBlobIndex].center_mass_x) >= ((percentageDeadbandX /
-                                    2) + adjustedProportionalCenterX))
+                            Hardware.imageProcessor
+                                    .getParticleAnalysisReports()[widestBlobIndex].center_mass_x) >= ((percentageDeadbandX
+                                            /
+                                            2)
+                                            + adjustedProportionalCenterX))
                 {
                 currentState = alignByCameraStates.ALIGN_RIGHT;
                 }
             //if the blob is in our x deadzone
             else
                 {
-                if (Hardware.imageProcessor.getParticleAnalysisReports().length > 0)
+                if (Hardware.imageProcessor
+                        .getParticleAnalysisReports().length > 0)
                     {
                     System.out.println(
                             "X Deadzone = (" + (((-percentageDeadbandX /
                                     2) + adjustedProportionalCenterX) *
                                     160 + 160) + ", " +
                                     (((percentageDeadbandX / 2) +
-                                            adjustedProportionalCenterX) *
-                                            160 + 160) + ")");
+                                            adjustedProportionalCenterX)
+                                            *
+                                            160 + 160)
+                                    + ")");
                     System.out.println("X axis center of mass:" +
-                            Hardware.imageProcessor.getParticleAnalysisReports()[widestBlobIndex].center_mass_x);
+                            Hardware.imageProcessor
+                                    .getParticleAnalysisReports()[widestBlobIndex].center_mass_x);
                     }
                 currentState =
                         alignByCameraStates.CHECK_Y_AXIS_CORRECTNESS;
@@ -1716,7 +1769,8 @@ public alignByCameraReturn alignByCameraStateMachine (
         case DRIVE_BACKWARD:
             //We need to check to make sure that we travel in the correct direction, regardless of joystick direction
             if (this.transmission.isLeftJoystickReversed() == false ||
-                    this.transmission.isRightJoystickReversed() == false)
+                    this.transmission
+                            .isRightJoystickReversed() == false)
                 {
                 this.driveContinuous(-driveCorrectionSpeed,
                         -driveCorrectionSpeed);
@@ -1914,10 +1968,14 @@ public boolean driveByCamera (double driveDistanceInches,
             //                .getParticleAnalysisReports()[0].center_mass_x);
             //if the center of the largest blob is to the left of our 
             //acceptable zone around the center
-            if (Hardware.imageProcessor.getParticleAnalysisReports().length > 0 &&
+            if (Hardware.imageProcessor
+                    .getParticleAnalysisReports().length > 0 &&
                     getRelativeXCoordinate(
-                            Hardware.imageProcessor.getParticleAnalysisReports()[0].center_mass_x) <= ((-percentageDeadBand /
-                                    2) + adjustedProportionalCenter))
+                            Hardware.imageProcessor
+                                    .getParticleAnalysisReports()[0].center_mass_x) <= ((-percentageDeadBand
+                                            /
+                                            2)
+                                            + adjustedProportionalCenter))
                 {
                 //turn left until it is in the zone (will be called over and
                 //over again until the blob is within the acceptable zone)
@@ -1930,10 +1988,14 @@ public boolean driveByCamera (double driveDistanceInches,
                 }
             //if the center of the largest blob is to the right of our 
             //acceptable zone around the center
-            else if (Hardware.imageProcessor.getParticleAnalysisReports().length > 0 &&
+            else if (Hardware.imageProcessor
+                    .getParticleAnalysisReports().length > 0 &&
                     getRelativeXCoordinate(
-                            Hardware.imageProcessor.getParticleAnalysisReports()[0].center_mass_x) >= ((percentageDeadBand /
-                                    2) + adjustedProportionalCenter))
+                            Hardware.imageProcessor
+                                    .getParticleAnalysisReports()[0].center_mass_x) >= ((percentageDeadBand
+                                            /
+                                            2)
+                                            + adjustedProportionalCenter))
                 {
                 //turn right until it is in the zone (will be called over and
                 //over again until the blob is within the acceptable zone)
@@ -1951,8 +2013,11 @@ public boolean driveByCamera (double driveDistanceInches,
                 }
             //If the either of the encoders are beyond our drive distance, stop and tell
             //the code that we're done.
-            if ((this.transmission.getRightRearEncoderDistance() >= driveDistanceInches ||
-                    this.transmission.getLeftRearEncoderDistance() >= driveDistanceInches))
+            if ((this.transmission
+                    .getRightRearEncoderDistance() >= driveDistanceInches
+                    ||
+                    this.transmission
+                            .getLeftRearEncoderDistance() >= driveDistanceInches))
                 {
                 //Set up for next call
                 firstTimeAlign = true;
@@ -2061,13 +2126,17 @@ public alignByCameraReturn alignByCamera (double percentageDeadBand,
             //blobs
             Hardware.imageProcessor.updateParticleAnalysisReports();
             for (int i =
-                    0; i < Hardware.imageProcessor.getParticleAnalysisReports().length; i++)
+                    0; i < Hardware.imageProcessor
+                            .getParticleAnalysisReports().length; i++)
                 {
-                if (Hardware.imageProcessor.getParticleAnalysisReports().length > 0 &&
-                        this.widestBlobWidth < Hardware.imageProcessor.getParticleAnalysisReports()[i].boundingRectWidth)
+                if (Hardware.imageProcessor
+                        .getParticleAnalysisReports().length > 0 &&
+                        this.widestBlobWidth < Hardware.imageProcessor
+                                .getParticleAnalysisReports()[i].boundingRectWidth)
                     {
                     this.widestBlobWidth =
-                            Hardware.imageProcessor.getParticleAnalysisReports()[i].boundingRectWidth;
+                            Hardware.imageProcessor
+                                    .getParticleAnalysisReports()[i].boundingRectWidth;
                     this.widestBlobIndex = i;
                     }
                 }
@@ -2075,20 +2144,25 @@ public alignByCameraReturn alignByCamera (double percentageDeadBand,
              * Tell the programmers the absolute and relative x coordinates
              * of the center of mass of the largest blob.
              */
-            if (Hardware.imageProcessor.getParticleAnalysisReports().length > 0)
+            if (Hardware.imageProcessor
+                    .getParticleAnalysisReports().length > 0)
                 {
                 System.out.println("CenterOfMass: " +
-                        Hardware.imageProcessor.getParticleAnalysisReports()[widestBlobIndex].center_mass_x);
+                        Hardware.imageProcessor
+                                .getParticleAnalysisReports()[widestBlobIndex].center_mass_x);
                 System.out.println("Relative x center of Mass :" +
                         (getRelativeCameraCoordinate(
-                                Hardware.imageProcessor.getParticleAnalysisReports()[widestBlobIndex].center_mass_x,
+                                Hardware.imageProcessor
+                                        .getParticleAnalysisReports()[widestBlobIndex].center_mass_x,
                                 true)));
                 System.out.println(
                         "Relative Center range: (" +
                                 (-percentageDeadBand / 2 +
-                                        adjustedProportionalCenter) +
+                                        adjustedProportionalCenter)
+                                +
                                 ", " + (percentageDeadBand / 2 +
-                                        adjustedProportionalCenter) +
+                                        adjustedProportionalCenter)
+                                +
                                 ")");
                 }
             //if the center of the largest blob is to the left of our 
@@ -2102,11 +2176,17 @@ public alignByCameraReturn alignByCamera (double percentageDeadBand,
 
             if ((Hardware.rightOperator.getRawButton(10) == true &&
                     Hardware.rightOperator.getRawButton(
-                            11) == true) == false &&
-                    Hardware.imageProcessor.getParticleAnalysisReports().length > 0 &&
+                            11) == true) == false
+                    &&
+                    Hardware.imageProcessor
+                            .getParticleAnalysisReports().length > 0
+                    &&
                     getRelativeXCoordinate(
-                            Hardware.imageProcessor.getParticleAnalysisReports()[widestBlobIndex].center_mass_x) <= ((-percentageDeadBand /
-                                    2) + adjustedProportionalCenter))
+                            Hardware.imageProcessor
+                                    .getParticleAnalysisReports()[widestBlobIndex].center_mass_x) <= ((-percentageDeadBand
+                                            /
+                                            2)
+                                            + adjustedProportionalCenter))
                 {
                 //turn left until it is in the zone (will be called over and
                 //over again until the blob is within the acceptable zone)
@@ -2118,11 +2198,17 @@ public alignByCameraReturn alignByCamera (double percentageDeadBand,
             //acceptable zone around the center
             else if ((Hardware.rightOperator.getRawButton(10) == true &&
                     Hardware.rightOperator.getRawButton(
-                            11) == true) == false &&
-                    Hardware.imageProcessor.getParticleAnalysisReports().length > 0 &&
+                            11) == true) == false
+                    &&
+                    Hardware.imageProcessor
+                            .getParticleAnalysisReports().length > 0
+                    &&
                     getRelativeXCoordinate(
-                            Hardware.imageProcessor.getParticleAnalysisReports()[widestBlobIndex].center_mass_x) >= ((percentageDeadBand /
-                                    2) + adjustedProportionalCenter))
+                            Hardware.imageProcessor
+                                    .getParticleAnalysisReports()[widestBlobIndex].center_mass_x) >= ((percentageDeadBand
+                                            /
+                                            2)
+                                            + adjustedProportionalCenter))
                 {
                 //turn right until it is in the zone (will be called over and
                 //over again until the blob is within the acceptable zone)
@@ -2165,14 +2251,14 @@ public alignByCameraReturn alignByCamera (double percentageDeadBand,
                 //Turn off the ringlight because we don't need it.
                 //this.ringLightRelay.set(Value.kOff);
                 //tell the programmers we're done.
+                if (Hardware.rightOperator.getRawButton(10) == true &&
+                        Hardware.rightOperator.getRawButton(11) == true)
+                    {
+                    return alignByCameraReturn.CANCELLED;
+                    }
                 return alignByCameraReturn.DONE;
                 }
             }
-        }
-    if (Hardware.rightOperator.getRawButton(10) == true &&
-            Hardware.rightOperator.getRawButton(11) == true)
-        {
-        return alignByCameraReturn.CANCELLED;
         }
     //final return just so we always make sure we tell the programmers 
     //we're not done if no other instance catches it
