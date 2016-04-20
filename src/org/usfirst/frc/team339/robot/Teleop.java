@@ -100,7 +100,7 @@ public static void init ()
     // anything yet
     Hardware.arrowDashboard
             .setDirection(Guidance.Direction.neutral);
-            // Hardware.arrowDashboard.update();
+    // Hardware.arrowDashboard.update();
 
     // Starts testing speed.
 
@@ -167,32 +167,6 @@ public static void periodic ()
         Hardware.transmission.setJoysticksAreReversed(true);
         Hardware.transmission.setFirstGearPercentage(1.0);
         Hardware.axisCamera.setHaveCamera(false);
-
-        // When the driver hits button 2, the robot will turn 180
-        // degrees to the right so we can drive back through the Sally
-        // Port.
-        if (Hardware.leftDriver.getRawButton(2))
-            {
-            Hardware.leftRearEncoder.reset();
-            Hardware.rightRearEncoder.reset();
-            isTurning180Degrees = true;
-            System.out.println("Turning 180 Degrees? " +
-                    isTurning180Degrees);
-            }
-
-        // If we've turned 180 degrees (going at 60% power and braking
-        // at the end), we set the boolean back to false and reset
-        // the encoders.
-        if (isTurning180Degrees == true)
-            {
-            if (Hardware.drive.turnLeftDegrees(180, false, -.6,
-                    .6) == true)
-                {
-                isTurning180Degrees = false;
-                Hardware.leftRearEncoder.reset();
-                Hardware.rightRearEncoder.reset();
-                }
-            }
 
         // System.out.println("t1: " + testMove1IsDone);
         // System.out.println("t2: " + testMove2IsDone);
@@ -344,6 +318,7 @@ public static void periodic ()
                 isTurning180Degrees = false;
                 Hardware.leftRearEncoder.reset();
                 Hardware.rightRearEncoder.reset();
+                Hardware.drive.driveStraightContinuous(0, 0);
                 }
             }
 
@@ -506,11 +481,11 @@ public static void periodic ()
                     }
                 currentCameraReturn = Drive.alignByCameraReturn.WORKING;
                 }
-        // cancel the align request if the right operator presses buttons 10 and
-        // 11 at the same time.
-        if (currentCameraReturn == Drive.alignByCameraReturn.CANCELLED)
-            {
-            isAligningByCamera = false;
+            // cancel the align request if the right operator presses buttons 10 and
+            // 11 at the same time.
+            if (currentCameraReturn == Drive.alignByCameraReturn.CANCELLED)
+                {
+                isAligningByCamera = false;
                 currentCameraReturn = Drive.alignByCameraReturn.WORKING;
                 //testingAlignByCamera = false;
                 fireRequested = false;
