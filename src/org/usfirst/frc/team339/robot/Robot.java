@@ -302,8 +302,8 @@ public void robotInit ()
         //---------------------------------
         // for old Kilroy 16
         //---------------------------------
-        //			Hardware.leftRearEncoder.setDistancePerPulse(.0197);
-        //			Hardware.rightRearEncoder.setDistancePerPulse(.0197);
+        //        Hardware.leftRearEncoder.setDistancePerPulse(.0197);
+        //        Hardware.rightRearEncoder.setDistancePerPulse(.0197);
         Hardware.leftRearEncoder.setDistancePerPulse(
                 this.distancePerTickForMotorEncoders);
         Hardware.rightRearEncoder.setDistancePerPulse(
@@ -423,7 +423,7 @@ public void robotInit ()
 
     // Starts streaming video
     //TODO add back in
-		//Hardware.cameraServer.startAutomaticCapture(Hardware.cam0);//AHK @cameratesting
+    //Hardware.cameraServer.startAutomaticCapture(Hardware.cam0);//AHK @cameratesting
     // Sets the hue, saturation, and luminance values for the vision
     // processing.
     //Hardware.imageProcessor.setHSLValues(0, 255, 0, 75, 5, 141);
@@ -599,8 +599,8 @@ public void testPeriodic ()
     // User code goes below here
     // =========================================================
 
-		System.out
-		        .println(Hardware.ultrasonic.getRefinedDistanceValue());
+    System.out
+            .println(Hardware.ultrasonic.getRefinedDistanceValue());
 
     // =========================================================
     // User code goes above here
