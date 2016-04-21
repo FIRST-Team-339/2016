@@ -656,25 +656,28 @@ public static void periodic ()
         // Driving the Robot
         // If we press the brake button, robot brakes
 
-        //if (Hardware.leftDriver
-        //        .getRawButton(BRAKE_JOYSTICK_BUTTON_FIVE) == true)
-        //    {
-        //    Hardware.transmission.setJoystickDeadbandRange(0.0);
-        //    Hardware.drive.driveContinuous(LEFT_MOTOR_BRAKE_SPEED,
-        //            RIGHT_MOTOR_BRAKE_SPEED);
-        //    }
+        if (Hardware.leftDriver
+                .getRawButton(BRAKE_JOYSTICK_BUTTON_FIVE) == true)
+            {
+            Hardware.transmission.setJoystickDeadbandRange(0.0);
+            Hardware.drive.driveContinuous(LEFT_MOTOR_BRAKE_SPEED,
+                    RIGHT_MOTOR_BRAKE_SPEED);
+            }
 
-        //else if (Hardware.leftDriver
-        //        .getRawButton(BRAKE_JOYSTICK_BUTTON_FOUR) == true)
-        //    {
-        //    Hardware.transmission.setJoystickDeadbandRange(0.0);
-        //    Hardware.drive.driveContinuous(LEFT_MOTOR_BRAKE_SPEED_TWO,
-        //            RIGHT_MOTOR_BRAKE_SPEED_TWO);
-        //    }
+        else if (Hardware.leftDriver
+                .getRawButton(BRAKE_JOYSTICK_BUTTON_FOUR) == true)
+            {
+            Hardware.transmission.setJoystickDeadbandRange(0.0);
+            Hardware.drive.driveContinuous(LEFT_MOTOR_BRAKE_SPEED_TWO,
+                    RIGHT_MOTOR_BRAKE_SPEED_TWO);
+            }
 
         //when brake button is pressed motor values reverse
         if (Hardware.leftDriver
-                .getRawButton(BRAKE_JOYSTICK_BUTTON_FIVE) == true)
+                .getRawButton(BRAKE_JOYSTICK_BUTTON_FIVE) == true ||
+                Hardware.leftDriver
+                        .getRawButton(
+                                BRAKE_JOYSTICK_BUTTON_FOUR) == true)
             {
             Hardware.transmission.setJoystickDeadbandRange(0.0);
             }
