@@ -100,7 +100,7 @@ public static void init ()
     // anything yet
     Hardware.arrowDashboard
             .setDirection(Guidance.Direction.neutral);
-            // Hardware.arrowDashboard.update();
+    // Hardware.arrowDashboard.update();
 
     //Starts testing speed.
 
@@ -137,7 +137,7 @@ private static boolean testMove3IsDone = true;
 private static boolean testCameraIsDone = true;
 private static boolean isTurning180Degrees = false;
 // private static boolean testingAlignByCamera = false;//@DELETE
-
+//
 //static Timer speedTesterTimer = new Timer();
 //static SpeedTester speedTester = new SpeedTester(
 //        Hardware.rightRearEncoder, speedTesterTimer);
@@ -155,6 +155,11 @@ public static void periodic ()
 {
     // Print out any data we want from the hardware elements.
     printStatements();
+
+    //    Hardware.transmission.upshift(1);
+    //    driveRobot();
+    //    speedTester.watchJoystick(Hardware.rightDriver.getY()); //@AHK REMOVE
+
 
     Hardware.errorMessage.printError("test12", PrintsTo.roboRIO);
 
@@ -261,11 +266,11 @@ public static void periodic ()
             else if (currentCameraReturn == Drive.alignByCameraReturn.CANCELLED)
                 {
                 isFiringByCamera = false;
-                currentCameraReturn = Drive.alignByCameraReturn.WORKING;
                 testingAlignByCamera = false;
                 fireRequested = false;
                 Hardware.armOutOfWayTimer.stop();
                 Hardware.armOutOfWayTimer.reset();
+                currentCameraReturn = Drive.alignByCameraReturn.WORKING;
                 }
             }
         // @DELETE
@@ -299,7 +304,7 @@ public static void periodic ()
         // When the driver hits button 2, the robot will turn 180
         // degrees to the right so we can drive back through the Sally
         // Port.
-        if (Hardware.leftDriver.getRawButton(2))
+        if (Hardware.leftDriver.getRawButton(2) == true)
             {
             Hardware.leftRearEncoder.reset();
             Hardware.rightRearEncoder.reset();
@@ -372,7 +377,10 @@ public static void periodic ()
         // If the drivers decided they were being stupid and we don't want to
         // fire anymore
         if (Hardware.leftOperator
-                .getRawButton(FIRE_CANCEL_BUTTON) == true)
+                .getRawButton(FIRE_CANCEL_BUTTON) == true
+                || (Hardware.rightOperator.getRawButton(10) == true
+                        && Hardware.rightOperator
+                                .getRawButton(11) == true))
             {
             // Stop asking the code to fire
             fireRequested = false;
@@ -681,7 +689,7 @@ public static void periodic ()
         //drive the robot with the joysticks
 
         // TODO delete all conditionals. Fix brake
-        if (/* isSpeedTesting == false && */ isAligningByCamera == false
+        if (/* speedTesting == false && */ isAligningByCamera == false
                 && testingAlignByCamera == false
                 && fireRequested == false && Hardware.leftDriver
                         .getRawButton(
@@ -1045,13 +1053,13 @@ public static void printStatements ()
     // + Hardware.rightRearEncoder.get());
     // System.out.println(
     // "Left Rear Encoder Tics: "
-    // + Hardware.leftRearEncoder.get());
-    // System.out.println(
-    // "RR distance = "
-    // + Hardware.rightRearEncoder.getDistance());
-    // System.out.println(
-    // "LR distance = "
-    // + Hardware.leftRearEncoder.getDistance());
+    //    // + Hardware.leftRearEncoder.get());
+    //    System.out.println(
+    //            "RR distance = "
+    //                    + Hardware.rightRearEncoder.getDistance());
+    //    System.out.println(
+    //            "LR distance = "
+    //                    + Hardware.leftRearEncoder.getDistance());
 
 
     // Encoders-------------
