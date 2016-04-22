@@ -133,6 +133,12 @@ public class Autonomous
 		FORWARDS_OVER_OUTER_WORKS,
 
 		/**
+		 * Continue driving over the outer works until we know we are over the
+		 * Outer Works.
+		 */
+		DRIVE_UNTIL_CLOSE_TO_WALL,
+
+		/**
 		 * This state checks to see if we are in lane 1 (or "6").
 		 * If so, we go until we reach an encoder distance (set to distance to
 		 * alignment tape),
@@ -493,12 +499,8 @@ public class Autonomous
 		}
 
 
-
-		if (isGettingCloserToWall(
-		        Hardware.ultrasonic.getRefinedDistanceValue()))
-		{
-			System.out.println("Closer...");
-		}
+		System.out
+		        .println(Hardware.ultrasonic.getRefinedDistanceValue());
 
 	} // end Periodic
 
@@ -742,6 +744,13 @@ public class Autonomous
 					mainState = MainState.DONE;
 				}
 
+				//Drive until we are close enough to a wall to know we are over Outer Works.
+				//lane 5 chosen arbitrarily.
+				if (lane == 5)
+				{
+					mainState = MainState.DRIVE_UNTIL_CLOSE_TO_WALL;
+				}
+
 				if (DriveInformation.SKIP_TO_DRIVE_BY_CAMERA[lane] == true)
 				{
 					mainState = MainState.DRIVE_BY_CAMERA;
@@ -751,6 +760,15 @@ public class Autonomous
 			break;
 
 
+		case DRIVE_UNTIL_CLOSE_TO_WALL:
+
+			if (driveUntilUltrasonicDistance(48.0, 0.6, false))
+			{
+				mainState = MainState.DONE;
+				resetEncoders();
+			}
+
+			break;
 
 
 		case FORWARDS_BASED_ON_ENCODERS_OR_IR:
@@ -925,7 +943,8 @@ public class Autonomous
 				resetEncoders();
 
 				//go to align.
-				mainState = MainState.ALIGN_IN_FRONT_OF_GOAL;
+				mainState = MainState.DRIVE_BY_CAMERA;
+				//MainState.ALIGN_IN_FRONT_OF_GOAL;
 			}
 
 			//print IR values once if they are on.
@@ -1444,6 +1463,42 @@ public class Autonomous
 
 		return slope;
 
+	}
+
+	/**
+	 * Drives until the ultrasonic detects something below a certain distance.
+	 * 
+	 * @param distance
+	 *            away from wall
+	 * @param speed
+	 *            at which to travel
+	 * @param brakeAtEnd
+	 * @return
+	 */
+	public static boolean driveUntilUltrasonicDistance (
+	        double distance, double speed, boolean brakeAtEnd)
+	{
+		if (Hardware.ultrasonic.getRefinedDistanceValue() > distance)
+		{
+			Hardware.drive.driveContinuous(speed, speed);
+
+		}
+		else
+		{
+			if (brakeAtEnd == true)
+			{
+				if (Hardware.drive.brake() == true)
+				{
+					return true;
+				}
+			}
+			else
+			{
+				return true;
+			}
+		}
+
+		return false;
 	}
 
 	/**

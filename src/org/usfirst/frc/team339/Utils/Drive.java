@@ -1543,7 +1543,6 @@ public alignByCameraReturn alignByCameraStateMachine (
             //Woah, that's too dark! Someone turn on the ringlight!
             this.ringLightRelay.set(Value.kOn);
             this.transmission.resetAllEncoders();
-            //firstTimeAlign = false;
             //TODO I don't think this is actually necessary.
             //Hardware.rightRearEncoder.reset();
             //Hardware.leftRearEncoder.reset();
