@@ -100,7 +100,7 @@ public static void init ()
     // anything yet
     Hardware.arrowDashboard
             .setDirection(Guidance.Direction.neutral);
-            // Hardware.arrowDashboard.update();
+    // Hardware.arrowDashboard.update();
 
     //Starts testing speed.
 
@@ -137,7 +137,7 @@ private static boolean testMove3IsDone = true;
 private static boolean testCameraIsDone = true;
 private static boolean isTurning180Degrees = false;
 // private static boolean testingAlignByCamera = false;//@DELETE
-
+//
 //static Timer speedTesterTimer = new Timer();
 //static SpeedTester speedTester = new SpeedTester(
 //        Hardware.rightRearEncoder, speedTesterTimer);
@@ -155,6 +155,11 @@ public static void periodic ()
 {
     // Print out any data we want from the hardware elements.
     printStatements();
+
+    //    Hardware.transmission.upshift(1);
+    //    driveRobot();
+    //    speedTester.watchJoystick(Hardware.rightDriver.getY()); //@AHK REMOVE
+
 
     Hardware.errorMessage.printError("test12", PrintsTo.roboRIO);
 
@@ -261,11 +266,11 @@ public static void periodic ()
             else if (currentCameraReturn == Drive.alignByCameraReturn.CANCELLED)
                 {
                 isFiringByCamera = false;
-                currentCameraReturn = Drive.alignByCameraReturn.WORKING;
                 testingAlignByCamera = false;
                 fireRequested = false;
                 Hardware.armOutOfWayTimer.stop();
                 Hardware.armOutOfWayTimer.reset();
+                currentCameraReturn = Drive.alignByCameraReturn.WORKING;
                 }
             }
         // @DELETE
@@ -299,7 +304,7 @@ public static void periodic ()
         // When the driver hits button 2, the robot will turn 180
         // degrees to the right so we can drive back through the Sally
         // Port.
-        if (Hardware.leftDriver.getRawButton(2))
+        if (Hardware.leftDriver.getRawButton(2) == true)
             {
             Hardware.leftRearEncoder.reset();
             Hardware.rightRearEncoder.reset();
@@ -372,7 +377,10 @@ public static void periodic ()
         // If the drivers decided they were being stupid and we don't want to
         // fire anymore
         if (Hardware.leftOperator
-                .getRawButton(FIRE_CANCEL_BUTTON) == true)
+                .getRawButton(FIRE_CANCEL_BUTTON) == true
+                || (Hardware.rightOperator.getRawButton(10) == true
+                        && Hardware.rightOperator
+                                .getRawButton(11) == true))
             {
             // Stop asking the code to fire
             fireRequested = false;
@@ -654,34 +662,59 @@ public static void periodic ()
 
 
         // Driving the Robot
+
         // If we press the brake button, robot brakes
-
-        //if (Hardware.leftDriver
-        //        .getRawButton(BRAKE_JOYSTICK_BUTTON_FIVE) == true)
-        //    {
-        //    Hardware.transmission.setJoystickDeadbandRange(0.0);
-        //    Hardware.drive.driveContinuous(LEFT_MOTOR_BRAKE_SPEED,
-        //            RIGHT_MOTOR_BRAKE_SPEED);
-        //    }
-
-        //else if (Hardware.leftDriver
-        //        .getRawButton(BRAKE_JOYSTICK_BUTTON_FOUR) == true)
-        //    {
-        //    Hardware.transmission.setJoystickDeadbandRange(0.0);
-        //    Hardware.drive.driveContinuous(LEFT_MOTOR_BRAKE_SPEED_TWO,
-        //            RIGHT_MOTOR_BRAKE_SPEED_TWO);
-        //    }
+        /*
+         * if (Hardware.leftDriver
+         * .getRawButton(BRAKE_JOYSTICK_BUTTON_FIVE) == true)
+         * {
+         * Hardware.transmission.setJoystickDeadbandRange(0.0);
+         * Hardware.drive.driveContinuous(LEFT_MOTOR_BRAKE_SPEED,
+         * RIGHT_MOTOR_BRAKE_SPEED);
+         * }
+         * 
+         * else if (Hardware.leftDriver
+         * .getRawButton(BRAKE_JOYSTICK_BUTTON_FOUR) == true)
+         * {
+         * Hardware.transmission.setJoystickDeadbandRange(0.0);
+         * Hardware.drive.driveContinuous(LEFT_MOTOR_BRAKE_SPEED_TWO,
+         * RIGHT_MOTOR_BRAKE_SPEED_TWO);
+         * }
+         */
 
         //when brake button is pressed motor values reverse
+        loopCounter++; //adds one every time teleop loops
+
+        //checks to see if the left driver button 5 is being pressed
         if (Hardware.leftDriver
                 .getRawButton(BRAKE_JOYSTICK_BUTTON_FIVE) == true)
             {
-            Hardware.transmission.setJoystickDeadbandRange(0.0);
+            //determines what number loop teleop is in, sets motors to 
+            //a positive number, and sets deadband to zero
+            if (loopCounter % BRAKING_INTERVAL < BRAKING_INTERVAL / 2)
+                {
+                Hardware.transmission.setJoystickDeadbandRange(0.0);
+                Hardware.drive.driveContinuous(MOTOR_HOLD_SPEED,
+                        MOTOR_HOLD_SPEED);
+                }
+            //determines what number loop teleop is in then sets motors to a negative number
+            else
+                {
+                Hardware.transmission.setJoystickDeadbandRange(0.0);
+                Hardware.drive.driveContinuous(-MOTOR_HOLD_SPEED,
+                        -MOTOR_HOLD_SPEED);
+                }
             }
+        //sets deadband back to 20%
+        else
+            {
+            Hardware.transmission.setJoystickDeadbandRange(.20);
+            }
+
         //drive the robot with the joysticks
 
         // TODO delete all conditionals. Fix brake
-        if (/* isSpeedTesting == false && */ isAligningByCamera == false
+        if (/* speedTesting == false && */ isAligningByCamera == false
                 && testingAlignByCamera == false
                 && fireRequested == false && Hardware.leftDriver
                         .getRawButton(
@@ -1045,13 +1078,13 @@ public static void printStatements ()
     // + Hardware.rightRearEncoder.get());
     // System.out.println(
     // "Left Rear Encoder Tics: "
-    // + Hardware.leftRearEncoder.get());
-    // System.out.println(
-    // "RR distance = "
-    // + Hardware.rightRearEncoder.getDistance());
-    // System.out.println(
-    // "LR distance = "
-    // + Hardware.leftRearEncoder.getDistance());
+    //    // + Hardware.leftRearEncoder.get());
+    //    System.out.println(
+    //            "RR distance = "
+    //                    + Hardware.rightRearEncoder.getDistance());
+    //    System.out.println(
+    //            "LR distance = "
+    //                    + Hardware.leftRearEncoder.getDistance());
 
 
     // Encoders-------------
@@ -1135,13 +1168,9 @@ private final static double CAMERA_ALIGNMENT_TURNING_SPEED = .50;// .55
 
 private final static double ARM_IS_OUT_OF_WAY_TIME = .10;
 
-//private final static double RIGHT_MOTOR_BRAKE_SPEED = 0.12;
+private final static int BRAKING_INTERVAL = 4;
 
-//private final static double RIGHT_MOTOR_BRAKE_SPEED_TWO = -0.12;
-
-//private final static double LEFT_MOTOR_BRAKE_SPEED = 0.12;
-
-//private final static double LEFT_MOTOR_BRAKE_SPEED_TWO = -0.12;
+private final static double MOTOR_HOLD_SPEED = 0.1;
 
 // minimum pressure when allowed to fire
 private static final int FIRING_MIN_PSI = 90;
@@ -1180,5 +1209,7 @@ private static boolean prepPic = false;
 // Stores temporarily whether firingState is true, for use in whether the arm is
 // in the way
 private static boolean storeFiringState;
+
+private static int loopCounter = 0;
 
 } // end class
