@@ -689,7 +689,8 @@ public static void periodic ()
                 Hardware.drive.driveContinuous(MOTOR_HOLD_SPEED,
                         MOTOR_HOLD_SPEED);
                 }
-            //determines what number loop teleop is in then sets motors to a negative number
+            //determines what number loop teleop is in then sets motors 
+            //to a negative number
             else
                 {
                 Hardware.transmission.setJoystickDeadbandRange(0.0);
