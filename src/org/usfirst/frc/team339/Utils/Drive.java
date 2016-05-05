@@ -512,33 +512,44 @@ public class Drive
 			isDrivingForwards = true;
 		}
 
+		//If we are going forwards,
+		//the side with that has a greater value will be reduced in speed.
+		//Otherwise,
+		//the side with the lesser value will be reduced.
 		if (isDrivingForwards == true)
 		{
+			//If both sides are equal (very rare),
 			if (this.transmission
 			        .getRightRearEncoderDistance() == this.transmission
 			                .getLeftRearEncoderDistance())
-				return (this.driveByInches(distance, brakeAtEnd,
-				        leftJoystickInputValue,
-				        rightJoystickInputValue));
+			    //make no changes to driving
+			    return (this.driveByInches(distance, brakeAtEnd,
+			            leftJoystickInputValue,
+			            rightJoystickInputValue));
 			// if the left drive train is ahead of the right drive train
 			else if ((this.transmission
 			        .getRightRearEncoderDistance()) < this.transmission
 			                .getLeftRearEncoderDistance())
 			{
+				//slow down the left side.
 				leftJoystickValue = determineCorrectedJoystickValue(
 				        leftJoystickInputValue, isDrivingForwards);
 			}
 			else
+			//if the right drive is ahead of the left,
 			{
+				//slow down the right side.
 				rightJoystickValue = determineCorrectedJoystickValue(
 				        rightJoystickInputValue, isDrivingForwards);
 			}
+			//drive at the given speeds until the distance is reached.
 			return (this.driveByInches(distance, brakeAtEnd,
 			        leftJoystickValue,
 			        rightJoystickValue));
 
 		}
 		else
+		// If we are going backwards,
 		{
 			if (this.transmission
 			        .getRightRearEncoderDistance() == this.transmission
@@ -551,15 +562,17 @@ public class Drive
 			        .getRightRearEncoderDistance()) < this.transmission
 			                .getLeftRearEncoderDistance())
 			{
+				//slow down the right side.
 				rightJoystickValue = determineCorrectedJoystickValue(
 				        rightJoystickInputValue, isDrivingForwards);
 			}
-			else
+			else //if the left is behind the right, 
 			{
+				//slow down the left side.
 				leftJoystickValue = determineCorrectedJoystickValue(
 				        leftJoystickInputValue, isDrivingForwards);
 			}
-
+			//drive at the given speeds until the distance is reached.
 			return (this.driveByInches(distance, brakeAtEnd,
 			        leftJoystickValue,
 			        rightJoystickValue));
