@@ -66,6 +66,7 @@ import org.usfirst.frc.team339.Utils.ImageProcessing.ObjectRemoval;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.Relay;
 import edu.wpi.first.wpilibj.Relay.Direction;
+import edu.wpi.first.wpilibj.vision.AxisCamera;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -370,22 +371,13 @@ public class Robot extends IterativeRobot
 		// Set the axis camera brightness to dark
 		//    Hardware.axisCamera.writeBrightness(
 		//            Hardware.NORMAL_AXIS_CAMERA_BRIGHTNESS);
+		// Sets FPS and Resolution of camera
 		Hardware.axisCamera.writeBrightness(
 		        Hardware.MINIMUM_AXIS_CAMERA_BRIGHTNESS);
-		        // -------------------------------------
-		        // USB camera initialization
-		        // -------------------------------------
-		        // Settings for the USB Camera
-		        //TODO readd
-		        //    Hardware.cam0.setBrightness(50);
-		        //    Hardware.cam0.setExposureAuto();
-		        //    Hardware.cam0.setSize(160, 120);
-		        //    Hardware.cam0.setFPS(20);
-		        //    Hardware.cam0.setWhiteBalanceAuto();
-		        //    Hardware.cam0.setWhiteBalanceHoldCurrent();
-		        //    Hardware.cam0.updateSettings();
-
-		// Sets FPS and Resolution of camera
+		//		Hardware.axisCamera.writeExposureControl(
+		//		        AxisCamera.ExposureControl.kAutomatic);
+		Hardware.axisCamera
+		        .writeExposureControl(AxisCamera.ExposureControl.kHold);
 		Hardware.axisCamera.writeMaxFPS(Hardware.AXIS_FPS);
 		Hardware.axisCamera.writeResolution(Hardware.AXIS_RESOLUTION);
 		// Hardware.axisCamera
@@ -420,15 +412,26 @@ public class Robot extends IterativeRobot
 			break;
 		}
 
-
+		// -------------------------------------
+		// USB camera initialization
+		// -------------------------------------
+		// Settings for the USB Camera
+		//TODO readd
+		//    Hardware.cam0.setBrightness(50);
+		//    Hardware.cam0.setExposureAuto();
+		//    Hardware.cam0.setSize(160, 120);
+		//    Hardware.cam0.setFPS(20);
+		//    Hardware.cam0.setWhiteBalanceAuto();
+		//    Hardware.cam0.setWhiteBalanceHoldCurrent();
+		//    Hardware.cam0.updateSettings();
 		// Starts streaming video
 		//TODO add back in
-		//Hardware.cameraServer.startAutomaticCapture(Hardware.cam0);//AHK @cameratesting
+		Hardware.cameraServer.startAutomaticCapture(Hardware.cam0);//AHK @cameratesting
 		// Sets the hue, saturation, and luminance values for the vision
 		// processing.
 		//Hardware.imageProcessor.setHSLValues(0, 255, 0, 75, 5, 141);
 		//Hardware.imageProcessor.setHSLValues(0, 115, 0, 69, 17, 44);
-		Hardware.imageProcessor.setHSLValues(73, 191, 110, 255, 9, 47);
+		Hardware.imageProcessor.setHSLValues(78, 141, 55, 255, 9, 47);
 		// Has us remove small objects at the intensity of 5. May have to
 		// change those values.
 		// Hardware.imageProcessor.setObjectRemoval(ObjectRemoval.BORDER);
@@ -578,6 +581,8 @@ public class Robot extends IterativeRobot
 		// User code goes below here
 		// =========================================================
 
+		Hardware.transmission.setJoysticksAreReversed(true);
+
 		// =========================================================
 		// User code goes above here
 		// =========================================================
@@ -600,7 +605,24 @@ public class Robot extends IterativeRobot
 		// User code goes below here
 		// =========================================================
 
-		Autonomous.driveUntilUltrasonicDistance(48.0, .65, false);
+		boolean runTest = false;
+		if (Hardware.leftDriver.getTrigger() == true)
+		{
+			runTest = true;
+		}
+
+		if (runTest == true)
+		{
+			Hardware.drive.driveStraightByInches(999, -.3, -.3);
+
+			System.out.println("Left\tRight");
+			System.out.println(Hardware.leftFrontMotor.get() + "\t"
+			        + Hardware.rightFrontMotor.get());
+			System.out.println(Hardware.leftRearMotor.get() + "\t"
+			        + Hardware.rightRearMotor.get());
+			System.out.println();
+
+		}
 
 		// =========================================================
 		// User code goes above here

@@ -352,9 +352,11 @@ public class Autonomous
 	//created to print a statement only once in the run of the program.
 	//TODO: remove.
 	private static boolean oneTimePrint1 = true;
-	private static boolean oneTimePrint2 = true;
+	private static boolean oneTimePrint2 = false;
 	private static boolean oneTimePrint3 = true;
 	private static boolean oneTimePrint4 = false;
+
+	private static int iterationCounter = 0;
 
 	// ==========================================
 	// TUNEABLES
@@ -419,6 +421,7 @@ public class Autonomous
 			// --------------------------------------
 			Hardware.leftRearEncoder.reset();
 			Hardware.rightRearEncoder.reset();
+
 
 			// Sets Resolution of camera
 			Hardware.ringLightRelay.set(Relay.Value.kOff);
@@ -498,9 +501,23 @@ public class Autonomous
 			Hardware.pickupArm.stopArmMotor();
 		}
 
+		iterationCounter++;
 
-		System.out
-		        .println(Hardware.ultrasonic.getRefinedDistanceValue());
+		if (iterationCounter % 5 == 0)
+		{
+			System.out.println(mainState + "\n\tLeft Encoder: " +
+			        Hardware.leftRearEncoder.getDistance() +
+			        "\n\tRight Encoder: " +
+			        Hardware.rightRearEncoder.getDistance());
+			System.out.println("Left Front Motor: "
+			        + Hardware.leftFrontMotor.get());
+			System.out.println("Left Rear Motor: "
+			        + Hardware.leftRearMotor.get());
+			System.out.println("Right Front Motor: "
+			        + Hardware.rightFrontMotor.get());
+			System.out.println("Right Rear Motor: "
+			        + Hardware.rightRearMotor.get());
+		}
 
 	} // end Periodic
 
@@ -873,7 +890,7 @@ public class Autonomous
 			        DriveInformation.FORWARDS_FROM_ALIGNMENT_LINE_DISTANCE[lane]
 			                *
 			                labScalingFactor,
-			        true, //breaking here is preferable.
+			        false, //breaking here is preferable.//@AHK turned off because brake is stupid
 			        DriveInformation.FORWARDS_FROM_ALIGNMENT_LINE_MOTOR_RATIO[lane],
 			        DriveInformation.FORWARDS_FROM_ALIGNMENT_LINE_MOTOR_RATIO[lane]) == true)
 			{
@@ -902,7 +919,20 @@ public class Autonomous
 				Hardware.transmission.controls(0.0, 0.0);
 
 				//then drive.
-				mainState = MainState.DRIVE_UP_TO_GOAL;
+				mainState = MainState.DRIVE_UP_TO_GOAL;//MainState.DRIVE_UP_TO_GOAL;
+
+				System.out.println(mainState + "\n\tLeft Encoder: " +
+				        Hardware.leftRearEncoder.getDistance() +
+				        "\n\tRight Encoder: " +
+				        Hardware.rightRearEncoder.getDistance());
+				System.out.println("Left Front Motor: "
+				        + Hardware.leftFrontMotor.get());
+				System.out.println("Left Rear Motor: "
+				        + Hardware.leftRearMotor.get());
+				System.out.println("Right Front Motor: "
+				        + Hardware.rightFrontMotor.get());
+				System.out.println("Right Rear Motor: "
+				        + Hardware.rightRearMotor.get());
 			}
 			break;
 
@@ -915,9 +945,32 @@ public class Autonomous
 				oneTimePrint1 = true;
 				System.out.println(mainState + "\n\tLeft Encoder: " +
 				        Hardware.leftRearEncoder.getDistance() +
-				        "\n\tLeft Encoder: " +
-				        Hardware.leftRearEncoder.getDistance());
+				        "\n\tRight Encoder: " +
+				        Hardware.rightRearEncoder.getDistance());
+
+				System.out.println("Left Front Motor: "
+				        + Hardware.leftFrontMotor.get());
+				System.out.println("Left Rear Motor: "
+				        + Hardware.leftRearMotor.get());
+				System.out.println("Right Front Motor: "
+				        + Hardware.rightFrontMotor.get());
+				System.out.println("Right Rear Motor: "
+				        + Hardware.rightRearMotor.get());
 			}
+
+			//			System.out.println(mainState +
+			//			        "\n\tLeft Encoder: " +
+			//			        Hardware.leftRearEncoder.getDistance() +
+			//			        "\n\tRight Encoder: " +
+			//			        Hardware.rightRearEncoder.getDistance());
+			//			System.out.println("Left Front Motor: "
+			//			        + Hardware.leftFrontMotor.get());
+			//			System.out.println("Left Rear Motor: "
+			//			        + Hardware.leftRearMotor.get());
+			//			System.out.println("Right Front Motor: "
+			//			        + Hardware.rightFrontMotor.get());
+			//			System.out.println("Right Rear Motor: "
+			//			        + Hardware.rightRearMotor.get());
 
 			//Moves to goal. Stops to align.
 			if (((Hardware.drive.driveStraightByInches(
@@ -937,14 +990,24 @@ public class Autonomous
 					        Hardware.leftRearEncoder.getDistance() +
 					        "\n\tLeft Encoder: " +
 					        Hardware.leftRearEncoder.getDistance());
+					System.out.println("Left Front Motor: "
+					        + Hardware.leftFrontMotor.get());
+					System.out.println("Left Rear Motor: "
+					        + Hardware.leftRearMotor.get());
+					System.out.println("Right Front Motor: "
+					        + Hardware.rightFrontMotor.get());
+					System.out.println("Right Rear Motor: "
+					        + Hardware.rightRearMotor.get());
 				}
+
 
 				//reset Encoders to prepare for next state.
 				resetEncoders();
 
 				//go to align.
-				mainState = MainState.DRIVE_BY_CAMERA;
-				//MainState.ALIGN_IN_FRONT_OF_GOAL;
+				mainState =
+				        //MainState.DONE;
+				        MainState.DRIVE_BY_CAMERA;
 			}
 
 			//print IR values once if they are on.
@@ -964,7 +1027,7 @@ public class Autonomous
 			        Autonomous.CAMERA_ALIGN_X_DEADBAND,
 			        DriveInformation.ALIGNMENT_SPEED,
 			        CAMERA_X_AXIS_ADJUSTED_PROPORTIONAL_CENTER,
-			        true) == Drive.alignByCameraReturn.DONE)
+			        false) == Drive.alignByCameraReturn.DONE)
 			//Once we are in position, we shoot!
 			{
 				mainState = MainState.SHOOT;
@@ -983,7 +1046,7 @@ public class Autonomous
 			        false,
 			        false, false) == Drive.alignByCameraReturn.DONE)
 			{
-				mainState = MainState.SHOOT;
+				mainState = MainState.ALIGN_IN_FRONT_OF_GOAL;
 			}
 
 			break;
@@ -1337,7 +1400,7 @@ public class Autonomous
 	 * You must use this to be versatile.
 	 * 
 	 * @param degrees
-	 *            is the number of degrees to be turned. A positive value will
+	 *            is the number of degreeq s to be turned. A positive value will
 	 *            turn left, while a negative value will turn right.
 	 * 
 	 * @param turnSpeed
@@ -1355,14 +1418,14 @@ public class Autonomous
 		if (degrees < 0)
 		//Turn right. Make degrees positive.
 		{
-			done = Hardware.drive.turnRightDegrees(-degrees, true,
+			done = Hardware.drive.turnRightDegrees(-degrees, false,
 			        turnSpeed,
 			        -turnSpeed);
 		}
 		else
 		//Turn left the given number of degrees.
 		{
-			done = Hardware.drive.turnLeftDegrees(degrees, true,
+			done = Hardware.drive.turnLeftDegrees(degrees, false,
 			        -turnSpeed,
 			        turnSpeed);
 		}
@@ -1756,7 +1819,7 @@ public class Autonomous
 		private static final double[] DRIVE_UP_TO_GOAL_MOTOR_RATIO =
 		        {
 		                0.0,
-		                0.50,
+		                0.55,
 		                0.5,
 		                0.5,
 		                0.5,
@@ -1872,10 +1935,13 @@ public class Autonomous
 	private static final double CAMERA_ALIGN_X_DEADBAND = .125;
 
 	private static final double CAMERA_X_AXIS_ADJUSTED_PROPORTIONAL_CENTER =
-	        -.375;
+	        Teleop.CAMERA_X_AXIS_ADJUSTED_PROPORTIONAL_CENTER;
+	//-.365;//-.375
 
 	private static final double CAMERA_Y_AXIS_ADJUSTED_PROPORTIONAL_CENTER =
-	        -.192;
+	        Teleop.CAMERA_Y_AXIS_ADJUSTED_PROPORTIONAL_CENTER;
+	// -.182;//-.192
+
 
 	private static final double ALIGN_BY_CAMERA_TURNING_SPEED = .55;
 
