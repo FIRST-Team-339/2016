@@ -76,11 +76,12 @@ public class Hardware
 
 	public static final int AXIS_FPS = 15;
 
-
 	public static final Resolution AXIS_RESOLUTION =
 	        AxisCamera.Resolution.k320x240;
 
 	public static final double ULTRASONIC_SCALING_FACTOR = 0.050548;
+
+	public static final double MINIMUM_POT_SCALING_VALUE = .1;
 
 	// ---------------------------------
 	// denote whether we are running in
@@ -154,12 +155,12 @@ public class Hardware
 	public static SingleThrowSwitch autonomousEnabled =
 	        new SingleThrowSwitch(
 	                19);
-	public static SingleThrowSwitch shootHigh =
-	        new SingleThrowSwitch(8);
-	public static SingleThrowSwitch shootLow = new SingleThrowSwitch(7);
+	public static SingleThrowSwitch inCompetition =
+	        new SingleThrowSwitch(7);
+	public static SingleThrowSwitch inDemo = new SingleThrowSwitch(8);
 	// Shoot high/low switch
-	public static DoubleThrowSwitch noShoot = new DoubleThrowSwitch(
-	        shootHigh, shootLow);
+	public static DoubleThrowSwitch inLab = new DoubleThrowSwitch(
+	        inCompetition, inDemo);
 
 	/**
 	 * Displays the starting position.

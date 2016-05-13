@@ -295,6 +295,27 @@ public class Robot extends IterativeRobot
 		// User code goes below here
 		// =========================================================
 
+		// Allows us to edit the speed of the robot using the 
+		// potentiometer on the control switch mount (Alex's fancy name)
+		// Essentially, we multiply the percentage given to the motors in
+		// second gear by maaath (the value of the delayPot adjusted out 
+		// of the 0-270 spectrum and into a 10-100 percentage range). If
+		// we're not in demo, we're just in regular ol' second gear.
+		if (Hardware.inDemo.isOn() == true)
+		{
+			Hardware.transmission.setSecondGearPercentage(
+			        (SECOND_GEAR_PERCENTAGE * (Hardware.delayPot.get() *
+			                (SECOND_GEAR_PERCENTAGE
+			                        - Hardware.MINIMUM_POT_SCALING_VALUE)
+			                /
+			                (Hardware.DELAY_POT_DEGREES))
+			                + Hardware.MINIMUM_POT_SCALING_VALUE));
+		}
+		else
+		{
+			Hardware.transmission
+			        .setSecondGearPercentage(SECOND_GEAR_PERCENTAGE);
+		}
 		// --------------------------------------
 		// Encoder Initialization
 		// --------------------------------------
@@ -337,8 +358,7 @@ public class Robot extends IterativeRobot
 
 		Hardware.transmission
 		        .setFirstGearPercentage(FIRST_GEAR_PERCENTAGE);
-		Hardware.transmission.setSecondGearPercentage(
-		        SECOND_GEAR_PERCENTAGE);
+
 
 		// ---------------------------------------
 		// denote which motors are wired backwards

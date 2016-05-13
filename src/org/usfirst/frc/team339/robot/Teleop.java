@@ -120,6 +120,30 @@ public class Teleop
 		Hardware.rightRearMotor.set(0.0);
 		Hardware.armMotor.set(0.0);
 		Hardware.armIntakeMotor.set(0.0);
+
+		// Allows us to edit the speed of the robot using the 
+		// potentiometer on the control switch mount (Alex's fancy name)
+		// Essentially, we multiply the percentage given to the motors in
+		// second gear by maaath (the value of the delayPot adjusted out 
+		// of the 0-270 spectrum and into a 10-100 percentage range). If
+		// we're not in demo, we're just in regular ol' second gear.
+		if (Hardware.inDemo.isOn() == true)
+		{
+			Hardware.transmission.setSecondGearPercentage(
+			        (Robot.SECOND_GEAR_PERCENTAGE
+			                * (Hardware.delayPot.get() *
+			                        (Robot.SECOND_GEAR_PERCENTAGE
+			                                - Hardware.MINIMUM_POT_SCALING_VALUE)
+			                        /
+			                        (Hardware.DELAY_POT_DEGREES))
+			                + Hardware.MINIMUM_POT_SCALING_VALUE));
+		}
+		else
+		{
+			Hardware.transmission
+			        .setSecondGearPercentage(
+			                Robot.SECOND_GEAR_PERCENTAGE);
+		}
 	} // end Init
 
 
@@ -213,6 +237,7 @@ public class Teleop
 		//    Hardware.transmission.upshift(1);
 		//    driveRobot();
 		//    speedTester.watchJoystick(Hardware.rightDriver.getY()); //@AHK REMOVE
+
 
 
 		Hardware.errorMessage.printError("test12", PrintsTo.roboRIO);
@@ -1187,9 +1212,9 @@ public class Teleop
 		// prints state of switches
 		// System.out.println("Autonomous Enabled Switch: " +
 		// Hardware.autonomousEnabled.isOn());
-		// System.out
-		// .println("Shoot High Switch: " + Hardware.shootHigh.isOn());
-		// System.out.println("Shoot Low Switch: " + Hardware.shootLow.isOn());
+		//		System.out.println(
+		//		        "Comp Switch: " + Hardware.inCompetition.isOn());
+		//		System.out.println("Demo Switch: " + Hardware.inDemo.isOn());
 
 
 		// print the position of the 6 position switch------------
