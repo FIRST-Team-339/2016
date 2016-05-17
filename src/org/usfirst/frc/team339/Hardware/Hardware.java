@@ -155,8 +155,10 @@ public class Hardware
 	public static SingleThrowSwitch autonomousEnabled =
 	        new SingleThrowSwitch(
 	                19);
+	//THis is when the switch is switched up
 	public static SingleThrowSwitch inCompetition =
 	        new SingleThrowSwitch(7);
+	//This is when the switch is switched down
 	public static SingleThrowSwitch inDemo = new SingleThrowSwitch(8);
 	// Shoot high/low switch
 	public static DoubleThrowSwitch inLab = new DoubleThrowSwitch(

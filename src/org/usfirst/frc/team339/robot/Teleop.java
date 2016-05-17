@@ -130,12 +130,14 @@ public class Teleop
 		if (Hardware.inDemo.isOn() == true)
 		{
 			Hardware.transmission.setSecondGearPercentage(
-			        (Robot.SECOND_GEAR_PERCENTAGE
-			                * (Hardware.delayPot.get() *
-			                        (Robot.SECOND_GEAR_PERCENTAGE
-			                                - Hardware.MINIMUM_POT_SCALING_VALUE)
-			                        /
-			                        (Hardware.DELAY_POT_DEGREES))
+			        (/*
+			          * Robot.SECOND_GEAR_PERCENTAGE //TODO check to make sure
+			          * this shouldn't be here @AHK
+			          */(Hardware.delayPot.get() *
+			                (Robot.SECOND_GEAR_PERCENTAGE
+			                        - Hardware.MINIMUM_POT_SCALING_VALUE)
+			                /
+			                (Hardware.DELAY_POT_DEGREES))
 			                + Hardware.MINIMUM_POT_SCALING_VALUE));
 		}
 		else
@@ -314,7 +316,14 @@ public class Teleop
 		{
 			if (Hardware.leftOperator.getRawButton(8))
 			{
-				testingAlignByCamera = true;//@FALSE
+				if (Hardware.inDemo.isOn() == false)//TODO use on a demo-by-demo basis
+				{
+					testingAlignByCamera = true;//@FALSE
+				}
+				else
+				{
+					testingAlignByCamera = false;
+				}
 			}
 			if (testingAlignByCamera == true)
 			{
@@ -438,8 +447,8 @@ public class Teleop
 			}
 			// If neither the pull in or the push out button are pressed, stop the
 			// intake motors
-			else if (isAligningByCamera == false
-			/* && testingAlignByCamera == false */)
+			else //if (isAligningByCamera == false //@AHK removed for demo, uncomment.
+			/* && testingAlignByCamera == false ) */
 			{
 				Hardware.pickupArm.stopIntakeMotors();
 			}
@@ -528,16 +537,29 @@ public class Teleop
 			// Will fire the boulder when done.
 			if (Hardware.rightOperator.getTrigger() == true)
 			{
-				// Tell the code to align us to the camera
-				isAligningByCamera = true;
-				// Tell the code we want to fire when we're done
-				isFiringByCamera = true;
+				if (Hardware.inDemo.isOn() == false)//TODO use on a demo-by-demo basis
+				{
+					// Tell the code to align us to the camera
+					isAligningByCamera = true;
+					// Tell the code we want to fire when we're done
+					isFiringByCamera = true;
+				}
+				else
+				{
+					// Tell the code to align us to the camera
+					isAligningByCamera = false;
+					// Tell the code we want to fire when we're done
+					isFiringByCamera = false;
+				}
 			}
 
 			// Align, but do not fire.
 			if (Hardware.leftOperator.getRawButton(5))
 			{
-				isAligningByCamera = true;
+				if (Hardware.inDemo.isOn() == false)
+					isAligningByCamera = true;
+				else
+					isAligningByCamera = false;
 			}
 
 			// If we want to point at the goal using the camera
