@@ -930,6 +930,123 @@ public boolean brake (final double lMotorBrakeVoltage,
 
 private double savedDeadBandRange;
 
+public boolean linearBrake (double brakeSpeed)
+{
+    // UNDER PENALTY OF DEATH - don't use without calling initEncoders()
+    // AND setting the distancePerPulse on them via
+    // setEncodersDistancePerPulse()
+    // in that order.
+    this.savedDeadBandRange = this.getJoystickDeadbandRange();
+    if ((this.leftMotorEncoder == null) ||
+            (this.oneOrRightMotorEncoder == null))
+        {
+        this.setJoystickDeadbandRange(savedDeadBandRange);
+        return true; // just stop if we don't even have encoders.
+        }
+    this.setJoystickDeadbandRange(0.0);
+    // If the current distance on all of our encoders is
+    // close enough to the previous values
+    //
+    // OR
+    //
+    // the measurement before THAT is greater than our
+    // previous measurement, indicating we go backwards...
+    //
+    // then we're done and we stop the motors.
+    if (((Math.abs(
+            this.leftMotorEncoder
+                    .getDistance()) >= (this.brakePreviousDistanceL
+                            -
+                            this.AUTO_ENCODER_THRESHOLD_INCHES))
+            &&
+            (Math.abs(
+                    this.leftMotorEncoder
+                            .getDistance()) <= (this.brakePreviousDistanceL
+                                    +
+                                    this.AUTO_ENCODER_THRESHOLD_INCHES))
+            &&
+            (Math.abs(
+                    this.leftMotorEncoder
+                            .getDistance()) >= (this.brakePreviousPreviousDistanceL
+                                    -
+                                    this.AUTO_ENCODER_THRESHOLD_INCHES))
+            &&
+            (Math.abs(
+                    this.leftMotorEncoder
+                            .getDistance()) <= (this.brakePreviousPreviousDistanceL
+                                    +
+                                    this.AUTO_ENCODER_THRESHOLD_INCHES))
+            &&
+            (Math.abs(
+                    this.oneOrRightMotorEncoder
+                            .getDistance()) >= (this.brakePreviousDistanceR
+                                    -
+                                    this.AUTO_ENCODER_THRESHOLD_INCHES))
+            &&
+            (Math.abs(
+                    this.oneOrRightMotorEncoder
+                            .getDistance()) <= (this.brakePreviousDistanceR
+                                    +
+                                    this.AUTO_ENCODER_THRESHOLD_INCHES))
+            &&
+            (Math.abs(
+                    this.oneOrRightMotorEncoder
+                            .getDistance()) >= (this.brakePreviousPreviousDistanceR
+                                    -
+                                    this.AUTO_ENCODER_THRESHOLD_INCHES))
+            &&
+            (Math.abs(
+                    this.oneOrRightMotorEncoder
+                            .getDistance()) <= (this.brakePreviousPreviousDistanceR
+                                    +
+                                    this.AUTO_ENCODER_THRESHOLD_INCHES)))
+            ||
+            ((this.brakePreviousPreviousDistanceL >= this.brakePreviousDistanceL)
+                    &&
+                    (this.brakePreviousPreviousDistanceR >= this.brakePreviousDistanceR)
+                    &&
+                    (this.brakePreviousDistanceL >= this.leftMotorEncoder
+                            .getDistance())
+                    &&
+                    (this.brakePreviousDistanceR >= this.oneOrRightMotorEncoder
+                            .getDistance())))
+        {
+        // System.out.println("DONE!");
+        this.brakePreviousDistanceL = 0.0;
+        this.brakePreviousDistanceR = 0.0;
+        this.brakePreviousPreviousDistanceL = 0.0;
+        this.brakePreviousPreviousDistanceR = 0.0;
+        this.controls(0.0, 0.0);
+        this.setJoystickDeadbandRange(savedDeadBandRange);
+        return true;
+        } // if
+    this.brakePreviousPreviousDistanceR =
+            this.brakePreviousDistanceR;
+    this.brakePreviousPreviousDistanceL =
+            this.brakePreviousDistanceL;
+    this.brakePreviousDistanceR = Math.abs(
+            this.oneOrRightMotorEncoder.getDistance());
+    this.brakePreviousDistanceL = Math.abs(
+            this.leftMotorEncoder.getDistance());
+    // continue braking
+    // if we are in mecanum, call the appropriate method to
+    // send the braking voltage backwards.
+    //    if (this.isMecanumDrive() == true)
+    //        {
+    /*
+     * this.controls(lMotorBrakeVoltage, 180.0, //
+     * 0.0);
+     * }
+     * else
+     * {
+     * // otherwise, use our 2 or 4 wheel braking method.
+     * this.controls(lMotorBrakeVoltage, rMotorBrakeVoltage);
+     * }
+     */
+    this.setJoystickDeadbandRange(savedDeadBandRange);
+    return false;
+}
+
 // -------------------------------------------------------
 /**
  * This function passes in the state of the downshift button.
