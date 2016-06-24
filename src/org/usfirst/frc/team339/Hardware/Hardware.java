@@ -60,6 +60,7 @@ public class Hardware
 	// ------------------------------------
 	// Public Constants
 	// ------------------------------------
+	public static final int DELAY_POT_MIN_DEGREES = 0;
 	public static final int DELAY_POT_DEGREES = 270;
 	public static final int TRANSDUCER_MAX_VALUE = 200;
 	public static final int ARM_POT_MAX_VALUE = 270;// 360 is a placeholder
