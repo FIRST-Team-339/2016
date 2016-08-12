@@ -80,7 +80,7 @@ public class Teleop
 		{
 			Hardware.transmission.setSecondGearPercentage(
 			        Robot.SECOND_GEAR_PERCENTAGE
-			                * ((double) (Hardware.delayPot.get()
+			                * (((double) Hardware.delayPot.get()
 			                        - Hardware.DELAY_POT_MIN_DEGREES)
 			                        / (double) (Hardware.DELAY_POT_DEGREES
 			                                - Hardware.DELAY_POT_MIN_DEGREES)));
@@ -421,9 +421,11 @@ public class Teleop
 				Hardware.leftRearEncoder.reset();
 				Hardware.rightRearEncoder.reset();
 				isTurning180Degrees = false;
-				System.out.println("Turning 180 Degrees? " +
-				        isTurning180Degrees);
-				Hardware.transmission.setJoysticksAreReversed(true);
+				//System.out.println("Turning 180 Degrees? " +
+				//        isTurning180Degrees);
+				// only set to true if we are actually reversing
+				// -- (disabled 180 degree turn 8/11/2016)
+				Hardware.transmission.setJoysticksAreReversed(false);
 			}
 
 			// If we've turned 180 degrees (going at 60% power and braking
@@ -826,7 +828,7 @@ public class Teleop
 			//when brake button is pressed motor values reverse
 			loopCounter++; //adds one every time teleop loops
 
-			//checks to see if the left driver button 5 is being pressed
+			//checks to see if the left driver button 4 is being pressed
 			if (Hardware.leftDriver
 			        .getRawButton(BRAKE_JOYSTICK_BUTTON_FOUR) == true)
 			{
@@ -1197,12 +1199,14 @@ public class Teleop
 		// System.out.println("right IR = " + Hardware.rightIR.isOn());
 		// System.out.println("Has ball IR = " + Hardware.armIR.isOn());
 
-
-
-
 		// pots-----------------
 		// System.out.println(
-		// "delay pot = " + (int) Hardware.delayPot.get());
+		// "delay pot = " + Hardware.delayPot.get());
+		// System.out.println(
+		//		 "delay scaling: " + (((double) Hardware.delayPot.get()
+	    //                    - Hardware.DELAY_POT_MIN_DEGREES)
+	    //                    / (double) (Hardware.DELAY_POT_DEGREES
+	    //                            - Hardware.DELAY_POT_MIN_DEGREES)));
 		// prints the value of the transducer- (range in code is 50)
 		// hits psi of 100 accurately
 		// System.out.println("transducer = " + Hardware.transducer.get());
