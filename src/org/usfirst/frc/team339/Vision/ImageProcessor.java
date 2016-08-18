@@ -8,6 +8,13 @@ import com.ni.vision.NIVision.Image;
 import org.usfirst.frc.team339.HardwareInterfaces.KilroyCamera;
 import edu.wpi.first.wpilibj.image.NIVisionException;
 
+/*
+ * @AHK general fixes:
+ * 	1. add an option to pass in processing options as an on-the-fly generated 
+ * 		array to the processing function, for changing the processing algorithm on the fly
+ * 	2. 
+ */
+
 public class ImageProcessor
 {
 
@@ -79,7 +86,7 @@ public ImageProcessor (KilroyCamera camera)
             "/home/lvuser/images/Out.png"));
     this.camera = camera;
 }
-
+//@AHK #1 in general fixes
 public void applyOperators ()
 {
     // Goes through all operators and applies whatever changes they are
@@ -91,6 +98,7 @@ public void applyOperators ()
         }
 }
 
+//@AHK Remove as soon as we determine nothing is dependant on this.
 public int doStuff2015 ()
 {
     return this.reports.length;
@@ -105,6 +113,7 @@ public void processImage ()
     // this.updateParticalAnalysisReports();
 }
 
+//Captures a new image from the camera.
 public void updateImage ()
 {
     try
@@ -116,9 +125,9 @@ public void updateImage ()
         // TODO Auto-generated catch block
         e.printStackTrace();
         }
-
 }
 
+//@AHK don't think this actually processes the image, figure out where that is
 public void updateParticalAnalysisReports ()
 {
     final int numParticles = NIVision
