@@ -501,23 +501,23 @@ public class Autonomous
 			Hardware.pickupArm.stopArmMotor();
 		}
 
-		iterationCounter++;
-
-		if (iterationCounter % 5 == 0)
-		{
-			System.out.println(mainState + "\n\tLeft Encoder: " +
-			        Hardware.leftRearEncoder.getDistance() +
-			        "\n\tRight Encoder: " +
-			        Hardware.rightRearEncoder.getDistance());
-			System.out.println("Left Front Motor: "
-			        + Hardware.leftFrontMotor.get());
-			System.out.println("Left Rear Motor: "
-			        + Hardware.leftRearMotor.get());
-			System.out.println("Right Front Motor: "
-			        + Hardware.rightFrontMotor.get());
-			System.out.println("Right Rear Motor: "
-			        + Hardware.rightRearMotor.get());
-		}
+//		iterationCounter++;
+//
+//		if (iterationCounter % 5 == 0)
+//		{
+//			System.out.println(mainState + "\n\tLeft Encoder: " +
+//			        Hardware.leftRearEncoder.getDistance() +
+//			        "\n\tRight Encoder: " +
+//			        Hardware.rightRearEncoder.getDistance());
+//			System.out.println("Left Front Motor: "
+//			        + Hardware.leftFrontMotor.get());
+//			System.out.println("Left Rear Motor: "
+//			        + Hardware.leftRearMotor.get());
+//			System.out.println("Right Front Motor: "
+//			        + Hardware.rightFrontMotor.get());
+//			System.out.println("Right Rear Motor: "
+//			        + Hardware.rightRearMotor.get());
+//		}
 
 	} // end Periodic
 

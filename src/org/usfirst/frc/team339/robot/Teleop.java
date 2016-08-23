@@ -1242,12 +1242,12 @@ public class Teleop
 		// System.out.println(
 		// "Left Rear Encoder Tics: "
 		//    // + Hardware.leftRearEncoder.get());
-		//		System.out.println(
-		//		        "RR distance = "
-		//		                + Hardware.rightRearEncoder.getDistance());
-		//		System.out.println(
-		//		        "LR distance = "
-		//		                + Hardware.leftRearEncoder.getDistance());
+//				System.out.println(
+//				        "RR distance = "
+//				                + Hardware.rightRearEncoder.getDistance());
+//				System.out.println(
+//				        "LR distance = "
+//				                + Hardware.leftRearEncoder.getDistance());
 
 
 		// Encoders-------------
