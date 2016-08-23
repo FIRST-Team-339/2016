@@ -6,6 +6,12 @@ import java.util.Vector;
 import com.ni.vision.NIVision;
 import com.ni.vision.NIVision.Image;
 import org.usfirst.frc.team339.HardwareInterfaces.KilroyCamera;
+import org.usfirst.frc.team339.Vision.operators.ColorThresholdOperator;
+import org.usfirst.frc.team339.Vision.operators.ConvexHullOperator;
+import org.usfirst.frc.team339.Vision.operators.LoadColorImageJPEGOperator;
+import org.usfirst.frc.team339.Vision.operators.RemoveSmallObjectsOperator;
+import org.usfirst.frc.team339.Vision.operators.SaveBinaryImagePNGOperator;
+import org.usfirst.frc.team339.Vision.operators.VisionOperatorInterface;
 import edu.wpi.first.wpilibj.image.NIVisionException;
 
 public class ImageProcessor
