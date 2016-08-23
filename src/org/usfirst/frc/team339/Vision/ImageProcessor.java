@@ -66,10 +66,24 @@ private KilroyCamera camera = null;
 
 private Image currentImage = null;
 
-private final ArrayList<VisionOperatorInterface> operators = new ArrayList<VisionOperatorInterface>();
+private final ArrayList<VisionOperatorInterface> operators =
+        new ArrayList<VisionOperatorInterface>();
 
 public ParticleReport[] reports = null;
 
+/**
+ * Creates an ImageProcessor object with camera <camera> and a default
+ * processing script. The script consists of:
+ * 1. LoadColorImageJPEGOperator
+ * 2. ColorThresholdOperator
+ * 3. RemoveSmallObjectsOperator
+ * 4. ConvexHullOperator
+ * 5. SaveBinaryImagePNGOperator
+ * 
+ * @param camera
+ *            The KiloryCamera object that corresponds to the camera on the
+ *            robot capturing images for processing. DO NOT PASS NULL HERE!
+ */
 public ImageProcessor (KilroyCamera camera)
 {
     // this.operators.add(new SaveColorImageJPEGOperator(
@@ -97,13 +111,10 @@ public void applyOperators ()
         }
 }
 
-public int doStuff2015 ()
-{
-    return this.reports.length;
-}
-
-// Fetches and processes the image, then updates the Particle Reports
-// DOES NOT do anything with reports.
+/**
+ * Pulls a new image from the camera and processes the image through the
+ * operator list. DOES NOT update the particle reports.
+ */
 public void processImage ()
 {
     this.updateImage();
@@ -111,6 +122,9 @@ public void processImage ()
     // this.updateParticalAnalysisReports();
 }
 
+/**
+ * Captures an image from the camera given to the class.
+ */
 public void updateImage ()
 {
     try
@@ -125,6 +139,10 @@ public void updateImage ()
 
 }
 
+/**
+ * Takes the processed image and writes information on each particle (blob) into
+ * the global <reports> array, in order of overall particle area.
+ */
 public void updateParticalAnalysisReports ()
 {
     final int numParticles = NIVision
@@ -134,60 +152,62 @@ public void updateParticalAnalysisReports ()
             NIVision.imaqCountParticles(this.currentImage, 0));
 
     // Measure particles and sort by particle size
-    final Vector<ParticleReport> particles = new Vector<ParticleReport>();
+    final Vector<ParticleReport> particles =
+            new Vector<ParticleReport>();
 
     if (numParticles > 0)
         {
 
-        for (int particleIndex = 0; particleIndex < numParticles; particleIndex++)
+        for (int particleIndex =
+                0; particleIndex < numParticles; particleIndex++)
             {
 
-            final ParticleReport par = new ParticleReport();
-            par.PercentAreaToImageArea = NIVision
+            final ParticleReport particle = new ParticleReport();
+            particle.PercentAreaToImageArea = NIVision
                     .imaqMeasureParticle(this.currentImage,
                             particleIndex, 0,
                             NIVision.MeasurementType.MT_AREA_BY_IMAGE_AREA);
-            par.Area = NIVision.imaqMeasureParticle(
+            particle.Area = NIVision.imaqMeasureParticle(
                     this.currentImage,
                     particleIndex, 0,
                     NIVision.MeasurementType.MT_AREA);
-            par.ConvexHullArea = NIVision.imaqMeasureParticle(
+            particle.ConvexHullArea = NIVision.imaqMeasureParticle(
                     this.currentImage,
                     particleIndex, 0,
                     NIVision.MeasurementType.MT_CONVEX_HULL_AREA);
-            par.boundingRectTop = (int) NIVision
+            particle.boundingRectTop = (int) NIVision
                     .imaqMeasureParticle(this.currentImage,
                             particleIndex, 0,
                             NIVision.MeasurementType.MT_BOUNDING_RECT_TOP);
-            par.boundingRectLeft = (int) NIVision
+            particle.boundingRectLeft = (int) NIVision
                     .imaqMeasureParticle(this.currentImage,
                             particleIndex, 0,
                             NIVision.MeasurementType.MT_BOUNDING_RECT_LEFT);
-            par.boundingRectBottom = (int) NIVision
+            particle.boundingRectBottom = (int) NIVision
                     .imaqMeasureParticle(this.currentImage,
                             particleIndex, 0,
                             NIVision.MeasurementType.MT_BOUNDING_RECT_BOTTOM);
-            par.boundingRectRight = (int) NIVision
+            particle.boundingRectRight = (int) NIVision
                     .imaqMeasureParticle(this.currentImage,
                             particleIndex, 0,
                             NIVision.MeasurementType.MT_BOUNDING_RECT_RIGHT);
-            par.boundingRectWidth = (int) NIVision
+            particle.boundingRectWidth = (int) NIVision
                     .imaqMeasureParticle(this.currentImage,
                             particleIndex, 0,
                             NIVision.MeasurementType.MT_BOUNDING_RECT_WIDTH);// par.boundingRectRight
             // -
             // par.boundingRectLeft;
-            par.center_mass_x = (int) NIVision
+            particle.center_mass_x = (int) NIVision
                     .imaqMeasureParticle(this.currentImage,
                             particleIndex, 0,
                             NIVision.MeasurementType.MT_CENTER_OF_MASS_X);
-            par.center_mass_y = (int) NIVision
+            particle.center_mass_y = (int) NIVision
                     .imaqMeasureParticle(this.currentImage,
                             particleIndex, 0,
                             NIVision.MeasurementType.MT_CENTER_OF_MASS_Y);
-            par.imageWidth = NIVision
+            particle.imageWidth = NIVision
                     .imaqGetImageSize(this.currentImage).width;
-            particles.add(par);
+            particles.add(particle);
             }
         particles.sort(null);
 
