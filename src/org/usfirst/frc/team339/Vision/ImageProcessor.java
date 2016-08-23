@@ -66,6 +66,7 @@ private KilroyCamera camera = null;
 
 private Image currentImage = null;
 
+//@AHK TODO create a visionScript object to further object orient the code?
 private final ArrayList<VisionOperatorInterface> operators =
         new ArrayList<VisionOperatorInterface>();
 
@@ -112,6 +113,68 @@ public void applyOperators ()
 }
 
 /**
+ * Adds a new vision operator to the operator list, in zero-based position
+ * <index>.
+ * 
+ * @param index
+ *            The position in the list to add the operator (the list is
+ *            traversed in order to process an image)
+ * @param operator
+ *            The VisionOperator to add to the list.
+ * @author Alexander H. Kneipp
+ */
+public void addOperator (int index, VisionOperatorInterface operator)
+{
+    this.operators.add(index, operator);
+}
+
+/**
+ * Removes the operator at position <index> in the processor list.
+ * 
+ * @param index
+ *            The zero-based position from which to remove the operator.
+ */
+public void removeOperator (int index)
+{
+    this.operators.remove(index);
+}
+
+/**
+ * Removes operators by operator type. Will only remove the first occurrence of
+ * the operator unless <removeAllInstances> is true.
+ * 
+ * @param operatorToRemove
+ *            The operator type to remove from the processing list.
+ * @param removeAllInstances
+ *            Boolean to determine if all occurrences of <operatorToRemove>.
+ *            True removes all, false removes first.
+ */
+public void removeOperator (VisionOperatorInterface operatorToRemove,
+        boolean removeAllInstances)
+{
+    for (int i = 0; i < this.operators.size(); i++)
+        {
+        //If the operator template is of the same class as the currently
+        //viewed operator in the processor script, remove it
+        if (operatorToRemove.getClass()
+                .equals(this.operators.get(i).getClass()))
+            {
+            this.removeOperator(i);
+            if (removeAllInstances == false)
+                break;
+            }
+        }
+}
+
+/**
+ * Removes all testing operators from the processing list.
+ */
+public void clearOperatorList ()
+{
+    operators.clear();
+}
+
+/**
  * Pulls a new image from the camera and processes the image through the
  * operator list. DOES NOT update the particle reports.
  */
@@ -133,7 +196,7 @@ public void updateImage ()
         }
     catch (final NIVisionException e)
         {
-        // TODO Auto-generated catch block
+        //Auto-generated catch block
         e.printStackTrace();
         }
 
