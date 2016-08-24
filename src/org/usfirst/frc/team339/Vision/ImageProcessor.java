@@ -1,6 +1,5 @@
 package org.usfirst.frc.team339.Vision;
 
-import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Vector;
 import com.ni.vision.NIVision;
@@ -21,11 +20,8 @@ public class ImageProcessor
 public class ParticleReport implements Comparator<ParticleReport>,
         Comparable<ParticleReport>
 {
-public double PercentAreaToImageArea;
 
-public double Area;
-
-public double ConvexHullArea;
+public double area;
 
 // double BoundingRectLeft;
 // double BoundingRectTop;
@@ -39,7 +35,9 @@ public int boundingRectRight;
 
 public int boundingRectBottom;
 
-public int center_mass_x; // TODO: actually initialize these values
+public int center_mass_x;                            // TODO: actually
+                                                     // initialize
+                                                     // these values
 
 public int center_mass_y;
 
@@ -49,16 +47,20 @@ public int imageWidth;
 
 public int boundingRectWidth;
 
+public double PercentAreaToImageArea;
+
+public double ConvexHullArea;
+
 @Override
 public int compare (ParticleReport r1, ParticleReport r2)
 {
-    return (int) (r1.Area - r2.Area);
+    return (int) (r1.area - r2.area);
 }
 
 @Override
 public int compareTo (ParticleReport r)
 {
-    return (int) (r.Area - this.Area);
+    return (int) (r.area - this.area);
 }
 };
 
@@ -66,9 +68,8 @@ private KilroyCamera camera = null;
 
 private Image currentImage = null;
 
-//@AHK TODO create a visionScript object to further object orient the code?
-private final ArrayList<VisionOperatorInterface> operators =
-        new ArrayList<VisionOperatorInterface>();
+// @AHK TODO create a visionScript object to further object orient the code?
+private VisionScript operators = new VisionScript();
 
 public ParticleReport[] reports = null;
 
@@ -101,6 +102,25 @@ public ImageProcessor (KilroyCamera camera)
     this.camera = camera;
 }
 
+public ImageProcessor (KilroyCamera camera, VisionScript script)
+{
+    this.camera = camera;
+    this.operators = script;
+}
+
+public ImageProcessor (KilroyCamera camera,
+        VisionOperatorInterface... ops)
+{
+    this.camera = camera;
+    VisionScript temp = new VisionScript();
+    for (VisionOperatorInterface inter : ops)
+        {
+            temp.add(inter);
+        }
+    this.operators = temp;
+
+}
+
 public void applyOperators ()
 {
     // Goes through all operators and applies whatever changes they are
@@ -108,7 +128,7 @@ public void applyOperators ()
     // image.
     for (final VisionOperatorInterface operator : this.operators)
         {
-        this.currentImage = operator.operate(this.currentImage);
+            this.currentImage = operator.operate(this.currentImage);
         }
 }
 
@@ -154,15 +174,15 @@ public void removeOperator (VisionOperatorInterface operatorToRemove,
 {
     for (int i = 0; i < this.operators.size(); i++)
         {
-        //If the operator template is of the same class as the currently
-        //viewed operator in the processor script, remove it
-        if (operatorToRemove.getClass()
-                .equals(this.operators.get(i).getClass()))
-            {
-            this.removeOperator(i);
-            if (removeAllInstances == false)
-                break;
-            }
+            // If the operator template is of the same class as the currently
+            // viewed operator in the processor script, remove it
+            if (operatorToRemove.getClass()
+                    .equals(this.operators.get(i).getClass()))
+                {
+                    this.removeOperator(i);
+                    if (removeAllInstances == false)
+                        break;
+                }
         }
 }
 
@@ -192,12 +212,12 @@ public void updateImage ()
 {
     try
         {
-        this.currentImage = this.camera.getImage().image;
+            this.currentImage = this.camera.getImage().image;
         }
     catch (final NIVisionException e)
         {
-        //Auto-generated catch block
-        e.printStackTrace();
+            // Auto-generated catch block
+            e.printStackTrace();
         }
 
 }
@@ -215,64 +235,63 @@ public void updateParticalAnalysisReports ()
             NIVision.imaqCountParticles(this.currentImage, 0));
 
     // Measure particles and sort by particle size
-    final Vector<ParticleReport> particles =
-            new Vector<ParticleReport>();
+    final Vector<ParticleReport> particles = new Vector<ParticleReport>();
 
     if (numParticles > 0)
         {
 
-        for (int particleIndex =
-                0; particleIndex < numParticles; particleIndex++)
-            {
+            for (int particleIndex = 0; particleIndex < numParticles; particleIndex++)
+                {
 
-            final ParticleReport particle = new ParticleReport();
-            particle.PercentAreaToImageArea = NIVision
-                    .imaqMeasureParticle(this.currentImage,
+                    final ParticleReport particle = new ParticleReport();
+                    particle.PercentAreaToImageArea = NIVision
+                            .imaqMeasureParticle(this.currentImage,
+                                    particleIndex, 0,
+                                    NIVision.MeasurementType.MT_AREA_BY_IMAGE_AREA);
+                    particle.area = NIVision.imaqMeasureParticle(
+                            this.currentImage,
                             particleIndex, 0,
-                            NIVision.MeasurementType.MT_AREA_BY_IMAGE_AREA);
-            particle.Area = NIVision.imaqMeasureParticle(
-                    this.currentImage,
-                    particleIndex, 0,
-                    NIVision.MeasurementType.MT_AREA);
-            particle.ConvexHullArea = NIVision.imaqMeasureParticle(
-                    this.currentImage,
-                    particleIndex, 0,
-                    NIVision.MeasurementType.MT_CONVEX_HULL_AREA);
-            particle.boundingRectTop = (int) NIVision
-                    .imaqMeasureParticle(this.currentImage,
-                            particleIndex, 0,
-                            NIVision.MeasurementType.MT_BOUNDING_RECT_TOP);
-            particle.boundingRectLeft = (int) NIVision
-                    .imaqMeasureParticle(this.currentImage,
-                            particleIndex, 0,
-                            NIVision.MeasurementType.MT_BOUNDING_RECT_LEFT);
-            particle.boundingRectBottom = (int) NIVision
-                    .imaqMeasureParticle(this.currentImage,
-                            particleIndex, 0,
-                            NIVision.MeasurementType.MT_BOUNDING_RECT_BOTTOM);
-            particle.boundingRectRight = (int) NIVision
-                    .imaqMeasureParticle(this.currentImage,
-                            particleIndex, 0,
-                            NIVision.MeasurementType.MT_BOUNDING_RECT_RIGHT);
-            particle.boundingRectWidth = (int) NIVision
-                    .imaqMeasureParticle(this.currentImage,
-                            particleIndex, 0,
-                            NIVision.MeasurementType.MT_BOUNDING_RECT_WIDTH);// par.boundingRectRight
-            // -
-            // par.boundingRectLeft;
-            particle.center_mass_x = (int) NIVision
-                    .imaqMeasureParticle(this.currentImage,
-                            particleIndex, 0,
-                            NIVision.MeasurementType.MT_CENTER_OF_MASS_X);
-            particle.center_mass_y = (int) NIVision
-                    .imaqMeasureParticle(this.currentImage,
-                            particleIndex, 0,
-                            NIVision.MeasurementType.MT_CENTER_OF_MASS_Y);
-            particle.imageWidth = NIVision
-                    .imaqGetImageSize(this.currentImage).width;
-            particles.add(particle);
-            }
-        particles.sort(null);
+                            NIVision.MeasurementType.MT_AREA);
+                    particle.ConvexHullArea = NIVision
+                            .imaqMeasureParticle(
+                                    this.currentImage,
+                                    particleIndex, 0,
+                                    NIVision.MeasurementType.MT_CONVEX_HULL_AREA);
+                    particle.boundingRectTop = (int) NIVision
+                            .imaqMeasureParticle(this.currentImage,
+                                    particleIndex, 0,
+                                    NIVision.MeasurementType.MT_BOUNDING_RECT_TOP);
+                    particle.boundingRectLeft = (int) NIVision
+                            .imaqMeasureParticle(this.currentImage,
+                                    particleIndex, 0,
+                                    NIVision.MeasurementType.MT_BOUNDING_RECT_LEFT);
+                    particle.boundingRectBottom = (int) NIVision
+                            .imaqMeasureParticle(this.currentImage,
+                                    particleIndex, 0,
+                                    NIVision.MeasurementType.MT_BOUNDING_RECT_BOTTOM);
+                    particle.boundingRectRight = (int) NIVision
+                            .imaqMeasureParticle(this.currentImage,
+                                    particleIndex, 0,
+                                    NIVision.MeasurementType.MT_BOUNDING_RECT_RIGHT);
+                    particle.boundingRectWidth = (int) NIVision
+                            .imaqMeasureParticle(this.currentImage,
+                                    particleIndex, 0,
+                                    NIVision.MeasurementType.MT_BOUNDING_RECT_WIDTH);// par.boundingRectRight
+                    // -
+                    // par.boundingRectLeft;
+                    particle.center_mass_x = (int) NIVision
+                            .imaqMeasureParticle(this.currentImage,
+                                    particleIndex, 0,
+                                    NIVision.MeasurementType.MT_CENTER_OF_MASS_X);
+                    particle.center_mass_y = (int) NIVision
+                            .imaqMeasureParticle(this.currentImage,
+                                    particleIndex, 0,
+                                    NIVision.MeasurementType.MT_CENTER_OF_MASS_Y);
+                    particle.imageWidth = NIVision
+                            .imaqGetImageSize(this.currentImage).width;
+                    particles.add(particle);
+                }
+            particles.sort(null);
 
         }
     this.reports = new ParticleReport[particles.size()];
