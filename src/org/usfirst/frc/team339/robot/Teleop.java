@@ -76,21 +76,8 @@ public class Teleop
 		Hardware.transmission.setGear(2);
 		Hardware.transmission
 		        .setFirstGearPercentage(Robot.FIRST_GEAR_PERCENTAGE);
-		if (Hardware.inDemo.isOn() == true)
-		{
-			Hardware.transmission.setSecondGearPercentage(
-			        Robot.SECOND_GEAR_PERCENTAGE
-			                * ((double) (Hardware.delayPot.get()
-			                        - Hardware.DELAY_POT_MIN_DEGREES)
-			                        / (double) (Hardware.DELAY_POT_DEGREES
-			                                - Hardware.DELAY_POT_MIN_DEGREES)));
-		}
-		else
-		{
-			Hardware.transmission
-			        .setSecondGearPercentage(
-			                Robot.SECOND_GEAR_PERCENTAGE);
-		}
+		Hardware.transmission
+		        .setSecondGearPercentage(Robot.SECOND_GEAR_PERCENTAGE);
 		Hardware.transmission.setJoystickDeadbandRange(.20);
 		Hardware.transmission.setJoysticksAreReversed(false);
 		// make sure we don't start Teleop off with the ringlight on
@@ -194,7 +181,6 @@ public class Teleop
 
 	public static void periodic ()
 	{
-
 		// Print out any data we want from the hardware elements.
 		printStatements();
 
@@ -328,7 +314,6 @@ public class Teleop
 		// If we don't have the runningInLab flag set to true
 		else
 		{
-
 			if (Hardware.leftOperator.getRawButton(8))
 			{
 				if (Hardware.inDemo.isOn() == false)//TODO use on a demo-by-demo basis
@@ -572,13 +557,9 @@ public class Teleop
 			if (Hardware.leftOperator.getRawButton(5))
 			{
 				if (Hardware.inDemo.isOn() == false)
-				{
 					isAligningByCamera = true;
-				}
 				else
-				{
 					isAligningByCamera = false;
-				}
 			}
 
 			// If we want to point at the goal using the camera
@@ -1180,10 +1161,6 @@ public class Teleop
 		// Align By Camera------
 		// System.out.println("AligningByCamera = " + isAligningByCamera);
 		// checks to see if the robot is aligning by camera
-
-		//Demo Mode Information---
-		//System.out.println("Demo?\t" + Hardware.inDemo.isOn());
-		//System.out.println(Hardware.delayPot.get());
 
 		// Joysticks------------
 		// System.out.println("Left Joystick: " + Hardware.leftDriver.getY());

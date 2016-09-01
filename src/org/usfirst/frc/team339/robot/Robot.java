@@ -301,15 +301,15 @@ public class Robot extends IterativeRobot
 		// second gear by maaath (the value of the delayPot adjusted out 
 		// of the 0-270 spectrum and into a 10-100 percentage range). If
 		// we're not in demo, we're just in regular ol' second gear.
-
 		if (Hardware.inDemo.isOn() == true)
 		{
 			Hardware.transmission.setSecondGearPercentage(
-			        SECOND_GEAR_PERCENTAGE
-			                * ((double) (Hardware.delayPot.get()
-			                        - Hardware.DELAY_POT_MIN_DEGREES)
-			                        / (double) (Hardware.DELAY_POT_DEGREES
-			                                - Hardware.DELAY_POT_MIN_DEGREES)));
+			        (SECOND_GEAR_PERCENTAGE * (Hardware.delayPot.get() *
+			                (SECOND_GEAR_PERCENTAGE
+			                        - Hardware.MINIMUM_POT_SCALING_VALUE)
+			                /
+			                (Hardware.DELAY_POT_DEGREES))
+			                + Hardware.MINIMUM_POT_SCALING_VALUE));
 		}
 		else
 		{
@@ -569,6 +569,7 @@ public class Robot extends IterativeRobot
 		// -------------------------------------
 		// Watch dog code used to go here.
 		// -------------------------------------
+
 
 		// -------------------------------------
 		// Call the Teleop class's Periodic function,
