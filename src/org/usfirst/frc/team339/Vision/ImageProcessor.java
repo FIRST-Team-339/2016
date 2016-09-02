@@ -20,6 +20,7 @@ public class ImageProcessor
 public class ParticleReport implements Comparator<ParticleReport>,
         Comparable<ParticleReport>
 {
+// TODO: actually initialize these values
 
 public double area;
 
@@ -35,9 +36,7 @@ public int boundingRectRight;
 
 public int boundingRectBottom;
 
-public int center_mass_x;                            // TODO: actually
-                                                     // initialize
-                                                     // these values
+public int center_mass_x;
 
 public int center_mass_y;
 
@@ -112,13 +111,11 @@ public ImageProcessor (KilroyCamera camera,
         VisionOperatorInterface... ops)
 {
     this.camera = camera;
-    VisionScript temp = new VisionScript();
-    for (VisionOperatorInterface inter : ops)
+    this.operators = new VisionScript();
+    for (VisionOperatorInterface operator : ops)
         {
-            temp.add(inter);
+            this.operators.put(operator);
         }
-    this.operators = temp;
-
 }
 
 public void applyOperators ()
@@ -130,6 +127,11 @@ public void applyOperators ()
         {
             this.currentImage = operator.operate(this.currentImage);
         }
+}
+
+public void replaceVisionScript (VisionScript newScript)
+{
+    this.operators = newScript;// TODO stop garbagecollection
 }
 
 /**
