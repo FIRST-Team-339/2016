@@ -55,6 +55,7 @@ import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.Relay;
 import edu.wpi.first.wpilibj.SpeedController;
+import edu.wpi.first.wpilibj.Timer;
 
 // -------------------------------------------------------
 /**
@@ -930,6 +931,11 @@ public boolean brake (final double lMotorBrakeVoltage,
 
 private double savedDeadBandRange;
 
+
+
+
+
+
 // -------------------------------------------------------
 /**
  * This function passes in the state of the downshift button.
@@ -1089,6 +1095,9 @@ public void controls (final boolean upShiftSwitch,
     this.controls(leftJoystickInputValue, leftSpeedController,
             rightJoystickInputValue, rightSpeedController);
 } // end Controls
+
+
+
 
 // -------------------------------------------------------
 /**
@@ -2563,6 +2572,8 @@ public boolean isMecanumDrive ()
 {
     return this.isMecanum;
 } // end isMecanumDrive()
+
+
 
 // -----------------------------------------------------------------
 /**
@@ -4154,6 +4165,134 @@ public void setThirdGearPercentage (final double leftGearPercentage,
         this.oneOrRightThirdGearPercentage = rightGearPercentage;
         }
 } // end setThirdGearPercentage
+
+
+//-------------------------------------------------------
+/**
+* Determines the amount of motors present, then calls 1 or 2
+* stopped() functions accordingly. Then waits for the called functions
+* to return true, then returning true itself.
+* @method stop
+
+* @return returns true when isStopped() functions return true
+* @author Eli Neagle
+* @written Aug 29, 2016
+*          -------------------------------------------------------
+*/
+
+
+
+public boolean stop()
+{
+	if(stopTimer.get() == 0)
+	{
+		stopTimer.start();
+	}
+	
+	if(stopTimer.get() == MAX_STOPPING_TIME) 
+	{
+		
+	}
+	
+	// check for amt of motors
+	// 1 set of motors, call one
+	// 2 sets of motors, call two
+	// no encoders, end func
+	this.setJoystickDeadbandRange(0.0);
+	if (this.leftMotorEncoder != null 
+			&& this.oneOrRightMotorEncoder != null) 
+		{
+			if (this.leftRearMotorEncoder != null
+					&& this.rightRearMotorEncoder != null)
+				{
+					if(isStopped(this.leftMotorEncoder, 
+							this.oneOrRightMotorEncoder) == true
+							&& isStopped(this.leftRearMotorEncoder, 
+									this.rightRearMotorEncoder) == true)
+					{
+						stopTimer.stop();
+						stopTimer.reset();
+						return true;
+					}
+					
+					
+				}
+			else
+				{
+					if(isStopped(this.leftMotorEncoder, 
+						this.oneOrRightMotorEncoder) == true)
+					{
+						stopTimer.stop();
+						stopTimer.reset();
+						return true;
+					}
+				}
+		}
+	else if(this.leftRearMotorEncoder != null
+			&& this.rightRearMotorEncoder != null)
+	{
+		if(isStopped(this.leftRearMotorEncoder, 
+				this.rightRearMotorEncoder) == true)
+			{
+				stopTimer.stop();
+				stopTimer.reset();
+				return true;
+			}
+	}
+	else
+	{
+		this.setJoystickDeadbandRange(savedDeadBandRange);
+		stopTimer.stop();
+		stopTimer.reset();
+		return true;
+		// No encoders present, we're done here
+	}
+	return false;
+	
+}
+
+Timer stopTimer = new Timer();
+
+/**
+ * @author Eli Neagle
+ * @description TBD
+ */
+//TODO: Add Javadoc description
+public static enum stoppedBy
+{
+	TIME_EXCEEDED, NO_MOVEMENT, DIRECTION_CHANGED, NO_ENCODERS
+}
+
+private double MAX_STOPPING_TIME;
+
+/**
+* @method isStopped
+* @return Returns false if chosen encoders are not stopped
+* @author Eli Neagle
+ * @param leftEncoder
+ * @param rightEncoder
+* @written Sep 1, 2016
+*/
+public boolean isStopped(Encoder leftEncoder, Encoder rightEncoder) 
+{
+	if(Math.abs(leftEncoder.getDistance()) - this.brakePreviousDistanceL 
+			== 0 
+			&& Math.abs(rightEncoder.getDistance()) - this.brakePreviousDistanceR
+			== 0)
+	{
+		
+		this.brakePreviousDistanceL = 0;
+		this.brakePreviousDistanceR = 0;
+		return true;
+	}
+	brakePreviousDistanceL = 
+			Math.abs(leftEncoder.getDistance());
+	brakePreviousDistanceR = 
+			Math.abs(rightEncoder.getDistance());
+	
+	return false;
+}
+
 
 // -------------------------------------------------------
 /**
