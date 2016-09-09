@@ -70,6 +70,18 @@ private Image currentImage = null;
 // @AHK TODO create a visionScript object to further object orient the code?
 private VisionScript operators = new VisionScript();
 
+private double offsetFromCenterX;// offset along line orthoganal to the primary
+                                 // vector of travel that intersects the center
+                                 // potistive towards the starboard, negative
+                                 // towards the port
+
+private double offsetFromCenterY;// offset along primary vector of travel
+                                 // positive is towards the front, negative
+                                 // towards the back
+
+private double cameraFocalLength;
+
+
 public ParticleReport[] reports = null;
 
 /**
@@ -131,7 +143,7 @@ public void applyOperators ()
 
 public void replaceVisionScript (VisionScript newScript)
 {
-    this.operators = newScript;// TODO stop garbagecollection
+    this.operators = newScript;
 }
 
 /**
