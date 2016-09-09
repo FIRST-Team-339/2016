@@ -787,6 +787,7 @@ public static void periodic ()
             }
 
 
+        
         //End driver direction block
 
         // Takes Pictures based on Operator Button stuff.
@@ -794,10 +795,9 @@ public static void periodic ()
 
 
         // Driving the Robot
-
         //TODO delete all conditionals.
         //If we want to run a speed test, tell the code that
-        if (Hardware.leftDriver.getRawButton(8) == true)
+//        if (Hardware.leftDriver.getRawButton(8) == true) 
 			// If we press the brake button, robot brakes
 			/*
 			 * if (Hardware.leftDriver

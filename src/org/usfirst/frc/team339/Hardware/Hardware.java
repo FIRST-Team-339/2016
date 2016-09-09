@@ -318,7 +318,10 @@ public class Hardware
 	public static MomentarySwitch cameraToggleButton =
 	        new MomentarySwitch(
 	                leftOperator, 2, false);
-
+	public static MomentarySwitch forwardToggleButton =
+			new MomentarySwitch(
+					leftDriver, 8, false);
+	
 	// **********************************************************
 	// Kilroy's Ancillary classes
 	// **********************************************************

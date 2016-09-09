@@ -4182,7 +4182,7 @@ public void setThirdGearPercentage (final double leftGearPercentage,
 
 
 
-public boolean stop()
+public brakeReturns stop()
 {
 	if(stopTimer.get() == 0)
 	{
@@ -4191,7 +4191,11 @@ public boolean stop()
 	
 	if(stopTimer.get() == MAX_STOPPING_TIME) 
 	{
-		
+		this.setJoystickDeadbandRange(0.0);
+		this.controls(0.0);
+		stopTimer.stop();
+		stopTimer.reset();
+		return this.timeExceeded;
 	}
 	
 	// check for amt of motors
@@ -4212,7 +4216,8 @@ public boolean stop()
 					{
 						stopTimer.stop();
 						stopTimer.reset();
-						return true;
+						this.controls(0.0);
+						return this.noMovement;
 					}
 					
 					
@@ -4224,7 +4229,8 @@ public boolean stop()
 					{
 						stopTimer.stop();
 						stopTimer.reset();
-						return true;
+						this.controls(0.0);
+						return this.noMovement;
 					}
 				}
 		}
@@ -4236,7 +4242,8 @@ public boolean stop()
 			{
 				stopTimer.stop();
 				stopTimer.reset();
-				return true;
+				this.controls(0.0);
+				return this.noMovement;
 			}
 	}
 	else
@@ -4244,10 +4251,10 @@ public boolean stop()
 		this.setJoystickDeadbandRange(savedDeadBandRange);
 		stopTimer.stop();
 		stopTimer.reset();
-		return true;
+		return this.noEncoders;
 		// No encoders present, we're done here
 	}
-	return false;
+	return this.inMotion;
 	
 }
 
@@ -4255,13 +4262,20 @@ Timer stopTimer = new Timer();
 
 /**
  * @author Eli Neagle
- * @description TBD
+ * @description When the stop() function is run, it
+ * will return one of these values.
  */
 //TODO: Add Javadoc description
-public static enum stoppedBy
+public enum brakeReturns
 {
-	TIME_EXCEEDED, NO_MOVEMENT, DIRECTION_CHANGED, NO_ENCODERS
+	TIME_EXCEEDED, NO_MOVEMENT, DIRECTION_CHANGED, NO_ENCODERS, IN_MOTION
 }
+
+brakeReturns timeExceeded = brakeReturns.TIME_EXCEEDED;
+brakeReturns noMovement = brakeReturns.NO_MOVEMENT;
+brakeReturns noEncoders = brakeReturns.NO_ENCODERS;
+brakeReturns directionChanged = brakeReturns.DIRECTION_CHANGED;
+brakeReturns inMotion = brakeReturns.IN_MOTION;
 
 private double MAX_STOPPING_TIME;
 
