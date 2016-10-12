@@ -4,13 +4,13 @@ import com.ni.vision.NIVision;
 import com.ni.vision.NIVision.Image;
 import com.ni.vision.NIVision.ImageType;
 
-public class ColorThresholdOperator implements VisionOperatorInterface
+public class ColorThresholdHSLOperator implements VisionOperatorInterface
 {
 private final int hueMin, hueMax;
 private final int saturationMin, saturationMax;
 private final int luminanceMin, luminanceMax;
 
-public ColorThresholdOperator (int hueMin, int hueMax, int satMin,
+public ColorThresholdHSLOperator (int hueMin, int hueMax, int satMin,
     int satMax, int luminanceMin, int luminanceMax)
     {
     // initializing the ranges
