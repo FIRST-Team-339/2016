@@ -301,7 +301,6 @@ public static USBCamera cam0 = new USBCamera("cam0"); // AHK @cameratesting
 
 
 // Declares the Axis camera
-// TODO: set back to true
 public static KilroyCamera axisCamera = new KilroyCamera(true);
 
 

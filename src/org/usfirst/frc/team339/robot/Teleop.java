@@ -468,11 +468,10 @@ public static void periodic ()
                     // joystick
                     // override the pickup mechanism
                     Hardware.pickupArm
-                            .pullInBall(// TODO change after competition
+                            .pullInBall(
 
                                     Hardware.rightOperator
                                             .getRawButton(3));
-
                 }
             // push out the ball if the push out button is pressed
             else if (Hardware.rightOperator
