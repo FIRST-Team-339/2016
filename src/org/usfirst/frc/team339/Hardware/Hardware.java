@@ -399,4 +399,5 @@ public static final MotorSafetyHelper leftFrontMotorSafety = new MotorSafetyHelp
 
 public static final MotorSafetyHelper rightFrontMotorSafety = new MotorSafetyHelper(
         rightFrontMotor);
-} // end class
+} // end
+  // class
