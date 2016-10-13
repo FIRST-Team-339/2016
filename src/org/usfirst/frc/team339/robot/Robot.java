@@ -115,6 +115,14 @@ public void autonomousInit ()
     // -------------------------------------
     Autonomous.init();
 
+    // -------------------------------------
+    // Holds the exposure value for the camera
+    // -------------------------------------
+
+    Hardware.axisCamera.writeExposureControl(
+            AxisCamera.ExposureControl.kHold);
+
+
     // ---------------------------------------
     // done setup - tell the user we are complete
     // setup
@@ -396,10 +404,11 @@ public void robotInit ()
             Hardware.MINIMUM_AXIS_CAMERA_BRIGHTNESS);
     // Hardware.axisCamera.writeExposureControl(
     // AxisCamera.ExposureControl.kAutomatic);
-    Hardware.axisCamera
-            .writeExposureControl(AxisCamera.ExposureControl.kHold);
+    // Hardware.axisCamera
+    // .writeExposureControl(AxisCamera.ExposureControl.kHold);
     Hardware.axisCamera.writeMaxFPS(Hardware.AXIS_FPS);
     Hardware.axisCamera.writeResolution(Hardware.AXIS_RESOLUTION);
+    // Hardware.axisCamera.writeCompression(60);//TODO magic number
     // Hardware.axisCamera
     // .writeWhiteBalance(AxisCamera.WhiteBalance.kHold);
 
@@ -433,6 +442,13 @@ public void robotInit ()
         }
 
     // -------------------------------------
+    // Holds the exposure value for the camera
+    // -------------------------------------
+
+    Hardware.axisCamera.writeExposureControl(
+            AxisCamera.ExposureControl.kHold);
+
+    // -------------------------------------
     // USB camera initialization
     // -------------------------------------
     // Settings for the USB Camera
@@ -452,7 +468,8 @@ public void robotInit ()
     // processing.
     // Hardware.imageProcessor.setHSLValues(0, 255, 0, 75, 5, 141);
     // Hardware.imageProcessor.setHSLValues(0, 115, 0, 69, 17, 44);
-    Hardware.imageProcessor.setHSLValues(78, 141, 55, 255, 9, 47);
+    // Hardware.imageProcessor.setHSLValues(78, 141, 55, 255, 9, 47);
+    Hardware.imageProcessor.setHSLValues(55, 147, 14, 255, 16, 255);
     // Has us remove small objects at the intensity of 5. May have to
     // change those values.
     // Hardware.imageProcessor.setObjectRemoval(ObjectRemoval.BORDER);
@@ -554,6 +571,8 @@ public void teleopInit ()
     // done setup - tell the user we are complete
     // setup
     // ---------------------------------------
+    Hardware.axisCamera.writeExposureControl(
+            AxisCamera.ExposureControl.kHold);
     System.out.println("Completed TeleopInit().");
 } // end teleopInit
 
@@ -585,6 +604,12 @@ public void teleopPeriodic ()
     Hardware.rightRearMotorSafety.feed();
     Hardware.leftFrontMotorSafety.feed();
     Hardware.rightFrontMotorSafety.feed();
+
+    if (Hardware.rightOperator.getRawButton(6))
+        {
+            Hardware.axisCamera.writeExposureControl(
+                    AxisCamera.ExposureControl.kHold);
+        }
 
 } // end teleopPeriodic
 
