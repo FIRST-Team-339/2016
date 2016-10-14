@@ -477,6 +477,7 @@ public void robotInit ()
             2);// 3
     // Has us convex hull our image so that the goal becomes a rectangle.
     Hardware.imageProcessor.setUseConvexHull(true);
+
     // we could also crop the image to only include blobs in our
     // good height range, which removes the possibility of
     // convex hull connecting the two totes when we carry more than one

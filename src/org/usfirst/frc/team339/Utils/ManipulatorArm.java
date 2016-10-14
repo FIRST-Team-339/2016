@@ -423,11 +423,11 @@ private final double BRAKE_ARM_WITH_FORWARD_VOLTAGE_DEGREES = 0.510
         * (MAX_SOFT_ARM_STOP - MIN_SOFT_ARM_STOP)
         + MIN_SOFT_ARM_STOP;// 165.0;
 
-private final double DEPOSIT_POSITION = 1.0
+private final double DEPOSIT_POSITION = .95 // 1.0
         * (MAX_SOFT_ARM_STOP - MIN_SOFT_ARM_STOP)
         + MIN_SOFT_ARM_STOP;// 230.0;
 
-private final double DEPOSIT_POSITION_THRESHOLD = 5.0;
+private final double DEPOSIT_POSITION_THRESHOLD = 20.0;// 5
 
 private final double REASONABLE_UP_FACTOR = -.6;
 
@@ -435,7 +435,8 @@ private final double REASONABLE_UP_AND_OVER_FACTOR = -0.40;
 
 private final double REASONABLE_DOWN_FACTOR = 0.15; // .2, .35
 
-private final double REASONABLE_DOWN_UNDER_FACTOR = -.1;// 0.1;// .15, .2//TODO
+private final double REASONABLE_DOWN_UNDER_FACTOR = -.1;// 0.1;// .15,
+                                                        // .2//TODO
                                                         // decrease
                                                         // factors from comp
 

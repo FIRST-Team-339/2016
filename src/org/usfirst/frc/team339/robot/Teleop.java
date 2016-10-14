@@ -1190,7 +1190,7 @@ public static void printStatements ()
     // prints the value of the transducer- (range in code is 50)
     // hits psi of 100 accurately
     // System.out.println("transducer = " + Hardware.transducer.get());
-    System.out.println("Arm Pot = " + Hardware.armPot.get());
+    // System.out.println("Arm Pot = " + Hardware.armPot.get());
 
     // Motor controllers-----
     // prints value of the motors
@@ -1276,13 +1276,13 @@ private static final double MAXIMUM_TELEOP_SPEED = 1.0;
 
 private static final double CAMERA_ALIGN_Y_DEADBAND = .10;
 
-private static final double CAMERA_ALIGN_X_DEADBAND = .12;
+private static final double CAMERA_ALIGN_X_DEADBAND = .1;
 
-public static final double CAMERA_X_AXIS_ADJUSTED_PROPORTIONAL_CENTER = -.485;// -.365;//
-                                                                              // -.375
+public static final double CAMERA_X_AXIS_ADJUSTED_PROPORTIONAL_CENTER = -.3175;// -.365;//
+                                                                               // -.375
 
-public static final double CAMERA_Y_AXIS_ADJUSTED_PROPORTIONAL_CENTER = .05;// -.182;//
-                                                                            // -.192
+public static final double CAMERA_Y_AXIS_ADJUSTED_PROPORTIONAL_CENTER = -.371;// -.182;//
+                                                                              // -.192
 
 private static final double ALIGN_BY_CAMERA_TURNING_SPEED = .75;// @AHK .5
 

@@ -130,6 +130,12 @@ public ImageProcessor (KilroyCamera camera,
         }
 }
 
+@Deprecated
+public ParticleReport[] getParticleAnalysisReports ()
+{
+    return this.reports;
+}
+
 public void applyOperators ()
 {
     // Goes through all operators and applies whatever changes they are
