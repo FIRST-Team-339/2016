@@ -469,6 +469,7 @@ public static void periodic ()
                     // override the pickup mechanism
                     Hardware.pickupArm
                             .pullInBall(
+
                                     Hardware.rightOperator
                                             .getRawButton(3));
                 }
@@ -933,7 +934,11 @@ public static void periodic ()
                                     BRAKE_JOYSTICK_BUTTON_FIVE) == false
                     && Hardware.leftDriver.getRawButton(
                             BRAKE_JOYSTICK_BUTTON_FOUR) == false
-                    && isTurning180Degrees == false)
+                    && isTurning180Degrees == false
+                    && Hardware.rightOperator.getRawButton(6) == false)// TODO
+                                                                       // remove
+                                                                       // last
+                                                                       // term
                 {
                     driveRobot();
                     // if we want to run a speed test, run it until we're done.
@@ -966,6 +971,18 @@ public static void periodic ()
 
 
         }
+    if (Hardware.rightOperator.getRawButton(6) == true)
+        {
+            Hardware.transmission.controls(1.0, 1.0);
+            System.out.println("Left Distance = "
+                    + Hardware.leftRearEncoder.getDistance());
+            System.out.println("Right Distance = "
+                    + Hardware.rightRearEncoder.getDistance());
+        }
+    // else
+    // {
+    // Hardware.transmission.controls(0.0, 0.0);
+    // }
 } // end Periodic
 
 /* private static boolean isSpeedTesting = false */;
@@ -1146,7 +1163,8 @@ public static void takePicture ()
     // processingImage = false;
     // }
     // }
-} // end Periodic
+
+} // end Take picture
 
 static boolean hasBegunTurning = true;
 
@@ -1202,7 +1220,7 @@ public static void printStatements ()
     // prints the value of the transducer- (range in code is 50)
     // hits psi of 100 accurately
     // System.out.println("transducer = " + Hardware.transducer.get());
-    // System.out.println("Arm Pot = " + Hardware.armPot.get());
+    System.out.println("Arm Pot = " + Hardware.armPot.get());
 
     // Motor controllers-----
     // prints value of the motors
@@ -1288,13 +1306,15 @@ private static final double MAXIMUM_TELEOP_SPEED = 1.0;
 
 private static final double CAMERA_ALIGN_Y_DEADBAND = .10;
 
-private static final double CAMERA_ALIGN_X_DEADBAND = .10;
+private static final double CAMERA_ALIGN_X_DEADBAND = .12;
 
-public static final double CAMERA_X_AXIS_ADJUSTED_PROPORTIONAL_CENTER = -.365;// -.375
+public static final double CAMERA_X_AXIS_ADJUSTED_PROPORTIONAL_CENTER = -.485;// -.365;//
+                                                                              // -.375
 
-public static final double CAMERA_Y_AXIS_ADJUSTED_PROPORTIONAL_CENTER = -.182;// -.192
+public static final double CAMERA_Y_AXIS_ADJUSTED_PROPORTIONAL_CENTER = .05;// -.182;//
+                                                                            // -.192
 
-private static final double ALIGN_BY_CAMERA_TURNING_SPEED = .5;// @AHK .5
+private static final double ALIGN_BY_CAMERA_TURNING_SPEED = .75;// @AHK .5
 
 private static final double ALIGN_BY_CAMERA_DRIVE_SPEED = .45;
 
