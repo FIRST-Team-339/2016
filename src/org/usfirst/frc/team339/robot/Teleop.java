@@ -198,6 +198,8 @@ private static boolean isTurning180Degrees = false;
  */
 static double val;
 
+static double demoDriveRatio;
+
 public static void periodic ()
 {
     // Print out any data we want from the hardware elements.
@@ -260,7 +262,29 @@ public static void periodic ()
     // driveRobot();
     // speedTester.watchJoystick(Hardware.rightDriver.getY()); //@AHK REMOVE
 
-
+    if (Hardware.inDemo.isOn() == true)
+        {
+            if (Hardware.leftDriver.getRawButton(8))
+                {
+                    demoDriveRatio = Hardware.delayPot.get() / 2;
+                }
+            else if (Hardware.leftDriver.getRawButton(9))
+                {
+                    demoDriveRatio = Hardware.delayPot.get() * 2;
+                }
+            else if (Hardware.leftDriver.getRawButton(10)
+                    || demoDriveRatio == 0)
+                {
+                    demoDriveRatio = Hardware.delayPot.get();
+                }
+            Hardware.transmission.setSecondGearPercentage(
+                    ((demoDriveRatio *
+                            (Robot.SECOND_GEAR_PERCENTAGE
+                                    - Hardware.MINIMUM_POT_SCALING_VALUE)
+                            /
+                            (Hardware.DELAY_POT_DEGREES))
+                            + Hardware.MINIMUM_POT_SCALING_VALUE));
+        }
 
     Hardware.errorMessage.printError("test12", PrintsTo.roboRIO);
 
@@ -1190,7 +1214,7 @@ public static void printStatements ()
     // prints the value of the transducer- (range in code is 50)
     // hits psi of 100 accurately
     // System.out.println("transducer = " + Hardware.transducer.get());
-    // System.out.println("Arm Pot = " + Hardware.armPot.get());
+    System.out.println("Arm Pot = " + Hardware.armPot.get());
 
     // Motor controllers-----
     // prints value of the motors
