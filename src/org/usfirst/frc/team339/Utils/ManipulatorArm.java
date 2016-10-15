@@ -176,6 +176,11 @@ public void pullInBall (boolean override)
         {
             this.intakeMotor.set(-INTAKE_SPEED);
         }
+    System.out.println("MaxArm Stop: " + this.DEPOSIT_POSITION);
+    System.out.println("Deposit allowance: ("
+            + (this.DEPOSIT_POSITION - this.DEPOSIT_POSITION_THRESHOLD)
+            + ", " + this.DEPOSIT_POSITION
+            + this.DEPOSIT_POSITION_THRESHOLD + ")");
 
 }
 
@@ -275,8 +280,8 @@ public boolean isClearOfArm ()
 
 public boolean isInDepositPosition ()
 {
-    if (armPot.get() > DEPOSIT_POSITION - DEPOSIT_POSITION_THRESHOLD
-            && armPot.get() < DEPOSIT_POSITION
+    if (armPot.get() < DEPOSIT_POSITION - DEPOSIT_POSITION_THRESHOLD
+            && armPot.get() > DEPOSIT_POSITION
                     + DEPOSIT_POSITION_THRESHOLD)
         {
             return true;
