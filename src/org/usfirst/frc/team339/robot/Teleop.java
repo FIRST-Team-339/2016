@@ -198,6 +198,8 @@ private static boolean isTurning180Degrees = false;
  */
 static double val;
 
+static double demoDriveRatio = 0.0;
+
 public static void periodic ()
 {
     // Print out any data we want from the hardware elements.
@@ -260,7 +262,29 @@ public static void periodic ()
     // driveRobot();
     // speedTester.watchJoystick(Hardware.rightDriver.getY()); //@AHK REMOVE
 
-
+    if (Hardware.inDemo.isOn() == true)
+        {
+            if (Hardware.leftDriver.getRawButton(8))
+                {
+                    demoDriveRatio = Hardware.delayPot.get() / 2;
+                }
+            else if (Hardware.leftDriver.getRawButton(9))
+                {
+                    demoDriveRatio = Hardware.delayPot.get() * 2;
+                }
+            else if (Hardware.leftDriver.getRawButton(10)
+                    || demoDriveRatio == 0)
+                {
+                    demoDriveRatio = Hardware.delayPot.get();
+                }
+            Hardware.transmission.setSecondGearPercentage(
+                    ((demoDriveRatio *
+                            (Robot.SECOND_GEAR_PERCENTAGE
+                                    - Hardware.MINIMUM_POT_SCALING_VALUE)
+                            /
+                            (Hardware.DELAY_POT_DEGREES))
+                            + Hardware.MINIMUM_POT_SCALING_VALUE));
+        }
 
     Hardware.errorMessage.printError("test12", PrintsTo.roboRIO);
 
@@ -830,6 +854,36 @@ public static void periodic ()
             // TODO delete all conditionals.
             // If we want to run a speed test, tell the code that
             // if (Hardware.leftDriver.getRawButton(8) == true)
+            // {
+            // Hardware.forwardToggleButton.update();
+            // }
+            //
+ 
+            if (Hardware.forwardToggleButton.isOnCheckNow() == true
+                    && brakingTesting == false)
+                {
+                    Hardware.drive.driveStraightContinuous();
+                }
+            // Start braking using the ! ! ! NEW STOP FUNCTION ! ! ! if the
+            // button is pressed while moving
+            if (Hardware.forwardToggleButton.isOn() == true
+                    && Hardware.leftDriver.getRawButton(8) == true
+                    && brakingTesting == false)
+                {
+                    brakingTesting = true;
+                    Hardware.forwardToggleButton.update();
+
+                }
+            else if (brakingTesting == true)
+                {
+                    if (Hardware.transmission
+                            .stop() != Hardware.transmission.noMovement
+                            || Hardware.transmission
+                                    .stop() != Hardware.transmission.noEncoders)
+                        {
+                            brakingTesting = false;
+                        }
+                }
             // If we press the brake button, robot brakes
             /*
              * if (Hardware.leftDriver
@@ -1276,13 +1330,13 @@ private static final double MAXIMUM_TELEOP_SPEED = 1.0;
 
 private static final double CAMERA_ALIGN_Y_DEADBAND = .10;
 
-private static final double CAMERA_ALIGN_X_DEADBAND = .12;
+private static final double CAMERA_ALIGN_X_DEADBAND = .1;
 
-public static final double CAMERA_X_AXIS_ADJUSTED_PROPORTIONAL_CENTER = -.485;// -.365;//
-                                                                              // -.375
+public static final double CAMERA_X_AXIS_ADJUSTED_PROPORTIONAL_CENTER = -.3175;// -.365;//
+                                                                               // -.375
 
-public static final double CAMERA_Y_AXIS_ADJUSTED_PROPORTIONAL_CENTER = .05;// -.182;//
-                                                                            // -.192
+public static final double CAMERA_Y_AXIS_ADJUSTED_PROPORTIONAL_CENTER = -.371;// -.182;//
+                                                                              // -.192
 
 private static final double ALIGN_BY_CAMERA_TURNING_SPEED = .75;// @AHK .5
 
@@ -1366,4 +1420,5 @@ private static boolean storeFiringState;
 
 private static int loopCounter = 0;
 
+private static boolean brakingTesting = false;
 } // end class

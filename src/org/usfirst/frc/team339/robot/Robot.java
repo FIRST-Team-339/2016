@@ -115,14 +115,6 @@ public void autonomousInit ()
     // -------------------------------------
     Autonomous.init();
 
-    // -------------------------------------
-    // Holds the exposure value for the camera
-    // -------------------------------------
-
-    Hardware.axisCamera.writeExposureControl(
-            AxisCamera.ExposureControl.kHold);
-
-
     // ---------------------------------------
     // done setup - tell the user we are complete
     // setup
@@ -183,8 +175,8 @@ public void disabledInit ()
     try
         {
             // check the Autonomous ENABLED/DISABLED switch.
-            Autonomous.autonomousEnabled = Hardware.autonomousEnabled
-                    .isOn();
+			Autonomous.autonomousEnabled =
+			        Hardware.autonomousEnabled.isOn();
 
             // set the delay time based on potentiometer.
             Autonomous.delay = Autonomous.initDelayTime();
@@ -404,13 +396,12 @@ public void robotInit ()
             Hardware.MINIMUM_AXIS_CAMERA_BRIGHTNESS);
     // Hardware.axisCamera.writeExposureControl(
     // AxisCamera.ExposureControl.kAutomatic);
-    // Hardware.axisCamera
-    // .writeExposureControl(AxisCamera.ExposureControl.kHold);
+		Hardware.axisCamera
+		        .writeExposureControl(AxisCamera.ExposureControl.kHold);
     Hardware.axisCamera.writeMaxFPS(Hardware.AXIS_FPS);
     Hardware.axisCamera.writeResolution(Hardware.AXIS_RESOLUTION);
-    // Hardware.axisCamera.writeCompression(60);//TODO magic number
-    // Hardware.axisCamera
-    // .writeWhiteBalance(AxisCamera.WhiteBalance.kHold);
+    Hardware.axisCamera
+            .writeWhiteBalance(AxisCamera.WhiteBalance.kFixedIndoor);
 
     switch (Hardware.axisCamera.getResolution())
         {
@@ -442,13 +433,6 @@ public void robotInit ()
         }
 
     // -------------------------------------
-    // Holds the exposure value for the camera
-    // -------------------------------------
-
-    Hardware.axisCamera.writeExposureControl(
-            AxisCamera.ExposureControl.kHold);
-
-    // -------------------------------------
     // USB camera initialization
     // -------------------------------------
     // Settings for the USB Camera
@@ -462,14 +446,12 @@ public void robotInit ()
     // Hardware.cam0.updateSettings();
     // Starts streaming video
     // TODO add back in
-    Hardware.cameraServer.startAutomaticCapture(Hardware.cam0);// AHK
-                                                               // @cameratesting
+    Hardware.cameraServer.startAutomaticCapture(Hardware.cam0);
     // Sets the hue, saturation, and luminance values for the vision
     // processing.
     // Hardware.imageProcessor.setHSLValues(0, 255, 0, 75, 5, 141);
     // Hardware.imageProcessor.setHSLValues(0, 115, 0, 69, 17, 44);
-    // Hardware.imageProcessor.setHSLValues(78, 141, 55, 255, 9, 47);
-    Hardware.imageProcessor.setHSLValues(55, 147, 14, 255, 16, 255);
+		Hardware.imageProcessor.setHSLValues(78, 141, 55, 255, 9, 47);
     // Has us remove small objects at the intensity of 5. May have to
     // change those values.
     // Hardware.imageProcessor.setObjectRemoval(ObjectRemoval.BORDER);
@@ -477,6 +459,7 @@ public void robotInit ()
             2);// 3
     // Has us convex hull our image so that the goal becomes a rectangle.
     Hardware.imageProcessor.setUseConvexHull(true);
+
     // we could also crop the image to only include blobs in our
     // good height range, which removes the possibility of
     // convex hull connecting the two totes when we carry more than one
@@ -526,9 +509,6 @@ public void robotInit ()
             Autonomous.labScalingFactor = 1.0;
         }
 
-    // TODO: COMPENSATE FOR SLOW MOTOR HERE
-    // Hardware.transmission.setFirstGearPercentage(.5, .5);
-
     // =========================================================
     // User code goes above here
     // =========================================================
@@ -540,7 +520,7 @@ public void robotInit ()
             "Kilroy XVII is started.  All hardware items created.");
     System.out.println();
     System.out.println();
-} // end robotInit
+	} // end robotInit
 
 // -------------------------------------------------------
 /**
@@ -557,7 +537,7 @@ public void teleopInit ()
 {
     // ---------------------------------------
     // start setup - tell the user we are beginning
-    // setup
+    // setupe c+-
     // ---------------------------------------
     System.out.println("Started teleopInit().");
 
@@ -565,14 +545,14 @@ public void teleopInit ()
     // Call the Teleop class's Init function,
     // which contains the user code.
     // -------------------------------------
+    Hardware.cameraServer.startAutomaticCapture(Hardware.cam0);
+
     Teleop.init();
 
     // ---------------------------------------
     // done setup - tell the user we are complete
     // setup
     // ---------------------------------------
-    Hardware.axisCamera.writeExposureControl(
-            AxisCamera.ExposureControl.kHold);
     System.out.println("Completed TeleopInit().");
 } // end teleopInit
 
@@ -604,12 +584,6 @@ public void teleopPeriodic ()
     Hardware.rightRearMotorSafety.feed();
     Hardware.leftFrontMotorSafety.feed();
     Hardware.rightFrontMotorSafety.feed();
-
-    if (Hardware.rightOperator.getRawButton(6))
-        {
-            Hardware.axisCamera.writeExposureControl(
-                    AxisCamera.ExposureControl.kHold);
-        }
 
 } // end teleopPeriodic
 

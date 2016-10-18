@@ -309,7 +309,7 @@ public class MomentarySwitch
         this.isOn = !this.isOn;
         } // if
         } // if
-        else
+        else 
         {
         // -------------------------------------
         // otherwise turn off previouslyOn

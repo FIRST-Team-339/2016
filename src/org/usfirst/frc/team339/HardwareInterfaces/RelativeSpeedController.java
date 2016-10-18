@@ -54,6 +54,13 @@ private final SpeedController speedController;
  */
 private final double maxSpeed;
 
+/**
+ * @description Whether or not this motor controller is inverted.
+ * @author Noah Golmant
+ * @written 10 Jan 2016
+ */
+private boolean isInverted = false;
+
 // -------------------------------------------------------
 /**
  * constructor
@@ -78,10 +85,10 @@ public RelativeSpeedController (final SpeedController speedController, // The
         // velocity
         // commands
         final double maxSpeed) // The maximum speed that a command of 1.0
-                               // should represent
+						        // should represent
 {
-    this.speedController = speedController;
-    this.maxSpeed = maxSpeed;
+	this.speedController = speedController;
+	this.maxSpeed = maxSpeed;
 } // end DoubleSolenoid
 
 // -------------------------------------------------------
@@ -96,7 +103,7 @@ public RelativeSpeedController (final SpeedController speedController, // The
 @Override
 public void disable ()
 {
-    this.speedController.disable();
+	this.speedController.disable();
 } // end disable
 
 // -------------------------------------------------------
@@ -113,7 +120,7 @@ public void disable ()
 @Override
 public double get ()
 {
-    return this.speedController.get() / this.maxSpeed;
+	return this.speedController.get() / this.maxSpeed;
 } // end get
 
 // -------------------------------------------------------
@@ -133,7 +140,7 @@ public double get ()
 @Override
 public void pidWrite (final double output)
 {
-    this.set(output);
+	this.set(output);
 } // end set
 
 // -------------------------------------------------------
@@ -152,7 +159,7 @@ public void pidWrite (final double output)
 @Override
 public void set (final double speed)
 {
-    this.speedController.set(speed * this.maxSpeed);
+	this.speedController.set(speed * this.maxSpeed);
 } // end set
 
 // -------------------------------------------------------
@@ -173,27 +180,36 @@ public void set (final double speed)
 @Override
 public void set (final double speed, final byte syncGroup)
 {
-    this.speedController.set(speed * this.maxSpeed, syncGroup);
+	this.speedController.set(speed * this.maxSpeed, syncGroup);
 } // end set
 
-@Override
-public void setInverted (boolean isInverted)
-{
-    // TODO Auto-generated method stub
-
-}
-
+/**
+ * @description Gets whether or not this speed controller's motor is inverted.
+ * @author Noah Golmant
+ * @written 10 Jan 2016
+ */
 @Override
 public boolean getInverted ()
 {
-    // TODO Auto-generated method stub
-    return false;
+	return this.isInverted;
 }
 
+/**
+ * @description Sets whether or not this speed controller's motor is inverted.
+ * @author Noah Golmant
+ * @written 10 Jan 2016
+ */
 @Override
+public void setInverted (boolean val)
+{
+	this.isInverted = val;
+}
+
+
+//@Override
 public void stopMotor ()
 {
-    // TODO Auto-generated method stub
+	// TODO Auto-generated method stub
 
 }
 } // end class

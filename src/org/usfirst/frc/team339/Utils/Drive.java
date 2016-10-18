@@ -12,7 +12,8 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.image.NIVisionException;
 
 public class Drive
-{
+{ 
+
 /**
  * Constructor for a Drive object. Should only be called once.
  * 
