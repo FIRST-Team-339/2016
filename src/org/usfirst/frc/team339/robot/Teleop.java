@@ -854,6 +854,36 @@ public static void periodic ()
             // TODO delete all conditionals.
             // If we want to run a speed test, tell the code that
             // if (Hardware.leftDriver.getRawButton(8) == true)
+            // {
+            // Hardware.forwardToggleButton.update();
+            // }
+            //
+ 
+            if (Hardware.forwardToggleButton.isOnCheckNow() == true
+                    && brakingTesting == false)
+                {
+                    Hardware.drive.driveStraightContinuous();
+                }
+            // Start braking using the ! ! ! NEW STOP FUNCTION ! ! ! if the
+            // button is pressed while moving
+            if (Hardware.forwardToggleButton.isOn() == true
+                    && Hardware.leftDriver.getRawButton(8) == true
+                    && brakingTesting == false)
+                {
+                    brakingTesting = true;
+                    Hardware.forwardToggleButton.update();
+
+                }
+            else if (brakingTesting == true)
+                {
+                    if (Hardware.transmission
+                            .stop() != Hardware.transmission.noMovement
+                            || Hardware.transmission
+                                    .stop() != Hardware.transmission.noEncoders)
+                        {
+                            brakingTesting = false;
+                        }
+                }
             // If we press the brake button, robot brakes
             /*
              * if (Hardware.leftDriver
@@ -1390,4 +1420,5 @@ private static boolean storeFiringState;
 
 private static int loopCounter = 0;
 
+private static boolean brakingTesting = false;
 } // end class

@@ -5,7 +5,7 @@ import java.util.Vector;
 import com.ni.vision.NIVision;
 import com.ni.vision.NIVision.Image;
 import org.usfirst.frc.team339.HardwareInterfaces.KilroyCamera;
-import org.usfirst.frc.team339.Vision.operators.ColorThresholdHSLOperator;
+import org.usfirst.frc.team339.Vision.operators.ColorThresholdOperator;
 import org.usfirst.frc.team339.Vision.operators.ConvexHullOperator;
 import org.usfirst.frc.team339.Vision.operators.LoadColorImageJPEGOperator;
 import org.usfirst.frc.team339.Vision.operators.RemoveSmallObjectsOperator;
@@ -105,7 +105,7 @@ public ImageProcessor (KilroyCamera camera)
     this.operators.add(new LoadColorImageJPEGOperator(
             "/home/lvuser/images/Firstpic.jpg"));
     this.operators
-            .add(new ColorThresholdHSLOperator(0, 153, 0, 75, 5, 141));
+            .add(new ColorThresholdOperator(0, 153, 0, 75, 5, 141));
     this.operators.add(new RemoveSmallObjectsOperator(2, true));
     this.operators.add(new ConvexHullOperator(true));
     this.operators.add(new SaveBinaryImagePNGOperator(
@@ -147,7 +147,7 @@ public void applyOperators ()
         }
 }
 
-public void replaceVisionScript (VisionScript newScript)// TODO rename
+public void replaceVisionScript (VisionScript newScript)
 {
     this.operators = newScript;
 }

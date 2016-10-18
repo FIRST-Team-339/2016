@@ -818,7 +818,7 @@ public boolean brake (final double bothMotorBrakeVoltages)
  */
 public boolean brake (final double lMotorBrakeVoltage,
         final double rMotorBrakeVoltage)
-{
+{ 
     // UNDER PENALTY OF DEATH - don't use without calling initEncoders()
     // AND setting the distancePerPulse on them via
     // setEncodersDistancePerPulse()
