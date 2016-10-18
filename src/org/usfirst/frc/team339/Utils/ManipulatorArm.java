@@ -441,9 +441,7 @@ private final double REASONABLE_UP_AND_OVER_FACTOR = -0.40;
 private final double REASONABLE_DOWN_FACTOR = 0.15; // .2, .35
 
 private final double REASONABLE_DOWN_UNDER_FACTOR = -.1;// 0.1;// .15,
-                                                        // .2//TODO
-                                                        // decrease
-                                                        // factors from comp
+                                                        // .2
 
 private final double REASONABLE_DECELERATION_ANGLE = 0.75
         * (MAX_SOFT_ARM_STOP - MIN_SOFT_ARM_STOP)

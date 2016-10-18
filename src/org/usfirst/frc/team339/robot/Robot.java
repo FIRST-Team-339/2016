@@ -409,8 +409,8 @@ public void robotInit ()
     Hardware.axisCamera.writeMaxFPS(Hardware.AXIS_FPS);
     Hardware.axisCamera.writeResolution(Hardware.AXIS_RESOLUTION);
     // Hardware.axisCamera.writeCompression(60);//TODO magic number
-    // Hardware.axisCamera
-    // .writeWhiteBalance(AxisCamera.WhiteBalance.kHold);
+    Hardware.axisCamera
+            .writeWhiteBalance(AxisCamera.WhiteBalance.kFixedIndoor);
 
     switch (Hardware.axisCamera.getResolution())
         {

@@ -198,7 +198,7 @@ private static boolean isTurning180Degrees = false;
  */
 static double val;
 
-static double demoDriveRatio;
+static double demoDriveRatio = 0.0;
 
 public static void periodic ()
 {
