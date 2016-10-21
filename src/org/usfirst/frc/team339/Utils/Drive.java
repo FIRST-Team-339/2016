@@ -12,7 +12,7 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.image.NIVisionException;
 
 public class Drive
-{ 
+{
 
 /**
  * Constructor for a Drive object. Should only be called once.
@@ -1588,7 +1588,7 @@ public alignByCameraReturn alignByCameraStateMachine (
         {
         case BEGINNING_SETUP:
             this.savedGear = this.transmission.getGear();
-            this.transmission.setGear(2);
+            this.transmission.setGear(1);
             this.cameraTimer.start();
             // turn down the lights
             this.camera.writeBrightness(

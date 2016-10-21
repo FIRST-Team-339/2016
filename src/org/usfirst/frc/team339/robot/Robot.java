@@ -175,8 +175,8 @@ public void disabledInit ()
     try
         {
             // check the Autonomous ENABLED/DISABLED switch.
-			Autonomous.autonomousEnabled =
-			        Hardware.autonomousEnabled.isOn();
+            Autonomous.autonomousEnabled = Hardware.autonomousEnabled
+                    .isOn();
 
             // set the delay time based on potentiometer.
             Autonomous.delay = Autonomous.initDelayTime();
@@ -396,8 +396,8 @@ public void robotInit ()
             Hardware.MINIMUM_AXIS_CAMERA_BRIGHTNESS);
     // Hardware.axisCamera.writeExposureControl(
     // AxisCamera.ExposureControl.kAutomatic);
-		Hardware.axisCamera
-		        .writeExposureControl(AxisCamera.ExposureControl.kHold);
+    Hardware.axisCamera
+            .writeExposureControl(AxisCamera.ExposureControl.kHold);
     Hardware.axisCamera.writeMaxFPS(Hardware.AXIS_FPS);
     Hardware.axisCamera.writeResolution(Hardware.AXIS_RESOLUTION);
     Hardware.axisCamera
@@ -451,7 +451,7 @@ public void robotInit ()
     // processing.
     // Hardware.imageProcessor.setHSLValues(0, 255, 0, 75, 5, 141);
     // Hardware.imageProcessor.setHSLValues(0, 115, 0, 69, 17, 44);
-		Hardware.imageProcessor.setHSLValues(78, 141, 55, 255, 9, 47);
+    Hardware.imageProcessor.setHSLValues(55, 147, 14, 255, 78, 255);
     // Has us remove small objects at the intensity of 5. May have to
     // change those values.
     // Hardware.imageProcessor.setObjectRemoval(ObjectRemoval.BORDER);
@@ -520,7 +520,7 @@ public void robotInit ()
             "Kilroy XVII is started.  All hardware items created.");
     System.out.println();
     System.out.println();
-	} // end robotInit
+} // end robotInit
 
 // -------------------------------------------------------
 /**
