@@ -97,18 +97,49 @@ public void move (double speed, boolean override)
 
     // If we're currently beyond our soft limits, don't do anything that would
     // bring up further out of them. Otherwise do what the user wants.
-    if (((speed > 0 && this.armPot.get() < MIN_SOFT_ARM_STOP)
-            || (speed < 0
-                    && this.armPot.get() > this.MAX_SOFT_ARM_STOP))
-            && override == false)
+    // if (((speed > 0 && this.armPot.get() < MIN_SOFT_ARM_STOP)
+    // || (speed < 0
+    // && this.armPot.get() > this.MAX_SOFT_ARM_STOP))
+    // && override == false)
+    // {
+    // // we have to give a little bit of voltage to stop the motor.
+    // this.stopArmMotor();
+    // }
+    // else
+    // {
+    // this.motor.set(-speed);
+
+    // }
+
+    if (override == true)
         {
-            // we have to give a little bit of voltage to stop the motor.
-            this.stopArmMotor();
+            if (speed == 0) // if override true, and speed is 0, don't move
+                {
+                    this.motor.set(speed);
+
+                }
+            else // if override is true, and speed is not 0, send more power, NO
+            // LIMITS
+                {
+                    this.motor.set(-speed * 1.5);
+                }
         }
     else
         {
-            this.motor.set(-speed);
+            if ((speed > 0 && this.armPot.get() < MIN_SOFT_ARM_STOP) ||
+                    (speed < 0 && this.armPot
+                            .get() > this.MAX_SOFT_ARM_STOP))
+                {
+                    this.stopArmMotor(); // if override false, and we are at our
+                    // arm limits, don't move
+                }
+            else
+                {
+                    this.motor.set(-speed); // if arm is between limits,
+                    // MOVE!!!!!!!
+                }
         }
+
 }
 
 public void move (double speed)
