@@ -105,6 +105,7 @@ public static void init ()
     isAligningByCamera = false;
     fireRequested = false;
     prepPic = false;
+    ballFiring = false;
     // Hardware.drive.alignByCameraStateMachine(0.0, 0.0, 0.0, 0.0,
     // 0.0,
     // 0.0, true, false, false);
@@ -520,8 +521,20 @@ public static void periodic ()
                 {
                     // Tell the code to start firing
                     fireRequested = true;
-                    Hardware.axisCamera.saveImagesSafely();
+
+                    if (ballFiring == false)
+                        {
+                            ballFiring = true;
+                            Hardware.axisCamera.saveImagesSafely();
+                            // Hardware.axisCamera
+                            // .saveTextSafely("This is a test");
+                        }
+
                     Hardware.armOutOfWayTimer.start();
+                }
+            else
+                {
+                    ballFiring = false;
                 }
             // if the override button is pressed and we want to fire
             if (Hardware.leftOperator
@@ -627,6 +640,8 @@ public static void periodic ()
                         {
                             isAligningByCamera = false;
                         }
+                    Hardware.testingTimer.reset();
+                    Hardware.testingTimer.start();
                 }
 
             // If we want to point at the goal using the camera
@@ -650,7 +665,7 @@ public static void periodic ()
                             PERCENT_IMAGE_PROCESSING_DEADBAND,
                             CAMERA_ALIGNMENT_TURNING_SPEED,
                             CAMERA_X_AXIS_ADJUSTED_PROPORTIONAL_CENTER,
-                            true);// -.375
+                            false);// -.375
                     // if (Hardware.drive.alignByCamera(
                     // PERCENT_IMAGE_PROCESSING_DEADBAND,
                     // CAMERA_ALIGNMENT_TURNING_SPEED, -.30, //-.483,
@@ -677,6 +692,9 @@ public static void periodic ()
                                     isFiringByCamera = false;
                                 }
                             currentCameraReturn = Drive.alignByCameraReturn.WORKING;
+                            Hardware.testingTimer.stop();
+                            System.out.println("Time to quit:"
+                                    + Hardware.testingTimer.get());
                         }
                     // cancel the align request if the right operator presses
                     // buttons 10 and
@@ -1423,4 +1441,6 @@ private static boolean storeFiringState;
 private static int loopCounter = 0;
 
 private static boolean brakingTesting = false;
+
+private static boolean ballFiring = false;
 } // end class

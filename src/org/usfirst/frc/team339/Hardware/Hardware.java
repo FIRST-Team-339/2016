@@ -303,10 +303,8 @@ public static USBCamera cam0 = new USBCamera("cam0"); // AHK @cameratesting
 // Declares the Axis camera
 public static KilroyCamera axisCamera = new KilroyCamera(true);
 
-
-
 public static ImageProcessing imageProcessor = new ImageProcessing(
-        Hardware.axisCamera);
+        Hardware.axisCamera); // @AHK newVision
 // **********************************************************
 // DRIVER STATION CLASSES
 // **********************************************************
@@ -384,6 +382,8 @@ public static final Timer fireTimer = new Timer();
 public static final Timer armOutOfWayTimer = new Timer();
 
 public static final Timer cameraInTeleopTimer = new Timer();
+
+public static final Timer testingTimer = new Timer();
 
 public static final ErrorMessage errorMessage = new ErrorMessage(
         false /* append timelog */);

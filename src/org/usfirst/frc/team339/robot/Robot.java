@@ -396,8 +396,8 @@ public void robotInit ()
             Hardware.MINIMUM_AXIS_CAMERA_BRIGHTNESS);
     // Hardware.axisCamera.writeExposureControl(
     // AxisCamera.ExposureControl.kAutomatic);
-    Hardware.axisCamera
-            .writeExposureControl(AxisCamera.ExposureControl.kHold);
+    // Hardware.axisCamera
+    // .writeExposureControl(AxisCamera.ExposureControl.kHold);
     Hardware.axisCamera.writeMaxFPS(Hardware.AXIS_FPS);
     Hardware.axisCamera.writeResolution(Hardware.AXIS_RESOLUTION);
     Hardware.axisCamera
