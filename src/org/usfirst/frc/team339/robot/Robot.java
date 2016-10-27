@@ -396,8 +396,8 @@ public void robotInit ()
             Hardware.MINIMUM_AXIS_CAMERA_BRIGHTNESS);
     // Hardware.axisCamera.writeExposureControl(
     // AxisCamera.ExposureControl.kAutomatic);
-		Hardware.axisCamera
-		        .writeExposureControl(AxisCamera.ExposureControl.kHold);
+//		Hardware.axisCamera
+//		        .writeExposureControl(AxisCamera.ExposureControl.kHold);
     Hardware.axisCamera.writeMaxFPS(Hardware.AXIS_FPS);
     Hardware.axisCamera.writeResolution(Hardware.AXIS_RESOLUTION);
     Hardware.axisCamera
@@ -446,7 +446,7 @@ public void robotInit ()
     // Hardware.cam0.updateSettings();
     // Starts streaming video
     // TODO add back in
-    Hardware.cameraServer.startAutomaticCapture(Hardware.cam0);
+    Hardware.cameraServer.startAutomaticCapture(Hardware.cam1);
     // Sets the hue, saturation, and luminance values for the vision
     // processing.
     // Hardware.imageProcessor.setHSLValues(0, 255, 0, 75, 5, 141);
@@ -545,7 +545,7 @@ public void teleopInit ()
     // Call the Teleop class's Init function,
     // which contains the user code.
     // -------------------------------------
-    Hardware.cameraServer.startAutomaticCapture(Hardware.cam0);
+    Hardware.cameraServer.startAutomaticCapture(Hardware.cam1);
 
     Teleop.init();
 
