@@ -12,7 +12,7 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.image.NIVisionException;
 
 public class Drive
-{ 
+{
 
 /**
  * Constructor for a Drive object. Should only be called once.
@@ -1588,7 +1588,7 @@ public alignByCameraReturn alignByCameraStateMachine (
         {
         case BEGINNING_SETUP:
             this.savedGear = this.transmission.getGear();
-            this.transmission.setGear(2);
+            this.transmission.setGear(1);
             this.cameraTimer.start();
             // turn down the lights
             this.camera.writeBrightness(
@@ -1993,137 +1993,137 @@ private enum alignByCameraStates
  * @author Alex Kneipp
  */
 
-public boolean driveByCamera (double driveDistanceInches,
-        double percentageDeadBand,
-        double correctionSpeed, double adjustedProportionalCenter,
-        boolean savePictures)
-{
-
-    if (this.camera != null && this.ringLightRelay != null)
-        {
-            if (this.firstRunDriveByCamera == true)
-                {
-                    this.cameraTimer.start();
-                    // turn down the lights
-                    this.camera.writeBrightness(
-                            Hardware.MINIMUM_AXIS_CAMERA_BRIGHTNESS);
-                    this.savedGear = this.transmission.getGear(); // TODO shared
-                                                                  // var
-                    this.transmission.setGear(2);
-                    // Woah, that's too dark! Someone turn on the ringlight!
-                    this.ringLightRelay.set(Value.kOn);
-                    firstRunDriveByCamera = false;
-                }
-            // If we claim to be driving by camera and we've waitied long enough
-            // (a quarter second) for someone to brighten up the darkness with
-            // the ringlight.
-            if (this.cameraTimer.get() >= .25)
-                {
-                    // try to take a picture and save it in memory and on the
-                    // "hard disk"
-                    try
-                        {
-                            Hardware.imageProcessor.updateImage(
-                                    Hardware.axisCamera.getImage());
-                            if (savePictures == true)
-                                Hardware.axisCamera.saveImagesSafely();
-                        }
-                    // This is NI yelling at us for something being wrong
-                    catch (NIVisionException e)
-                        {
-                            // if something wrong happens, tell the stupid
-                            // programmers
-                            // who let it happen more information about where it
-                            // came from
-                            e.printStackTrace();
-                        }
-                    // tell imageProcessor to use the image we just took to look
-                    // for
-                    // blobs
-                    Hardware.imageProcessor
-                            .updateParticleAnalysisReports();
-                    // tell the programmers where the X coordinate of the center
-                    // of
-                    // mass of the largest blob
-                    // System.out.println("CenterOfMass: " +
-                    // Hardware.imageProcessor
-                    // .getParticleAnalysisReports()[0].center_mass_x);
-                    // if the center of the largest blob is to the left of our
-                    // acceptable zone around the center
-                    if (Hardware.imageProcessor
-                            .getParticleAnalysisReports().length > 0 &&
-                            getRelativeXCoordinate(
-                                    Hardware.imageProcessor
-                                            .getParticleAnalysisReports()[0].center_mass_x) <= ((-percentageDeadBand
-                                                    /
-                                                    2)
-                                                    + adjustedProportionalCenter))
-                        {
-                            // turn left until it is in the zone (will be called
-                            // over and
-                            // over again until the blob is within the
-                            // acceptable zone)
-                            // TODO check and make sure this still doesn't work,
-                            // then
-                            // change it back or write turn continuous method
-                            this.driveContinuous(
-                                    Math.min(correctionSpeed,
-                                            defaultTurnSpeed),
-                                    Math.max(defaultTurnSpeed,
-                                            correctionSpeed));
-                        }
-                    // if the center of the largest blob is to the right of our
-                    // acceptable zone around the center
-                    else if (Hardware.imageProcessor
-                            .getParticleAnalysisReports().length > 0 &&
-                            getRelativeXCoordinate(
-                                    Hardware.imageProcessor
-                                            .getParticleAnalysisReports()[0].center_mass_x) >= ((percentageDeadBand
-                                                    /
-                                                    2)
-                                                    + adjustedProportionalCenter))
-                        {
-                            // turn right until it is in the zone (will be
-                            // called over and
-                            // over again until the blob is within the
-                            // acceptable zone)
-                            this.driveContinuous(
-                                    Math.max(defaultTurnSpeed,
-                                            correctionSpeed),
-                                    Math.min(correctionSpeed,
-                                            defaultTurnSpeed));
-                        }
-                    // If the blob is where we want it to be right now...
-                    else
-                        {
-                            // drive forward as fast as we can
-                            this.driveContinuous(defaultMaxSpeed,
-                                    defaultMaxSpeed);
-                        }
-                    // If the either of the encoders are beyond our drive
-                    // distance, stop and tell
-                    // the code that we're done.
-                    if ((this.transmission
-                            .getRightRearEncoderDistance() >= driveDistanceInches
-                            ||
-                            this.transmission
-                                    .getLeftRearEncoderDistance() >= driveDistanceInches))
-                        {
-                            // Set up for next call
-                            firstTimeAlign = true;
-                            this.cameraTimer.stop();
-                            this.cameraTimer.reset();
-                            // stop
-                            Hardware.transmission.controls(0.0, 0.0);
-                            this.transmission.setGear(savedGear);
-                            // say we're done
-                            return true;
-                        }
-                }
-        }
-    return false;
-
-}
+// public boolean driveByCamera (double driveDistanceInches,
+// double percentageDeadBand,
+// double correctionSpeed, double adjustedProportionalCenter,
+// boolean savePictures)
+// {
+//
+// if (this.camera != null && this.ringLightRelay != null)
+// {
+// if (this.firstRunDriveByCamera == true)
+// {
+// this.cameraTimer.start();
+// // turn down the lights
+// this.camera.writeBrightness(
+// Hardware.MINIMUM_AXIS_CAMERA_BRIGHTNESS);
+// this.savedGear = this.transmission.getGear(); // TODO shared
+// // var
+// this.transmission.setGear(2);
+// // Woah, that's too dark! Someone turn on the ringlight!
+// this.ringLightRelay.set(Value.kOn);
+// firstRunDriveByCamera = false;
+// }
+// // If we claim to be driving by camera and we've waitied long enough
+// // (a quarter second) for someone to brighten up the darkness with
+// // the ringlight.
+// if (this.cameraTimer.get() >= .25)
+// {
+// // try to take a picture and save it in memory and on the
+// // "hard disk"
+// try
+// {
+// Hardware.imageProcessor.updateImage(
+// Hardware.axisCamera.getImage());
+// if (savePictures == true)
+// Hardware.axisCamera.saveImagesSafely();
+// }
+// // This is NI yelling at us for something being wrong
+// catch (NIVisionException e)
+// {
+// // if something wrong happens, tell the stupid
+// // programmers
+// // who let it happen more information about where it
+// // came from
+// e.printStackTrace();
+// }
+// // tell imageProcessor to use the image we just took to look
+// // for
+// // blobs
+// Hardware.imageProcessor
+// .updateParticleAnalysisReports();
+// // tell the programmers where the X coordinate of the center
+// // of
+// // mass of the largest blob
+// // System.out.println("CenterOfMass: " +
+// // Hardware.imageProcessor
+// // .getParticleAnalysisReports()[0].center_mass_x);
+// // if the center of the largest blob is to the left of our
+// // acceptable zone around the center
+// if (Hardware.imageProcessor
+// .getParticleAnalysisReports().length > 0 &&
+// getRelativeXCoordinate(
+// Hardware.imageProcessor
+// .getParticleAnalysisReports()[0].center_mass_x) <= ((-percentageDeadBand
+// /
+// 2)
+// + adjustedProportionalCenter))
+// {
+// // turn left until it is in the zone (will be called
+// // over and
+// // over again until the blob is within the
+// // acceptable zone)
+// // TODO check and make sure this still doesn't work,
+// // then
+// // change it back or write turn continuous method
+// this.driveContinuous(
+// Math.min(correctionSpeed,
+// defaultTurnSpeed),
+// Math.max(defaultTurnSpeed,
+// correctionSpeed));
+// }
+// // if the center of the largest blob is to the right of our
+// // acceptable zone around the center
+// else if (Hardware.imageProcessor
+// .getParticleAnalysisReports().length > 0 &&
+// getRelativeXCoordinate(
+// Hardware.imageProcessor
+// .getParticleAnalysisReports()[0].center_mass_x) >= ((percentageDeadBand
+// /
+// 2)
+// + adjustedProportionalCenter))
+// {
+// // turn right until it is in the zone (will be
+// // called over and
+// // over again until the blob is within the
+// // acceptable zone)
+// this.driveContinuous(
+// Math.max(defaultTurnSpeed,
+// correctionSpeed),
+// Math.min(correctionSpeed,
+// defaultTurnSpeed));
+// }
+// // If the blob is where we want it to be right now...
+// else
+// {
+// // drive forward as fast as we can
+// this.driveContinuous(defaultMaxSpeed,
+// defaultMaxSpeed);
+// }
+// // If the either of the encoders are beyond our drive
+// // distance, stop and tell
+// // the code that we're done.
+// if ((this.transmission
+// .getRightRearEncoderDistance() >= driveDistanceInches
+// ||
+// this.transmission
+// .getLeftRearEncoderDistance() >= driveDistanceInches))
+// {
+// // Set up for next call
+// firstTimeAlign = true;
+// this.cameraTimer.stop();
+// this.cameraTimer.reset();
+// // stop
+// Hardware.transmission.controls(0.0, 0.0);
+// this.transmission.setGear(savedGear);
+// // say we're done
+// return true;
+// }
+// }
+// }
+// return false;
+//
+// }
 
 /**
  * Turn the robot until it has the largest blob in its vision processing
@@ -2161,6 +2161,10 @@ public boolean driveByCamera (double driveDistanceInches,
  * @author Alex Kneipp
  */
 // todo allow absolute coordinates as input
+int newImages = 0;
+
+int dupImages = 0;
+
 public alignByCameraReturn alignByCamera (double percentageDeadBand,
         double correctionSpeed, double adjustedProportionalCenter,
         boolean savePictures)
@@ -2194,18 +2198,26 @@ public alignByCameraReturn alignByCamera (double percentageDeadBand,
             // If we claim to be driving by camera and we've waitied long enough
             // (a quarter second) for someone to brighten up the darkness with
             // the ringlight.
-            if (this.cameraTimer.get() >= .50)
+            if (this.cameraTimer.get() >= .25)
                 {
                     // try to take a picture and save it in memory and on the
                     // "hard disk"
                     try
                         {
-                            // if (Hardware.axisCamera.freshImage() == true)
+                            if (Hardware.axisCamera
+                                    .freshImage() == true)
                                 {
                                     Hardware.imageProcessor.updateImage(
                                             Hardware.axisCamera
                                                     .getImage());
-
+                                    newImages++;
+                                }
+                            else
+                                {
+                                    Hardware.imageProcessor.updateImage(
+                                            Hardware.axisCamera
+                                                    .getImage());
+                                    dupImages++;
                                 }
                         }
                     // This is NI yelling at us for something being wrong
@@ -2244,26 +2256,26 @@ public alignByCameraReturn alignByCamera (double percentageDeadBand,
                     if (Hardware.imageProcessor
                             .getParticleAnalysisReports().length > 0)
                         {
-                            System.out.println("CenterOfMass: " +
-                                    Hardware.imageProcessor
-                                            .getParticleAnalysisReports()[widestBlobIndex].center_mass_x);
-                            System.out.println(
-                                    "Relative x center of Mass :" +
-                                            (getRelativeCameraCoordinate(
-                                                    Hardware.imageProcessor
-                                                            .getParticleAnalysisReports()[widestBlobIndex].center_mass_x,
-                                                    true)));
-                            System.out.println(
-                                    "Relative Center range: ("
-                                            + (percentageDeadBand / 2 +
-                                                    adjustedProportionalCenter)
-
-                                            +
-                                            ", "
-                                            + (-percentageDeadBand / 2 +
-                                                    adjustedProportionalCenter)
-                                            +
-                                            ")");
+                            // System.out.println("CenterOfMass: " +
+                            // Hardware.imageProcessor
+                            // .getParticleAnalysisReports()[widestBlobIndex].center_mass_x);
+                            // System.out.println(
+                            // "Relative x center of Mass :" +
+                            // (getRelativeCameraCoordinate(
+                            // Hardware.imageProcessor
+                            // .getParticleAnalysisReports()[widestBlobIndex].center_mass_x,
+                            // true)));
+                            // System.out.println(
+                            // "Relative Center range: ("
+                            // + (percentageDeadBand / 2 +
+                            // adjustedProportionalCenter)
+                            //
+                            // +
+                            // ", "
+                            // + (-percentageDeadBand / 2 +
+                            // adjustedProportionalCenter)
+                            // +
+                            // ")");
                         }
                     else
                         {
@@ -2334,6 +2346,39 @@ public alignByCameraReturn alignByCamera (double percentageDeadBand,
                     // deadzone
                     else
                         {
+                            if (Hardware.imageProcessor
+                                    .getParticleAnalysisReports().length > 0)
+                                {
+                                    System.out
+                                            .println("CenterOfMass: " +
+                                                    Hardware.imageProcessor
+                                                            .getParticleAnalysisReports()[widestBlobIndex].center_mass_x);
+                                    System.out.println(
+                                            "Relative x center of Mass :"
+                                                    +
+                                                    (getRelativeCameraCoordinate(
+                                                            Hardware.imageProcessor
+                                                                    .getParticleAnalysisReports()[widestBlobIndex].center_mass_x,
+                                                            true)));
+                                    System.out.println(
+                                            "Relative Center range: ("
+                                                    + (percentageDeadBand
+                                                            / 2 +
+                                                            adjustedProportionalCenter)
+
+                                                    +
+                                                    ", "
+                                                    + (-percentageDeadBand
+                                                            / 2 +
+                                                            adjustedProportionalCenter)
+                                                    +
+                                                    ")");
+                                    System.out.println(
+                                            "DupImages: " + dupImages);
+                                    System.out.println("FreshImages: "
+                                            + newImages);
+                                }
+
                             // System.out.println("Center of Mass X: "
                             // + Hardware.imageProcessor
                             // .getParticleAnalysisReports()[0].center_mass_x);
@@ -2357,7 +2402,7 @@ public alignByCameraReturn alignByCamera (double percentageDeadBand,
                             // hardware reference.
 
                             // stop the robot
-                            // Hardware.transmission.controls(0.0, 0.0);
+                            Hardware.transmission.controls(0.0, 0.0);
                             // save the image of us when we're in alignment.
                             if (savePictures == true)
                                 Hardware.axisCamera.saveImagesSafely();
@@ -2590,6 +2635,10 @@ public void setYResolution (double res)
 {
     this.cameraYResolution = res;
 }
+
+public void getYawAngleToGoal ()
+{
+}// TODO write.
 
 /**
  * enum which describes which way to turn

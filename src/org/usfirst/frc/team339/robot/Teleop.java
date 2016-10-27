@@ -105,6 +105,7 @@ public static void init ()
     isAligningByCamera = false;
     fireRequested = false;
     prepPic = false;
+    ballFiring = false;
     // Hardware.drive.alignByCameraStateMachine(0.0, 0.0, 0.0, 0.0,
     // 0.0,
     // 0.0, true, false, false);
@@ -378,8 +379,12 @@ public static void periodic ()
                                     CAMERA_ALIGN_Y_DEADBAND,
                                     CAMERA_X_AXIS_ADJUSTED_PROPORTIONAL_CENTER,
                                     CAMERA_Y_AXIS_ADJUSTED_PROPORTIONAL_CENTER,
-                                    ALIGN_BY_CAMERA_TURNING_SPEED,
-                                    ALIGN_BY_CAMERA_DRIVE_SPEED,
+                                    ALIGN_BY_CAMERA_TURNING_SPEED
+                                            * 1.25,// TODO
+                                                   // super
+                                                   // ugly,
+                                                   // fix
+                                    ALIGN_BY_CAMERA_DRIVE_SPEED * 1.25,
                                     (Hardware.rightOperator
                                             .getRawButton(10) == true
                                             && Hardware.rightOperator
@@ -405,9 +410,6 @@ public static void periodic ()
                         }
                     else if (currentCameraReturn == Drive.alignByCameraReturn.CANCELLED
                             || currentCameraReturn == Drive.alignByCameraReturn.NO_BLOBS_FOUND)// @AHK
-                                                                                               // test
-                                                                                               // low
-                                                                                               // priority
                         {
                             isFiringByCamera = false;
                             testingAlignByCamera = false;
@@ -519,8 +521,20 @@ public static void periodic ()
                 {
                     // Tell the code to start firing
                     fireRequested = true;
-                    Hardware.axisCamera.saveImagesSafely();
+
+                    if (ballFiring == false)
+                        {
+                            ballFiring = true;
+                            Hardware.axisCamera.saveImagesSafely();
+                            // Hardware.axisCamera
+                            // .saveTextSafely("This is a test");
+                        }
+
                     Hardware.armOutOfWayTimer.start();
+                }
+            else
+                {
+                    ballFiring = false;
                 }
             // if the override button is pressed and we want to fire
             if (Hardware.leftOperator
@@ -626,6 +640,8 @@ public static void periodic ()
                         {
                             isAligningByCamera = false;
                         }
+                    Hardware.testingTimer.reset();
+                    Hardware.testingTimer.start();
                 }
 
             // If we want to point at the goal using the camera
@@ -649,7 +665,7 @@ public static void periodic ()
                             PERCENT_IMAGE_PROCESSING_DEADBAND,
                             CAMERA_ALIGNMENT_TURNING_SPEED,
                             CAMERA_X_AXIS_ADJUSTED_PROPORTIONAL_CENTER,
-                            true);// -.375
+                            false);// -.375
                     // if (Hardware.drive.alignByCamera(
                     // PERCENT_IMAGE_PROCESSING_DEADBAND,
                     // CAMERA_ALIGNMENT_TURNING_SPEED, -.30, //-.483,
@@ -676,6 +692,9 @@ public static void periodic ()
                                     isFiringByCamera = false;
                                 }
                             currentCameraReturn = Drive.alignByCameraReturn.WORKING;
+                            Hardware.testingTimer.stop();
+                            System.out.println("Time to quit:"
+                                    + Hardware.testingTimer.get());
                         }
                     // cancel the align request if the right operator presses
                     // buttons 10 and
@@ -858,28 +877,40 @@ public static void periodic ()
             // Hardware.forwardToggleButton.update();
             // }
             //
- 
-            if (Hardware.forwardToggleButton.isOnCheckNow() == true
-                    && brakingTesting == false)
-                {
-                    Hardware.drive.driveStraightContinuous();
-                }
-            // Start braking using the ! ! ! NEW STOP FUNCTION ! ! ! if the
-            // button is pressed while moving
-            if (Hardware.forwardToggleButton.isOn() == true
-                    && Hardware.leftDriver.getRawButton(8) == true
-                    && brakingTesting == false)
-                {
-                    brakingTesting = true;
-                    Hardware.forwardToggleButton.update();
 
-                }
-            else if (brakingTesting == true)
+            // If the stop testing button (BUTTON 8 ON LEFT DRIVER)
+            // is toggled on and we aren't moving or stopping, 
+            // then start moving.
+            
+            if (Hardware.forwardToggleButton.isOnCheckNow() == true
+                    && brakingTesting == false
+                    && motionToggled == false)
                 {
-                    if (Hardware.transmission
-                            .stop() != Hardware.transmission.noMovement
-                            || Hardware.transmission
-                                    .stop() != Hardware.transmission.noEncoders)
+                    motionToggled = true;
+                }
+            
+            if (motionToggled == true)
+                {
+                    Hardware.transmission.controls(1.0, 1.0);
+                    Hardware.transmission.setJoystickDeadbandRange(1.0);
+                }
+            
+            // If the button is toggled off, then stop moving and
+            // start stopping.
+            
+            if (Hardware.forwardToggleButton.isOnCheckNow() == false
+                    && motionToggled == true)
+                {
+                    motionToggled = false;
+                    brakingTesting = true;
+                }
+            
+            if (brakingTesting == true)
+                {
+                    if (Hardware.transmission.stop() 
+                        != Hardware.transmission.noMovement
+                            && Hardware.transmission
+                            .stop() != Hardware.transmission.noEncoders)
                         {
                             brakingTesting = false;
                         }
@@ -1049,6 +1080,7 @@ public static boolean fire (int power, boolean override)
 {
     // If we have enough pressure to fire or we want to ignore the
     // transducer and FIRE ANYWAY, fire. Otherwise wait until we can.
+    Hardware.transmission.controls(0, 0);
     if (Hardware.transducer.get() >= FIRING_MIN_PSI
             || override == true)
         {
@@ -1244,7 +1276,7 @@ public static void printStatements ()
     // prints the value of the transducer- (range in code is 50)
     // hits psi of 100 accurately
     // System.out.println("transducer = " + Hardware.transducer.get());
-    System.out.println("Arm Pot = " + Hardware.armPot.get());
+    // System.out.println("Arm Pot = " + Hardware.armPot.get());
 
     // Motor controllers-----
     // prints value of the motors
@@ -1330,13 +1362,13 @@ private static final double MAXIMUM_TELEOP_SPEED = 1.0;
 
 private static final double CAMERA_ALIGN_Y_DEADBAND = .10;
 
-private static final double CAMERA_ALIGN_X_DEADBAND = .1;
+private static final double CAMERA_ALIGN_X_DEADBAND = .08;
 
-public static final double CAMERA_X_AXIS_ADJUSTED_PROPORTIONAL_CENTER = -.3175;// -.365;//
-                                                                               // -.375
+public static final double CAMERA_X_AXIS_ADJUSTED_PROPORTIONAL_CENTER = -.394;// -.365;//
+                                                                              // -.375
 
-public static final double CAMERA_Y_AXIS_ADJUSTED_PROPORTIONAL_CENTER = -.371;// -.182;//
-                                                                              // -.192
+public static final double CAMERA_Y_AXIS_ADJUSTED_PROPORTIONAL_CENTER = -.68;// -.182;//
+                                                                             // -.192
 
 private static final double ALIGN_BY_CAMERA_TURNING_SPEED = .75;// @AHK .5
 
@@ -1373,7 +1405,7 @@ private static final double PICKUP_ARM_CONTROL_DEADZONE = 0.2;
 
 private final static double PERCENT_IMAGE_PROCESSING_DEADBAND = .13;
 
-private final static double CAMERA_ALIGNMENT_TURNING_SPEED = .50;// .55
+private final static double CAMERA_ALIGNMENT_TURNING_SPEED = .5;// .55
 
 private final static double ARM_IS_OUT_OF_WAY_TIME = .10;
 
@@ -1421,4 +1453,8 @@ private static boolean storeFiringState;
 private static int loopCounter = 0;
 
 private static boolean brakingTesting = false;
+
+private static boolean ballFiring = false;
+
+private static boolean motionToggled = false;
 } // end class

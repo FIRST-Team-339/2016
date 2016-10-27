@@ -60,7 +60,7 @@ public void moveReasonably (int direction, boolean override)
     // Going UP!
         {
             if (armPot.get() < REASONABLE_DECELERATION_ANGLE)
-			//Starting up, has to work hard.
+            // Starting up, has to work hard.
                 {
                     move(REASONABLE_UP_FACTOR, override);
                 }
@@ -153,7 +153,7 @@ public void stopArmMotor ()
             && armPot
                     .get() < BRAKE_ARM_WITH_FORWARD_VOLTAGE_DEGREES)
         {
-			this.motor.set(0.1);
+            this.motor.set(0.1);
         }
     else if (armPot.get() <= this.MAX_SOFT_ARM_STOP
             && armPot
@@ -445,16 +445,18 @@ private boolean ballHasBeenPreviouslyDetected = false;
 private final double MAX_ARM_SPEED = -.8;
 
 // default slow arm turn speed proportion
-	private double slowSpeed = .2;
+private double slowSpeed = .2;
 
-	private double MAX_SOFT_ARM_STOP = 248.0;
-	private final static double MIN_SOFT_ARM_STOP = 81.0;
+private double MAX_SOFT_ARM_STOP = 248.0;
 
-	private final double ARM_OUT_OF_WAY_DEGREES =
-	        0.701 * (MAX_SOFT_ARM_STOP - MIN_SOFT_ARM_STOP)
+private final static double MIN_SOFT_ARM_STOP = 81.0;
+
+private final double ARM_OUT_OF_WAY_DEGREES = 0.701
+        * (MAX_SOFT_ARM_STOP - MIN_SOFT_ARM_STOP)
         + MIN_SOFT_ARM_STOP;// 175.0;
-	private final double BRAKE_ARM_WITH_FORWARD_VOLTAGE_DEGREES =
-	        0.510 * (MAX_SOFT_ARM_STOP - MIN_SOFT_ARM_STOP)
+
+private final double BRAKE_ARM_WITH_FORWARD_VOLTAGE_DEGREES = 0.510
+        * (MAX_SOFT_ARM_STOP - MIN_SOFT_ARM_STOP)
         + MIN_SOFT_ARM_STOP;// 165.0;
 
 private final double DEPOSIT_POSITION = .95 // 1.0
@@ -463,35 +465,36 @@ private final double DEPOSIT_POSITION = .95 // 1.0
 
 private final double DEPOSIT_POSITION_THRESHOLD = 20.0;// 5
 
-	private final double REASONABLE_UP_FACTOR = -1.0;
-private final double REASONABLE_UP_AND_OVER_FACTOR = -0.40;
+private final double REASONABLE_UP_FACTOR = -.55;
+
+private final double REASONABLE_UP_AND_OVER_FACTOR = -0.45;
 
 private final double REASONABLE_DOWN_FACTOR = 0.15; // .2, .35
 
 private final double REASONABLE_DOWN_UNDER_FACTOR = -.1;// 0.1;// .15,
                                                         // .2
 
-private final double REASONABLE_DECELERATION_ANGLE = 0.75
-        * (MAX_SOFT_ARM_STOP - MIN_SOFT_ARM_STOP)
-        + MIN_SOFT_ARM_STOP;// 174.1;
+private final double REASONABLE_DECELERATION_ANGLE = 129;// 0.75
+// * (MAX_SOFT_ARM_STOP - MIN_SOFT_ARM_STOP)
+// + MIN_SOFT_ARM_STOP;// 174.1;
 
 private final double INTAKE_SPEED = 0.5;
 
-	private final double HOLDING_POSITION =
-	        0.349 * (MAX_SOFT_ARM_STOP - MIN_SOFT_ARM_STOP)
+private final double HOLDING_POSITION = 0.349
+        * (MAX_SOFT_ARM_STOP - MIN_SOFT_ARM_STOP)
         + MIN_SOFT_ARM_STOP;// 143;
 
 private static final int HOLDING_POSITION_THRESHOLD = 10;
 
-private static final double HOLDING_SPEED = -.2;
+private static final double HOLDING_SPEED = -.25;
 
 private static final double DELAY_AFTER_BALL_DETECTION = 0.12;
 
 
 private static final double UNDER_BAR_THRESHOLD = 2.0;
 
-	private static final double UNDER_BAR_VALUE =
-	        MIN_SOFT_ARM_STOP + UNDER_BAR_THRESHOLD;
+private static final double UNDER_BAR_VALUE = MIN_SOFT_ARM_STOP
+        + UNDER_BAR_THRESHOLD;
 
 
 }
