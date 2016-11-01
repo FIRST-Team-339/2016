@@ -878,27 +878,39 @@ public static void periodic ()
             // }
             //
 
+            // If the stop testing button (BUTTON 8 ON LEFT DRIVER)
+            // is toggled on and we aren't moving or stopping, 
+            // then start moving.
+            
             if (Hardware.forwardToggleButton.isOnCheckNow() == true
-                    && brakingTesting == false)
+                    && brakingTesting == false
+                    && motionToggled == false)
                 {
-                    Hardware.drive.driveStraightContinuous();
+                    motionToggled = true;
                 }
-            // Start braking using the ! ! ! NEW STOP FUNCTION ! ! ! if the
-            // button is pressed while moving
-            if (Hardware.forwardToggleButton.isOn() == true
-                    && Hardware.leftDriver.getRawButton(8) == true
-                    && brakingTesting == false)
+            
+            if (motionToggled == true)
                 {
+                    Hardware.transmission.controls(1.0, 1.0);
+                    Hardware.transmission.setJoystickDeadbandRange(1.0);
+                }
+            
+            // If the button is toggled off, then stop moving and
+            // start stopping.
+            
+            if (Hardware.forwardToggleButton.isOnCheckNow() == false
+                    && motionToggled == true)
+                {
+                    motionToggled = false;
                     brakingTesting = true;
-                    Hardware.forwardToggleButton.update();
-
                 }
-            else if (brakingTesting == true)
+            
+            if (brakingTesting == true)
                 {
-                    if (Hardware.transmission
-                            .stop() != Hardware.transmission.noMovement
-                            || Hardware.transmission
-                                    .stop() != Hardware.transmission.noEncoders)
+                    if (Hardware.transmission.stop() 
+                        != Hardware.transmission.noMovement
+                            && Hardware.transmission
+                            .stop() != Hardware.transmission.noEncoders)
                         {
                             brakingTesting = false;
                         }
@@ -1443,4 +1455,6 @@ private static int loopCounter = 0;
 private static boolean brakingTesting = false;
 
 private static boolean ballFiring = false;
+
+private static boolean motionToggled = false;
 } // end class
