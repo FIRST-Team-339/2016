@@ -4,9 +4,10 @@ import java.util.Comparator;
 import java.util.Vector;
 import com.ni.vision.NIVision;
 import com.ni.vision.NIVision.Image;
+import org.usfirst.frc.team339.Hardware.Hardware;
 import org.usfirst.frc.team339.HardwareInterfaces.KilroyCamera;
-import org.usfirst.frc.team339.Vision.operators.HSLColorThresholdOperator;
 import org.usfirst.frc.team339.Vision.operators.ConvexHullOperator;
+import org.usfirst.frc.team339.Vision.operators.HSLColorThresholdOperator;
 import org.usfirst.frc.team339.Vision.operators.LoadColorImageJPEGOperator;
 import org.usfirst.frc.team339.Vision.operators.RemoveSmallObjectsOperator;
 import org.usfirst.frc.team339.Vision.operators.SaveBinaryImagePNGOperator;
@@ -84,6 +85,9 @@ private double cameraFocalLength;
 
 public ParticleReport[] reports = null;
 
+private boolean newImageIsFresh = true;// TODO @AHK use to determine if we
+                                       // actually process an image
+
 /**
  * Creates an ImageProcessor object with camera <camera> and a default
  * processing script. The script consists of:
@@ -126,7 +130,7 @@ public ImageProcessor (KilroyCamera camera,
     this.operators = new VisionScript();
     for (VisionOperatorInterface operator : ops)
         {
-            this.operators.put(operator);
+        this.operators.put(operator);
         }
 }
 
@@ -136,14 +140,16 @@ public ParticleReport[] getParticleAnalysisReports ()
     return this.reports;
 }
 
+
 public void applyOperators ()
 {
     // Goes through all operators and applies whatever changes they are
     // programmed to apply. The currentImage is replaced with the altered
     // image.
-    for (final VisionOperatorInterface operator : this.operators)
+    for (int i = 0; i < operators.size(); i++)
         {
-            this.currentImage = operator.operate(this.currentImage);
+        this.currentImage = this.operators.get(i)
+                .operate(this.currentImage);
         }
 }
 
@@ -194,15 +200,15 @@ public void removeOperator (VisionOperatorInterface operatorToRemove,
 {
     for (int i = 0; i < this.operators.size(); i++)
         {
-            // If the operator template is of the same class as the currently
-            // viewed operator in the processor script, remove it
-            if (operatorToRemove.getClass()
-                    .equals(this.operators.get(i).getClass()))
-                {
-                    this.removeOperator(i);
-                    if (removeAllInstances == false)
-                        break;
-                }
+        // If the operator template is of the same class as the currently
+        // viewed operator in the processor script, remove it
+        if (operatorToRemove.getClass()
+                .equals(this.operators.get(i).getClass()))
+            {
+            this.removeOperator(i);
+            if (removeAllInstances == false)
+                break;
+            }
         }
 }
 
@@ -216,13 +222,13 @@ public void clearOperatorList ()
 
 /**
  * Pulls a new image from the camera and processes the image through the
- * operator list. DOES NOT update the particle reports.
+ * operator list.
  */
 public void processImage ()
 {
     this.updateImage();
     this.applyOperators();
-    // this.updateParticalAnalysisReports();
+    this.updateParticalAnalysisReports();// TODO test for mem usage and time
 }
 
 /**
@@ -232,12 +238,21 @@ public void updateImage ()
 {
     try
         {
+        if (this.camera.freshImage() == true)
+            {
             this.currentImage = this.camera.getImage().image;
+            this.newImageIsFresh = true;
+            }// @TEST 1
+        else
+            {
+            this.newImageIsFresh = false;
+            }
+        // might cause problems actually updating images
         }
     catch (final NIVisionException e)
         {
-            // Auto-generated catch block
-            e.printStackTrace();
+        // Auto-generated catch block
+        e.printStackTrace();
         }
 
 }
@@ -260,61 +275,86 @@ public void updateParticalAnalysisReports ()
     if (numParticles > 0)
         {
 
-            for (int particleIndex = 0; particleIndex < numParticles; particleIndex++)
-                {
+        for (int particleIndex = 0; particleIndex < numParticles; particleIndex++)
+            {
 
-                    final ParticleReport particle = new ParticleReport();
-                    particle.PercentAreaToImageArea = NIVision
-                            .imaqMeasureParticle(this.currentImage,
-                                    particleIndex, 0,
-                                    NIVision.MeasurementType.MT_AREA_BY_IMAGE_AREA);
-                    particle.area = NIVision.imaqMeasureParticle(
+            final ParticleReport particle = new ParticleReport();
+            particle.PercentAreaToImageArea = NIVision
+                    .imaqMeasureParticle(this.currentImage,
+                            particleIndex, 0,
+                            NIVision.MeasurementType.MT_AREA_BY_IMAGE_AREA);
+            particle.area = NIVision.imaqMeasureParticle(
+                    this.currentImage,
+                    particleIndex, 0,
+                    NIVision.MeasurementType.MT_AREA);
+            particle.ConvexHullArea = NIVision
+                    .imaqMeasureParticle(
                             this.currentImage,
                             particleIndex, 0,
-                            NIVision.MeasurementType.MT_AREA);
-                    particle.ConvexHullArea = NIVision
-                            .imaqMeasureParticle(
-                                    this.currentImage,
-                                    particleIndex, 0,
-                                    NIVision.MeasurementType.MT_CONVEX_HULL_AREA);
-                    particle.boundingRectTop = (int) NIVision
-                            .imaqMeasureParticle(this.currentImage,
-                                    particleIndex, 0,
-                                    NIVision.MeasurementType.MT_BOUNDING_RECT_TOP);
-                    particle.boundingRectLeft = (int) NIVision
-                            .imaqMeasureParticle(this.currentImage,
-                                    particleIndex, 0,
-                                    NIVision.MeasurementType.MT_BOUNDING_RECT_LEFT);
-                    particle.boundingRectBottom = (int) NIVision
-                            .imaqMeasureParticle(this.currentImage,
-                                    particleIndex, 0,
-                                    NIVision.MeasurementType.MT_BOUNDING_RECT_BOTTOM);
-                    particle.boundingRectRight = (int) NIVision
-                            .imaqMeasureParticle(this.currentImage,
-                                    particleIndex, 0,
-                                    NIVision.MeasurementType.MT_BOUNDING_RECT_RIGHT);
-                    particle.boundingRectWidth = (int) NIVision
-                            .imaqMeasureParticle(this.currentImage,
-                                    particleIndex, 0,
-                                    NIVision.MeasurementType.MT_BOUNDING_RECT_WIDTH);// par.boundingRectRight
-                    // -
-                    // par.boundingRectLeft;
-                    particle.center_mass_x = (int) NIVision
-                            .imaqMeasureParticle(this.currentImage,
-                                    particleIndex, 0,
-                                    NIVision.MeasurementType.MT_CENTER_OF_MASS_X);
-                    particle.center_mass_y = (int) NIVision
-                            .imaqMeasureParticle(this.currentImage,
-                                    particleIndex, 0,
-                                    NIVision.MeasurementType.MT_CENTER_OF_MASS_Y);
-                    particle.imageWidth = NIVision
-                            .imaqGetImageSize(this.currentImage).width;
-                    particles.add(particle);
-                }
-            particles.sort(null);
+                            NIVision.MeasurementType.MT_CONVEX_HULL_AREA);
+            particle.boundingRectTop = (int) NIVision
+                    .imaqMeasureParticle(this.currentImage,
+                            particleIndex, 0,
+                            NIVision.MeasurementType.MT_BOUNDING_RECT_TOP);
+            particle.boundingRectLeft = (int) NIVision
+                    .imaqMeasureParticle(this.currentImage,
+                            particleIndex, 0,
+                            NIVision.MeasurementType.MT_BOUNDING_RECT_LEFT);
+            particle.boundingRectBottom = (int) NIVision
+                    .imaqMeasureParticle(this.currentImage,
+                            particleIndex, 0,
+                            NIVision.MeasurementType.MT_BOUNDING_RECT_BOTTOM);
+            particle.boundingRectRight = (int) NIVision
+                    .imaqMeasureParticle(this.currentImage,
+                            particleIndex, 0,
+                            NIVision.MeasurementType.MT_BOUNDING_RECT_RIGHT);
+            particle.boundingRectWidth = (int) NIVision
+                    .imaqMeasureParticle(this.currentImage,
+                            particleIndex, 0,
+                            NIVision.MeasurementType.MT_BOUNDING_RECT_WIDTH);// par.boundingRectRight
+            // -
+            // par.boundingRectLeft;
+            particle.center_mass_x = (int) NIVision
+                    .imaqMeasureParticle(this.currentImage,
+                            particleIndex, 0,
+                            NIVision.MeasurementType.MT_CENTER_OF_MASS_X);
+            particle.center_mass_y = (int) NIVision
+                    .imaqMeasureParticle(this.currentImage,
+                            particleIndex, 0,
+                            NIVision.MeasurementType.MT_CENTER_OF_MASS_Y);
+            particle.imageWidth = NIVision
+                    .imaqGetImageSize(this.currentImage).width;
+            particles.add(particle);
+            }
+        particles.sort(null);
 
         }
     this.reports = new ParticleReport[particles.size()];
     particles.copyInto(this.reports);
+}
+
+// Positive right, negative left
+// @AHK TODO improve parameter list
+public double getYawAngleToTarget (int targetIndex)
+{
+    return Math.atan((this.reports[targetIndex].center_mass_x
+            - (Hardware.drive.cameraXResolution / 2) - .5)
+            / Hardware.CAMERA_FOCAL_LENGTH_PIXELS);
+}
+
+public double getPitchAngleToTarget (int targetIndex)
+{
+    return Math.atan((this.reports[targetIndex].center_mass_y
+            - (Hardware.drive.cameraYResolution / 2) - .5)
+            / Hardware.CAMERA_FOCAL_LENGTH_PIXELS)
+            + Hardware.CAMERA_MOUNT_ANGLE_ABOVE_HORIZONTAL_RADIANS;
+}
+
+// TODO return ultrasonic value if we have one.
+public double getZDistanceToTargetFT (int targetIndex)
+{
+    return (Hardware.VISION_GOAL_HEIGHT_FT
+            * Math.cos(this.getYawAngleToTarget(targetIndex)))
+            / Math.tan(this.getPitchAngleToTarget(targetIndex));
 }
 }

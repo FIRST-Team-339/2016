@@ -9,7 +9,6 @@ import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.Relay;
 import edu.wpi.first.wpilibj.Relay.Value;
 import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj.image.NIVisionException;
 
 public class Drive
 {
@@ -1636,25 +1635,8 @@ public alignByCameraReturn alignByCameraStateMachine (
         case TAKE_AND_PROCESS_IMAGE:
             try
                 {
-                if (camera.freshImage() == true)
-                    {
-                    Hardware.imageProcessor.updateImage(
-                            Hardware.axisCamera.getImage());
-                    // tell imageProcessor to use the image we just took
-                    // to look for
-                    // blobs
-                    Hardware.imageProcessor
-                            .updateParticleAnalysisReports();
-                    if (savePictures)
-                        {
-                        this.camera.saveImagesSafely();
+                Hardware.imageProcessor.processImage();
                         }
-                    }
-                }
-            catch (NIVisionException e)
-                {
-                e.printStackTrace();
-                }
             finally
                 {
                 if (Hardware.imageProcessor
@@ -2203,38 +2185,10 @@ public alignByCameraReturn alignByCamera (double percentageDeadBand,
             {
             // try to take a picture and save it in memory and on the
             // "hard disk"
-            try
-                {
-                if (Hardware.axisCamera
-                        .freshImage() == true)
-                    {
-                    Hardware.imageProcessor.updateImage(
-                            Hardware.axisCamera
-                                    .getImage());
-                    newImages++;
-                    }
-                else
-                    {
-                    Hardware.imageProcessor.updateImage(
-                            Hardware.axisCamera
-                                    .getImage());
-                    dupImages++;
-                    }
-                }
-            // This is NI yelling at us for something being wrong
-            catch (NIVisionException e)
-                {
-                // if something wrong happens, tell the stupid
-                // programmers
-                // who let it happen more information about where it
-                // came from
-                e.printStackTrace();
-                }
+            Hardware.imageProcessor.processImage();
             // tell imageProcessor to use the image we just took to look
             // for
             // blobs
-            Hardware.imageProcessor
-                    .updateParticleAnalysisReports();
             for (int i = 0; i < Hardware.imageProcessor
                     .getParticleAnalysisReports().length; i++)
                 {
@@ -2689,10 +2643,10 @@ private Relay ringLightRelay = null;
 private final Timer cameraTimer = new Timer();
 
 // The horizontal resolution of the camera for the drive class
-private double cameraXResolution;
+public double cameraXResolution;
 
 // The vertical resolution of the camera used in the drive class.
-private double cameraYResolution;
+public double cameraYResolution;
 
 private boolean firstTimeAlign = true;
 

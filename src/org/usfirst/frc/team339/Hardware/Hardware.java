@@ -27,8 +27,12 @@ import org.usfirst.frc.team339.HardwareInterfaces.transmission.Transmission_old;
 import org.usfirst.frc.team339.Utils.Drive;
 import org.usfirst.frc.team339.Utils.ErrorMessage;
 import org.usfirst.frc.team339.Utils.Guidance;
-import org.usfirst.frc.team339.Utils.ImageProcessing;
 import org.usfirst.frc.team339.Utils.ManipulatorArm;
+import org.usfirst.frc.team339.Vision.ImageProcessor;
+import org.usfirst.frc.team339.Vision.VisionScript;
+import org.usfirst.frc.team339.Vision.operators.ConvexHullOperator;
+import org.usfirst.frc.team339.Vision.operators.HSLColorThresholdOperator;
+import org.usfirst.frc.team339.Vision.operators.RemoveSmallObjectsOperator;
 import edu.wpi.first.wpilibj.CameraServer;
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
@@ -85,6 +89,15 @@ public static final Resolution AXIS_RESOLUTION = AxisCamera.Resolution.k320x240;
 public static final double ULTRASONIC_SCALING_FACTOR = 0.050548;
 
 public static final double MINIMUM_POT_SCALING_VALUE = .1;
+
+public static final double CAMERA_FOCAL_LENGTH_MM = 4.4;
+
+public static final double CAMERA_FOCAL_LENGTH_PIXELS = 390.099;
+// =focal_pixel = (image_width_in_pixels * 0.5) / tan(Horiz_FOV * 0.5 * PI/180)
+
+public static final double VISION_GOAL_HEIGHT_FT = 6;
+
+public static final double CAMERA_MOUNT_ANGLE_ABOVE_HORIZONTAL_RADIANS = .9599;
 
 // ---------------------------------
 // denote whether we are running in
@@ -301,10 +314,22 @@ public static USBCamera cam1 = new USBCamera("cam1"); // AHK @cameratesting
 
 
 // Declares the Axis camera
+public static VisionScript doubleGreenRingScript = new VisionScript(
+        new HSLColorThresholdOperator(55, 147, 14, 255, 78, 255),
+        new RemoveSmallObjectsOperator(3, false),
+        new ConvexHullOperator(false));
+
+// public static VisionScript temp = new VisionScript();
+
 public static KilroyCamera axisCamera = new KilroyCamera(true);
 
-public static ImageProcessing imageProcessor = new ImageProcessing(
-        Hardware.axisCamera); // @AHK newVision
+// public static ImageProcessing imageProcessor = new ImageProcessing(
+// axisCamera);
+
+public static ImageProcessor imageProcessor = new ImageProcessor(
+        Hardware.axisCamera, doubleGreenRingScript); // @AHK newVision
+
+
 // **********************************************************
 // DRIVER STATION CLASSES
 // **********************************************************
@@ -399,4 +424,5 @@ public static final MotorSafetyHelper leftFrontMotorSafety = new MotorSafetyHelp
 
 public static final MotorSafetyHelper rightFrontMotorSafety = new MotorSafetyHelper(
         rightFrontMotor);
+
 } // end class

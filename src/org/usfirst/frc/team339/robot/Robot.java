@@ -62,7 +62,6 @@ package org.usfirst.frc.team339.robot;
 import org.usfirst.frc.team339.Hardware.Hardware;
 import org.usfirst.frc.team339.HardwareInterfaces.DoubleSolenoid;
 import org.usfirst.frc.team339.HardwareInterfaces.transmission.Transmission_old.debugStateValues;
-import org.usfirst.frc.team339.Utils.ImageProcessing.ObjectRemoval;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.Relay;
 import edu.wpi.first.wpilibj.Relay.Direction;
@@ -451,15 +450,14 @@ public void robotInit ()
     // processing.
     // Hardware.imageProcessor.setHSLValues(0, 255, 0, 75, 5, 141);
     // Hardware.imageProcessor.setHSLValues(0, 115, 0, 69, 17, 44);
-    Hardware.imageProcessor.setHSLValues(55, 147, 14, 255, 78, 255);
-    // Has us remove small objects at the intensity of 5. May have to
-    // change those values.
-    // Hardware.imageProcessor.setObjectRemoval(ObjectRemoval.BORDER);
-    Hardware.imageProcessor.setObjectRemoval(ObjectRemoval.SMALL,
-            2);// 3
-    // Has us convex hull our image so that the goal becomes a rectangle.
-    Hardware.imageProcessor.setUseConvexHull(true);
-
+    // Hardware.imageProcessor.setHSLValues(55, 147, 14, 255, 78, 255);
+    // // Has us remove small objects at the intensity of 5. May have to
+    // // change those values.
+    // // Hardware.imageProcessor.setObjectRemoval(ObjectRemoval.BORDER);
+    // Hardware.imageProcessor.setObjectRemoval(ObjectRemoval.SMALL,
+    // 2);// 3
+    // // Has us convex hull our image so that the goal becomes a rectangle.
+    // Hardware.imageProcessor.setUseConvexHull(true);
     // we could also crop the image to only include blobs in our
     // good height range, which removes the possibility of
     // convex hull connecting the two totes when we carry more than one
