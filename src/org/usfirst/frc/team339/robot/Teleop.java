@@ -1264,7 +1264,7 @@ public static void printStatements ()
     // prints the value of the transducer- (range in code is 50)
     // hits psi of 100 accurately
     // System.out.println("transducer = " + Hardware.transducer.get());
-    // System.out.println("Arm Pot = " + Hardware.armPot.get());
+    System.out.println("Arm Pot = " + Hardware.armPot.get());
 
     // Motor controllers-----
     // prints value of the motors
