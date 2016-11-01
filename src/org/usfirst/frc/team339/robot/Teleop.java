@@ -665,6 +665,7 @@ public static void periodic ()
                             PERCENT_IMAGE_PROCESSING_DEADBAND,
                             CAMERA_ALIGNMENT_TURNING_SPEED,
                             CAMERA_X_AXIS_ADJUSTED_PROPORTIONAL_CENTER,
+                            ADJUST_DEADBAND_BY_PERCENTAGE,
                             false);// -.375
                     // if (Hardware.drive.alignByCamera(
                     // PERCENT_IMAGE_PROCESSING_DEADBAND,
@@ -879,38 +880,38 @@ public static void periodic ()
             //
 
             // If the stop testing button (BUTTON 8 ON LEFT DRIVER)
-            // is toggled on and we aren't moving or stopping, 
+            // is toggled on and we aren't moving or stopping,
             // then start moving.
-            
+
             if (Hardware.forwardToggleButton.isOnCheckNow() == true
                     && brakingTesting == false
                     && motionToggled == false)
                 {
                     motionToggled = true;
                 }
-            
+
             if (motionToggled == true)
                 {
                     Hardware.transmission.controls(1.0, 1.0);
                     Hardware.transmission.setJoystickDeadbandRange(1.0);
                 }
-            
+
             // If the button is toggled off, then stop moving and
             // start stopping.
-            
+
             if (Hardware.forwardToggleButton.isOnCheckNow() == false
                     && motionToggled == true)
                 {
                     motionToggled = false;
                     brakingTesting = true;
                 }
-            
+
             if (brakingTesting == true)
                 {
-                    if (Hardware.transmission.stop() 
-                        != Hardware.transmission.noMovement
+                    if (Hardware.transmission
+                            .stop() != Hardware.transmission.noMovement
                             && Hardware.transmission
-                            .stop() != Hardware.transmission.noEncoders)
+                                    .stop() != Hardware.transmission.noEncoders)
                         {
                             brakingTesting = false;
                         }
@@ -1371,6 +1372,8 @@ public static final double CAMERA_Y_AXIS_ADJUSTED_PROPORTIONAL_CENTER = -.68;// 
                                                                              // -.192
 
 private static final double ALIGN_BY_CAMERA_TURNING_SPEED = .75;// @AHK .5
+
+private static final double ADJUST_DEADBAND_BY_PERCENTAGE = .2;
 
 private static final double ALIGN_BY_CAMERA_DRIVE_SPEED = .45;
 
