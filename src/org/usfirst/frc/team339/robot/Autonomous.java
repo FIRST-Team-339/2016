@@ -1966,7 +1966,7 @@ private static final double ALIGN_BY_CAMERA_TURNING_SPEED = .55;
 
 private static final double ALIGN_BY_CAMERA_DRIVE_SPEED = .45;
 
-private static final double ADJUST_DEADBAND_BY_PERCENTAGE = .2;
+private static final double ADJUST_DEADBAND_BY_PERCENTAGE = 0;
 
 private static final int ULTRASONIC_POINTS_REQUIRED = 5;
 
