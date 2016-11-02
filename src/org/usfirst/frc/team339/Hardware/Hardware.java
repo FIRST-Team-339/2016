@@ -95,7 +95,7 @@ public static final double CAMERA_FOCAL_LENGTH_MM = 4.4;
 public static final double CAMERA_FOCAL_LENGTH_PIXELS = 390.099;
 // =focal_pixel = (image_width_in_pixels * 0.5) / tan(Horiz_FOV * 0.5 * PI/180)
 
-public static final double VISION_GOAL_HEIGHT_FT = 6;
+public static final double VISION_GOAL_HEIGHT_FT = 5.5;
 
 public static final double CAMERA_MOUNT_ANGLE_ABOVE_HORIZONTAL_RADIANS = .9599;
 

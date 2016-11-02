@@ -146,10 +146,13 @@ public void applyOperators ()
     // Goes through all operators and applies whatever changes they are
     // programmed to apply. The currentImage is replaced with the altered
     // image.
-    for (int i = 0; i < operators.size(); i++)
+    if (this.currentImage != null)
         {
-        this.currentImage = this.operators.get(i)
-                .operate(this.currentImage);
+        for (int i = 0; i < operators.size(); i++)
+            {
+            this.currentImage = this.operators.get(i)
+                    .operate(this.currentImage);
+            }
         }
 }
 
