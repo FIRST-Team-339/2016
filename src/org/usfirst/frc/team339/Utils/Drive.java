@@ -345,10 +345,10 @@ public boolean driveByInches (final double distance,
                             + rightJoystickInputValue);
             }
         } // if debug = on
-          // -----------------------------------
-          // stop if the average value of either drive train
-          // is greater than the desired distance traveled.
-          // ------------------------------------
+    // -----------------------------------
+    // stop if the average value of either drive train
+    // is greater than the desired distance traveled.
+    // ------------------------------------
     if (this.hasDrivenInches(distance) == true)
         {
         // if requested to brake, stop
@@ -1605,7 +1605,7 @@ public alignByCameraReturn alignByCameraStateMachine (
                 {
                 if (Hardware.pickupArm.moveToPosition(
                         ArmPosition.DEPOSIT) == true)// TODO Hardware
-                                                     // reference
+                // reference
                     {
                     Hardware.pickupArm.pullInBall(true);
                     }
@@ -1621,13 +1621,13 @@ public alignByCameraReturn alignByCameraStateMachine (
                 Hardware.cameraSolenoid.set(
                         DoubleSolenoid.Value.kReverse);
                 Hardware.cameraToggleButton.update(true); // TODO HARDWARE
-                                                          // REFERENCES
+                // REFERENCES
                 currentState = alignByCameraStates.WAIT_FOR_LIGHT_AND_CAMERA;//
                 }
             break;
         case WAIT_FOR_LIGHT_AND_CAMERA:
             if (this.cameraTimer.get() >= 2.5)// The camera solenoid is SOOOO
-                                              // SLOOOWWW
+            // SLOOOWWW
                 {
                 currentState = alignByCameraStates.TAKE_AND_PROCESS_IMAGE;
                 }
@@ -1636,7 +1636,7 @@ public alignByCameraReturn alignByCameraStateMachine (
             try
                 {
                 Hardware.imageProcessor.processImage();
-                }
+                        }
             finally
                 {
                 if (Hardware.imageProcessor
@@ -2149,6 +2149,7 @@ int dupImages = 0;
 
 public alignByCameraReturn alignByCamera (double percentageDeadBand,
         double correctionSpeed, double adjustedProportionalCenter,
+        double adjustDeadBandByPercentage,
         boolean savePictures)
 {
     // If the stupid programmers didn't give me a camera or relay before
@@ -2255,10 +2256,14 @@ public alignByCameraReturn alignByCamera (double percentageDeadBand,
                     &&
                     getRelativeXCoordinate(
                             Hardware.imageProcessor
-                                    .getParticleAnalysisReports()[widestBlobIndex].center_mass_x) <= ((-percentageDeadBand// <=
-                                            /
-                                            2)
+                                    .getParticleAnalysisReports()[widestBlobIndex].center_mass_x) <= (((-percentageDeadBand// <=
+                                            / 2)
                                             + adjustedProportionalCenter))
+                                            + ((getRelativeXCoordinate(
+                                                    Hardware.imageProcessor
+                                                            .getParticleAnalysisReports()[widestBlobIndex].center_mass_x)
+                                                    - adjustedProportionalCenter)
+                                                    * (adjustDeadBandByPercentage)))
                 {
                 // turn left until it is in the zone (will be called
                 // over and
@@ -2284,7 +2289,12 @@ public alignByCameraReturn alignByCamera (double percentageDeadBand,
                             Hardware.imageProcessor
                                     .getParticleAnalysisReports()[widestBlobIndex].center_mass_x) >= ((percentageDeadBand// >=
                                             / 2)
-                                            + adjustedProportionalCenter))
+                                            + adjustedProportionalCenter
+                                            + ((getRelativeXCoordinate(
+                                                    Hardware.imageProcessor
+                                                            .getParticleAnalysisReports()[widestBlobIndex].center_mass_x)
+                                                    - adjustedProportionalCenter)
+                                                    * adjustDeadBandByPercentage)))
                 {
                 // turn right until it is in the zone (will be
                 // called over and
@@ -2677,7 +2687,7 @@ private double defaultTurnSpeed = .5;
 // and ranges from 0 to 1.0 (100%)
 // ------------------------------------
 private double drivingCorrectionFactor = 0.75;// 0.6;// TODO: changed around #
-                                              // :0.75;
+// :0.75;
 
 // -------------------------------------
 // minimum motor speed allowed. This represents

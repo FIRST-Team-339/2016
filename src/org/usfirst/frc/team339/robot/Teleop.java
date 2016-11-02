@@ -665,6 +665,7 @@ public static void periodic ()
                     PERCENT_IMAGE_PROCESSING_DEADBAND,
                     CAMERA_ALIGNMENT_TURNING_SPEED,
                     CAMERA_X_AXIS_ADJUSTED_PROPORTIONAL_CENTER,
+                    ADJUST_DEADBAND_BY_PERCENTAGE,
                     false);// -.375
             // if (Hardware.drive.alignByCamera(
             // PERCENT_IMAGE_PROCESSING_DEADBAND,
@@ -1374,6 +1375,8 @@ public static final double CAMERA_Y_AXIS_ADJUSTED_PROPORTIONAL_CENTER = -.68;// 
                                                                              // -.192
 
 private static final double ALIGN_BY_CAMERA_TURNING_SPEED = .75;// @AHK .5
+
+private static final double ADJUST_DEADBAND_BY_PERCENTAGE = 0;
 
 private static final double ALIGN_BY_CAMERA_DRIVE_SPEED = .45;
 
