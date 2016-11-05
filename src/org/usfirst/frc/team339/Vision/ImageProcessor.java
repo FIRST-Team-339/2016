@@ -17,12 +17,39 @@ import edu.wpi.first.wpilibj.image.NIVisionException;
 public class ImageProcessor
 {
 
-// A structure to hold measurements of a particle
+/**
+ * A class that holds several statistics about particles.
+ * 
+ * The measures include:
+ * area: The area, in pixels of the blob
+ * boundingRectLeft: The x coordinate of the left side of the blob
+ * boundingRectTop: The y coordinate on the top of the bounding rectangle of the
+ * blob
+ * boundingRectRight: The x coordinate of a point which lies on the right side
+ * of the bounding rectangle of the blob
+ * boundingRectBottom: The y coordinate of a point which lies on the bottom side
+ * of the bounding rectangle of the blob
+ * center_mass_x: the weighted center of mass of the particle, If the particle
+ * were a solid object of uniform density and thickness, this would be the x
+ * coord of the balancing point.
+ * center_mass_y: the weighted center of mass of the particle, If the particle
+ * were a solid object of uniform density and thickness, this would be the y
+ * coord of the balancing point.
+ * imageHeight: The height of the image containing the blob
+ * imageWidth: the width of the image containing the blob
+ * boundingRectWidth: the width of the rectangle which would perfectly bound the
+ * blob
+ * PercentAreaToImageArea: The percent of the image this blob fills
+ * ConvexHullArea: The area filled by the convex hull of the image
+ * 
+ * @author Kilroy
+ *
+ */
 public class ParticleReport implements Comparator<ParticleReport>,
         Comparable<ParticleReport>
 {
 // TODO: actually initialize these values
-
+// TODO add boundingRectHeight (and aspect ratio?)
 public double area;
 
 // double BoundingRectLeft;
@@ -146,7 +173,7 @@ public void applyOperators ()
     // Goes through all operators and applies whatever changes they are
     // programmed to apply. The currentImage is replaced with the altered
     // image.
-    if (this.currentImage != null)
+    if (this.currentImage != null && this.newImageIsFresh == true)
         {
         for (int i = 0; i < operators.size(); i++)
             {
@@ -225,13 +252,16 @@ public void clearOperatorList ()
 
 /**
  * Pulls a new image from the camera and processes the image through the
- * operator list.
+ * operator list, only if the new image it received was fresh.
  */
 public void processImage ()
 {
     this.updateImage();
-    this.applyOperators();
-    this.updateParticalAnalysisReports();// TODO test for mem usage and time
+    if (this.newImageIsFresh == true)
+        {
+        this.applyOperators();
+        this.updateParticalAnalysisReports();// TODO test for mem usage and time
+        }
 }
 
 /**
@@ -241,17 +271,17 @@ public void updateImage ()
 {
     try
         {
+        this.currentImage = this.camera.getImage().image;
         if (this.camera.freshImage() == true)
             {
-            this.currentImage = this.camera.getImage().image;
+            // this.currentImage = this.camera.getImage().image;
             this.newImageIsFresh = true;
-            }// @TEST 1
+            }
         else
             {
-            this.newImageIsFresh = false;
+            this.newImageIsFresh = true;// false;
             }
-        // might cause problems actually updating images
-        }
+        }// TODO @AHK only process new images
     catch (final NIVisionException e)
         {
         // Auto-generated catch block

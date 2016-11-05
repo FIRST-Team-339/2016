@@ -420,6 +420,10 @@ public static void periodic ()
                 }
             }
         // @DELETE
+        // pinCurrent(12);
+        // pinCurrent(13);
+        // pinCurrent(14);
+        // pinCurrent(15);
 
         // Begin arm movement code
         if (Math.abs(Hardware.rightOperator
@@ -433,13 +437,15 @@ public static void periodic ()
             // to an int
             // to
             // make the compiler happy
-            Hardware.pickupArm.moveReasonably(
-                    -(int) Math
-                            .round(Hardware.rightOperator.getY()
-                                    / Math.abs(
-                                            Hardware.rightOperator
-                                                    .getY())),
-                    Hardware.rightOperator.getRawButton(2));
+            // Hardware.pickupArm.moveReasonably(
+            // -(int) Math
+            // .round(Hardware.rightOperator.getY()
+            // / Math.abs(
+            // Hardware.rightOperator
+            // .getY())),
+            // Hardware.rightOperator.getRawButton(2));
+            Hardware.pickupArm.move(-Hardware.rightOperator.getY() * .5,
+                    true);
 
             }
         else if (isAligningByCamera == false
@@ -893,7 +899,7 @@ public static void periodic ()
         if (motionToggled == true)
             {
             Hardware.transmission.controls(1.0, 1.0);
-            Hardware.transmission.setJoystickDeadbandRange(1.0);
+            Hardware.transmission.setJoystickDeadbandRange(0.0);
             }
 
         // If the button is toggled off, then stop moving and
@@ -1133,6 +1139,9 @@ public static boolean fire (int power, boolean override)
 
 }
 
+
+
+
 private static boolean firstTimeFireRun = true;
 
 /**
@@ -1278,10 +1287,10 @@ public static void printStatements ()
     // hits psi of 100 accurately
     // System.out.println("transducer = " + Hardware.transducer.get());
     // System.out.println("Arm Pot = " + Hardware.armPot.get());
-    Hardware.imageProcessor.processImage();
-    if (Hardware.imageProcessor.reports.length > 0)
-        System.out.println("DistanceToGoal: "
-                + Hardware.imageProcessor.getZDistanceToTargetFT(0));
+    // Hardware.imageProcessor.processImage();
+    // if (Hardware.imageProcessor.reports.length > 0)
+    // System.out.println("DistanceToGoal: "
+    // + Hardware.imageProcessor.getZDistanceToTargetFT(0));
     // Motor controllers-----
     // prints value of the motors
     // System.out.println("RR Motor T = " + Hardware.rightRearMotor.get());
@@ -1355,14 +1364,23 @@ public static void printStatements ()
     // + Hardware.ultrasonic.getRefinedDistanceValue());
 } // end printStatements
 
-
+// TODO Take out
+/**
+ * voltage on pdp
+ * 
+ * @param pdpPin
+ */
+public static void pinCurrent (int pdpPin)
+{
+    System.out.println(Hardware.pdp.getCurrent(pdpPin));
+}
 /*
  * ===============================================
  * Constants
  * ===============================================
  */
 
-private static final double MAXIMUM_TELEOP_SPEED = 1.0;
+private static final double MAXIMUM_TELEOP_SPEED = .85;
 
 private static final double CAMERA_ALIGN_Y_DEADBAND = .10;
 
