@@ -14,6 +14,9 @@ import org.usfirst.frc.team339.Vision.operators.SaveBinaryImagePNGOperator;
 import org.usfirst.frc.team339.Vision.operators.VisionOperatorInterface;
 import edu.wpi.first.wpilibj.image.NIVisionException;
 
+// TODO a processImageNoUpdate
+// TODO the rest of the absolute position methods
+
 public class ImageProcessor
 {
 
@@ -109,7 +112,10 @@ private double offsetFromCenterY;// offset along primary vector of travel
 
 private double cameraFocalLength;
 
-
+/**
+ * 
+ */
+// TODO should this be public? Use a getter, methinks
 public ParticleReport[] reports = null;
 
 private boolean newImageIsFresh = true;// TODO @AHK use to determine if we
@@ -144,12 +150,34 @@ public ImageProcessor (KilroyCamera camera)
     this.camera = camera;
 }
 
+/**
+ * Creates a new ImageProcessor class with a camera and a custom vision
+ * processing script.
+ * 
+ * @param camera
+ *            The IP camera we'll use to capture images.
+ * @param script
+ *            The processing script object; it will be executed in the order
+ *            they are organized in the object.
+ */
 public ImageProcessor (KilroyCamera camera, VisionScript script)
 {
     this.camera = camera;
     this.operators = script;
 }
 
+/**
+ * Creates a new ImageProcessor class with a camera and a custom vision
+ * processing script
+ * 
+ * @param camera
+ *            The IP camera with which we will capture images.
+ * @param ops
+ *            A parameter list of VisionOperatorInterfaces, passed in order to
+ *            the constructor.
+ *            The constructor will create a VisionScript object the the
+ *            parameter list in the same order it was received.
+ */
 public ImageProcessor (KilroyCamera camera,
         VisionOperatorInterface... ops)
 {
@@ -161,13 +189,25 @@ public ImageProcessor (KilroyCamera camera,
         }
 }
 
+/**
+ * 
+ * @return
+ *         An array containing ParticleReport objects for all our spotted blobs
+ * @deprecated by Alex Kneipp, for reason:
+ *             You should no longer need to use actual raw values, use the
+ *             position methods such as getYawAngleToTarget, etc.
+ */
 @Deprecated
 public ParticleReport[] getParticleAnalysisReports ()
 {
     return this.reports;
 }
 
-
+/**
+ * Applies all the operators in the VisionScript to the image and saves the
+ * updated image to the currentImage field.
+ */
+// TODO make private?
 public void applyOperators ()
 {
     // Goes through all operators and applies whatever changes they are
@@ -183,11 +223,23 @@ public void applyOperators ()
         }
 }
 
+/**
+ * Takes the current VisionScript controller for the class and replaces it with
+ * the provided one.
+ * 
+ * @param newScript
+ *            The VisionScript object with which to replace the processing
+ *            script
+ * @author
+ *         Alexander H. Kneipp
+ */
 public void replaceVisionScript (VisionScript newScript)
 {
     this.operators = newScript;
 }
 
+// TODO move the following methods to VisionScript and add a getVisionScript()
+// method.
 /**
  * Adds a new vision operator to the operator list, in zero-based position
  * <index>.
