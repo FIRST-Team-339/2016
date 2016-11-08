@@ -420,6 +420,7 @@ public void updateParticalAnalysisReports ()
 
 // Positive right, negative left
 // @AHK TODO improve parameter list
+// @AHK TODO javaDocComments
 public double getYawAngleToTarget (int targetIndex)
 {
     return Math.atan((this.reports[targetIndex].center_mass_x
