@@ -110,7 +110,7 @@ public void move (double speed, boolean override)
     // this.motor.set(-speed);
 
     // }
-
+    override = true; // TODO BAAAAAAAAAAAAAAAD
     if (override == true)
         {
         if (speed == 0) // if override true, and speed is 0, don't move

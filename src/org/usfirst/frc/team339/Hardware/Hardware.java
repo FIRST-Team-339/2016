@@ -312,13 +312,13 @@ public static UltraSonic ultrasonic = new UltraSonic(4,
 // -------------------------------------
 public static CameraServer cameraServer = CameraServer.getInstance();
 
-public static USBCamera cam1 = new USBCamera("cam1"); // AHK @cameratesting
+public static USBCamera cam1 = new USBCamera("cam0"); // AHK @cameratesting
 
 
 // Declares the Axis camera
 public static VisionScript doubleGreenRingScript = new VisionScript(
         new HSLColorThresholdOperator(55, 147, 14, 255, 78, 255),
-        new RemoveSmallObjectsOperator(3, false),
+        new RemoveSmallObjectsOperator(3, true),
         new ConvexHullOperator(false));
 
 // public static VisionScript temp = new VisionScript();

@@ -173,70 +173,70 @@ public void disabledInit ()
     // =========================================================
     try
         {
-            // check the Autonomous ENABLED/DISABLED switch.
-			Autonomous.autonomousEnabled =
-			        Hardware.autonomousEnabled.isOn();
+        // check the Autonomous ENABLED/DISABLED switch.
+        Autonomous.autonomousEnabled = Hardware.autonomousEnabled
+                .isOn();
 
-            // set the delay time based on potentiometer.
-            Autonomous.delay = Autonomous.initDelayTime();
+        // set the delay time based on potentiometer.
+        Autonomous.delay = Autonomous.initDelayTime();
 
-            // get the lane based off of startingPositionPotentiometer
-            Autonomous.lane = Autonomous.getLane();
+        // get the lane based off of startingPositionPotentiometer
+        Autonomous.lane = Autonomous.getLane();
 
-            Autonomous.debug = Autonomous.DEBUGGING_DEFAULT;
+        Autonomous.debug = Autonomous.DEBUGGING_DEFAULT;
 
-            Hardware.transmission
-                    .setDebugState(debugStateValues.DEBUG_NONE);
+        Hardware.transmission
+                .setDebugState(debugStateValues.DEBUG_NONE);
 
-            Autonomous.initAutoState();
-            // Hardware.drive.setMaxSpeed(MAXIMUM_AUTONOMOUS_SPEED);
+        Autonomous.initAutoState();
+        // Hardware.drive.setMaxSpeed(MAXIMUM_AUTONOMOUS_SPEED);
 
-            // -------------------------------------
-            // motor initialization
-            // -------------------------------------
+        // -------------------------------------
+        // motor initialization
+        // -------------------------------------
 
-            Hardware.transmission.setFirstGearPercentage(1.0);
-            Hardware.transmission.setGear(1);
-            Hardware.transmission.setJoysticksAreReversed(true);
-            Hardware.transmission.setJoystickDeadbandRange(0.0);
+        Hardware.transmission.setFirstGearPercentage(1.0);
+        Hardware.transmission.setGear(1);
+        Hardware.transmission.setJoysticksAreReversed(true);
+        Hardware.transmission.setJoystickDeadbandRange(0.0);
 
-            // --------------------------------------
-            // Encoder Initialization
-            // --------------------------------------
-            Hardware.leftRearEncoder.reset();
-            Hardware.rightRearEncoder.reset();
+        // --------------------------------------
+        // Encoder Initialization
+        // --------------------------------------
+        Hardware.leftRearEncoder.reset();
+        Hardware.rightRearEncoder.reset();
 
-            // Sets Resolution of camera
-            Hardware.ringLightRelay.set(Relay.Value.kOff);
+        // Sets Resolution of camera
+        Hardware.ringLightRelay.set(Relay.Value.kOff);
 
-            Hardware.axisCamera
-                    .writeBrightness(
-                            Hardware.MINIMUM_AXIS_CAMERA_BRIGHTNESS);
+        Hardware.axisCamera
+                .writeBrightness(
+                        Hardware.MINIMUM_AXIS_CAMERA_BRIGHTNESS);
 
-            // ---------------------------------------
-            // turn the timer off and reset the counter
-            // so that we can use it in autonomous
-            // ---------------------------------------
-            Hardware.kilroyTimer.stop();
-            Hardware.kilroyTimer.reset();
+        // ---------------------------------------
+        // turn the timer off and reset the counter
+        // so that we can use it in autonomous
+        // ---------------------------------------
+        Hardware.kilroyTimer.stop();
+        Hardware.kilroyTimer.reset();
 
-            Hardware.leftRearEncoder.reset();
-            Hardware.rightRearEncoder.reset();
-            Hardware.leftFrontMotor.set(0.0);
-            Hardware.leftRearMotor.set(0.0);
-            Hardware.rightFrontMotor.set(0.0);
-            Hardware.rightRearMotor.set(0.0);
-            Hardware.armMotor.set(0.0);
-            Hardware.armIntakeMotor.set(0.0);
+        Hardware.leftRearEncoder.reset();
+        Hardware.rightRearEncoder.reset();
+        Hardware.leftFrontMotor.set(0.0);
+        Hardware.leftRearMotor.set(0.0);
+        Hardware.rightFrontMotor.set(0.0);
+        Hardware.rightRearMotor.set(0.0);
+        Hardware.armMotor.set(0.0);
+        Hardware.armIntakeMotor.set(0.0);
 
-            Hardware.catapultSolenoid0.set(false);
-            Hardware.catapultSolenoid1.set(false);
-            Hardware.catapultSolenoid2.set(false);
+        Hardware.catapultSolenoid0.set(false);
+        Hardware.catapultSolenoid1.set(false);
+        Hardware.catapultSolenoid2.set(false);
 
         }
     catch (Exception e)
         {
-            System.out.println("Disabled init died");
+        System.out.println("Disabled init died");
         }
     // =========================================================
     // User code goes above here
@@ -303,48 +303,48 @@ public void robotInit ()
 
     if (Hardware.inDemo.isOn() == true)
         {
-            Hardware.transmission.setSecondGearPercentage(
-                    SECOND_GEAR_PERCENTAGE
-                            * ((double) (Hardware.delayPot.get()
-                                    - Hardware.DELAY_POT_MIN_DEGREES)
-                                    / (double) (Hardware.DELAY_POT_DEGREES
-                                            - Hardware.DELAY_POT_MIN_DEGREES)));
+        Hardware.transmission.setSecondGearPercentage(
+                SECOND_GEAR_PERCENTAGE
+                        * ((double) (Hardware.delayPot.get()
+                                - Hardware.DELAY_POT_MIN_DEGREES)
+                                / (double) (Hardware.DELAY_POT_DEGREES
+                                        - Hardware.DELAY_POT_MIN_DEGREES)));
         }
     else
         {
-            Hardware.transmission
-                    .setSecondGearPercentage(SECOND_GEAR_PERCENTAGE);
+        Hardware.transmission
+                .setSecondGearPercentage(SECOND_GEAR_PERCENTAGE);
         }
     // --------------------------------------
     // Encoder Initialization
     // --------------------------------------
     if (Hardware.runningInLab == true)
         {
-            // ---------------------------------
-            // for old Kilroy 16
-            // ---------------------------------
-            // Hardware.leftRearEncoder.setDistancePerPulse(.0197);
-            // Hardware.rightRearEncoder.setDistancePerPulse(.0197);
-            Hardware.leftRearEncoder.setDistancePerPulse(
-                    this.distancePerTickForMotorEncoders);
-            Hardware.rightRearEncoder.setDistancePerPulse(
-                    this.distancePerTickForMotorEncoders);
-            Hardware.leftRearEncoder.reset();
-            Hardware.rightRearEncoder.reset();
+        // ---------------------------------
+        // for old Kilroy 16
+        // ---------------------------------
+        // Hardware.leftRearEncoder.setDistancePerPulse(.0197);
+        // Hardware.rightRearEncoder.setDistancePerPulse(.0197);
+        Hardware.leftRearEncoder.setDistancePerPulse(
+                this.distancePerTickForMotorEncoders);
+        Hardware.rightRearEncoder.setDistancePerPulse(
+                this.distancePerTickForMotorEncoders);
+        Hardware.leftRearEncoder.reset();
+        Hardware.rightRearEncoder.reset();
 
         }
     else
         {
-            // ---------------------------------
-            // Kilroy 17
-            // ---------------------------------
-            Hardware.leftRearEncoder.setDistancePerPulse(
-                    this.distancePerTickForMotorEncoders);
-            Hardware.leftRearEncoder.reset();
-            Hardware.rightRearEncoder.setDistancePerPulse(
-                    this.distancePerTickForMotorEncoders);
-            Hardware.rightRearEncoder.reset();
-            Hardware.rightRearEncoder.setReverseDirection(true);
+        // ---------------------------------
+        // Kilroy 17
+        // ---------------------------------
+        Hardware.leftRearEncoder.setDistancePerPulse(
+                this.distancePerTickForMotorEncoders);
+        Hardware.leftRearEncoder.reset();
+        Hardware.rightRearEncoder.setDistancePerPulse(
+                this.distancePerTickForMotorEncoders);
+        Hardware.rightRearEncoder.reset();
+        Hardware.rightRearEncoder.setReverseDirection(true);
         }
 
     // --------------------------------------
@@ -366,18 +366,18 @@ public void robotInit ()
     // ---------------------------------------
     if (Hardware.runningInLab == true)
         {
-            Hardware.rightFrontMotor.setInverted(true);
-            Hardware.rightRearMotor.setInverted(false);
-            Hardware.leftFrontMotor.setInverted(true);
-            Hardware.leftRearMotor.setInverted(true);
-            Hardware.axisCamera.setHaveCamera(false);
+        Hardware.rightFrontMotor.setInverted(true);
+        Hardware.rightRearMotor.setInverted(false);
+        Hardware.leftFrontMotor.setInverted(true);
+        Hardware.leftRearMotor.setInverted(true);
+        Hardware.axisCamera.setHaveCamera(false);
         }
     else
         {
-            Hardware.rightFrontMotor.setInverted(true);
-            Hardware.rightRearMotor.setInverted(false);
-            Hardware.leftFrontMotor.setInverted(true);
-            Hardware.leftRearMotor.setInverted(true);
+        Hardware.rightFrontMotor.setInverted(true);
+        Hardware.rightRearMotor.setInverted(false);
+        Hardware.leftFrontMotor.setInverted(true);
+        Hardware.leftRearMotor.setInverted(true);
         }
 
 
@@ -395,8 +395,8 @@ public void robotInit ()
             Hardware.MINIMUM_AXIS_CAMERA_BRIGHTNESS);
     // Hardware.axisCamera.writeExposureControl(
     // AxisCamera.ExposureControl.kAutomatic);
-//		Hardware.axisCamera
-//		        .writeExposureControl(AxisCamera.ExposureControl.kHold);
+    // Hardware.axisCamera
+    // .writeExposureControl(AxisCamera.ExposureControl.kHold);
     Hardware.axisCamera.writeMaxFPS(Hardware.AXIS_FPS);
     Hardware.axisCamera.writeResolution(Hardware.AXIS_RESOLUTION);
     Hardware.axisCamera
@@ -500,11 +500,11 @@ public void robotInit ()
 
     if (Hardware.runningInLab == true)
         {
-            Autonomous.labScalingFactor = 0.25;
+        Autonomous.labScalingFactor = 0.25;
         }
     else
         {
-            Autonomous.labScalingFactor = 1.0;
+        Autonomous.labScalingFactor = 1.0;
         }
 
     // =========================================================
@@ -518,7 +518,7 @@ public void robotInit ()
             "Kilroy XVII is started.  All hardware items created.");
     System.out.println();
     System.out.println();
-	} // end robotInit
+} // end robotInit
 
 // -------------------------------------------------------
 /**
@@ -628,19 +628,19 @@ public void testPeriodic ()
     boolean runTest = false;
     if (Hardware.leftDriver.getTrigger() == true)
         {
-            runTest = true;
+        runTest = true;
         }
 
     if (runTest == true)
         {
-            Hardware.drive.driveStraightByInches(999, -.3, -.3);
+        Hardware.drive.driveStraightByInches(999, -.3, -.3);
 
-            System.out.println("Left\tRight");
-            System.out.println(Hardware.leftFrontMotor.get() + "\t"
-                    + Hardware.rightFrontMotor.get());
-            System.out.println(Hardware.leftRearMotor.get() + "\t"
-                    + Hardware.rightRearMotor.get());
-            System.out.println();
+        System.out.println("Left\tRight");
+        System.out.println(Hardware.leftFrontMotor.get() + "\t"
+                + Hardware.rightFrontMotor.get());
+        System.out.println(Hardware.leftRearMotor.get() + "\t"
+                + Hardware.rightRearMotor.get());
+        System.out.println();
 
         }
 
@@ -662,5 +662,5 @@ public static final double JOYSTICK_DEADBAND_ZONE = 0.20;
 
 public static final double FIRST_GEAR_PERCENTAGE = 0.5;
 
-public static final double SECOND_GEAR_PERCENTAGE = 1.0;// previously 0.7;//.85
+public static final double SECOND_GEAR_PERCENTAGE = .90;// previously 0.7;//.85
 } // end class

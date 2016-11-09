@@ -500,7 +500,7 @@ public static void periodic ()
     else
     // if not, we do not want the arm to move.
         {
-        Hardware.pickupArm.stopArmMotor();
+        // Hardware.pickupArm.stopArmMotor();//TODO broken arm
         }
 
     // iterationCounter++;
@@ -601,8 +601,9 @@ private static void runMainStateMachine ()
 
         case BEGIN_LOWERING_ARM:
             // starts the arm movement to the floor
-            runArmStates = true;
-            armState = ArmState.MOVE_DOWN;
+            // runArmStates = true;
+            // armState = ArmState.MOVE_DOWN;//TODO GROSSNESS
+            Hardware.pickupArm.move(.25);
             // goes into initDelay
             mainState = MainState.INIT_DELAY;
             break;
@@ -751,8 +752,8 @@ private static void runMainStateMachine ()
                 resetEncoders();
 
                 // We are over the outer works. Start the arm back up.
-                armState = ArmState.MOVE_UP_TO_DEPOSIT;
-                runArmStates = true;
+                // armState = ArmState.MOVE_UP_TO_DEPOSIT;
+                // runArmStates = true;//TODO broken arm time
 
                 // decide whether to stop next by encoder distance, or when
                 // IRs detect tape.
@@ -773,10 +774,12 @@ private static void runMainStateMachine ()
                     mainState = MainState.DRIVE_UNTIL_CLOSE_TO_WALL;
                     }
 
-                if (DriveInformation.SKIP_TO_DRIVE_BY_CAMERA[lane] == true)
-                    {
-                    mainState = MainState.DRIVE_BY_CAMERA;
-                    }
+                // TODO Fix this; we commented it out during rumble in roads
+
+                // if (DriveInformation.SKIP_TO_DRIVE_BY_CAMERA[lane] == true)
+                // {
+                // mainState = MainState.DRIVE_BY_CAMERA;
+                // }
 
                 }
             break;
@@ -974,60 +977,61 @@ private static void runMainStateMachine ()
                         + Hardware.rightRearMotor.get());
                 }
 
-            // System.out.println(mainState +
-            // "\n\tLeft Encoder: " +
-            // Hardware.leftRearEncoder.getDistance() +
-            // "\n\tRight Encoder: " +
-            // Hardware.rightRearEncoder.getDistance());
-            // System.out.println("Left Front Motor: "
-            // + Hardware.leftFrontMotor.get());
-            // System.out.println("Left Rear Motor: "
-            // + Hardware.leftRearMotor.get());
-            // System.out.println("Right Front Motor: "
-            // + Hardware.rightFrontMotor.get());
-            // System.out.println("Right Rear Motor: "
-            // + Hardware.rightRearMotor.get());
+        // System.out.println(mainState +
+        // "\n\tLeft Encoder: " +
+        // Hardware.leftRearEncoder.getDistance() +
+        // "\n\tRight Encoder: " +
+        // Hardware.rightRearEncoder.getDistance());
+        // System.out.println("Left Front Motor: "
+        // + Hardware.leftFrontMotor.get());
+        // System.out.println("Left Rear Motor: "
+        // + Hardware.leftRearMotor.get());
+        // System.out.println("Right Front Motor: "
+        // + Hardware.rightFrontMotor.get());
+        // System.out.println("Right Rear Motor: "
+        // + Hardware.rightRearMotor.get());
 
-            // Moves to goal. Stops to align.
-            if (((Hardware.drive.driveStraightByInches(
-                    DriveInformation.DRIVE_UP_TO_GOAL[lane] *
-                            labScalingFactor,
-                    false,
-                    DriveInformation.DRIVE_UP_TO_GOAL_MOTOR_RATIO[lane],
-                    DriveInformation.DRIVE_UP_TO_GOAL_MOTOR_RATIO[lane]) == true)))
-            // Go to align.
+        // Moves to goal. Stops to align.
+        // TODO deleted for RITR, replace
+        // if (((Hardware.drive.driveStraightByInches(
+        // DriveInformation.DRIVE_UP_TO_GOAL[lane] *
+        // labScalingFactor,
+        // false,
+        // DriveInformation.DRIVE_UP_TO_GOAL_MOTOR_RATIO[lane],
+        // DriveInformation.DRIVE_UP_TO_GOAL_MOTOR_RATIO[lane]) == true)))
+        // // Go to align.
+            {
+
+            if (oneTimePrint2 == false)
                 {
-
-                if (oneTimePrint2 == false)
-                    {
-                    oneTimePrint2 = true;
-                    System.out.println(mainState +
-                            "\n\tLeft Encoder: " +
-                            Hardware.leftRearEncoder
-                                    .getDistance()
-                            +
-                            "\n\tLeft Encoder: " +
-                            Hardware.leftRearEncoder
-                                    .getDistance());
-                    System.out.println("Left Front Motor: "
-                            + Hardware.leftFrontMotor.get());
-                    System.out.println("Left Rear Motor: "
-                            + Hardware.leftRearMotor.get());
-                    System.out.println("Right Front Motor: "
-                            + Hardware.rightFrontMotor.get());
-                    System.out.println("Right Rear Motor: "
-                            + Hardware.rightRearMotor.get());
-                    }
-
-
-                // reset Encoders to prepare for next state.
-                resetEncoders();
-
-                // go to align.
-                mainState =
-                        // MainState.DONE;
-                        MainState.DRIVE_BY_CAMERA;
+                oneTimePrint2 = true;
+                System.out.println(mainState +
+                        "\n\tLeft Encoder: " +
+                        Hardware.leftRearEncoder
+                                .getDistance()
+                        +
+                        "\n\tLeft Encoder: " +
+                        Hardware.leftRearEncoder
+                                .getDistance());
+                System.out.println("Left Front Motor: "
+                        + Hardware.leftFrontMotor.get());
+                System.out.println("Left Rear Motor: "
+                        + Hardware.leftRearMotor.get());
+                System.out.println("Right Front Motor: "
+                        + Hardware.rightFrontMotor.get());
+                System.out.println("Right Rear Motor: "
+                        + Hardware.rightRearMotor.get());
                 }
+
+
+            // reset Encoders to prepare for next state.
+            resetEncoders();
+
+            // go to align.
+            // TODO Changed this at Rumble; do not change until fixed
+            mainState = MainState.DONE;
+            // MainState.DRIVE_BY_CAMERA;
+            }
 
             // print IR values once if they are on.
             // if (oneTimePrint3 == false &&
@@ -1361,7 +1365,7 @@ private static void runArmStates ()
             // do not move the intake motors.
             Hardware.pickupArm.stopIntakeMotors();
             // keep the arms in holding position
-            Hardware.pickupArm.moveToPosition(ArmPosition.HOLD);
+            // Hardware.pickupArm.moveToPosition(ArmPosition.HOLD);
             // note: no end conditions, unless if the state is manually changed.
             break;
 
@@ -1871,7 +1875,7 @@ private static final double[] ADDED_DISTANCE_FROM_OW =
             0.0,
             0.0,
             0.0,
-            48.0,// Further driving is disabled in this lane,
+            72.0,// 48.0,// Further driving is disabled in this lane,
             // so this is to be sure we are all the way over.
             60.0,
             0.0,

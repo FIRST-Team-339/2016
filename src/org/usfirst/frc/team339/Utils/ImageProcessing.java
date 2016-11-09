@@ -41,20 +41,31 @@ public class ParticleReport implements Comparator<ParticleReport>,
         Comparable<ParticleReport>
 {
 public double PercentAreaToImageArea;
+
 public double Area;
+
 public double ConvexHullArea;
+
 // double BoundingRectLeft;
 // double BoundingRectTop;
 // double BoundingRectRight;
 // double BoundingRectBottom;
 public int boundingRectLeft;
+
 public int boundingRectTop;
+
 public int boundingRectRight;
+
 public int boundingRectBottom;
+
 public int center_mass_x;// TODO: actually initialize these values
+
 public int center_mass_y;
+
 public int imageHeight;
+
 public int imageWidth;
+
 public int boundingRectWidth;
 
 @Override
@@ -94,8 +105,7 @@ private ParticleReport[] reports = null;
 
 // Criteria collection
 // private CriteriaCollection criteriaCollection = new CriteriaCollection();
-private ParticleFilterCriteria2[] criteriaArray =
-        new ParticleFilterCriteria2[0];
+private ParticleFilterCriteria2[] criteriaArray = new ParticleFilterCriteria2[0];
 
 // middle of the screen on x axis
 private int middleScreenWidth = 80;
@@ -209,15 +219,13 @@ public void addCriteria (NIVision.MeasurementType type, float lower,
         float upper, int exclude, int outsideRange)
 {
     // Create a new criteria object from our arguments
-    final ParticleFilterCriteria2 criteria =
-            new ParticleFilterCriteria2(
-                    type, lower, upper, exclude,
-                    outsideRange);
+    final ParticleFilterCriteria2 criteria = new ParticleFilterCriteria2(
+            type, lower, upper, exclude,
+            outsideRange);
     // Create a new criteria array, the size of our old array + 1 to
     // accomodate the new one
-    final ParticleFilterCriteria2[] tempCriteria =
-            new ParticleFilterCriteria2[this.criteriaArray.length
-                    + 1];
+    final ParticleFilterCriteria2[] tempCriteria = new ParticleFilterCriteria2[this.criteriaArray.length
+            + 1];
     // Copy the old criteria array into our new one
     System.arraycopy(this.criteriaArray, 0, tempCriteria, 0,
             this.criteriaArray.length);
@@ -241,8 +249,8 @@ public void clearCriteriaCollection ()
     this.criteriaArray = new ParticleFilterCriteria2[0];
 }
 
-//TODO temporary code to find the center of a bounding rectangle.
-//We really need to clean this up
+// TODO temporary code to find the center of a bounding rectangle.
+// We really need to clean this up
 public double getCenterOfBoundingRectangleX (ParticleReport desiredBlob)
 {
     return 0.0;
@@ -433,9 +441,8 @@ public int getXOffsetOfYellowTote ()
                     Area > 1000.0)
                 {
                 // update the max
-                maxRight =
-                        Math.max(maxRight, blob.boundingRectWidth +
-                                blob.boundingRectLeft);
+                maxRight = Math.max(maxRight, blob.boundingRectWidth +
+                        blob.boundingRectLeft);
                 }
             }
         }
@@ -690,15 +697,15 @@ public boolean updateParticleAnalysisReports ()
                 this.image.image,
                 255,
                 NIVision.ColorMode.HSL,
-                new NIVision.Range(this.hueLow,//TODO set colormode to HSL
+                new NIVision.Range(this.hueLow,// TODO set colormode to HSL
                         this.hueHigh),
                 new NIVision.Range(this.saturationLow,
                         this.saturationHigh),
                 new NIVision.Range(this.luminenceLow,
                         this.luminenceHigh));
 
-        //			System.out.println("HSL blobs: " +
-        //			        NIVision.imaqCountParticles(thresholdImage, 0));
+        // System.out.println("HSL blobs: " +
+        // NIVision.imaqCountParticles(thresholdImage, 0));
 
         // initial size of the criteria array is ZERO so we have to
         // check this
@@ -711,9 +718,8 @@ public boolean updateParticleAnalysisReports ()
             }
         else
             {
-            final NIVision.ParticleFilterOptions2 filterOptions =
-                    new NIVision.ParticleFilterOptions2(
-                            0, 0, 0, 0);
+            final NIVision.ParticleFilterOptions2 filterOptions = new NIVision.ParticleFilterOptions2(
+                    0, 0, 0, 0);
             NIVision.imaqParticleFilter4(criteriaImage,
                     thresholdImage,
                     this.criteriaArray, filterOptions, null);
@@ -721,8 +727,8 @@ public boolean updateParticleAnalysisReports ()
             // thresholdImage.particleFilter(this.criteriaArray);
             }
 
-        //			System.out.println("Criteria blobs: " +
-        //			        NIVision.imaqCountParticles(criteriaImage, 0));
+        // System.out.println("Criteria blobs: " +
+        // NIVision.imaqCountParticles(criteriaImage, 0));
 
         // fill in occluded rectangles
         Image convexHullImage = NIVision
@@ -739,8 +745,8 @@ public boolean updateParticleAnalysisReports ()
             convexHullImage = criteriaImage;
             }
 
-        //			System.out.println("Convex hull blobs: " +
-        //			        NIVision.imaqCountParticles(convexHullImage, 0));
+        // System.out.println("Convex hull blobs: " +
+        // NIVision.imaqCountParticles(convexHullImage, 0));
 
         // remove small artifacts
         Image objectRemovalImage = NIVision
@@ -748,9 +754,8 @@ public boolean updateParticleAnalysisReports ()
         if (this.objectRemoval == ObjectRemoval.SMALL)
             {
 
-            final NIVision.StructuringElement retStruct =
-                    new NIVision.StructuringElement(
-                            3, 3, 0);
+            final NIVision.StructuringElement retStruct = new NIVision.StructuringElement(
+                    3, 3, 0);
             NIVision.imaqSizeFilter(objectRemovalImage,
                     convexHullImage,
                     0,
@@ -789,18 +794,16 @@ public boolean updateParticleAnalysisReports ()
         final int numParticles = NIVision
                 .imaqCountParticles(objectRemovalImage, 0);
 
-        //			System.out.println("Object removal blobs: " +
-        //			        NIVision.imaqCountParticles(objectRemovalImage, 0));
+        // System.out.println("Object removal blobs: " +
+        // NIVision.imaqCountParticles(objectRemovalImage, 0));
 
         // Measure particles and sort by particle size
-        final Vector<ParticleReport> particles =
-                new Vector<ParticleReport>();
+        final Vector<ParticleReport> particles = new Vector<ParticleReport>();
 
         if (numParticles > 0)
             {
 
-            for (int particleIndex =
-                    0; particleIndex < numParticles; particleIndex++)
+            for (int particleIndex = 0; particleIndex < numParticles; particleIndex++)
                 {
 
                 final ParticleReport par = new ParticleReport();
@@ -838,16 +841,14 @@ public boolean updateParticleAnalysisReports ()
                                 NIVision.MeasurementType.MT_BOUNDING_RECT_WIDTH);// par.boundingRectRight
                 // -
                 // par.boundingRectLeft;
-                par.center_mass_x =
-                        (int) NIVision.imaqMeasureParticle(
-                                objectRemovalImage,
-                                particleIndex, 0,
-                                NIVision.MeasurementType.MT_CENTER_OF_MASS_X);
-                par.center_mass_y =
-                        (int) NIVision.imaqMeasureParticle(
-                                objectRemovalImage,
-                                particleIndex, 0,
-                                NIVision.MeasurementType.MT_CENTER_OF_MASS_Y);
+                par.center_mass_x = (int) NIVision.imaqMeasureParticle(
+                        objectRemovalImage,
+                        particleIndex, 0,
+                        NIVision.MeasurementType.MT_CENTER_OF_MASS_X);
+                par.center_mass_y = (int) NIVision.imaqMeasureParticle(
+                        objectRemovalImage,
+                        particleIndex, 0,
+                        NIVision.MeasurementType.MT_CENTER_OF_MASS_Y);
                 par.imageWidth = NIVision
                         .imaqGetImageSize(objectRemovalImage).width;
                 particles.add(par);
@@ -954,9 +955,8 @@ public boolean updateParticleAnalysisReports2015 ()
             }
         else
             {
-            final NIVision.ParticleFilterOptions2 filterOptions =
-                    new NIVision.ParticleFilterOptions2(
-                            0, 0, 0, 0);
+            final NIVision.ParticleFilterOptions2 filterOptions = new NIVision.ParticleFilterOptions2(
+                    0, 0, 0, 0);
             NIVision.imaqParticleFilter4(criteriaImage,
                     thresholdImage,
                     this.criteriaArray, filterOptions, null);
@@ -1030,14 +1030,12 @@ public boolean updateParticleAnalysisReports2015 ()
                 NIVision.imaqCountParticles(objectRemovalImage, 0));
 
         // Measure particles and sort by particle size
-        final Vector<ParticleReport> particles =
-                new Vector<ParticleReport>();
+        final Vector<ParticleReport> particles = new Vector<ParticleReport>();
 
         if (numParticles > 0)
             {
 
-            for (int particleIndex =
-                    0; particleIndex < numParticles; particleIndex++)
+            for (int particleIndex = 0; particleIndex < numParticles; particleIndex++)
                 {
 
                 final ParticleReport par = new ParticleReport();
@@ -1075,16 +1073,14 @@ public boolean updateParticleAnalysisReports2015 ()
                                 NIVision.MeasurementType.MT_BOUNDING_RECT_WIDTH);// par.boundingRectRight
                 // -
                 // par.boundingRectLeft;
-                par.center_mass_x =
-                        (int) NIVision.imaqMeasureParticle(
-                                objectRemovalImage,
-                                particleIndex, 0,
-                                NIVision.MeasurementType.MT_CENTER_OF_MASS_X);
-                par.center_mass_y =
-                        (int) NIVision.imaqMeasureParticle(
-                                objectRemovalImage,
-                                particleIndex, 0,
-                                NIVision.MeasurementType.MT_CENTER_OF_MASS_Y);
+                par.center_mass_x = (int) NIVision.imaqMeasureParticle(
+                        objectRemovalImage,
+                        particleIndex, 0,
+                        NIVision.MeasurementType.MT_CENTER_OF_MASS_X);
+                par.center_mass_y = (int) NIVision.imaqMeasureParticle(
+                        objectRemovalImage,
+                        particleIndex, 0,
+                        NIVision.MeasurementType.MT_CENTER_OF_MASS_Y);
                 par.imageWidth = NIVision
                         .imaqGetImageSize(objectRemovalImage).width;
                 particles.add(par);

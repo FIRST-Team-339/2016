@@ -14,15 +14,45 @@ import org.usfirst.frc.team339.Vision.operators.SaveBinaryImagePNGOperator;
 import org.usfirst.frc.team339.Vision.operators.VisionOperatorInterface;
 import edu.wpi.first.wpilibj.image.NIVisionException;
 
+// TODO a processImageNoUpdate
+// TODO the rest of the absolute position methods
+
 public class ImageProcessor
 {
 
-// A structure to hold measurements of a particle
+/**
+ * A class that holds several statistics about particles.
+ * 
+ * The measures include:
+ * area: The area, in pixels of the blob
+ * boundingRectLeft: The x coordinate of the left side of the blob
+ * boundingRectTop: The y coordinate on the top of the bounding rectangle of the
+ * blob
+ * boundingRectRight: The x coordinate of a point which lies on the right side
+ * of the bounding rectangle of the blob
+ * boundingRectBottom: The y coordinate of a point which lies on the bottom side
+ * of the bounding rectangle of the blob
+ * center_mass_x: the weighted center of mass of the particle, If the particle
+ * were a solid object of uniform density and thickness, this would be the x
+ * coord of the balancing point.
+ * center_mass_y: the weighted center of mass of the particle, If the particle
+ * were a solid object of uniform density and thickness, this would be the y
+ * coord of the balancing point.
+ * imageHeight: The height of the image containing the blob
+ * imageWidth: the width of the image containing the blob
+ * boundingRectWidth: the width of the rectangle which would perfectly bound the
+ * blob
+ * PercentAreaToImageArea: The percent of the image this blob fills
+ * ConvexHullArea: The area filled by the convex hull of the image
+ * 
+ * @author Kilroy
+ *
+ */
 public class ParticleReport implements Comparator<ParticleReport>,
         Comparable<ParticleReport>
 {
 // TODO: actually initialize these values
-
+// TODO add boundingRectHeight (and aspect ratio?)
 public double area;
 
 // double BoundingRectLeft;
@@ -82,7 +112,10 @@ private double offsetFromCenterY;// offset along primary vector of travel
 
 private double cameraFocalLength;
 
-
+/**
+ * 
+ */
+// TODO should this be public? Use a getter, methinks
 public ParticleReport[] reports = null;
 
 private boolean newImageIsFresh = true;// TODO @AHK use to determine if we
@@ -117,12 +150,34 @@ public ImageProcessor (KilroyCamera camera)
     this.camera = camera;
 }
 
+/**
+ * Creates a new ImageProcessor class with a camera and a custom vision
+ * processing script.
+ * 
+ * @param camera
+ *            The IP camera we'll use to capture images.
+ * @param script
+ *            The processing script object; it will be executed in the order
+ *            they are organized in the object.
+ */
 public ImageProcessor (KilroyCamera camera, VisionScript script)
 {
     this.camera = camera;
     this.operators = script;
 }
 
+/**
+ * Creates a new ImageProcessor class with a camera and a custom vision
+ * processing script
+ * 
+ * @param camera
+ *            The IP camera with which we will capture images.
+ * @param ops
+ *            A parameter list of VisionOperatorInterfaces, passed in order to
+ *            the constructor.
+ *            The constructor will create a VisionScript object the the
+ *            parameter list in the same order it was received.
+ */
 public ImageProcessor (KilroyCamera camera,
         VisionOperatorInterface... ops)
 {
@@ -134,19 +189,31 @@ public ImageProcessor (KilroyCamera camera,
         }
 }
 
+/**
+ * 
+ * @return
+ *         An array containing ParticleReport objects for all our spotted blobs
+ * @deprecated by Alex Kneipp, for reason:
+ *             You should no longer need to use actual raw values, use the
+ *             position methods such as getYawAngleToTarget, etc.
+ */
 @Deprecated
 public ParticleReport[] getParticleAnalysisReports ()
 {
     return this.reports;
 }
 
-
+/**
+ * Applies all the operators in the VisionScript to the image and saves the
+ * updated image to the currentImage field.
+ */
+// TODO make private?
 public void applyOperators ()
 {
     // Goes through all operators and applies whatever changes they are
     // programmed to apply. The currentImage is replaced with the altered
     // image.
-    if (this.currentImage != null)
+    if (this.currentImage != null && this.newImageIsFresh == true)
         {
         for (int i = 0; i < operators.size(); i++)
             {
@@ -156,11 +223,23 @@ public void applyOperators ()
         }
 }
 
+/**
+ * Takes the current VisionScript controller for the class and replaces it with
+ * the provided one.
+ * 
+ * @param newScript
+ *            The VisionScript object with which to replace the processing
+ *            script
+ * @author
+ *         Alexander H. Kneipp
+ */
 public void replaceVisionScript (VisionScript newScript)
 {
     this.operators = newScript;
 }
 
+// TODO move the following methods to VisionScript and add a getVisionScript()
+// method.
 /**
  * Adds a new vision operator to the operator list, in zero-based position
  * <index>.
@@ -225,13 +304,16 @@ public void clearOperatorList ()
 
 /**
  * Pulls a new image from the camera and processes the image through the
- * operator list.
+ * operator list, only if the new image it received was fresh.
  */
 public void processImage ()
 {
     this.updateImage();
-    this.applyOperators();
-    this.updateParticalAnalysisReports();// TODO test for mem usage and time
+    if (this.newImageIsFresh == true)
+        {
+        this.applyOperators();
+        this.updateParticalAnalysisReports();// TODO test for mem usage and time
+        }
 }
 
 /**
@@ -241,17 +323,17 @@ public void updateImage ()
 {
     try
         {
+        this.currentImage = this.camera.getImage().image;
         if (this.camera.freshImage() == true)
             {
-            this.currentImage = this.camera.getImage().image;
+            // this.currentImage = this.camera.getImage().image;
             this.newImageIsFresh = true;
-            }// @TEST 1
+            }
         else
             {
-            this.newImageIsFresh = false;
+            this.newImageIsFresh = true;// false;
             }
-        // might cause problems actually updating images
-        }
+        }// TODO @AHK only process new images
     catch (final NIVisionException e)
         {
         // Auto-generated catch block
@@ -338,6 +420,7 @@ public void updateParticalAnalysisReports ()
 
 // Positive right, negative left
 // @AHK TODO improve parameter list
+// @AHK TODO javaDocComments
 public double getYawAngleToTarget (int targetIndex)
 {
     return Math.atan((this.reports[targetIndex].center_mass_x

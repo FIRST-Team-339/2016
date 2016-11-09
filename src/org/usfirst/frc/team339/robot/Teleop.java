@@ -419,7 +419,7 @@ public static void periodic ()
                 currentCameraReturn = Drive.alignByCameraReturn.WORKING;
                 }
             }
-        // @DELETE
+
 
         // Begin arm movement code
         if (Math.abs(Hardware.rightOperator
@@ -892,7 +892,7 @@ public static void periodic ()
 
         if (motionToggled == true)
             {
-            Hardware.transmission.controls(-1.0, -1.0);
+            Hardware.transmission.controls(1.0, 1.0);
             Hardware.transmission.setJoystickDeadbandRange(0.0);
             }
 
@@ -1373,14 +1373,13 @@ public static void printStatements ()
     // + Hardware.ultrasonic.getRefinedDistanceValue());
 } // end printStatements
 
-
 /*
  * ===============================================
  * Constants
  * ===============================================
  */
 
-private static final double MAXIMUM_TELEOP_SPEED = 1.0;
+private static final double MAXIMUM_TELEOP_SPEED = .85;
 
 private static final double CAMERA_ALIGN_Y_DEADBAND = .10;
 

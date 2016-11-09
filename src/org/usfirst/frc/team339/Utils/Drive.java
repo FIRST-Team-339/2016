@@ -1636,7 +1636,7 @@ public alignByCameraReturn alignByCameraStateMachine (
             try
                 {
                 Hardware.imageProcessor.processImage();
-                        }
+                }
             finally
                 {
                 if (Hardware.imageProcessor
@@ -2686,7 +2686,9 @@ private double defaultTurnSpeed = .5;
 // driving speed passed in from the joysticks
 // and ranges from 0 to 1.0 (100%)
 // ------------------------------------
-private double drivingCorrectionFactor = 0.75;// 0.6;// TODO: changed around #
+// Changed because an encoder broke.
+private double drivingCorrectionFactor = 1.0;// 0.75;// 0.6;// TODO: changed
+                                             // around #
 // :0.75;
 
 // -------------------------------------
