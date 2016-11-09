@@ -892,8 +892,8 @@ public static void periodic ()
 
         if (motionToggled == true)
             {
-            Hardware.transmission.controls(1.0, 1.0);
-            Hardware.transmission.setJoystickDeadbandRange(1.0);
+            Hardware.transmission.controls(-1.0, -1.0);
+            Hardware.transmission.setJoystickDeadbandRange(0.0);
             }
 
         // If the button is toggled off, then stop moving and
@@ -908,14 +908,15 @@ public static void periodic ()
 
         if (brakingTesting == true)
             {
+            System.out.println(Hardware.transmission.stop().name());
             if (Hardware.transmission
-                    .stop() != Hardware.transmission.noMovement
-                    && Hardware.transmission
-                            .stop() != Hardware.transmission.noEncoders)
+                    .stop() != Hardware.transmission.inMotion)
                 {
+                System.out.println(Hardware.transmission.stop().name());
                 brakingTesting = false;
                 }
             }
+
         // If we press the brake button, robot brakes
         /*
          * if (Hardware.leftDriver
@@ -991,10 +992,12 @@ public static void periodic ()
                 && Hardware.leftDriver.getRawButton(
                         BRAKE_JOYSTICK_BUTTON_FOUR) == false
                 && isTurning180Degrees == false
-                && Hardware.rightOperator.getRawButton(6) == false)// TODO
-                                                                   // remove
-                                                                   // last
-                                                                   // term
+                && Hardware.rightOperator.getRawButton(6) == false
+                && motionToggled == false
+                && brakingTesting == false)// TODO
+                                           // remove
+                                           // last
+                                           // term
             {
             driveRobot();
             // if we want to run a speed test, run it until we're done.
@@ -1065,6 +1068,21 @@ public static void driveRobot ()
         {
         Hardware.transmission.downshift(1);
         }
+
+}
+
+/**
+ * gives user voltage on given pin on pdp board
+ * 
+ * @param pinNumber
+ *            pin on pdp
+ * @author Becky Button
+ */
+public static void pinCurrent (int pinNumber)
+{
+
+    System.out.print(Hardware.pdp.getCurrent(pinNumber));
+
 }
 
 /**
@@ -1278,10 +1296,10 @@ public static void printStatements ()
     // hits psi of 100 accurately
     // System.out.println("transducer = " + Hardware.transducer.get());
     // System.out.println("Arm Pot = " + Hardware.armPot.get());
-    Hardware.imageProcessor.processImage();
-    if (Hardware.imageProcessor.reports.length > 0)
-        System.out.println("DistanceToGoal: "
-                + Hardware.imageProcessor.getZDistanceToTargetFT(0));
+    // Hardware.imageProcessor.processImage();
+    // if (Hardware.imageProcessor.reports.length > 0)
+    // System.out.println("DistanceToGoal: "
+    // + Hardware.imageProcessor.getZDistanceToTargetFT(0));
     // Motor controllers-----
     // prints value of the motors
     // System.out.println("RR Motor T = " + Hardware.rightRearMotor.get());

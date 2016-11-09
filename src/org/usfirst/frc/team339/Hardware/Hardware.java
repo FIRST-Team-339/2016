@@ -40,6 +40,7 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.MotorSafetyHelper;
+import edu.wpi.first.wpilibj.PowerDistributionPanel;
 import edu.wpi.first.wpilibj.Relay;
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.TalonSRX;
@@ -148,6 +149,7 @@ public static VictorSP armIntakeMotor = new VictorSP(5);
 // ------------------------------------
 // CAN classes
 // ------------------------------------
+public static PowerDistributionPanel pdp = new PowerDistributionPanel();
 
 // ====================================
 // Relay classes

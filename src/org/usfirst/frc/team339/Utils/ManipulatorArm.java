@@ -59,29 +59,29 @@ public void moveReasonably (int direction, boolean override)
     if (direction > 0)
     // Going UP!
         {
-            if (armPot.get() < REASONABLE_DECELERATION_ANGLE)
-            // Starting up, has to work hard.
-                {
-                    move(REASONABLE_UP_FACTOR, override);
-                }
-            else
-            // We are over the hump, slow down.
-                {
-                    move(REASONABLE_UP_AND_OVER_FACTOR, override);
-                }
+        if (armPot.get() < REASONABLE_DECELERATION_ANGLE)
+        // Starting up, has to work hard.
+            {
+            move(REASONABLE_UP_FACTOR, override);
+            }
+        else
+        // We are over the hump, slow down.
+            {
+            move(REASONABLE_UP_AND_OVER_FACTOR, override);
+            }
         }
     else
     // going down.
         {
-            if (armPot.get() > REASONABLE_DECELERATION_ANGLE)
-                {
-                    move(REASONABLE_DOWN_FACTOR, override);
-                }
-            else
-            // now gravity is on our side. Slow down a bit.
-                {
-                    move(REASONABLE_DOWN_UNDER_FACTOR, override);
-                }
+        if (armPot.get() > REASONABLE_DECELERATION_ANGLE)
+            {
+            move(REASONABLE_DOWN_FACTOR, override);
+            }
+        else
+        // now gravity is on our side. Slow down a bit.
+            {
+            move(REASONABLE_DOWN_UNDER_FACTOR, override);
+            }
         }
 
 }
@@ -113,31 +113,31 @@ public void move (double speed, boolean override)
 
     if (override == true)
         {
-            if (speed == 0) // if override true, and speed is 0, don't move
-                {
-                    this.motor.set(speed);
+        if (speed == 0) // if override true, and speed is 0, don't move
+            {
+            this.motor.set(speed);
 
-                }
-            else // if override is true, and speed is not 0, send more power, NO
-            // LIMITS
-                {
-                    this.motor.set(-speed * 1.5);
-                }
+            }
+        else // if override is true, and speed is not 0, send more power, NO
+        // LIMITS
+            {
+            this.motor.set(-speed * 1.5);
+            }
         }
     else
         {
-            if ((speed > 0 && this.armPot.get() < MIN_SOFT_ARM_STOP) ||
-                    (speed < 0 && this.armPot
-                            .get() > this.MAX_SOFT_ARM_STOP))
-                {
-                    this.stopArmMotor(); // if override false, and we are at our
-                    // arm limits, don't move
-                }
-            else
-                {
-                    this.motor.set(-speed); // if arm is between limits,
-                    // MOVE!!!!!!!
-                }
+        if ((speed > 0 && this.armPot.get() < MIN_SOFT_ARM_STOP) ||
+                (speed < 0 && this.armPot
+                        .get() > this.MAX_SOFT_ARM_STOP))
+            {
+            this.stopArmMotor(); // if override false, and we are at our
+            // arm limits, don't move
+            }
+        else
+            {
+            this.motor.set(-speed); // if arm is between limits,
+            // MOVE!!!!!!!
+            }
         }
 
 }
@@ -153,17 +153,17 @@ public void stopArmMotor ()
             && armPot
                     .get() < BRAKE_ARM_WITH_FORWARD_VOLTAGE_DEGREES)
         {
-            this.motor.set(0.1);
+        this.motor.set(0.1);
         }
     else if (armPot.get() <= this.MAX_SOFT_ARM_STOP
             && armPot
                     .get() >= BRAKE_ARM_WITH_FORWARD_VOLTAGE_DEGREES)
         {
-            this.motor.set(-.025);
+        this.motor.set(-.025);
         }
     else
         {
-            this.motor.set(0.0);
+        this.motor.set(0.0);
         }
 
 }
@@ -177,9 +177,9 @@ public void pullInBall (boolean override)
     if (ballHasBeenPreviouslyDetected == false
             && Hardware.armIR.isOn())
         {
-            ballHasBeenPreviouslyDetected = true;
-            Hardware.kilroyTimer.reset();
-            Hardware.kilroyTimer.start();
+        ballHasBeenPreviouslyDetected = true;
+        Hardware.kilroyTimer.reset();
+        Hardware.kilroyTimer.start();
         }
 
 
@@ -188,30 +188,30 @@ public void pullInBall (boolean override)
             && Hardware.kilroyTimer
                     .get() > DELAY_AFTER_BALL_DETECTION)
         {
-            // If we already have a ball, no need to pull one in.
-            this.intakeMotor.set(0.0);
-            Hardware.kilroyTimer.stop();
+        // If we already have a ball, no need to pull one in.
+        this.intakeMotor.set(0.0);
+        Hardware.kilroyTimer.stop();
         }
     else
         {
-            this.intakeMotor.set(-INTAKE_SPEED);
-            if (Hardware.armIR.isOn() == false)
-                {
-                    Hardware.kilroyTimer.reset();
-                    ballHasBeenPreviouslyDetected = false;
-                }
+        this.intakeMotor.set(-INTAKE_SPEED);
+        if (Hardware.armIR.isOn() == false)
+            {
+            Hardware.kilroyTimer.reset();
+            ballHasBeenPreviouslyDetected = false;
+            }
         }
 
 
     if (override == true)
         {
-            this.intakeMotor.set(-INTAKE_SPEED);
+        this.intakeMotor.set(-INTAKE_SPEED);
         }
-    System.out.println("MaxArm Stop: " + this.DEPOSIT_POSITION);
-    System.out.println("Deposit allowance: ("
-            + (this.DEPOSIT_POSITION - this.DEPOSIT_POSITION_THRESHOLD)
-            + ", " + this.DEPOSIT_POSITION
-            + this.DEPOSIT_POSITION_THRESHOLD + ")");
+    // System.out.println("MaxArm Stop: " + this.DEPOSIT_POSITION);
+    // System.out.println("Deposit allowance: ("
+    // + (this.DEPOSIT_POSITION - this.DEPOSIT_POSITION_THRESHOLD)
+    // + ", " + this.DEPOSIT_POSITION
+    // + this.DEPOSIT_POSITION_THRESHOLD + ")");
 
 }
 
@@ -257,11 +257,11 @@ public boolean isDown ()
 {
     if (this.armPot.get() <= MIN_SOFT_ARM_STOP)
         {
-            return true;
+        return true;
         }
     else
         {
-            return false;
+        return false;
         }
 }
 
@@ -273,11 +273,11 @@ public boolean isUp ()
 {
     if (this.armPot.get() >= MAX_SOFT_ARM_STOP)
         {
-            return true;
+        return true;
         }
     else
         {
-            return false;
+        return false;
         }
 }
 
@@ -286,11 +286,11 @@ public boolean isUnderBar ()
 {
     if (this.armPot.get() <= UNDER_BAR_VALUE)
         {
-            return true;
+        return true;
         }
     else
         {
-            return false;
+        return false;
         }
 }
 
@@ -303,7 +303,7 @@ public boolean isClearOfArm ()
 {
     if (armPot.get() <= this.ARM_OUT_OF_WAY_DEGREES)
         {
-            return true;
+        return true;
         }
 
     return false;
@@ -315,7 +315,7 @@ public boolean isInDepositPosition ()
             && armPot.get() > DEPOSIT_POSITION
                     + DEPOSIT_POSITION_THRESHOLD)
         {
-            return true;
+        return true;
         }
     return false;
 }
@@ -325,16 +325,16 @@ public void holdInHoldingPosition ()
     if (armPot.get() < HOLDING_POSITION
             - HOLDING_POSITION_THRESHOLD)
         {
-            move(MAX_ARM_SPEED);
+        move(MAX_ARM_SPEED);
         }
     else if (armPot.get() > HOLDING_POSITION
             + HOLDING_POSITION_THRESHOLD)
         {
-            move(-MAX_ARM_SPEED);
+        move(-MAX_ARM_SPEED);
         }
     else
         {
-            move(HOLDING_SPEED);
+        move(HOLDING_SPEED);
         }
 }
 
@@ -356,23 +356,23 @@ public boolean moveToPosition (ArmPosition position)
             move(-MAX_ARM_SPEED);
             if (this.isDown())
                 {
-                    move(0.0);
-                    done = true;
+                move(0.0);
+                done = true;
                 }
             break;
         case FULL_UP:
             move(MAX_ARM_SPEED);
             if (this.isUp())
                 {
-                    move(0.0);
-                    done = true;
+                move(0.0);
+                done = true;
                 }
             break;
         case DEPOSIT:
             if (armPot.get() < DEPOSIT_POSITION
                     - DEPOSIT_POSITION_THRESHOLD)
                 {
-                    move(MAX_ARM_SPEED);
+                move(MAX_ARM_SPEED);
                 }
             // else if (armPot.get() > DEPOSIT_POSITION
             // + DEPOSIT_POSITION_THRESHOLD)
@@ -381,16 +381,16 @@ public boolean moveToPosition (ArmPosition position)
             // }
             else
                 {
-                    move(0.0);
-                    done = true;
+                move(0.0);
+                done = true;
                 }
             break;
         case CLEAR_OF_FIRING_ARM:
             move(-MAX_ARM_SPEED);
             if (this.isClearOfArm() == true)
                 {
-                    move(0.0);
-                    done = true;
+                move(0.0);
+                done = true;
                 }
             break;
         default:
