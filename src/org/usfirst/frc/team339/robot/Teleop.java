@@ -1299,7 +1299,7 @@ public static void printStatements ()
     // prints the value of the transducer- (range in code is 50)
     // hits psi of 100 accurately
     // System.out.println("transducer = " + Hardware.transducer.get());
-    System.out.println("Arm Pot = " + Hardware.armPot.get());
+    // System.out.println("Arm Pot = " + Hardware.armPot.get());
     // Hardware.imageProcessor.processImage();
     // if (Hardware.imageProcessor.reports.length > 0)
     // System.out.println("DistanceToGoal: "
@@ -1336,9 +1336,9 @@ public static void printStatements ()
     // System.out.println(
     // "RR distance = "
     // + Hardware.rightRearEncoder.getDistance());
-    System.out.println(
-            "LR distance = "
-                    + Hardware.leftRearEncoder.getDistance());
+    // System.out.println(
+    // "LR distance = "
+    // + Hardware.leftRearEncoder.getDistance());
 
 
     // Encoders-------------

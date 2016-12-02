@@ -46,8 +46,8 @@ public Image operate (Image Source)
             {
             NIVision.imaqSizeFilter(largeObjectsImage, Source, 0,
                     this.erosions,
-                    NIVision.SizeType.KEEP_LARGE,
-                    new NIVision.StructuringElement(3, 3, 0));
+                    NIVision.SizeType.KEEP_LARGE, null
+            /* new NIVision.StructuringElement(3, 3, 0) */);
             System.out.println("Other. Working???");
             }
         }

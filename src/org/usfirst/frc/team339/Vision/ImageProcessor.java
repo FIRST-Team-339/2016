@@ -277,6 +277,7 @@ public void removeOperator (int index)
  *            Boolean to determine if all occurrences of <operatorToRemove>.
  *            True removes all, false removes first.
  */
+// TODO why is this here?
 public void removeOperator (VisionOperatorInterface operatorToRemove,
         boolean removeAllInstances)
 {
@@ -424,13 +425,20 @@ public void updateParticalAnalysisReports ()
 public double getYawAngleToTarget (int targetIndex)
 {
     return Math.atan((this.reports[targetIndex].center_mass_x
-            - (Hardware.drive.cameraXResolution / 2) - .5)
+            - ((Hardware.drive.cameraXResolution / 2) - .5))
             / Hardware.CAMERA_FOCAL_LENGTH_PIXELS);
 }
 
 public double getPitchAngleToTarget (int targetIndex)
 {
-    return Math.atan((this.reports[targetIndex].center_mass_y
+    double adjustedYVal = Hardware.drive.cameraYResolution -
+            this.reports[targetIndex].center_mass_y;
+    // System.out.println("Vert Res: " + Hardware.drive.cameraYResolution);
+    // System.out.println(
+    // "Y coord " + this.reports[targetIndex].center_mass_y);
+    // System.out.println(
+    // "X coord " + this.reports[targetIndex].center_mass_x);
+    return Math.atan((adjustedYVal
             - (Hardware.drive.cameraYResolution / 2) - .5)
             / Hardware.CAMERA_FOCAL_LENGTH_PIXELS)
             + Hardware.CAMERA_MOUNT_ANGLE_ABOVE_HORIZONTAL_RADIANS;
@@ -439,8 +447,14 @@ public double getPitchAngleToTarget (int targetIndex)
 // TODO return ultrasonic value if we have one.
 public double getZDistanceToTargetFT (int targetIndex)
 {
-    return (Hardware.VISION_GOAL_HEIGHT_FT
-            * Math.cos(this.getYawAngleToTarget(targetIndex)))
-            / Math.tan(this.getPitchAngleToTarget(targetIndex));
+    double yaw = this.getYawAngleToTarget(targetIndex);
+    double pitch = this.getPitchAngleToTarget(targetIndex);
+    // System.out.println("Yaw angle: " + Math.toDegrees(yaw));
+    // System.out.println("Pitch angle: " + Math.toDegrees(pitch));
+    // I have no idea why multiplying by 2 approx. works, if you find a problem
+    // somewhere else, look here for random hacks
+    return 2.0 * (Hardware.VISION_GOAL_HEIGHT_FT
+            * Math.cos(yaw)
+            / Math.tan(pitch));
 }
 }
