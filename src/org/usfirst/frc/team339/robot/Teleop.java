@@ -1300,10 +1300,10 @@ public static void printStatements ()
     // hits psi of 100 accurately
     // System.out.println("transducer = " + Hardware.transducer.get());
     // System.out.println("Arm Pot = " + Hardware.armPot.get());
-    // Hardware.imageProcessor.processImage();
-    // if (Hardware.imageProcessor.reports.length > 0)
-    // System.out.println("DistanceToGoal: "
-    // + Hardware.imageProcessor.getZDistanceToTargetFT(0));
+    Hardware.imageProcessor.processImage();
+    if (Hardware.imageProcessor.reports.length > 0)
+        System.out.println("DistanceToGoal: "
+                + Hardware.imageProcessor.getZDistanceToTargetFT(0));
     // Motor controllers-----
     // prints value of the motors
     // System.out.println("RR Motor T = " + Hardware.rightRearMotor.get());
