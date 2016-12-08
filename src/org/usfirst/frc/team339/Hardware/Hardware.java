@@ -312,7 +312,7 @@ public static UltraSonic ultrasonic = new UltraSonic(4,
 // -------------------------------------
 public static CameraServer cameraServer = CameraServer.getInstance();
 
-public static USBCamera cam1 = new USBCamera("cam0"); // AHK @cameratesting
+public static USBCamera usbCam = new USBCamera("cam0"); // AHK @cameratesting
 
 
 // Declares the Axis camera
