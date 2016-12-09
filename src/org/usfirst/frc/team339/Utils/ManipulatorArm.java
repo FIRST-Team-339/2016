@@ -465,11 +465,11 @@ private final double DEPOSIT_POSITION = .95 // 1.0
 
 private final double DEPOSIT_POSITION_THRESHOLD = 20.0;// 5
 
-private final double REASONABLE_UP_FACTOR = -.55;
+private final double REASONABLE_UP_FACTOR = -.15;// -.55;
 
-private final double REASONABLE_UP_AND_OVER_FACTOR = -0.45;
+private final double REASONABLE_UP_AND_OVER_FACTOR = -.4;// -0.45;
 
-private final double REASONABLE_DOWN_FACTOR = 0.15; // .2, .35
+private final double REASONABLE_DOWN_FACTOR = 0.08; // .2, .35
 
 private final double REASONABLE_DOWN_UNDER_FACTOR = -.1;// 0.1;// .15,
                                                         // .2

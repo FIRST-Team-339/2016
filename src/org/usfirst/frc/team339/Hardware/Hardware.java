@@ -318,7 +318,7 @@ public static USBCamera cam1 = new USBCamera("cam0"); // AHK @cameratesting
 // Declares the Axis camera
 public static VisionScript doubleGreenRingScript = new VisionScript(
         new HSLColorThresholdOperator(55, 147, 14, 255, 78, 255),
-        new RemoveSmallObjectsOperator(3, true),
+        new RemoveSmallObjectsOperator(2, false),
         new ConvexHullOperator(false));
 
 // public static VisionScript temp = new VisionScript();
@@ -329,7 +329,7 @@ public static KilroyCamera axisCamera = new KilroyCamera(true);
 // axisCamera);
 
 public static ImageProcessor imageProcessor = new ImageProcessor(
-        Hardware.axisCamera, doubleGreenRingScript); // @AHK newVision
+        axisCamera, doubleGreenRingScript);
 
 
 // **********************************************************

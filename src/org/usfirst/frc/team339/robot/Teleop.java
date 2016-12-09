@@ -420,6 +420,15 @@ public static void periodic ()
                 }
             }
 
+        // if (Hardware.rightDriver.getRawButton(11) == true)
+        // {
+        // lowBattery = true;
+        // }
+        // else if (Hardware.rightDriver.getRawButton(10) == true)
+        // {
+        // lowBattery = false;
+        // }
+
 
         // Begin arm movement code
         if (Math.abs(Hardware.rightOperator
@@ -433,13 +442,15 @@ public static void periodic ()
             // to an int
             // to
             // make the compiler happy
+
             Hardware.pickupArm.moveReasonably(
                     -(int) Math
                             .round(Hardware.rightOperator.getY()
                                     / Math.abs(
                                             Hardware.rightOperator
                                                     .getY())),
-                    Hardware.rightOperator.getRawButton(2));
+                    /* Hardware.rightOperator.getRawButton(2) */ true);
+            // TODO ^^ fix this when the arm pot is fixed!! ^^
 
             }
         else if (isAligningByCamera == false
@@ -537,9 +548,11 @@ public static void periodic ()
             ballFiring = false;
             }
         // if the override button is pressed and we want to fire
-        if (Hardware.leftOperator
-                .getRawButton(FIRE_OVERRIDE_BUTTON) == true
-                && fireRequested == true)
+        if (/*
+             * Hardware.leftOperator
+             * .getRawButton(FIRE_OVERRIDE_BUTTON) == true
+             * &&
+             */ fireRequested == true)
             {
             // FIRE NO MATTER WHAT!!!!!
             if (fire(3, true) == true)
@@ -908,6 +921,7 @@ public static void periodic ()
 
         if (brakingTesting == true)
             {
+            // prints
             System.out.println(Hardware.transmission.stop().name());
             if (Hardware.transmission
                     .stop() != Hardware.transmission.inMotion)
@@ -940,6 +954,7 @@ public static void periodic ()
         loopCounter++; // adds one every time teleop loops
 
         // checks to see if the left driver button 4 is being pressed
+        // Labeled "Brake FWD"- Button 4- moves wheels slightly FORWARD
         if (Hardware.leftDriver
                 .getRawButton(BRAKE_JOYSTICK_BUTTON_FOUR) == true)
             {
@@ -952,7 +967,7 @@ public static void periodic ()
                         .setJoystickDeadbandRange(0.0);
                 // Hardware.drive.driveContinuous(MOTOR_HOLD_SPEED,
                 // MOTOR_HOLD_SPEED);
-                Hardware.rightRearMotor.set(-.14);// TODO check
+                Hardware.rightRearMotor.set(-.14);
                 Hardware.rightFrontMotor.set(-.14);
                 Hardware.leftRearMotor.set(-.14);
                 Hardware.leftFrontMotor.set(-.14);
@@ -961,13 +976,16 @@ public static void periodic ()
         // determines what number loop teleop is in then sets motors
         // to a negative number
         // else
+
+
+        // Labeled "Brake RVS"- Button 5- moves wheels BACKWARD
         else if (Hardware.leftDriver
-                .getRawButton(BRAKE_JOYSTICK_BUTTON_FIVE))
+                .getRawButton(BRAKE_JOYSTICK_BUTTON_FIVE) == true)
             {
             Hardware.transmission.setJoystickDeadbandRange(0.0);
             // Hardware.drive.driveContinuous(-MOTOR_HOLD_SPEED,
             // -MOTOR_HOLD_SPEED);
-            Hardware.rightRearMotor.set(.14);// TODO check directions.
+            Hardware.rightRearMotor.set(.14);
             Hardware.rightFrontMotor.set(.14);
             Hardware.leftRearMotor.set(.14);
             Hardware.leftFrontMotor.set(.14);
@@ -978,6 +996,20 @@ public static void periodic ()
             {
             Hardware.transmission.setJoystickDeadbandRange(.20);
             }
+
+        // Left Drive Button 7 will activate transmission.stop(), a
+        // a poorly named brake function- SERIOUSLY PEOPLE BE MORE CREATIVE
+        // Part of a project working on the transmission.stop() function
+        // as well as the previous chain of if statements
+        // Worked on by Ashley Espeland and Cole Ramos
+        if (Hardware.leftDriver.getRawButton(7) == true)
+            {
+            Hardware.transmission.stop();
+            }
+
+
+
+
         // Only let the drivers drive if we're not speed testing or aligning
         // by camera
 
@@ -1280,9 +1312,11 @@ public static void printStatements ()
     // System.out.println("left IR = " + Hardware.leftIR.isOn());
     // System.out.println("right IR = " + Hardware.rightIR.isOn());
     // System.out.println("Has ball IR = " + Hardware.armIR.isOn());
-
-
-
+    Hardware.imageProcessor.processImage();
+    System.out.println("Distance to goal: "
+            + Hardware.imageProcessor.getZDistanceToTargetFT(0));
+    System.out.println("Number of blobs: "
+            + Hardware.imageProcessor.reports.length);
 
     // pots-----------------
     // System.out.println(
@@ -1338,11 +1372,13 @@ public static void printStatements ()
 
 
     // Encoders-------------
-    // System.out.println(
-    // "RR distance = " + Hardware.rightRearEncoder.getDistance());
-    // System.out.println(
-    // "LR distance = " + Hardware.leftRearEncoder.getDistance());
+    System.out.println(
+            "RR distance = " + Hardware.rightRearEncoder.getDistance());
+    System.out.println(
+            "LR distance = " + Hardware.leftRearEncoder.getDistance());
     // System.out.println("Arm Motor = " + Hardware.armMotor.getDistance());
+
+
 
     // Switches--------------
     // prints state of switches

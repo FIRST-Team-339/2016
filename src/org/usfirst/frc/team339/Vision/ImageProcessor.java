@@ -116,10 +116,10 @@ private double cameraFocalLength;
  * 
  */
 // TODO should this be public? Use a getter, methinks
-public ParticleReport[] reports = null;
+public ParticleReport[] reports = new ParticleReport[0];
 
-private boolean newImageIsFresh = true;// TODO @AHK use to determine if we
-                                       // actually process an image
+private boolean newImageIsFresh = false;// TODO @AHK use to determine if we
+                                        // actually process an image
 
 /**
  * Creates an ImageProcessor object with camera <camera> and a default
@@ -147,7 +147,7 @@ public ImageProcessor (KilroyCamera camera)
     this.operators.add(new ConvexHullOperator(true));
     this.operators.add(new SaveBinaryImagePNGOperator(
             "/home/lvuser/images/Out.png"));
-    this.camera = camera;
+    this.setCamera(camera);
 }
 
 /**
@@ -201,6 +201,11 @@ public ImageProcessor (KilroyCamera camera,
 public ParticleReport[] getParticleAnalysisReports ()
 {
     return this.reports;
+}
+
+public void setCamera (KilroyCamera cam)
+{
+    this.camera = cam;
 }
 
 /**
@@ -323,15 +328,14 @@ public void updateImage ()
 {
     try
         {
-        this.currentImage = this.camera.getImage().image;
         if (this.camera.freshImage() == true)
             {
-            // this.currentImage = this.camera.getImage().image;
+            this.currentImage = this.camera.getImage().image;
             this.newImageIsFresh = true;
             }
         else
             {
-            this.newImageIsFresh = true;// false;
+            this.newImageIsFresh = false;
             }
         }// TODO @AHK only process new images
     catch (final NIVisionException e)
@@ -423,24 +427,38 @@ public void updateParticalAnalysisReports ()
 // @AHK TODO javaDocComments
 public double getYawAngleToTarget (int targetIndex)
 {
-    return Math.atan((this.reports[targetIndex].center_mass_x
-            - (Hardware.drive.cameraXResolution / 2) - .5)
-            / Hardware.CAMERA_FOCAL_LENGTH_PIXELS);
+    if (this.reports != null && targetIndex < this.reports.length)
+        {
+        return Math.atan((this.reports[targetIndex].center_mass_x
+                - (Hardware.drive.cameraXResolution / 2) - .5)
+                / Hardware.CAMERA_FOCAL_LENGTH_PIXELS);
+        }
+    return 0;
 }
 
+// TODO move camera resolution into here.
 public double getPitchAngleToTarget (int targetIndex)
 {
-    return Math.atan((this.reports[targetIndex].center_mass_y
-            - (Hardware.drive.cameraYResolution / 2) - .5)
-            / Hardware.CAMERA_FOCAL_LENGTH_PIXELS)
-            + Hardware.CAMERA_MOUNT_ANGLE_ABOVE_HORIZONTAL_RADIANS;
+    if (this.reports != null && targetIndex < this.reports.length)
+        {
+        return Math
+                .atan((240 - this.reports[targetIndex].center_mass_y)
+                        - ((Hardware.drive.cameraYResolution / 2) - .5)
+                                / Hardware.CAMERA_FOCAL_LENGTH_PIXELS)
+                + Hardware.CAMERA_MOUNT_ANGLE_ABOVE_HORIZONTAL_RADIANS;
+        }
+    return 0.0;
 }
 
 // TODO return ultrasonic value if we have one.
 public double getZDistanceToTargetFT (int targetIndex)
 {
-    return (Hardware.VISION_GOAL_HEIGHT_FT
-            * Math.cos(this.getYawAngleToTarget(targetIndex)))
-            / Math.tan(this.getPitchAngleToTarget(targetIndex));
+    if (this.reports != null && targetIndex < this.reports.length)
+        {
+        return (Hardware.VISION_GOAL_HEIGHT_FT
+                * Math.cos(this.getYawAngleToTarget(targetIndex)))
+                / Math.tan(this.getPitchAngleToTarget(targetIndex));
+        }
+    return 0.0;
 }
 }

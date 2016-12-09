@@ -293,7 +293,6 @@ public void robotInit ()
     // =========================================================
     // User code goes below here
     // =========================================================
-
     // Allows us to edit the speed of the robot using the
     // potentiometer on the control switch mount (Alex's fancy name)
     // Essentially, we multiply the percentage given to the motors in
