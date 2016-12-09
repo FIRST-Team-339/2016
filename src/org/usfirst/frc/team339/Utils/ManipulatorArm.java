@@ -110,7 +110,6 @@ public void move (double speed, boolean override)
     // this.motor.set(-speed);
 
     // }
-    override = true; // TODO BAAAAAAAAAAAAAAAD
     if (override == true)
         {
         if (speed == 0) // if override true, and speed is 0, don't move
@@ -153,7 +152,7 @@ public void stopArmMotor ()
             && armPot
                     .get() < BRAKE_ARM_WITH_FORWARD_VOLTAGE_DEGREES)
         {
-        this.motor.set(0.1);
+        this.motor.set(0.3);// TODO magic number?
         }
     else if (armPot.get() <= this.MAX_SOFT_ARM_STOP
             && armPot
@@ -374,11 +373,11 @@ public boolean moveToPosition (ArmPosition position)
                 {
                 move(MAX_ARM_SPEED);
                 }
-            // else if (armPot.get() > DEPOSIT_POSITION
-            // + DEPOSIT_POSITION_THRESHOLD)
-            // {
-            // move(-MAX_ARM_SPEED);
-            // }
+            else if (armPot.get() > DEPOSIT_POSITION
+                    + DEPOSIT_POSITION_THRESHOLD)
+                {
+                move(-MAX_ARM_SPEED);
+                }
             else
                 {
                 move(0.0);
@@ -447,9 +446,9 @@ private final double MAX_ARM_SPEED = -.8;
 // default slow arm turn speed proportion
 private double slowSpeed = .2;
 
-private double MAX_SOFT_ARM_STOP = 248.0;
+private double MAX_SOFT_ARM_STOP = 256.0;
 
-private final static double MIN_SOFT_ARM_STOP = 81.0;
+private final static double MIN_SOFT_ARM_STOP = 110.0;
 
 private final double ARM_OUT_OF_WAY_DEGREES = 0.701
         * (MAX_SOFT_ARM_STOP - MIN_SOFT_ARM_STOP)
@@ -469,12 +468,12 @@ private final double REASONABLE_UP_FACTOR = -.15;// -.55;
 
 private final double REASONABLE_UP_AND_OVER_FACTOR = -.4;// -0.45;
 
-private final double REASONABLE_DOWN_FACTOR = 0.08; // .2, .35
+private final double REASONABLE_DOWN_FACTOR = .15; // .2, .35
 
 private final double REASONABLE_DOWN_UNDER_FACTOR = -.1;// 0.1;// .15,
                                                         // .2
 
-private final double REASONABLE_DECELERATION_ANGLE = 129;// 0.75
+private final double REASONABLE_DECELERATION_ANGLE = 198;// 0.75
 // * (MAX_SOFT_ARM_STOP - MIN_SOFT_ARM_STOP)
 // + MIN_SOFT_ARM_STOP;// 174.1;
 

@@ -54,6 +54,13 @@ private static int imageNumber = 0;
 
 private static int txtNumber = 0;
 
+// The focal length of the camera, you can find it in the camera documentation
+// Measured in mm.
+private double focalLength = 4.4;
+
+// The horizontal field of view of the camera in degrees.
+private double horizFieldOfView = 47;
+
 // --------------------------------------------------------------
 // All methods below this point simply call the methods for the
 // Axis camera, if we have one, else it does nothing or it returns
@@ -79,11 +86,11 @@ public KilroyCamera (boolean hasCamera)
     this.haveCamera = hasCamera;
     if (hasCamera)
         {
-            this.camera = new AxisCamera(KILROY_CAMERA_IP);
+        this.camera = new AxisCamera(KILROY_CAMERA_IP);
         }
     else
         {
-            this.camera = null;
+        this.camera = null;
         }
 }
 
@@ -99,15 +106,15 @@ public void clearAllImages ()
 {
     try
         {
-            // rm -rf removes a directory
-            Runtime.getRuntime()
-                    .exec("/bin/rm -rf /home/lvuser/images");
-            // saves new file
+        // rm -rf removes a directory
+        Runtime.getRuntime()
+                .exec("/bin/rm -rf /home/lvuser/images");
+        // saves new file
         }  // end try
     catch (final IOException e)
         {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+        // TODO Auto-generated catch block
+        e.printStackTrace();
         } // catch any errors
 
 } // end clearAllImages
@@ -245,6 +252,97 @@ public AxisCamera.WhiteBalance getWhiteBalance ()
 }
 
 /**
+ * @return
+ *         The focal length of the camera this object refers to, in millimeter.
+ */
+public double getFocalLength ()
+{
+    return this.focalLength;
+}
+
+/**
+ * Saves the focal length of the of the camera this object refers to in this
+ * class
+ */
+public void setFocalLength (double focalLength)
+{
+    this.focalLength = focalLength;
+}
+
+/**
+ * 
+ * @return
+ *         The horizontal field of view of the camera, in degrees
+ */
+public double getFieldOfView ()
+{
+    return this.horizFieldOfView;
+}
+
+/**
+ * Saves the field of view of the hardware camera into this class.
+ * 
+ * @param FOV
+ *            THe horizontal field of view, in degrees.
+ */
+public void setFieldOfView (double FOV)
+{
+    this.horizFieldOfView = FOV;
+}
+
+// TODO maybe do this in the constructor so I don't spend the cycles everytime
+// this is called
+/**
+ * 
+ * @return
+ *         The horizontal resolution of the axis camera this object refers to.
+ */
+public double getHorizontalResolution ()
+{
+    switch (this.getResolution())
+        {
+        case k640x480:
+            return 640;
+        case k480x360:
+            return 480;
+        case k320x240:
+            return 320;
+        case k240x180:
+            return 240;
+        case k176x144:
+            return 176;
+        default:
+        case k160x120:
+            return 160.0;
+        }
+}
+
+/**
+ * 
+ * @return
+ *         The vertical resolution of the camera this object this refers to.
+ */
+public double getVerticalResolution ()
+{
+    switch (this.getResolution())
+        {
+        case k640x480:
+            return 480;
+        case k480x360:
+            return 360;
+        case k320x240:
+            return 240;
+        case k240x180:
+            return 180;
+        case k176x144:
+            return 144;
+        default:
+        case k160x120:
+            return 120.0;
+        }
+}
+
+/**
  * Takes an image from the camera and stores it in the specified file path.
  * This will override old images of the same name.
  *
@@ -260,42 +358,42 @@ public void saveImage (String fileName)
     // Pre-creates the directory for images in all cases
     try
         {
-            Runtime.getRuntime()
-                    .exec("/bin/mkdir -p /home/lvuser/images");
-            // saves new file
+        Runtime.getRuntime()
+                .exec("/bin/mkdir -p /home/lvuser/images");
+        // saves new file
         }
     catch (final IOException e)
         {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+        // TODO Auto-generated catch block
+        e.printStackTrace();
         }
     // Erases any pre-existing files that have previously been created
     try
         {
-            Runtime.getRuntime()
-                    .exec("/bin/rm -rf /home/lvuser/images/" + fileName
-                            + ".jpg");
-            // saves new file
+        Runtime.getRuntime()
+                .exec("/bin/rm -rf /home/lvuser/images/" + fileName
+                        + ".jpg");
+        // saves new file
         }
     catch (final IOException e)
         {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+        // TODO Auto-generated catch block
+        e.printStackTrace();
         }
     // Creates new image, keep a log of the creation of the file
     try
         {
-            Runtime.getRuntime()
-                    .exec("/usr/bin/wget http://" + KILROY_CAMERA_IP
-                            + "/jpg/image.jpg "
-                            + "-O /home/lvuser/images/" + fileName
-                            + ".jpg >> /home/lvuser/images/log.txt");
-            // saves new file
+        Runtime.getRuntime()
+                .exec("/usr/bin/wget http://" + KILROY_CAMERA_IP
+                        + "/jpg/image.jpg "
+                        + "-O /home/lvuser/images/" + fileName
+                        + ".jpg >> /home/lvuser/images/log.txt");
+        // saves new file
         }
     catch (final IOException e)
         {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+        // TODO Auto-generated catch block
+        e.printStackTrace();
         }
 }
 
@@ -362,22 +460,22 @@ public void saveTextSafely (String text)
     // Pre-creates the directory for files in all cases
     try
         {
-            Runtime.getRuntime()
-                    .exec("/bin/mkdir -p /home/lvuser/TextFiles");
-            // echo the text to the shell and pipe it into a new file
-            Runtime.getRuntime()
-                    .exec("echo " + text + " > "
-                            + "/home/lvuser/TextFiles/RoboRIO_Out_"
-                            + txtNumber + ".txt"); // @TEST
-            txtNumber++;
+        Runtime.getRuntime()
+                .exec("/bin/mkdir -p /home/lvuser/TextFiles");
+        // echo the text to the shell and pipe it into a new file
+        Runtime.getRuntime()
+                .exec("echo " + text + " > "
+                        + "/home/lvuser/TextFiles/RoboRIO_Out_"
+                        + txtNumber + ".txt"); // @TEST
+        txtNumber++;
         }
     catch (FileNotFoundException e)// Shouldn't actually happen.
         {
-            System.out.println("Failed to save the text file!");
+        System.out.println("Failed to save the text file!");
         }
     catch (final IOException e)
         {
-            System.out.println("Failed to make text directory!");
+        System.out.println("Failed to make text directory!");
         }
 }
 
@@ -403,11 +501,11 @@ public void writeBrightness (int brightness)
 {
     if (this.haveCamera)
         {
-            this.camera.writeBrightness(brightness);
+        this.camera.writeBrightness(brightness);
         }
     else
         {
-            // returns nothing
+        // returns nothing
 
         }
 }
@@ -416,11 +514,11 @@ public void writeColorLevel (int value)
 {
     if (this.haveCamera)
         {
-            this.camera.writeColorLevel(value);
+        this.camera.writeColorLevel(value);
         }
     else
         {
-            // returns nothing
+        // returns nothing
 
         }
 }
@@ -429,11 +527,11 @@ public void writeCompression (int value)
 {
     if (this.haveCamera)
         {
-            this.camera.writeCompression(value);
+        this.camera.writeCompression(value);
         }
     else
         {
-            // returns nothing
+        // returns nothing
 
         }
 }
@@ -442,11 +540,11 @@ public void writeExposureControl (AxisCamera.ExposureControl value)
 {
     if (this.haveCamera)
         {
-            this.camera.writeExposureControl(value);
+        this.camera.writeExposureControl(value);
         }
     else
         {
-            // returns nothing
+        // returns nothing
 
         }
 }
@@ -455,11 +553,11 @@ public void writeMaxFPS (int value)
 {
     if (this.haveCamera)
         {
-            this.camera.writeMaxFPS(value);
+        this.camera.writeMaxFPS(value);
         }
     else
         {
-            // returns nothing
+        // returns nothing
 
         }
 }
@@ -468,11 +566,11 @@ public void writeResolution (AxisCamera.Resolution value)
 {
     if (this.haveCamera)
         {
-            this.camera.writeResolution(value);
+        this.camera.writeResolution(value);
         }
     else
         {
-            // returns nothing
+        // returns nothing
 
         }
 }
@@ -481,11 +579,11 @@ public void writeRotation (AxisCamera.Rotation value)
 {
     if (this.haveCamera)
         {
-            this.camera.writeRotation(value);
+        this.camera.writeRotation(value);
         }
     else
         {
-            // returns nothing
+        // returns nothing
 
         }
 }
@@ -494,11 +592,11 @@ public void writeWhiteBalance (AxisCamera.WhiteBalance whiteBalance)
 {
     if (this.haveCamera)
         {
-            this.camera.writeWhiteBalance(whiteBalance);
+        this.camera.writeWhiteBalance(whiteBalance);
         }
     else
         {
-            // returns nothing
+        // returns nothing
 
         }
 }

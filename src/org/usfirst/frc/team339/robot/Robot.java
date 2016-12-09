@@ -444,7 +444,7 @@ public void robotInit ()
     // Hardware.cam0.updateSettings();
     // Starts streaming video
     // TODO add back in
-    Hardware.cameraServer.startAutomaticCapture(Hardware.cam1);
+    Hardware.cameraServer.startAutomaticCapture(Hardware.usbCam);
     // Sets the hue, saturation, and luminance values for the vision
     // processing.
     // Hardware.imageProcessor.setHSLValues(0, 255, 0, 75, 5, 141);
@@ -542,7 +542,7 @@ public void teleopInit ()
     // Call the Teleop class's Init function,
     // which contains the user code.
     // -------------------------------------
-    Hardware.cameraServer.startAutomaticCapture(Hardware.cam1);
+    Hardware.cameraServer.startAutomaticCapture(Hardware.usbCam);
 
     Teleop.init();
 

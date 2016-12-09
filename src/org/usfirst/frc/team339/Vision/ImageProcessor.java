@@ -103,18 +103,32 @@ private VisionScript operators = new VisionScript();
 
 private double offsetFromCenterX;// offset along line orthoganal to the primary
                                  // vector of travel that intersects the center
-                                 // potistive towards the starboard, negative
+                                 // positive towards the starboard, negative
                                  // towards the port
 
 private double offsetFromCenterY;// offset along primary vector of travel
                                  // positive is towards the front, negative
                                  // towards the back
 
-private double cameraFocalLength;
+// The focal length of the camera in pixels, use the formula below...
+private double cameraFocalLengthPixels;
+// =focal_pixel = (image_width_in_pixels * 0.5) / tan(Horiz_FOV * 0.5 * PI/180)
 
-/**
- * 
+// the horizontal
+private double horizFieldOfView;
+
+// The vertical angle, in radians, above the horizontal the camera points
+private double cameraMountAngleAboveHorizontalRadians = .9599;
+
+
+/*
+ * The pixel values of the camera resolution, x and y. Doubles because we have
+ * to operate on them with decimals
  */
+private double cameraXRes;
+
+private double cameraYRes;
+
 // TODO should this be public? Use a getter, methinks
 public ParticleReport[] reports = new ParticleReport[0];
 
@@ -139,15 +153,13 @@ public ImageProcessor (KilroyCamera camera)
     // this.operators.add(new SaveColorImageJPEGOperator(
     // "/home/lvuser/images/Test.jpg"));
     // this.camera.getImage().image;
-    this.operators.add(new LoadColorImageJPEGOperator(
-            "/home/lvuser/images/Firstpic.jpg"));
-    this.operators
-            .add(new HSLColorThresholdOperator(0, 153, 0, 75, 5, 141));
-    this.operators.add(new RemoveSmallObjectsOperator(2, true));
-    this.operators.add(new ConvexHullOperator(true));
-    this.operators.add(new SaveBinaryImagePNGOperator(
+    this(camera, new LoadColorImageJPEGOperator(
+            "/home/lvuser/images/Firstpic.jpg"),
+            new HSLColorThresholdOperator(0, 153, 0, 75, 5, 141),
+            new RemoveSmallObjectsOperator(2, true),
+            new ConvexHullOperator(true),
+            new SaveBinaryImagePNGOperator(
             "/home/lvuser/images/Out.png"));
-    this.setCamera(camera);
 }
 
 /**
@@ -164,6 +176,11 @@ public ImageProcessor (KilroyCamera camera, VisionScript script)
 {
     this.camera = camera;
     this.operators = script;
+    this.cameraXRes = camera.getHorizontalResolution();
+    this.cameraYRes = camera.getVerticalResolution();
+    this.cameraFocalLengthPixels = (this.cameraXRes / 2.0)
+            / Math.tan(camera.getFieldOfView() * .5 * (Math.PI / 180));
+    // see formula commented below the variable
 }
 
 /**
@@ -182,7 +199,11 @@ public ImageProcessor (KilroyCamera camera,
         VisionOperatorInterface... ops)
 {
     this.camera = camera;
+    this.cameraXRes = camera.getHorizontalResolution();
+    this.cameraYRes = camera.getVerticalResolution();
     this.operators = new VisionScript();
+    this.cameraFocalLengthPixels = (this.cameraXRes / 2.0)
+            / Math.tan(camera.getFieldOfView() * .5 * (Math.PI / 180));
     for (VisionOperatorInterface operator : ops)
         {
         this.operators.put(operator);
@@ -282,6 +303,7 @@ public void removeOperator (int index)
  *            Boolean to determine if all occurrences of <operatorToRemove>.
  *            True removes all, false removes first.
  */
+// TODO why is this here?
 public void removeOperator (VisionOperatorInterface operatorToRemove,
         boolean removeAllInstances)
 {
@@ -430,8 +452,8 @@ public double getYawAngleToTarget (int targetIndex)
     if (this.reports != null && targetIndex < this.reports.length)
         {
         return Math.atan((this.reports[targetIndex].center_mass_x
-                - (Hardware.drive.cameraXResolution / 2) - .5)
-                / Hardware.CAMERA_FOCAL_LENGTH_PIXELS);
+            - ((this.cameraXRes / 2) - .5))
+            / this.cameraFocalLengthPixels);
         }
     return 0;
 }
@@ -439,15 +461,17 @@ public double getYawAngleToTarget (int targetIndex)
 // TODO move camera resolution into here.
 public double getPitchAngleToTarget (int targetIndex)
 {
-    if (this.reports != null && targetIndex < this.reports.length)
-        {
-        return Math
-                .atan((240 - this.reports[targetIndex].center_mass_y)
-                        - ((Hardware.drive.cameraYResolution / 2) - .5)
-                                / Hardware.CAMERA_FOCAL_LENGTH_PIXELS)
-                + Hardware.CAMERA_MOUNT_ANGLE_ABOVE_HORIZONTAL_RADIANS;
-        }
-    return 0.0;
+        double adjustedYVal = Hardware.drive.cameraYResolution -
+            this.reports[targetIndex].center_mass_y;
+    // System.out.println("Vert Res: " + Hardware.drive.cameraYResolution);
+    System.out.println(
+            "Y coord " + this.reports[targetIndex].center_mass_y);
+    // System.out.println(
+    // "X coord " + this.reports[targetIndex].center_mass_x);
+    // TODO change the y to adjusted, apperantly.
+    return Math.atan((adjustedYVal - (this.cameraYRes / 2) - .5)
+            / this.cameraFocalLengthPixels)
+            + this.cameraMountAngleAboveHorizontalRadians;
 }
 
 // TODO return ultrasonic value if we have one.
@@ -455,9 +479,16 @@ public double getZDistanceToTargetFT (int targetIndex)
 {
     if (this.reports != null && targetIndex < this.reports.length)
         {
+    double yaw = this.getYawAngleToTarget(targetIndex);
+    double pitch = this.getPitchAngleToTarget(targetIndex);
+    System.out.println("Yaw angle: " + Math.toDegrees(yaw));
+    System.out.println("Pitch angle: " + Math.toDegrees(pitch));
+    // I have no idea why multiplying by 2 approx. works, if you find a problem
+    // somewhere else, look here for random hacks
+    // TODO generalize. No more hardware!
         return (Hardware.VISION_GOAL_HEIGHT_FT
-                * Math.cos(this.getYawAngleToTarget(targetIndex)))
-                / Math.tan(this.getPitchAngleToTarget(targetIndex));
+            * Math.cos(yaw)
+            / Math.tan(pitch)) * 2.0;
         }
     return 0.0;
 }
