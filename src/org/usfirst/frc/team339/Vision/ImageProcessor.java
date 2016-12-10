@@ -120,6 +120,7 @@ private double horizFieldOfView;
 // The vertical angle, in radians, above the horizontal the camera points
 private double cameraMountAngleAboveHorizontalRadians = .9599;
 
+private double cameraMountAngleToRightOfCenterRadians = 0;
 
 /*
  * The pixel values of the camera resolution, x and y. Doubles because we have
@@ -159,7 +160,7 @@ public ImageProcessor (KilroyCamera camera)
             new RemoveSmallObjectsOperator(2, true),
             new ConvexHullOperator(true),
             new SaveBinaryImagePNGOperator(
-            "/home/lvuser/images/Out.png"));
+                    "/home/lvuser/images/Out.png"));
 }
 
 /**
@@ -330,6 +331,53 @@ public void clearOperatorList ()
 }
 
 /**
+ * Sets the angle the camera is mounted above the horizontal on the robot
+ * 
+ * @param mountAngle
+ *            The angle above the horizontal the camera is mounted at, in
+ *            radians
+ */
+public void setVerticalCameraMountAngle (double mountAngle)
+{
+    this.cameraMountAngleAboveHorizontalRadians = mountAngle;
+}
+
+/**
+ * 
+ * @return
+ *         The angle above the horizontal at which the camera is mounted, in
+ *         radians.
+ */
+public double getVerticalCameraMountAngle ()
+{
+    return this.cameraMountAngleAboveHorizontalRadians;
+}
+
+/**
+ * Sets the angle to the right of the centerline of the camera (which is
+ * parallel to the centerline of the robot) the camera is mounted, just in case
+ * the builders decided it was a good idea to mount it off center.
+ * 
+ * @param angle
+ *            The angle, in radians, to the right of center the camera is
+ *            mounted (negative is to the left).
+ */
+public void setMountAngleToRightOfCenter (double angle)
+{
+    this.cameraMountAngleToRightOfCenterRadians = angle;
+}
+
+/**
+ * @return
+ *         The angle, in radians, to the right of center the camera is mounted
+ *         (negative is to the left).
+ */
+public double getMountAngleToRightOfCenter ()
+{
+    return this.cameraMountAngleToRightOfCenterRadians;
+}
+
+/**
  * Pulls a new image from the camera and processes the image through the
  * operator list, only if the new image it received was fresh.
  */
@@ -452,8 +500,8 @@ public double getYawAngleToTarget (int targetIndex)
     if (this.reports != null && targetIndex < this.reports.length)
         {
         return Math.atan((this.reports[targetIndex].center_mass_x
-            - ((this.cameraXRes / 2) - .5))
-            / this.cameraFocalLengthPixels);
+                - ((this.cameraXRes / 2) - .5))
+                / this.cameraFocalLengthPixels);
         }
     return 0;
 }
@@ -461,7 +509,7 @@ public double getYawAngleToTarget (int targetIndex)
 // TODO move camera resolution into here.
 public double getPitchAngleToTarget (int targetIndex)
 {
-        double adjustedYVal = Hardware.drive.cameraYResolution -
+    double adjustedYVal = Hardware.drive.cameraYResolution -
             this.reports[targetIndex].center_mass_y;
     // System.out.println("Vert Res: " + Hardware.drive.cameraYResolution);
     System.out.println(
@@ -479,16 +527,17 @@ public double getZDistanceToTargetFT (int targetIndex)
 {
     if (this.reports != null && targetIndex < this.reports.length)
         {
-    double yaw = this.getYawAngleToTarget(targetIndex);
-    double pitch = this.getPitchAngleToTarget(targetIndex);
-    System.out.println("Yaw angle: " + Math.toDegrees(yaw));
-    System.out.println("Pitch angle: " + Math.toDegrees(pitch));
-    // I have no idea why multiplying by 2 approx. works, if you find a problem
-    // somewhere else, look here for random hacks
-    // TODO generalize. No more hardware!
+        double yaw = this.getYawAngleToTarget(targetIndex);
+        double pitch = this.getPitchAngleToTarget(targetIndex);
+        System.out.println("Yaw angle: " + Math.toDegrees(yaw));
+        System.out.println("Pitch angle: " + Math.toDegrees(pitch));
+        // I have no idea why multiplying by 2 approx. works, if you find a
+        // problem
+        // somewhere else, look here for random hacks
+        // TODO generalize. No more hardware!
         return (Hardware.VISION_GOAL_HEIGHT_FT
-            * Math.cos(yaw)
-            / Math.tan(pitch)) * 2.0;
+                * Math.cos(yaw)
+                / Math.tan(pitch)) * 2.0;
         }
     return 0.0;
 }
