@@ -159,7 +159,7 @@ public ImageProcessor (KilroyCamera camera)
             new RemoveSmallObjectsOperator(2, true),
             new ConvexHullOperator(true),
             new SaveBinaryImagePNGOperator(
-            "/home/lvuser/images/Out.png"));
+                    "/home/lvuser/images/Out.png"));
 }
 
 /**
@@ -444,51 +444,143 @@ public void updateParticalAnalysisReports ()
     particles.copyInto(this.reports);
 }
 
-// Positive right, negative left
-// @AHK TODO improve parameter list
-// @AHK TODO javaDocComments
-public double getYawAngleToTarget (int targetIndex)
+/**
+ * Finds the angle to the target to the right of center from the position of the
+ * camera.
+ * 
+ * @param target
+ *            The blob we're targeting
+ * @return
+ *         The yaw angle between the blob and the camera to the right of center
+ *         (left is negative), in radians.
+ * 
+ */
+public double getYawAngleToTarget (ParticleReport target)
 {
-    if (this.reports != null && targetIndex < this.reports.length)
-        {
-        return Math.atan((this.reports[targetIndex].center_mass_x
+    return Math.atan((target.center_mass_x
             - ((this.cameraXRes / 2) - .5))
             / this.cameraFocalLengthPixels);
-        }
-    return 0;
 }
 
-// TODO move camera resolution into here.
-public double getPitchAngleToTarget (int targetIndex)
+/**
+ * Finds the angle to the target above the horizontal from the height of the
+ * camera.
+ * 
+ * @param target
+ *            The blob to calculate the angle to.
+ * @return
+ *         The pitch angle between the blob and the camera above the horizontal,
+ *         in radians.
+ */
+public double getPitchAngleToTarget (ParticleReport target)
 {
-        double adjustedYVal = Hardware.drive.cameraYResolution -
-            this.reports[targetIndex].center_mass_y;
+    double adjustedYVal = Hardware.drive.cameraYResolution
+            - target.center_mass_y;
     // System.out.println("Vert Res: " + Hardware.drive.cameraYResolution);
     System.out.println(
-            "Y coord " + this.reports[targetIndex].center_mass_y);
+            "Y coord " + target.center_mass_y);
     // System.out.println(
-    // "X coord " + this.reports[targetIndex].center_mass_x);
-    // TODO change the y to adjusted, apperantly.
+    // "X coord " + target.center_mass_x);
     return Math.atan((adjustedYVal - (this.cameraYRes / 2) - .5)
             / this.cameraFocalLengthPixels)
             + this.cameraMountAngleAboveHorizontalRadians;
 }
 
+// TODO either define unit or make sure the programmer knows about all the units
+/**
+ * The distance from the front of the robot to the vertical plane of the target.
+ * 
+ * @param target
+ *            The blob we're targeting
+ * @return
+ *         The distance between the front of the robot and the vertical plane on
+ *         which the target sits, in the unit of the height of the vision
+ *         target.
+ */
+public double getZDistanceToTarget (ParticleReport target)
+{
+    double yaw = this.getYawAngleToTarget(target);
+    double pitch = this.getPitchAngleToTarget(target);
+    // System.out.println("Yaw angle: " + Math.toDegrees(yaw));
+    // System.out.println("Pitch angle: " + Math.toDegrees(pitch));
+    // I have no idea why multiplying by 2 approx. works, if you find a
+    // problem somewhere else, look here for random hacks
+    return (Hardware.VISION_GOAL_HEIGHT_FT
+            * Math.cos(yaw)
+            / Math.tan(pitch)) * 2.0;
+}
+
+// Positive right, negative left
+/**
+ * See getYawAngleToTarget (ParticleReport).
+ * 
+ * @author Alex Kneipp
+ * @deprecated by Alex Kneipp
+ *             Use getYawAngleToTarget (ParticleReport) instead.
+ * @param targetIndex
+ *            The index of the target blob in the reports array
+ * @return
+ *         The yaw angle to the target, or zero if the reports array does not
+ *         exist or the int argument is beyond the bounds of the array.
+ *         See getYawAngleToTarget (ParticleReport) for more information on the
+ *         return.
+ */
+@Deprecated
+public double getYawAngleToTarget (int targetIndex)
+{
+    if (this.reports != null && targetIndex < this.reports.length)
+        {
+        return this.getYawAngleToTarget(this.reports[targetIndex]);
+        }
+    return 0;
+}
+
+/**
+ * See getPitchAngleToTarget (ParticleReport).
+ * 
+ * @author Alex Kneipp
+ * 
+ * @deprecated by Alex Kneipp
+ *             Use getPitchAngleToTarget (ParticleReport) instead.
+ * @param targetIndex
+ *            The index of the target blob in the reports array
+ * @return
+ *         The pitch angle to the target, or zero if the reports array does not
+ *         exist or the int argument is beyond the bounds of the array.
+ *         See getPitchAngleToTarget (ParticleReport) for more information on
+ *         the return.
+ */
+@Deprecated
+public double getPitchAngleToTarget (int targetIndex)
+{
+    if (this.reports != null && targetIndex < this.reports.length)
+        {
+        return this.getPitchAngleToTarget(this.reports[targetIndex]);
+        }
+    return 0;
+}
+
+/**
+ * See getZDistanceToTarget (ParticleReport).
+ * 
+ * @author Alex Kneipp
+ * @deprecated by Alex Kneipp
+ *             Use getZDistanceToTarget (ParticleReport) instead.
+ * @param targetIndex
+ *            The index of the target blob in the reports array
+ * @return
+ *         The ZDistance to thhe target, or zero if the reports array does not
+ *         exist or the int argument is beyond the bounds of the array.
+ *         See getZDistanceToTarget (ParticleReport) for more information on the
+ *         return.
+ */
 // TODO return ultrasonic value if we have one.
+@Deprecated
 public double getZDistanceToTargetFT (int targetIndex)
 {
     if (this.reports != null && targetIndex < this.reports.length)
         {
-    double yaw = this.getYawAngleToTarget(targetIndex);
-    double pitch = this.getPitchAngleToTarget(targetIndex);
-    System.out.println("Yaw angle: " + Math.toDegrees(yaw));
-    System.out.println("Pitch angle: " + Math.toDegrees(pitch));
-    // I have no idea why multiplying by 2 approx. works, if you find a problem
-    // somewhere else, look here for random hacks
-    // TODO generalize. No more hardware!
-        return (Hardware.VISION_GOAL_HEIGHT_FT
-            * Math.cos(yaw)
-            / Math.tan(pitch)) * 2.0;
+        return this.getZDistanceToTarget(this.reports[targetIndex]);
         }
     return 0.0;
 }
