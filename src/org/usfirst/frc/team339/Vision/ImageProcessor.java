@@ -15,8 +15,16 @@ import org.usfirst.frc.team339.Vision.operators.VisionOperatorInterface;
 import edu.wpi.first.wpilibj.image.NIVisionException;
 
 // TODO a processImageNoUpdate
-// TODO the rest of the absolute position methods
-
+// TODO getLargetsBlob, getSmallestBlob,getNthBlob, etc.
+// TODO getXDistance to target, etc.
+/**
+ * A class to capture and process images. Provides information on the pictures
+ * it captures and the blobs in it.
+ * Make sure you give it a camera and a Vision script when you create it!
+ * 
+ * @author Noah Golmant and/or Nathan Lydick
+ *
+ */
 public class ImageProcessor
 {
 
@@ -98,9 +106,9 @@ private KilroyCamera camera = null;
 
 private Image currentImage = null;
 
-// @AHK TODO create a visionScript object to further object orient the code?
 private VisionScript operators = new VisionScript();
 
+// TODO use these values
 private double offsetFromCenterX;// offset along line orthoganal to the primary
                                  // vector of travel that intersects the center
                                  // positive towards the starboard, negative
@@ -114,7 +122,7 @@ private double offsetFromCenterY;// offset along primary vector of travel
 private double cameraFocalLengthPixels;
 // =focal_pixel = (image_width_in_pixels * 0.5) / tan(Horiz_FOV * 0.5 * PI/180)
 
-// the horizontal
+// the horizontal field of view of the camera
 private double horizFieldOfView;
 
 // The vertical angle, in radians, above the horizontal the camera points
@@ -224,6 +232,12 @@ public ParticleReport[] getParticleAnalysisReports ()
     return this.reports;
 }
 
+/**
+ * Changes the camera which captures images for processing
+ * 
+ * @param cam
+ *            The camera to use for capturing images
+ */
 public void setCamera (KilroyCamera cam)
 {
     this.camera = cam;
@@ -335,11 +349,15 @@ public void clearOperatorList ()
  */
 public void processImage ()
 {
-    this.updateImage();
-    if (this.newImageIsFresh == true)
+    if (this.camera != null)
         {
-        this.applyOperators();
-        this.updateParticalAnalysisReports();// TODO test for mem usage and time
+        this.updateImage();
+        if (this.newImageIsFresh == true)
+            {
+            this.applyOperators();
+            this.updateParticalAnalysisReports();// TODO test for mem usage and
+                                                 // time
+            }
         }
 }
 
