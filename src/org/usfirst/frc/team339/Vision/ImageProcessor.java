@@ -100,7 +100,7 @@ public int compareTo (ParticleReport r)
 {
     return (int) (r.area - this.area);
 }
-};
+}
 
 private KilroyCamera camera = null;
 
@@ -253,7 +253,8 @@ public void applyOperators ()
     // Goes through all operators and applies whatever changes they are
     // programmed to apply. The currentImage is replaced with the altered
     // image.
-    if (this.currentImage != null && this.newImageIsFresh == true)
+    if (this.camera.gethaveCamera() == true && this.currentImage != null
+            && this.newImageIsFresh == true)
         {
         for (int i = 0; i < operators.size(); i++)
             {
@@ -392,74 +393,78 @@ public void updateImage ()
  */
 public void updateParticalAnalysisReports ()
 {
-    final int numParticles = NIVision
-            .imaqCountParticles(this.currentImage, 0);
-
-    System.out.println("Object removal blobs: " +
-            NIVision.imaqCountParticles(this.currentImage, 0));
-
-    // Measure particles and sort by particle size
-    final Vector<ParticleReport> particles = new Vector<ParticleReport>();
-
-    if (numParticles > 0)
+    if (this.camera.gethaveCamera() == true
+            && this.currentImage != null)
         {
+        final int numParticles = NIVision
+                .imaqCountParticles(this.currentImage, 0);
 
-        for (int particleIndex = 0; particleIndex < numParticles; particleIndex++)
+        System.out.println("Object removal blobs: " +
+                NIVision.imaqCountParticles(this.currentImage, 0));
+
+        // Measure particles and sort by particle size
+        final Vector<ParticleReport> particles = new Vector<ParticleReport>();
+
+        if (numParticles > 0)
             {
 
-            final ParticleReport particle = new ParticleReport();
-            particle.PercentAreaToImageArea = NIVision
-                    .imaqMeasureParticle(this.currentImage,
-                            particleIndex, 0,
-                            NIVision.MeasurementType.MT_AREA_BY_IMAGE_AREA);
-            particle.area = NIVision.imaqMeasureParticle(
-                    this.currentImage,
-                    particleIndex, 0,
-                    NIVision.MeasurementType.MT_AREA);
-            particle.ConvexHullArea = NIVision
-                    .imaqMeasureParticle(
-                            this.currentImage,
-                            particleIndex, 0,
-                            NIVision.MeasurementType.MT_CONVEX_HULL_AREA);
-            particle.boundingRectTop = (int) NIVision
-                    .imaqMeasureParticle(this.currentImage,
-                            particleIndex, 0,
-                            NIVision.MeasurementType.MT_BOUNDING_RECT_TOP);
-            particle.boundingRectLeft = (int) NIVision
-                    .imaqMeasureParticle(this.currentImage,
-                            particleIndex, 0,
-                            NIVision.MeasurementType.MT_BOUNDING_RECT_LEFT);
-            particle.boundingRectBottom = (int) NIVision
-                    .imaqMeasureParticle(this.currentImage,
-                            particleIndex, 0,
-                            NIVision.MeasurementType.MT_BOUNDING_RECT_BOTTOM);
-            particle.boundingRectRight = (int) NIVision
-                    .imaqMeasureParticle(this.currentImage,
-                            particleIndex, 0,
-                            NIVision.MeasurementType.MT_BOUNDING_RECT_RIGHT);
-            particle.boundingRectWidth = (int) NIVision
-                    .imaqMeasureParticle(this.currentImage,
-                            particleIndex, 0,
-                            NIVision.MeasurementType.MT_BOUNDING_RECT_WIDTH);// par.boundingRectRight
-            // -
-            // par.boundingRectLeft;
-            particle.center_mass_x = (int) NIVision
-                    .imaqMeasureParticle(this.currentImage,
-                            particleIndex, 0,
-                            NIVision.MeasurementType.MT_CENTER_OF_MASS_X);
-            particle.center_mass_y = (int) NIVision
-                    .imaqMeasureParticle(this.currentImage,
-                            particleIndex, 0,
-                            NIVision.MeasurementType.MT_CENTER_OF_MASS_Y);
-            particle.imageWidth = NIVision
-                    .imaqGetImageSize(this.currentImage).width;
-            particles.add(particle);
-            }
-        particles.sort(null);
+            for (int particleIndex = 0; particleIndex < numParticles; particleIndex++)
+                {
 
+                final ParticleReport particle = new ParticleReport();
+                particle.PercentAreaToImageArea = NIVision
+                        .imaqMeasureParticle(this.currentImage,
+                                particleIndex, 0,
+                                NIVision.MeasurementType.MT_AREA_BY_IMAGE_AREA);
+                particle.area = NIVision.imaqMeasureParticle(
+                        this.currentImage,
+                        particleIndex, 0,
+                        NIVision.MeasurementType.MT_AREA);
+                particle.ConvexHullArea = NIVision
+                        .imaqMeasureParticle(
+                                this.currentImage,
+                                particleIndex, 0,
+                                NIVision.MeasurementType.MT_CONVEX_HULL_AREA);
+                particle.boundingRectTop = (int) NIVision
+                        .imaqMeasureParticle(this.currentImage,
+                                particleIndex, 0,
+                                NIVision.MeasurementType.MT_BOUNDING_RECT_TOP);
+                particle.boundingRectLeft = (int) NIVision
+                        .imaqMeasureParticle(this.currentImage,
+                                particleIndex, 0,
+                                NIVision.MeasurementType.MT_BOUNDING_RECT_LEFT);
+                particle.boundingRectBottom = (int) NIVision
+                        .imaqMeasureParticle(this.currentImage,
+                                particleIndex, 0,
+                                NIVision.MeasurementType.MT_BOUNDING_RECT_BOTTOM);
+                particle.boundingRectRight = (int) NIVision
+                        .imaqMeasureParticle(this.currentImage,
+                                particleIndex, 0,
+                                NIVision.MeasurementType.MT_BOUNDING_RECT_RIGHT);
+                particle.boundingRectWidth = (int) NIVision
+                        .imaqMeasureParticle(this.currentImage,
+                                particleIndex, 0,
+                                NIVision.MeasurementType.MT_BOUNDING_RECT_WIDTH);// par.boundingRectRight
+                // -
+                // par.boundingRectLeft;
+                particle.center_mass_x = (int) NIVision
+                        .imaqMeasureParticle(this.currentImage,
+                                particleIndex, 0,
+                                NIVision.MeasurementType.MT_CENTER_OF_MASS_X);
+                particle.center_mass_y = (int) NIVision
+                        .imaqMeasureParticle(this.currentImage,
+                                particleIndex, 0,
+                                NIVision.MeasurementType.MT_CENTER_OF_MASS_Y);
+                particle.imageWidth = NIVision
+                        .imaqGetImageSize(this.currentImage).width;
+                particles.add(particle);
+                }
+            particles.sort(null);
+
+            }
+        this.reports = new ParticleReport[particles.size()];
+        particles.copyInto(this.reports);
         }
-    this.reports = new ParticleReport[particles.size()];
-    particles.copyInto(this.reports);
 }
 
 /**
@@ -492,13 +497,13 @@ public double getYawAngleToTarget (ParticleReport target)
  */
 public double getPitchAngleToTarget (ParticleReport target)
 {
-    double adjustedYVal = Hardware.drive.cameraYResolution
+    double adjustedYVal = this.cameraYRes
             - target.center_mass_y;
     // System.out.println("Vert Res: " + Hardware.drive.cameraYResolution);
     System.out.println(
             "Y coord " + target.center_mass_y);
-    // System.out.println(
-    // "X coord " + target.center_mass_x);
+    System.out.println(
+            "X coord " + target.center_mass_x);
     return Math.atan((adjustedYVal - (this.cameraYRes / 2) - .5)
             / this.cameraFocalLengthPixels)
             + this.cameraMountAngleAboveHorizontalRadians;
@@ -519,8 +524,8 @@ public double getZDistanceToTarget (ParticleReport target)
 {
     double yaw = this.getYawAngleToTarget(target);
     double pitch = this.getPitchAngleToTarget(target);
-    // System.out.println("Yaw angle: " + Math.toDegrees(yaw));
-    // System.out.println("Pitch angle: " + Math.toDegrees(pitch));
+    System.out.println("Yaw angle: " + Math.toDegrees(yaw));
+    System.out.println("Pitch angle: " + Math.toDegrees(pitch));
     // I have no idea why multiplying by 2 approx. works, if you find a
     // problem somewhere else, look here for random hacks
     return (Hardware.VISION_GOAL_HEIGHT_FT
