@@ -17,6 +17,8 @@ import edu.wpi.first.wpilibj.image.NIVisionException;
 // TODO a processImageNoUpdate
 // TODO getLargetsBlob, getSmallestBlob,getNthBlob, etc.
 // TODO getXDistance to target, etc.
+// TODO KILL HARDWARE
+// TODO prints under debug switch
 /**
  * A class to capture and process images. Provides information on the pictures
  * it captures and the blobs in it.
@@ -576,7 +578,7 @@ public double getZDistanceToTarget (ParticleReport target)
     System.out.println("Pitch angle: " + Math.toDegrees(pitch));
     // I have no idea why multiplying by 2 approx. works, if you find a
     // problem somewhere else, look here for random hacks
-        // TODO generalize. No more hardware!
+    // TODO generalize. No more hardware!
     return (Hardware.VISION_GOAL_HEIGHT_FT
             * Math.cos(yaw)
             / Math.tan(pitch)) * 2.0;
