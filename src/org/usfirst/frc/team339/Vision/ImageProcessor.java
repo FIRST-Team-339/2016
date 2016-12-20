@@ -235,6 +235,30 @@ public ParticleReport[] getParticleAnalysisReports ()
     return this.reports;
 }
 
+public ParticleReport getLargestBlob ()
+{
+    if (this.reports != null && this.reports.length > 0)
+        return this.reports[0];
+    else
+        return null;
+}
+
+public ParticleReport getSmallestBlob ()
+{
+    if (this.reports != null && this.reports.length > 0)
+        return this.reports[this.reports.length - 1];
+    else
+        return null;
+}
+
+public ParticleReport getNthSizeBlob (int n)
+{
+    if (this.reports != null && this.reports.length > 0)
+        return this.reports[n];
+    else
+        return null;
+}
+
 /**
  * Changes the camera which captures images for processing
  * 
@@ -517,6 +541,7 @@ public void updateParticalAnalysisReports ()
         }
 }
 
+// TODO document the null handling
 /**
  * Finds the angle to the target to the right of center from the position of the
  * camera.
@@ -530,9 +555,12 @@ public void updateParticalAnalysisReports ()
  */
 public double getYawAngleToTarget (ParticleReport target)
 {
-    return Math.atan((target.center_mass_x
-            - ((this.cameraXRes / 2) - .5))
-            / this.cameraFocalLengthPixels);
+    if (target != null)
+        return Math.atan((target.center_mass_x
+                - ((this.cameraXRes / 2) - .5))
+                / this.cameraFocalLengthPixels);
+    else
+        return 0.0;
 }
 
 /**
@@ -547,16 +575,21 @@ public double getYawAngleToTarget (ParticleReport target)
  */
 public double getPitchAngleToTarget (ParticleReport target)
 {
-    double adjustedYVal = this.cameraYRes
-            - target.center_mass_y;
-    // System.out.println("Vert Res: " + Hardware.drive.cameraYResolution);
-    System.out.println(
-            "Y coord " + target.center_mass_y);
-    System.out.println(
-            "X coord " + target.center_mass_x);
-    return Math.atan((adjustedYVal - (this.cameraYRes / 2) - .5)
-            / this.cameraFocalLengthPixels)
-            + this.cameraMountAngleAboveHorizontalRadians;
+    if (target != null)
+        {
+        double adjustedYVal = this.cameraYRes
+                - target.center_mass_y;
+        // System.out.println("Vert Res: " + Hardware.drive.cameraYResolution);
+        System.out.println(
+                "Y coord " + target.center_mass_y);
+        System.out.println(
+                "X coord " + target.center_mass_x);
+        return Math.atan((adjustedYVal - (this.cameraYRes / 2) - .5)
+                / this.cameraFocalLengthPixels)
+                + this.cameraMountAngleAboveHorizontalRadians;
+        }
+    else
+        return 0.0;
 }
 
 // TODO either define unit or make sure the programmer knows about all the units
@@ -572,16 +605,21 @@ public double getPitchAngleToTarget (ParticleReport target)
  */
 public double getZDistanceToTarget (ParticleReport target)
 {
-    double yaw = this.getYawAngleToTarget(target);
-    double pitch = this.getPitchAngleToTarget(target);
-    System.out.println("Yaw angle: " + Math.toDegrees(yaw));
-    System.out.println("Pitch angle: " + Math.toDegrees(pitch));
-    // I have no idea why multiplying by 2 approx. works, if you find a
-    // problem somewhere else, look here for random hacks
-    // TODO generalize. No more hardware!
-    return (Hardware.VISION_GOAL_HEIGHT_FT
-            * Math.cos(yaw)
-            / Math.tan(pitch)) * 2.0;
+    if (target != null)
+        {
+        double yaw = this.getYawAngleToTarget(target);
+        double pitch = this.getPitchAngleToTarget(target);
+        System.out.println("Yaw angle: " + Math.toDegrees(yaw));
+        System.out.println("Pitch angle: " + Math.toDegrees(pitch));
+        // I have no idea why multiplying by 2 approx. works, if you find a
+        // problem somewhere else, look here for random hacks
+        // TODO generalize. No more hardware!
+        return (Hardware.VISION_GOAL_HEIGHT_FT
+                * Math.cos(yaw)
+                / Math.tan(pitch)) * 2.0;
+        }
+    else
+        return -1.0;
 }
 
 // Positive right, negative left
