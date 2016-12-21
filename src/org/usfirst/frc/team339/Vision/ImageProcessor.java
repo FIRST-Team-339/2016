@@ -104,6 +104,11 @@ public int compareTo (ParticleReport r)
 }
 }
 
+private enum DebugMode
+    {
+
+    }
+
 private KilroyCamera camera = null;
 
 private Image currentImage = null;
@@ -190,7 +195,7 @@ public ImageProcessor (KilroyCamera camera, VisionScript script)
     this.cameraXRes = camera.getHorizontalResolution();
     this.cameraYRes = camera.getVerticalResolution();
     this.cameraFocalLengthPixels = (this.cameraXRes / 2.0)
-            / Math.tan(camera.getFieldOfView() * .5 * (Math.PI / 180));
+            / Math.tan(camera.getHorizFieldOfView() * .5 * (Math.PI / 180));
     // see formula commented below the variable
 }
 
@@ -214,7 +219,7 @@ public ImageProcessor (KilroyCamera camera,
     this.cameraYRes = camera.getVerticalResolution();
     this.operators = new VisionScript();
     this.cameraFocalLengthPixels = (this.cameraXRes / 2.0)
-            / Math.tan(camera.getFieldOfView() * .5 * (Math.PI / 180));
+            / Math.tan(camera.getHorizFieldOfView() * .5 * (Math.PI / 180));
     for (VisionOperatorInterface operator : ops)
         {
         this.operators.put(operator);
@@ -559,8 +564,7 @@ public double getYawAngleToTarget (ParticleReport target)
         return Math.atan((target.center_mass_x
                 - ((this.cameraXRes / 2) - .5))
                 / this.cameraFocalLengthPixels);
-    else
-        return 0.0;
+    return 0.0;
 }
 
 /**
@@ -588,8 +592,7 @@ public double getPitchAngleToTarget (ParticleReport target)
                 / this.cameraFocalLengthPixels)
                 + this.cameraMountAngleAboveHorizontalRadians;
         }
-    else
-        return 0.0;
+    return 0.0;
 }
 
 // TODO either define unit or make sure the programmer knows about all the units
@@ -618,8 +621,7 @@ public double getZDistanceToTarget (ParticleReport target)
                 * Math.cos(yaw)
                 / Math.tan(pitch)) * 2.0;
         }
-    else
-        return -1.0;
+    return -1.0;
 }
 
 // Positive right, negative left
