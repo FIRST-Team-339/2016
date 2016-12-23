@@ -133,7 +133,7 @@ private double cameraFocalLengthPixels;
 private double horizFieldOfView;
 
 // The vertical angle, in radians, above the horizontal the camera points
-private double cameraMountAngleAboveHorizontalRadians = .9599;
+private double cameraMountAngleAboveHorizontalRadians = .7854;
 
 private double cameraMountAngleToRightOfCenterRadians = 0;
 
@@ -195,7 +195,8 @@ public ImageProcessor (KilroyCamera camera, VisionScript script)
     this.cameraXRes = camera.getHorizontalResolution();
     this.cameraYRes = camera.getVerticalResolution();
     this.cameraFocalLengthPixels = (this.cameraXRes / 2.0)
-            / Math.tan(camera.getHorizFieldOfView() * .5 * (Math.PI / 180));
+            / Math.tan(camera.getHorizFieldOfView() * .5
+                    * (Math.PI / 180));
     // see formula commented below the variable
 }
 
@@ -219,7 +220,8 @@ public ImageProcessor (KilroyCamera camera,
     this.cameraYRes = camera.getVerticalResolution();
     this.operators = new VisionScript();
     this.cameraFocalLengthPixels = (this.cameraXRes / 2.0)
-            / Math.tan(camera.getHorizFieldOfView() * .5 * (Math.PI / 180));
+            / Math.tan(camera.getHorizFieldOfView() * .5
+                    * (Math.PI / 180));
     for (VisionOperatorInterface operator : ops)
         {
         this.operators.put(operator);
@@ -273,6 +275,12 @@ public ParticleReport getNthSizeBlob (int n)
 public void setCamera (KilroyCamera cam)
 {
     this.camera = cam;
+}
+
+public void updateResolution ()
+{
+    this.cameraYRes = this.camera.getVerticalResolution();
+    this.cameraXRes = this.camera.getHorizontalResolution();
 }
 
 /**
@@ -614,12 +622,19 @@ public double getZDistanceToTarget (ParticleReport target)
         double pitch = this.getPitchAngleToTarget(target);
         System.out.println("Yaw angle: " + Math.toDegrees(yaw));
         System.out.println("Pitch angle: " + Math.toDegrees(pitch));
-        // I have no idea why multiplying by 2 approx. works, if you find a
-        // problem somewhere else, look here for random hacks
+        System.out.println(
+                "Old Distance: " + Hardware.VISION_GOAL_HEIGHT_FT
+                        * Math.cos(yaw)
+                        / Math.tan(pitch));
+        System.out.println("New Distance: " +
+                (Math.sin(getPitchAngleToTarget(target)
+                        / Hardware.VISION_GOAL_HEIGHT_FT)
+                        * Math.cos(this.getPitchAngleToTarget(target))
+                        * Math.sin(this.getYawAngleToTarget(target))));
         // TODO generalize. No more hardware!
         return (Hardware.VISION_GOAL_HEIGHT_FT
                 * Math.cos(yaw)
-                / Math.tan(pitch)) * 2.0;
+                / Math.tan(pitch))/* * 2.0 */;
         }
     return -1.0;
 }

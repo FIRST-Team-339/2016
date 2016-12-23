@@ -318,7 +318,7 @@ public static USBCamera usbCam = new USBCamera("cam0"); // AHK @cameratesting
 // Declares the Axis camera
 public static VisionScript doubleGreenRingScript = new VisionScript(
         new HSLColorThresholdOperator(55, 147, 14, 255, 78, 255),
-        new RemoveSmallObjectsOperator(2, true),
+        new RemoveSmallObjectsOperator(1, true),
         new ConvexHullOperator(false));
 
 // public static VisionScript temp = new VisionScript();
