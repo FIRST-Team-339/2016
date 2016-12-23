@@ -59,7 +59,13 @@ private static int txtNumber = 0;
 private double focalLength = 4.4;
 
 // The horizontal field of view of the camera in degrees.
-private double horizFieldOfView = 47;
+private double horizFieldOfView = 67;
+
+private double vertFieldOfView = 34;
+// claimed to be a = 2 arctan(d/2f)
+// d = size of sensor in direction of interest
+// f = focal length of camera
+// a = field of view
 
 // --------------------------------------------------------------
 // All methods below this point simply call the methods for the
@@ -274,7 +280,7 @@ public void setFocalLength (double focalLength)
  * @return
  *         The horizontal field of view of the camera, in degrees
  */
-public double getFieldOfView ()
+public double getHorizFieldOfView ()
 {
     return this.horizFieldOfView;
 }
@@ -285,7 +291,24 @@ public double getFieldOfView ()
  * @param FOV
  *            THe horizontal field of view, in degrees.
  */
-public void setFieldOfView (double FOV)
+public void setVertFieldOfView (double FOV)
+{
+    this.vertFieldOfView = FOV;
+}
+
+
+public double getVertFieldOfView ()
+{
+    return this.vertFieldOfView;
+}
+
+/**
+ * Saves the field of view of the hardware camera into this class.
+ * 
+ * @param FOV
+ *            THe horizontal field of view, in degrees.
+ */
+public void setHorizFieldOfView (double FOV)
 {
     this.horizFieldOfView = FOV;
 }
@@ -302,15 +325,15 @@ public double getHorizontalResolution ()
     switch (this.getResolution())
         {
         case k640x480:
-            return 640;
+            return 640.0;
         case k480x360:
-            return 480;
+            return 480.0;
         case k320x240:
-            return 320;
+            return 320.0;
         case k240x180:
-            return 240;
+            return 240.0;
         case k176x144:
-            return 176;
+            return 176.0;
         default:
         case k160x120:
             return 160.0;
@@ -327,15 +350,15 @@ public double getVerticalResolution ()
     switch (this.getResolution())
         {
         case k640x480:
-            return 480;
+            return 480.0;
         case k480x360:
-            return 360;
+            return 360.0;
         case k320x240:
-            return 240;
+            return 240.0;
         case k240x180:
-            return 180;
+            return 180.0;
         case k176x144:
-            return 144;
+            return 144.0;
         default:
         case k160x120:
             return 120.0;

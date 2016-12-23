@@ -400,7 +400,7 @@ public void robotInit ()
     Hardware.axisCamera.writeResolution(Hardware.AXIS_RESOLUTION);
     Hardware.axisCamera
             .writeWhiteBalance(AxisCamera.WhiteBalance.kFixedIndoor);
-
+    Hardware.imageProcessor.updateResolution();
     switch (Hardware.axisCamera.getResolution())
         {
         case k640x480:
