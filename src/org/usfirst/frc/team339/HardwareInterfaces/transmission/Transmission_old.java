@@ -490,6 +490,9 @@ private int integralUseCounter = 0;
 // THIS WOULD HAVE BEEN NICE TO KNOW BEFORE AN ENTIRE MEETING WAS WASTED
 // ON THIS STUPID VARIABLE
 // COMMENT YOUR UGLY CODE PEOPLE
+// Note from Cole (15 Dec 16): the above comment apparently
+// means something different from it's saying: Check for clarification
+// with Alex
 private double brakePreviousDistanceL = 0.0;
 
 private double brakePreviousPreviousDistanceL = 0.0;
@@ -4186,6 +4189,55 @@ public void setThirdGearPercentage (final double leftGearPercentage,
 } // end setThirdGearPercentage
 
 
+/**
+ * @return stopMoving()
+ * @author Ashley Espeland
+ *         should stop movement even if on hill, or turning, also should quit
+ *         after five seconds
+ * 
+ */
+public brakeReturns stopMovement ()
+{
+    // if stopTimer is equal to 0, start it
+    if (movementTimer.get() == 0)
+        {
+        movementTimer.start();
+        }
+    // if timer is equal to the MAX_STOPPING_TIME then basically remove
+    // deadband range, stop the motors, and stop then reset the stopTimer
+    // returns timeExceeded
+    if (movementTimer.get() == MAX_STOPPING_TIME)
+        {
+        this.setJoystickDeadbandRange(0.0);
+        this.controls(0.0);
+        movementTimer.stop();
+        movementTimer.reset();
+        return this.timeExceeded;
+        }
+    // if both left and left rear motor encoders are not equal to null
+    // and isStopped is equal to true then return to normal controls,
+    // if iStopped is not equal to true then multiply
+    if (this.leftMotorEncoder != null)
+        {
+        if (this.leftRearMotorEncoder != null)
+            {
+            if (this.isStopped(leftMotorEncoder,
+                    leftRearMotorEncoder) == true)
+                ;
+                {
+                this.setJoystickDeadbandRange(savedDeadBandRange);
+                movementTimer.stop();
+                movementTimer.reset();
+                this.controls(0.0);
+                return this.noMovement;
+                }
+
+            }
+        }
+    return stopMovement();
+
+}
+
 // -------------------------------------------------------
 /**
  * Determines the amount of motors present, then calls 1 or 2
@@ -4209,6 +4261,17 @@ public void setThirdGearPercentage (final double leftGearPercentage,
 // are moving
 // See Cole or Ashley for further info; Remove this comment later
 
+// Note from Cole (Dec 15, 16): Added print statements in isStopped
+// because I was trying to figure out why Ashley said it was returning
+// true at the wrong time. My tests showed that isStopped was working,
+// although I didn't have much time to test it. More importantly,
+// the wheels didn't stop when Left Drive Button 7 was pressed. For
+// next time, look into why the wheels weren't stopping, and if we
+// should just use the functions called by buttons 4 and 5 on the Left
+// Driver Station (see the top of this functions comments).
+
+
+// This function is used by Left Drive Button 7
 public brakeReturns stop ()
 {
     // TODO TEACH THE FUTURE MINIONS TO COMMENT THEIR UGLY CODE
@@ -4229,7 +4292,7 @@ public brakeReturns stop ()
 
     // if timer is equal to the MAX_STOPPING_TIME then basically remove
     // deadband range, stop the motors, and stop then reset the stopTimer
-    // returns timeExceeded
+    // returns timeExceeded YIPEE!!!!
     if (stopTimer.get() == MAX_STOPPING_TIME)
         {
         this.setJoystickDeadbandRange(0.0);
@@ -4247,7 +4310,7 @@ public brakeReturns stop ()
     // sets JoystickDeadbandRange to 0
     this.setJoystickDeadbandRange(0.0);
 
-    // if both motor encoders are NOT equal to null then
+    // if both front motor encoders are NOT equal to null then
     if (this.leftMotorEncoder != null
             && this.oneOrRightMotorEncoder != null)
         {
@@ -4270,8 +4333,8 @@ public brakeReturns stop ()
                 this.controls(0.0);
                 return this.noMovement;
                 }
-            // GO OVER DIRECTION CHANGED AGAIN< WE THINK THE IF STATEMENT IS
-            // NEVER EQUALS TO TRUE/set off
+            // else if direction was changed in both motor encoder sets
+
             else if (directionChanged(this.leftMotorEncoder,
                     this.oneOrRightMotorEncoder) == true
                     && directionChanged(this.leftRearMotorEncoder,
@@ -4364,6 +4427,8 @@ public brakeReturns stop ()
 
 Timer stopTimer = new Timer();
 
+Timer movementTimer = new Timer();
+
 /**
  * @author Eli Neagle
  * @description When the stop() function is run, it
@@ -4402,16 +4467,31 @@ private double MAX_STOPPING_TIME = 5;
 // a certain time
 public boolean isStopped (Encoder leftEncoder, Encoder rightEncoder)
 {
+    // Print statements for current distance brakePreviousDistance_ variables
+    // TODO comment out the print statements
+    // System.out.println("left encoder current distance is: " +
+    // leftEncoder.getDistance());
+    // System.out.println("brakePreviousDistanceL is: " +
+    // this.brakePreviousDistanceL);
+    // System.out.println("right encoder current distance is: " +
+    // rightEncoder.getDistance());
+    // System.out.println("brakePreviousDistanceR is: " +
+    // this.brakePreviousDistanceR);
+
+    // if the difference between the current encoder value and the encoder
+    // value from the last time we called this function is equal to 0
     if (Math.abs(leftEncoder.getDistance())
             - this.brakePreviousDistanceL == 0
             && Math.abs(rightEncoder.getDistance())
                     - this.brakePreviousDistanceR == 0)
         {
-
+        // then set the brakePreviousDistance to 0, and return true
         this.brakePreviousDistanceL = 0;
         this.brakePreviousDistanceR = 0;
         return true;
         }
+    // else set brakePreviousDistance to the current encoder value,
+    // and return false
     brakePreviousDistanceL = Math.abs(leftEncoder.getDistance());
     brakePreviousDistanceR = Math.abs(rightEncoder.getDistance());
 
@@ -4421,7 +4501,7 @@ public boolean isStopped (Encoder leftEncoder, Encoder rightEncoder)
 public boolean directionChanged (Encoder leftEncoder,
         Encoder rightEncoder)
 {
-    // if /Encoder/ - distance from previous brake is less than 0
+    // if /Encoder/ - distance from previous call is less than 0
     //
     if (Math.abs(leftEncoder.getDistance())
             - this.brakePreviousDistanceL < 0
