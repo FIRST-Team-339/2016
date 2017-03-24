@@ -61,6 +61,9 @@ public class Teleop
  */
 public static void init ()
 {
+    // inverts the right side of the drivetrain
+    Hardware.rightFrontMotor.setInverted(true);
+    Hardware.rightRearMotor.setInverted(true);
     // Initial set up so the screen doesn't start green after Teleop starts
     Guidance.updateBallStatus(false);
     // Tell USB camera handler that we only have one USB camera
