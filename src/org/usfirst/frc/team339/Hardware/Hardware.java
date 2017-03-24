@@ -46,8 +46,8 @@ import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.TalonSRX;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.VictorSP;
-import edu.wpi.first.wpilibj.vision.AxisCamera;
-import edu.wpi.first.wpilibj.vision.AxisCamera.Resolution;
+// import edu.wpi.first.wpilibj.vision.AxisCamera;
+// import edu.wpi.first.wpilibj.vision.AxisCamera.Resolution;
 import edu.wpi.first.wpilibj.vision.USBCamera;
 
 // -------------------------------------------------------
@@ -85,7 +85,8 @@ public static final int MINIMUM_AXIS_CAMERA_BRIGHTNESS = 6;
 
 public static final int AXIS_FPS = 15;
 
-public static final Resolution AXIS_RESOLUTION = AxisCamera.Resolution.k320x240;
+// public static final Resolution AXIS_RESOLUTION =
+// AxisCamera.Resolution.k320x240;
 
 public static final double ULTRASONIC_SCALING_FACTOR = 0.050548;
 
@@ -323,7 +324,7 @@ public static VisionScript doubleGreenRingScript = new VisionScript(
 
 // public static VisionScript temp = new VisionScript();
 
-public static KilroyCamera axisCamera = new KilroyCamera(true);
+public static KilroyCamera axisCamera = new KilroyCamera(false);
 
 // public static ImageProcessing imageProcessor = new ImageProcessing(
 // axisCamera);

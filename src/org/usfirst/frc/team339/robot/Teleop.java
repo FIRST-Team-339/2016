@@ -1014,7 +1014,7 @@ public static void periodic ()
         // by camera
 
         // drive the robot with the joysticks
-
+        // TODO uncomment this conditional
         // TODO delete all conditionals. Fix brake
         if (/* speedTesting == false && */ isAligningByCamera == false
                 && testingAlignByCamera == false
@@ -1027,9 +1027,9 @@ public static void periodic ()
                 && Hardware.rightOperator.getRawButton(6) == false
                 && motionToggled == false
                 && brakingTesting == false)// TODO
-                                           // remove
-                                           // last
-                                           // term
+        // remove
+        // last
+        // term
             {
             driveRobot();
             // if we want to run a speed test, run it until we're done.
@@ -1323,8 +1323,8 @@ public static void printStatements ()
     // printAllPDPChannels();
 
     // pots-----------------
-    // System.out.println(
-    // "delay pot = " + Hardware.delayPot.get());
+    System.out.println(
+            "delay pot = " + Hardware.delayPot.get());
     // System.out.println(
     // "delay scaling: " + (((double) Hardware.delayPot.get()
     // - Hardware.DELAY_POT_MIN_DEGREES)
@@ -1338,6 +1338,7 @@ public static void printStatements ()
     // if (Hardware.imageProcessor.reports.length > 0)
     // System.out.println("DistanceToGoal: "
     // + Hardware.imageProcessor.getZDistanceToTargetFT(0));
+
     // Motor controllers-----
     // prints value of the motors
     // System.out.println("RR Motor T = " + Hardware.rightRearMotor.get());
@@ -1376,10 +1377,10 @@ public static void printStatements ()
 
 
     // Encoders-------------
-    System.out.println(
-            "RR distance = " + Hardware.rightRearEncoder.getDistance());
-    System.out.println(
-            "LR distance = " + Hardware.leftRearEncoder.getDistance());
+    // System.out.println(
+    // "RR distance = " + Hardware.rightRearEncoder.getDistance());
+    // System.out.println(
+    // "LR distance = " + Hardware.leftRearEncoder.getDistance());
     // System.out.println("Arm Motor = " + Hardware.armMotor.getDistance());
 
 
@@ -1390,7 +1391,7 @@ public static void printStatements ()
     // Hardware.autonomousEnabled.isOn());
     // System.out.println(
     // "Comp Switch: " + Hardware.inCompetition.isOn());
-    // System.out.println("Demo Switch: " + Hardware.inDemo.isOn());
+    System.out.println("Demo Switch: " + Hardware.inDemo.isOn());
 
 
     // print the position of the 6 position switch------------

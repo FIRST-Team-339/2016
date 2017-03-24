@@ -65,7 +65,7 @@ import org.usfirst.frc.team339.HardwareInterfaces.transmission.Transmission_old.
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.Relay;
 import edu.wpi.first.wpilibj.Relay.Direction;
-import edu.wpi.first.wpilibj.vision.AxisCamera;
+// import edu.wpi.first.wpilibj.vision.AxisCamera;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -396,39 +396,39 @@ public void robotInit ()
     // AxisCamera.ExposureControl.kAutomatic);
     // Hardware.axisCamera
     // .writeExposureControl(AxisCamera.ExposureControl.kHold);
-    Hardware.axisCamera.writeMaxFPS(Hardware.AXIS_FPS);
-    Hardware.axisCamera.writeResolution(Hardware.AXIS_RESOLUTION);
-    Hardware.axisCamera
-            .writeWhiteBalance(AxisCamera.WhiteBalance.kFixedIndoor);
+    // Hardware.axisCamera.writeMaxFPS(Hardware.AXIS_FPS);
+    // Hardware.axisCamera.writeResolution(Hardware.AXIS_RESOLUTION);
+    // Hardware.axisCamera
+    // .writeWhiteBalance(AxisCamera.WhiteBalance.kFixedIndoor);
     Hardware.imageProcessor.updateResolution();
-    switch (Hardware.axisCamera.getResolution())
-        {
-        case k640x480:
-            Hardware.drive.setXResolution(640.0);
-            Hardware.drive.setYResolution(480.0);
-            break;
-        case k480x360:
-            Hardware.drive.setXResolution(480.0);
-            Hardware.drive.setYResolution(360.0);
-            break;
-        case k320x240:
-            Hardware.drive.setXResolution(320.0);
-            Hardware.drive.setYResolution(240.0);
-            break;
-        case k240x180:
-            Hardware.drive.setXResolution(240.0);
-            Hardware.drive.setYResolution(180.0);
-            break;
-        case k176x144:
-            Hardware.drive.setXResolution(176.0);
-            Hardware.drive.setYResolution(144.0);
-            break;
-        default:
-        case k160x120:
-            Hardware.drive.setXResolution(160.0);
-            Hardware.drive.setYResolution(120.0);
-            break;
-        }
+    // switch (Hardware.axisCamera.getResolution())
+    // {
+    // case k640x480:
+    // Hardware.drive.setXResolution(640.0);
+    // Hardware.drive.setYResolution(480.0);
+    // break;
+    // case k480x360:
+    // Hardware.drive.setXResolution(480.0);
+    // Hardware.drive.setYResolution(360.0);
+    // break;
+    // case k320x240:
+    // Hardware.drive.setXResolution(320.0);
+    // Hardware.drive.setYResolution(240.0);
+    // break;
+    // case k240x180:
+    // Hardware.drive.setXResolution(240.0);
+    // Hardware.drive.setYResolution(180.0);
+    // break;
+    // case k176x144:
+    // Hardware.drive.setXResolution(176.0);
+    // Hardware.drive.setYResolution(144.0);
+    // break;
+    // default:
+    // case k160x120:
+    // Hardware.drive.setXResolution(160.0);
+    // Hardware.drive.setYResolution(120.0);
+    // break;
+    // }
 
     // -------------------------------------
     // USB camera initialization
@@ -444,7 +444,7 @@ public void robotInit ()
     // Hardware.cam0.updateSettings();
     // Starts streaming video
     // TODO add back in
-    Hardware.cameraServer.startAutomaticCapture(Hardware.usbCam);
+    // Hardware.cameraServer.startAutomaticCapture(Hardware.usbCam);
     // Sets the hue, saturation, and luminance values for the vision
     // processing.
     // Hardware.imageProcessor.setHSLValues(0, 255, 0, 75, 5, 141);
@@ -542,7 +542,7 @@ public void teleopInit ()
     // Call the Teleop class's Init function,
     // which contains the user code.
     // -------------------------------------
-    Hardware.cameraServer.startAutomaticCapture(Hardware.usbCam);
+    // Hardware.cameraServer.startAutomaticCapture(Hardware.usbCam);
 
     Teleop.init();
 
@@ -659,7 +659,7 @@ private final double distancePerTickForMotorEncoders = 0.0745033113;
 //
 public static final double JOYSTICK_DEADBAND_ZONE = 0.20;
 
-public static final double FIRST_GEAR_PERCENTAGE = 0.5;
+public static final double FIRST_GEAR_PERCENTAGE = .50;
 
 public static final double SECOND_GEAR_PERCENTAGE = .90;// previously 0.7;//.85
 } // end class
