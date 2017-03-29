@@ -302,17 +302,17 @@ public void robotInit ()
 
     if (Hardware.inDemo.isOn() == true)
         {
-        Hardware.transmission.setSecondGearPercentage(
-                SECOND_GEAR_PERCENTAGE
-                        * ((double) (Hardware.delayPot.get()
-                                - Hardware.DELAY_POT_MIN_DEGREES)
-                                / (double) (Hardware.DELAY_POT_DEGREES
-                                        - Hardware.DELAY_POT_MIN_DEGREES)));
+        // Hardware.transmission.setSecondGearPercentage(
+        // SECOND_GEAR_PERCENTAGE
+        // * ((double) (Hardware.delayPot.get()
+        // - Hardware.DELAY_POT_MIN_DEGREES)
+        // / (double) (Hardware.DELAY_POT_DEGREES
+        // - Hardware.DELAY_POT_MIN_DEGREES)));
         }
     else
         {
-        Hardware.transmission
-                .setSecondGearPercentage(SECOND_GEAR_PERCENTAGE);
+        // Hardware.transmission
+        // .setSecondGearPercentage(SECOND_GEAR_PERCENTAGE);
         }
     // --------------------------------------
     // Encoder Initialization
@@ -366,17 +366,17 @@ public void robotInit ()
     if (Hardware.runningInLab == true)
         {
         Hardware.rightFrontMotor.setInverted(true);
-        Hardware.rightRearMotor.setInverted(false);
-        Hardware.leftFrontMotor.setInverted(true);
-        Hardware.leftRearMotor.setInverted(true);
+        Hardware.rightRearMotor.setInverted(true);
+        Hardware.leftFrontMotor.setInverted(false);
+        Hardware.leftRearMotor.setInverted(false);
         Hardware.axisCamera.setHaveCamera(false);
         }
     else
         {
         Hardware.rightFrontMotor.setInverted(true);
-        Hardware.rightRearMotor.setInverted(false);
-        Hardware.leftFrontMotor.setInverted(true);
-        Hardware.leftRearMotor.setInverted(true);
+        Hardware.rightRearMotor.setInverted(true);
+        Hardware.leftFrontMotor.setInverted(false);
+        Hardware.leftRearMotor.setInverted(false);
         }
 
 
@@ -472,6 +472,11 @@ public void robotInit ()
     // -------------------------------------
     // motor initialization
     // -------------------------------------
+    Hardware.rightRearMotor.setInverted(true);
+    Hardware.rightFrontMotor.setInverted(false);
+    Hardware.leftFrontMotor.setInverted(false);
+    Hardware.leftRearMotor.setInverted(false);
+
     Hardware.leftRearMotorSafety.setSafetyEnabled(false);
     Hardware.rightRearMotorSafety.setSafetyEnabled(false);
     Hardware.leftFrontMotorSafety.setSafetyEnabled(false);
@@ -517,7 +522,8 @@ public void robotInit ()
             "Kilroy XVII is started.  All hardware items created.");
     System.out.println();
     System.out.println();
-} // end robotInit
+} // end
+  // robotInit
 
 // -------------------------------------------------------
 /**

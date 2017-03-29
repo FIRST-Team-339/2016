@@ -82,11 +82,11 @@ public static void init ()
     if (Hardware.inDemo.isOn() == true)
         {
         Hardware.transmission.setSecondGearPercentage(
-                Robot.SECOND_GEAR_PERCENTAGE
-                        * (((double) Hardware.delayPot.get()
-                                - Hardware.DELAY_POT_MIN_DEGREES)
-                                / (double) (Hardware.DELAY_POT_DEGREES
-                                        - Hardware.DELAY_POT_MIN_DEGREES)));
+                Robot.SECOND_GEAR_PERCENTAGE *
+                        (Hardware.delayPot.get(0, 1)));
+        // - Hardware.DELAY_POT_MIN_DEGREES)
+        // / (double) (Hardware.DELAY_POT_DEGREES
+        // - Hardware.DELAY_POT_MIN_DEGREES)));
         }
     else
         {
@@ -127,6 +127,8 @@ public static void init ()
     Hardware.catapultSolenoid1.set(false);
     Hardware.catapultSolenoid2.set(false);
 
+    // reversing left joystick
+    Hardware.transmission.setLeftJoystickIsReversed(true);
     // Reset all timers, encoders, and stop all the motors.
     Hardware.delayTimer.reset();
     Hardware.rightRearEncoder.reset();
@@ -144,25 +146,25 @@ public static void init ()
     // second gear by maaath (the value of the delayPot adjusted out
     // of the 0-270 spectrum and into a 10-100 percentage range). If
     // we're not in demo, we're just in regular ol' second gear.
-    if (Hardware.inDemo.isOn() == true)
-        {
-        Hardware.transmission.setSecondGearPercentage(
-                (/*
-                  * Robot.SECOND_GEAR_PERCENTAGE //TODO check to make sure
-                  * this shouldn't be here @AHK
-                  */(Hardware.delayPot.get() *
-                        (Robot.SECOND_GEAR_PERCENTAGE
-                                - Hardware.MINIMUM_POT_SCALING_VALUE)
-                        /
-                        (Hardware.DELAY_POT_DEGREES))
-                        + Hardware.MINIMUM_POT_SCALING_VALUE));
-        }
-    else
-        {
-        Hardware.transmission
-                .setSecondGearPercentage(
-                        Robot.SECOND_GEAR_PERCENTAGE);
-        }
+    // if (Hardware.inDemo.isOn() == true)
+    // {
+    // Hardware.transmission.setSecondGearPercentage(
+    // (/*
+    // * Robot.SECOND_GEAR_PERCENTAGE //TODO check to make sure
+    // * this shouldn't be here @AHK
+    // */(Hardware.delayPot.get() *
+    // (Robot.SECOND_GEAR_PERCENTAGE
+    // - Hardware.MINIMUM_POT_SCALING_VALUE)
+    // /
+    // (Hardware.DELAY_POT_DEGREES))
+    // + Hardware.MINIMUM_POT_SCALING_VALUE));
+    // }
+    // else
+    // {
+    // Hardware.transmission
+    // .setSecondGearPercentage(
+    // Robot.SECOND_GEAR_PERCENTAGE);
+    // }
 } // end Init
 
 
@@ -208,55 +210,7 @@ public static void periodic ()
 {
     // Print out any data we want from the hardware elements.
     printStatements();
-
-    // if (Hardware.leftDriver.getTrigger() == true)
-    // {
-    // Hardware.axisCamera.writeExposureControl(
-    // AxisCamera.ExposureControl.kHold);
-    // }//@AHK TODO remove
-
-    // if (Hardware.leftDriver.getRawButton(6) == true)
-    // {
-    // for (int i = 0; i < 5; i++)
-    // {
-    // for (int j = 0; j < 5; j++)
-    // {
-    // switch (j)
-    // {
-    // case 0:
-    // Hardware.axisCamera
-    // .saveImageWithTypeName("A");
-    // break;
-    // case 1:
-    // Hardware.axisCamera
-    // .saveImageWithTypeName("B");
-    // break;
-    // case 2:
-    // Hardware.axisCamera
-    // .saveImageWithTypeName("C");
-    // break;
-    // case 3:
-    // Hardware.axisCamera
-    // .saveImageWithTypeName("D");
-    // break;
-    // case 4:
-    // Hardware.axisCamera
-    // .saveImageWithTypeName("E");
-    // break;
-    // }
-    // try
-    // {
-    // Thread.sleep(20);
-    // }
-    // catch (InterruptedException e)
-    // {
-    // // TODO Auto-generated catch block
-    // e.printStackTrace();
-    // }
-    // }
-    // }
-    // }
-
+    Hardware.transmission.setLeftJoystickIsReversed(true);
     // val = Hardware.leftDriver.getThrottle();
     // Hardware.axisCamera.writeBrightness((int) val * 100);
     // System.out.println("Camera brightness: " + (int) val * 100);//@AHK
@@ -281,13 +235,13 @@ public static void periodic ()
             {
             demoDriveRatio = Hardware.delayPot.get();
             }
-        Hardware.transmission.setSecondGearPercentage(
-                ((demoDriveRatio *
-                        (Robot.SECOND_GEAR_PERCENTAGE
-                                - Hardware.MINIMUM_POT_SCALING_VALUE)
-                        /
-                        (Hardware.DELAY_POT_DEGREES))
-                        + Hardware.MINIMUM_POT_SCALING_VALUE));
+        // Hardware.transmission.setSecondGearPercentage(
+        // ((demoDriveRatio *
+        // (Robot.SECOND_GEAR_PERCENTAGE
+        // - Hardware.MINIMUM_POT_SCALING_VALUE)
+        // /
+        // (Hardware.DELAY_POT_DEGREES))
+        // + Hardware.MINIMUM_POT_SCALING_VALUE));
         }
 
     Hardware.errorMessage.printError("test12", PrintsTo.roboRIO);
@@ -302,61 +256,6 @@ public static void periodic ()
         Hardware.transmission.setFirstGearPercentage(1.0);
         Hardware.axisCamera.setHaveCamera(false);
 
-        // System.out.println("t1: " + testMove1IsDone);
-        // System.out.println("t2: " + testMove2IsDone);
-        // System.out.println("t3: " + testMove3IsDone);
-        // if we hit the left driver trigger in the lab
-        // if (Hardware.leftDriver.getTrigger() == true)
-        // {
-        // // tell the code to start testing autonomous
-        // testAuto = true;
-        // }
-        // // Test certain aspects of autonomous
-        // if (testAuto == true)
-        // {
-        // if (!testMove1IsDone)
-        // {
-        // System.out.print("\n" + 1 + "\n");
-        // if (Hardware.drive.driveStraightByInches(12.0, true,
-        // .9, .9))
-        // {
-        // Autonomous.resetEncoders();
-        // testMove1IsDone = true;
-        // }
-        // }
-        // else if (!testMove2IsDone && (Hardware.leftIR.isOn()
-        // || Hardware.rightIR.isOn()))
-        // {
-        // System.out.println("IR Detected.");
-        // // if (Hardware.drive.turnLeftDegrees(60.0, true,
-        // // -.55, .55))
-        // // {
-        // // //Autonomous.resetEncoders();
-        // // Hardware.transmission.controls(0.0, 0.0);
-        // testMove2IsDone = true;
-        // // }
-        // }
-        // else if (!testMove3IsDone)
-        // {
-        // System.out.print("\n" + 3 + "\n");
-        // if (Hardware.drive.driveStraightByInches(12.0, true,
-        // .3, .3))
-        // {
-        // Autonomous.resetEncoders();
-        // testMove3IsDone = true;
-        // }
-        // }
-        // else if (!testCameraIsDone)
-        // {
-        // // if (Hardware.drive.driveByCamera(999.0, .2, .25,
-        // // 0.0, true));
-        // }
-        // else
-        // {
-        // // Stop
-        // Hardware.transmission.controls(0.0, 0.0);
-        // }
-        // }
         }
     // If we don't have the runningInLab flag set to true
     else
@@ -1327,7 +1226,9 @@ public static void printStatements ()
 
     // pots-----------------
     System.out.println(
-            "delay pot = " + Hardware.delayPot.get());
+            "delay pot = " + Hardware.delayPot.get(0, 1));
+    // System.out
+    // .println("Delay pot raw: " + Hardware.delayPot.getValue());
     // System.out.println(
     // "delay scaling: " + (((double) Hardware.delayPot.get()
     // - Hardware.DELAY_POT_MIN_DEGREES)
@@ -1336,7 +1237,8 @@ public static void printStatements ()
     // prints the value of the transducer- (range in code is 50)
     // hits psi of 100 accurately
     // System.out.println("transducer = " + Hardware.transducer.get());
-    // System.out.println("Arm Pot = " + Hardware.armPot.get());
+    System.out.println("Arm Pot = " + Hardware.armPot.get());
+    System.out.println("Arm Pot raw: " + Hardware.delayPot.getValue());
     // Hardware.imageProcessor.processImage();
     // if (Hardware.imageProcessor.reports.length > 0)
     // System.out.println("DistanceToGoal: "
@@ -1415,6 +1317,12 @@ public static void printStatements ()
     // Ultrasonic
     // System.out.println("Ultrasonic Dist: "
     // + Hardware.ultrasonic.getRefinedDistanceValue());
+
+    // Gear
+    System.out.println("Gear = " + Hardware.transmission.getGear());
+    System.out.println("secondgearpercentage "
+            + Hardware.transmission.getSecondGearPercentage());
+
 } // end printStatements
 
 /*

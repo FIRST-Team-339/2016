@@ -37,7 +37,7 @@ import edu.wpi.first.wpilibj.AnalogInput;
  * @author Bob Brown
  * @written Feb 8, 2011 -------------------------------------------------------
  */
-public class RobotPotentiometer extends AnalogInput
+public class OldRobotPotentiometer extends AnalogInput
         implements Potentiometer
 {
 /**
@@ -99,7 +99,7 @@ private boolean isReversed = false;
  * @written Feb 8, 2011
  *          -------------------------------------------------------
  */
-public RobotPotentiometer (final int channel)
+public OldRobotPotentiometer (final int channel)
 {
 	super(channel);
 	this.maxDegreesForPotentiometer = kDEFAULT_MAX_DEGREES;
@@ -120,7 +120,7 @@ public RobotPotentiometer (final int channel)
  * @written Feb 8, 2011
  *          -------------------------------------------------------
  */
-public RobotPotentiometer (final int channel, final double maxDegrees)
+public OldRobotPotentiometer (final int channel, final double maxDegrees)
 {
 	super(channel);
 	this.maxDegreesForPotentiometer = maxDegrees;
