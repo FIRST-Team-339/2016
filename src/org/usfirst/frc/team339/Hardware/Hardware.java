@@ -33,7 +33,6 @@ import org.usfirst.frc.team339.Vision.VisionScript;
 import org.usfirst.frc.team339.Vision.operators.ConvexHullOperator;
 import org.usfirst.frc.team339.Vision.operators.HSLColorThresholdOperator;
 import org.usfirst.frc.team339.Vision.operators.RemoveSmallObjectsOperator;
-import edu.wpi.first.wpilibj.CameraServer;
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -311,7 +310,10 @@ public static UltraSonic ultrasonic = new UltraSonic(4,
 // declare the USB camera server and the
 // USB camera it serves
 // -------------------------------------
-public static CameraServer cameraServer = CameraServer.getInstance();
+// public static UsbCamera camForward = CameraServer.getInstance()
+// .startAutomaticCapture(0);
+//
+// public static CameraServer cameraServer = CameraServer.getInstance();
 
 public static USBCamera usbCam = new USBCamera("cam0"); // AHK @cameratesting
 

@@ -38,7 +38,6 @@ import org.usfirst.frc.team339.Utils.ErrorMessage.PrintsTo;
 import org.usfirst.frc.team339.Utils.Guidance;
 import org.usfirst.frc.team339.Utils.ManipulatorArm;
 import org.usfirst.frc.team339.Utils.ManipulatorArm.ArmPosition;
-import edu.wpi.first.wpilibj.CameraServer;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.Relay;
 import edu.wpi.first.wpilibj.Relay.Value;
@@ -67,7 +66,7 @@ public static void init ()
     // Initial set up so the screen doesn't start green after Teleop starts
     Guidance.updateBallStatus(false);
     // Tell USB camera handler that we only have one USB camera
-    CameraServer.getInstance().setSize(1);// AHK @cameratesting
+    //// CameraServer.getInstance().setSize(1);// AHK @cameratesting
     // Make sure the camera is really dark
     Hardware.axisCamera.writeBrightness(
             Hardware.MINIMUM_AXIS_CAMERA_BRIGHTNESS);
@@ -1225,8 +1224,8 @@ public static void printStatements ()
     // printAllPDPChannels();
 
     // pots-----------------
-    System.out.println(
-            "delay pot = " + Hardware.delayPot.get(0, 1));
+    // System.out.println(
+    // "delay pot = " + Hardware.delayPot.get(0, 1));
     // System.out
     // .println("Delay pot raw: " + Hardware.delayPot.getValue());
     // System.out.println(
@@ -1238,7 +1237,7 @@ public static void printStatements ()
     // hits psi of 100 accurately
     // System.out.println("transducer = " + Hardware.transducer.get());
     System.out.println("Arm Pot = " + Hardware.armPot.get());
-    System.out.println("Arm Pot raw: " + Hardware.delayPot.getValue());
+    // System.out.println("Arm Pot raw: " + Hardware.delayPot.getValue());
     // Hardware.imageProcessor.processImage();
     // if (Hardware.imageProcessor.reports.length > 0)
     // System.out.println("DistanceToGoal: "
@@ -1371,10 +1370,10 @@ private static final int FIRE_OVERRIDE_BUTTON = 4;
 private static final int FIRE_CANCEL_BUTTON = 3;
 
 // Right operator 4
-private static final int TAKE_IN_BALL_BUTTON = 4;
+private static final int TAKE_IN_BALL_BUTTON = 2;
 
 // right operator 5
-private static final int PUSH_OUT_BALL_BUTTON = 5;
+private static final int PUSH_OUT_BALL_BUTTON = 3;
 
 private static final double PICKUP_ARM_CONTROL_DEADZONE = 0.2;
 

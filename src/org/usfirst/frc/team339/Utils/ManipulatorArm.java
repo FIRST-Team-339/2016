@@ -417,7 +417,7 @@ public static enum ArmPosition
      */
     FULL_UP,
     /**
-     * Within a rang from which we can pu the ball into the catapult.
+     * Within a rang from which we can put the ball into the catapult.
      */
     DEPOSIT,
     /**
@@ -446,9 +446,9 @@ private final double MAX_ARM_SPEED = -.8;
 // default slow arm turn speed proportion
 private double slowSpeed = .2;
 
-private double MAX_SOFT_ARM_STOP = 256.0;
+private double MAX_SOFT_ARM_STOP = 120.0; // 256.0; TODO CHECK
 
-private final static double MIN_SOFT_ARM_STOP = 110.0;
+private final static double MIN_SOFT_ARM_STOP = 2.0; // 110.0;
 
 private final double ARM_OUT_OF_WAY_DEGREES = 0.701
         * (MAX_SOFT_ARM_STOP - MIN_SOFT_ARM_STOP)
@@ -466,14 +466,15 @@ private final double DEPOSIT_POSITION_THRESHOLD = 20.0;// 5
 
 private final double REASONABLE_UP_FACTOR = -.15;// -.55;
 
-private final double REASONABLE_UP_AND_OVER_FACTOR = -.4;// -0.45;
+private final double REASONABLE_UP_AND_OVER_FACTOR = .8; // -.4;// -0.45;
 
 private final double REASONABLE_DOWN_FACTOR = .15; // .2, .35
 
 private final double REASONABLE_DOWN_UNDER_FACTOR = -.1;// 0.1;// .15,
                                                         // .2
+// angle of "gravity"
 
-private final double REASONABLE_DECELERATION_ANGLE = 198;// 0.75
+private final double REASONABLE_DECELERATION_ANGLE = 100;// 198;// 0.75
 // * (MAX_SOFT_ARM_STOP - MIN_SOFT_ARM_STOP)
 // + MIN_SOFT_ARM_STOP;// 174.1;
 
