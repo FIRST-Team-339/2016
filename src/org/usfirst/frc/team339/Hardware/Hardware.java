@@ -45,9 +45,6 @@ import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.TalonSRX;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.VictorSP;
-// import edu.wpi.first.wpilibj.vision.AxisCamera;
-// import edu.wpi.first.wpilibj.vision.AxisCamera.Resolution;
-import edu.wpi.first.wpilibj.vision.USBCamera;
 
 // -------------------------------------------------------
 /**
@@ -312,10 +309,10 @@ public static UltraSonic ultrasonic = new UltraSonic(4,
 // -------------------------------------
 // public static UsbCamera camForward = CameraServer.getInstance()
 // .startAutomaticCapture(0);
-//
+
 // public static CameraServer cameraServer = CameraServer.getInstance();
 
-public static USBCamera usbCam = new USBCamera("cam0"); // AHK @cameratesting
+// public static USBCamera usbCam = new USBCamera("cam0"); // AHK @cameratesting
 
 
 // Declares the Axis camera

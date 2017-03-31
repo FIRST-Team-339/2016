@@ -62,6 +62,7 @@ package org.usfirst.frc.team339.robot;
 import org.usfirst.frc.team339.Hardware.Hardware;
 import org.usfirst.frc.team339.HardwareInterfaces.DoubleSolenoid;
 import org.usfirst.frc.team339.HardwareInterfaces.transmission.Transmission_old.debugStateValues;
+import edu.wpi.first.wpilibj.CameraServer;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.Relay;
 import edu.wpi.first.wpilibj.Relay.Direction;
@@ -299,6 +300,9 @@ public void robotInit ()
     // second gear by maaath (the value of the delayPot adjusted out
     // of the 0-270 spectrum and into a 10-100 percentage range). If
     // we're not in demo, we're just in regular ol' second gear.
+    // CameraServer.getInstance().startAutomaticCapture("cam0",
+    // "/dev/video0");
+    CameraServer.getInstance().startAutomaticCapture();
 
     if (Hardware.inDemo.isOn() == true)
         {

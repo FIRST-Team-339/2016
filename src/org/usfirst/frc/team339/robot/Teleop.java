@@ -1236,7 +1236,7 @@ public static void printStatements ()
     // prints the value of the transducer- (range in code is 50)
     // hits psi of 100 accurately
     // System.out.println("transducer = " + Hardware.transducer.get());
-    System.out.println("Arm Pot = " + Hardware.armPot.get());
+    // System.out.println("Arm Pot = " + Hardware.armPot.get());
     // System.out.println("Arm Pot raw: " + Hardware.delayPot.getValue());
     // Hardware.imageProcessor.processImage();
     // if (Hardware.imageProcessor.reports.length > 0)
@@ -1295,7 +1295,7 @@ public static void printStatements ()
     // Hardware.autonomousEnabled.isOn());
     // System.out.println(
     // "Comp Switch: " + Hardware.inCompetition.isOn());
-    System.out.println("Demo Switch: " + Hardware.inDemo.isOn());
+    // System.out.println("Demo Switch: " + Hardware.inDemo.isOn());
 
 
     // print the position of the 6 position switch------------
@@ -1318,9 +1318,9 @@ public static void printStatements ()
     // + Hardware.ultrasonic.getRefinedDistanceValue());
 
     // Gear
-    System.out.println("Gear = " + Hardware.transmission.getGear());
-    System.out.println("secondgearpercentage "
-            + Hardware.transmission.getSecondGearPercentage());
+    // System.out.println("Gear = " + Hardware.transmission.getGear());
+    // System.out.println("secondgearpercentage "
+    // + Hardware.transmission.getSecondGearPercentage());
 
 } // end printStatements
 

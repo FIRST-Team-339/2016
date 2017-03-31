@@ -444,7 +444,7 @@ private boolean ballHasBeenPreviouslyDetected = false;
 private final double MAX_ARM_SPEED = -.8;
 
 // default slow arm turn speed proportion
-private double slowSpeed = .2;
+private double slowSpeed = .6;
 
 private double MAX_SOFT_ARM_STOP = 120.0; // 256.0; TODO CHECK
 
@@ -464,9 +464,9 @@ private final double DEPOSIT_POSITION = .95 // 1.0
 
 private final double DEPOSIT_POSITION_THRESHOLD = 20.0;// 5
 
-private final double REASONABLE_UP_FACTOR = -.15;// -.55;
+private final double REASONABLE_UP_FACTOR = -.35;// -.15;// -.55;
 
-private final double REASONABLE_UP_AND_OVER_FACTOR = .8; // -.4;// -0.45;
+private final double REASONABLE_UP_AND_OVER_FACTOR = -.4;// -0.45;
 
 private final double REASONABLE_DOWN_FACTOR = .15; // .2, .35
 
