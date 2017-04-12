@@ -34,7 +34,6 @@ package org.usfirst.frc.team339.robot;
 import org.usfirst.frc.team339.Hardware.Hardware;
 import org.usfirst.frc.team339.HardwareInterfaces.transmission.Transmission_old.debugStateValues;
 import org.usfirst.frc.team339.Utils.Drive;
-import org.usfirst.frc.team339.Utils.ErrorMessage.PrintsTo;
 import org.usfirst.frc.team339.Utils.Guidance;
 import org.usfirst.frc.team339.Utils.ManipulatorArm;
 import org.usfirst.frc.team339.Utils.ManipulatorArm.ArmPosition;
@@ -61,7 +60,7 @@ public class Teleop
 public static void init ()
 {
     // inverts the right side of the drivetrain
-    Hardware.rightFrontMotor.setInverted(true);
+    Hardware.rightFrontMotor.setInverted(false);
     Hardware.rightRearMotor.setInverted(true);
     // Initial set up so the screen doesn't start green after Teleop starts
     Guidance.updateBallStatus(false);
@@ -75,10 +74,13 @@ public static void init ()
     // Set up the transmission class so it knows how to drive. Kind of
     // like driver's ed for Robots. I wish my drivers ed class was this
     // short and painless...
+
     Hardware.transmission.setGear(2);
     Hardware.transmission
             .setFirstGearPercentage(Robot.FIRST_GEAR_PERCENTAGE);
+
     if (Hardware.inDemo.isOn() == true)
+
         {
         Hardware.transmission.setSecondGearPercentage(
                 Robot.SECOND_GEAR_PERCENTAGE *
@@ -218,32 +220,39 @@ public static void periodic ()
     // Hardware.transmission.upshift(1);
     // driveRobot();
     // speedTester.watchJoystick(Hardware.rightDriver.getY()); //@AHK REMOVE
-
-    if (Hardware.inDemo.isOn() == true)
+    if (Hardware.overrideDemoPot.isOn() == true)
         {
-        if (Hardware.leftDriver.getRawButton(8))
-            {
-            demoDriveRatio = Hardware.delayPot.get() / 2;
-            }
-        else if (Hardware.leftDriver.getRawButton(9))
-            {
-            demoDriveRatio = Hardware.delayPot.get() * 2;
-            }
-        else if (Hardware.leftDriver.getRawButton(10)
-                || demoDriveRatio == 0)
-            {
-            demoDriveRatio = Hardware.delayPot.get();
-            }
-        // Hardware.transmission.setSecondGearPercentage(
-        // ((demoDriveRatio *
-        // (Robot.SECOND_GEAR_PERCENTAGE
-        // - Hardware.MINIMUM_POT_SCALING_VALUE)
-        // /
-        // (Hardware.DELAY_POT_DEGREES))
-        // + Hardware.MINIMUM_POT_SCALING_VALUE));
+        Hardware.transmission.setSecondGearPercentage(1.0);
         }
-
-    Hardware.errorMessage.printError("test12", PrintsTo.roboRIO);
+    else
+        {
+        Hardware.transmission.setSecondGearPercentage(
+                Robot.SECOND_GEAR_PERCENTAGE *
+                        (Hardware.delayPot.get(0, 1)));
+        }
+    // if (Hardware.inDemo.isOn() == true)
+    // {
+    // if (Hardware.leftDriver.getRawButton(8))
+    // {
+    // demoDriveRatio = Hardware.delayPot.get() / 2;
+    // }
+    // else if (Hardware.leftDriver.getRawButton(9))
+    // {
+    // demoDriveRatio = Hardware.delayPot.get() * 2;
+    // }
+    // else if (Hardware.leftDriver.getRawButton(10)
+    // || demoDriveRatio == 0)
+    // {
+    // demoDriveRatio = Hardware.delayPot.get();
+    // }
+    // // Hardware.transmission.setSecondGearPercentage(
+    // // ((demoDriveRatio *
+    // // (Robot.SECOND_GEAR_PERCENTAGE
+    // // - Hardware.MINIMUM_POT_SCALING_VALUE)
+    // // /
+    // // (Hardware.DELAY_POT_DEGREES))
+    // // + Hardware.MINIMUM_POT_SCALING_VALUE));
+    // } Hardware.errorMessage.printError("test12", PrintsTo.roboRIO);
 
     // If we're running tests in the lab, NOT at competition
     if (Hardware.runningInLab == true)
@@ -895,6 +904,7 @@ public static void periodic ()
         // sets deadband back to 20%
         else
             {
+
             Hardware.transmission.setJoystickDeadbandRange(.20);
             }
 
@@ -1206,7 +1216,7 @@ public static void printStatements ()
     // Joysticks------------
     // System.out.println("Left Joystick: " + Hardware.leftDriver.getY());
     // System.out
-    // .println("Right Joystick: " + Hardware.rightDriver.getY());
+    // .println("Right Joystick: " + Hardware.rightD`river.getY());
     // System.out.println("Left Operator: " + Hardware.leftOperator.getY());
     // System.out.println("Right Operator: " + Hardware.rightOperator.getY());
 
@@ -1237,7 +1247,7 @@ public static void printStatements ()
     // hits psi of 100 accurately
     // System.out.println("transducer = " + Hardware.transducer.get());
     // System.out.println("Arm Pot = " + Hardware.armPot.get());
-    // System.out.println("Arm Pot raw: " + Hardware.delayPot.getValue());
+    // System.out.println("armPot = " + Hardware.armPot.get(270));
     // Hardware.imageProcessor.processImage();
     // if (Hardware.imageProcessor.reports.length > 0)
     // System.out.println("DistanceToGoal: "
@@ -1330,7 +1340,7 @@ public static void printStatements ()
  * ===============================================
  */
 
-private static final double MAXIMUM_TELEOP_SPEED = .85;
+private static final double MAXIMUM_TELEOP_SPEED = .9;
 
 private static final double CAMERA_ALIGN_Y_DEADBAND = .10;
 
@@ -1431,4 +1441,5 @@ private static boolean brakingTesting = false;
 private static boolean ballFiring = false;
 
 private static boolean motionToggled = false;
+
 } // end class
