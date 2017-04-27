@@ -88,7 +88,10 @@ public static void init ()
         // - Hardware.DELAY_POT_MIN_DEGREES)
         // / (double) (Hardware.DELAY_POT_DEGREES
         // - Hardware.DELAY_POT_MIN_DEGREES)));
+        // CHECK
+        Hardware.cameraSolenoid.set(DoubleSolenoid.Value.kForward);
         }
+
     else
         {
         Hardware.transmission
@@ -220,7 +223,7 @@ public static void periodic ()
     // Hardware.transmission.upshift(1);
     // driveRobot();
     // speedTester.watchJoystick(Hardware.rightDriver.getY()); //@AHK REMOVE
-    if (Hardware.overrideDemoPot.isOn() == true)
+    if (Hardware.overrideDemoPot.isOnCheckNow() == true)
         {
         Hardware.transmission.setSecondGearPercentage(1.0);
         }
@@ -464,8 +467,16 @@ public static void periodic ()
              * &&
              */ fireRequested == true)
             {
+            if (Hardware.startingPositionDial.getPosition() == 0)
+                {
+                firingPower = 2;
+                }
+            else
+                {
+                firingPower = 3;
+                }
             // FIRE NO MATTER WHAT!!!!!
-            if (fire(3, true) == true)
+            if (fire(firingPower, true) == true)
                 {
                 // We've shot our ball, we don't want to fire
                 // anymore.
@@ -499,7 +510,7 @@ public static void periodic ()
                         .getRawButton(FIRE_OVERRIDE_BUTTON) != true)
             {
             // fire, if we're ready to
-            if (fire(3, false) == true)
+            if (fire(2, false) == true)
                 {
                 // if we're done firing, drop the request
                 fireRequested = false;
@@ -515,20 +526,28 @@ public static void periodic ()
         /* && testingAlignByCamera == false */)
             {
             // raise the camera
-            Hardware.cameraSolenoid
-                    .set(DoubleSolenoid.Value.kForward);
+            // // Hardware.cameraSolenoid
+            // // .set(DoubleSolenoid.Value.kForward);
             // Hardware.ringLightRelay.set(Value.kOn);
             }
         // If the camera is up and we press the toggle button.
-        if (Hardware.cameraToggleButton.isOnCheckNow() == true
-                && isAligningByCamera == false
-        /* && testingAlignByCamera == false */)
-            {
-            // Drop the camera
-            Hardware.cameraSolenoid
-                    .set(DoubleSolenoid.Value.kReverse);
-            // Hardware.ringLightRelay.set(Value.kOff);
-            }
+        // CHECK
+        // if (Hardware.cameraToggleButton.isOnCheckNow() == true
+        // && isAligningByCamera == false
+        // // && Hardware.inDemo.get() == false
+        // /* && testingAlignByCamera == false */)
+        // {
+        // // Drop the camera(chaged to raise)
+        // Hardware.cameraSolenoid
+        // .set(DoubleSolenoid.Value.kForward);
+        // // Hardware.ringLightRelay.set(Value.kOff);
+        // }
+        // else
+        // {
+        // Hardware.cameraSolenoid
+        // .set(DoubleSolenoid.Value.kReverse);
+        // }
+
         // end raise/lower camera block
 
         // Block of code to align us on the goal using the camera
@@ -1435,6 +1454,8 @@ private static boolean prepPic = false;
 private static boolean storeFiringState;
 
 private static int loopCounter = 0;
+
+private static int firingPower = 3;
 
 private static boolean brakingTesting = false;
 

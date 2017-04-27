@@ -312,6 +312,7 @@ public void robotInit ()
         // - Hardware.DELAY_POT_MIN_DEGREES)
         // / (double) (Hardware.DELAY_POT_DEGREES
         // - Hardware.DELAY_POT_MIN_DEGREES)));
+        Hardware.cameraSolenoid.set(DoubleSolenoid.Value.kForward);
         }
     else
         {
@@ -501,7 +502,14 @@ public void robotInit ()
     // Solenoid Initialization
     // ---------------------------------------
     // initializes the solenoids...duh duh duh...
-    Hardware.cameraSolenoid.set(DoubleSolenoid.Value.kForward);
+    if (Hardware.inDemo.get() == true)
+        {
+        // Hardware.cameraSolenoid.set(DoubleSolenoid.Value.kReverse);
+        }
+    else
+        {
+        // Hardware.cameraSolenoid.set(DoubleSolenoid.Value.kReverse);
+        }
     Hardware.catapultSolenoid0.set(false);
     Hardware.catapultSolenoid1.set(false);
     Hardware.catapultSolenoid2.set(false);

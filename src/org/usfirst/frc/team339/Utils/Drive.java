@@ -1618,8 +1618,9 @@ public alignByCameraReturn alignByCameraStateMachine (
             if (Hardware.cameraSolenoid
                     .get() != DoubleSolenoid.Value.kReverse)
                 {
-                Hardware.cameraSolenoid.set(
-                        DoubleSolenoid.Value.kReverse);
+                // CHECK
+                // Hardware.cameraSolenoid.set(
+                // DoubleSolenoid.Value.kReverse);
                 Hardware.cameraToggleButton.update(true); // TODO HARDWARE
                 // REFERENCES
                 currentState = alignByCameraStates.WAIT_FOR_LIGHT_AND_CAMERA;//
