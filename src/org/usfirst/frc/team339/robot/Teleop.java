@@ -471,6 +471,7 @@ public static void periodic ()
                 {
                 firingPower = 2;
                 }
+
             else
                 {
                 firingPower = 3;
@@ -510,7 +511,7 @@ public static void periodic ()
                         .getRawButton(FIRE_OVERRIDE_BUTTON) != true)
             {
             // fire, if we're ready to
-            if (fire(2, false) == true)
+            if (fire(firingPower, false) == true)
                 {
                 // if we're done firing, drop the request
                 fireRequested = false;
@@ -673,7 +674,7 @@ public static void periodic ()
                 && fireRequested == true)
             {
             // FIRE NO MATTER WHAT!!!!!
-            if (fire(3, true) == true)
+            if (fire(firingPower, true) == true)
                 {
                 // We've shot our ball, we don't want to fire
                 // anymore.
@@ -712,7 +713,7 @@ public static void periodic ()
                 }
             else
                 {// fire, if we're ready to
-                if (fire(3, false) == true)
+                if (fire(firingPower, false) == true)
                     {
                     // if we're done firing, drop the request
                     fireRequested = false;
@@ -1229,13 +1230,13 @@ public static void printStatements ()
     // checks to see if the robot is aligning by camera
 
     // Demo Mode Information---
-    // System.out.println("Demo?\t" + Hardware.inDemo.isOn());
-    // System.out.println(Hardware.delayPot.get());
+    System.out.println("Demo?\t" + Hardware.inDemo.isOn());
+    System.out.println(Hardware.delayPot.get());
 
     // Joysticks------------
-    // System.out.println("Left Joystick: " + Hardware.leftDriver.getY());
-    // System.out
-    // .println("Right Joystick: " + Hardware.rightD`river.getY());
+    System.out.println("Left Joystick: " + Hardware.leftDriver.getY());
+    System.out
+            .println("Right Joystick: " + Hardware.rightDriver.getY());
     // System.out.println("Left Operator: " + Hardware.leftOperator.getY());
     // System.out.println("Right Operator: " + Hardware.rightOperator.getY());
 
@@ -1274,11 +1275,11 @@ public static void printStatements ()
 
     // Motor controllers-----
     // prints value of the motors
-    // System.out.println("RR Motor T = " + Hardware.rightRearMotor.get());
-    // System.out.println("LR Motor T = " + Hardware.leftRearMotor.get());
-    // System.out
-    // .println("RF Motor T = " + Hardware.rightFrontMotor.get());
-    // System.out.println("LF Motor T = " + Hardware.leftFrontMotor.get());
+    System.out.println("RR Motor T = " + Hardware.rightRearMotor.get());
+    System.out.println("LR Motor T = " + Hardware.leftRearMotor.get());
+    System.out
+            .println("RF Motor T = " + Hardware.rightFrontMotor.get());
+    System.out.println("LF Motor T = " + Hardware.leftFrontMotor.get());
     // System.out.println("Arm Motor: " + Hardware.armMotor.get());
     // System.out
     // .println("Intake Motor: " + Hardware.armIntakeMotor.get());

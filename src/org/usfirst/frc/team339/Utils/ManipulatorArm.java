@@ -444,11 +444,11 @@ private boolean ballHasBeenPreviouslyDetected = false;
 private final double MAX_ARM_SPEED = -.8;
 
 // default slow arm turn speed proportion
-private double slowSpeed = .2;// .6;
+private double slowSpeed = .2;// .6;+++
 
 private double MAX_SOFT_ARM_STOP = 210.0;// 120.0; // 256.0; TODO CHECK
 
-private final static double MIN_SOFT_ARM_STOP = 70.0;// 2.0; // 110.0;
+private final static double MIN_SOFT_ARM_STOP = 85.0;// 2.0; // 110.0;
 
 private final double ARM_OUT_OF_WAY_DEGREES = 0.701
         * (MAX_SOFT_ARM_STOP - MIN_SOFT_ARM_STOP)
