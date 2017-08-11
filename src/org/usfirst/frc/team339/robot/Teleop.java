@@ -60,8 +60,8 @@ public class Teleop
 public static void init ()
 {
     // inverts the right side of the drivetrain
-    Hardware.rightFrontMotor.setInverted(false);
-    Hardware.rightRearMotor.setInverted(true);
+    Hardware.rightFrontMotor.setInverted(true);
+    Hardware.rightRearMotor.setInverted(false);
     // Initial set up so the screen doesn't start green after Teleop starts
     Guidance.updateBallStatus(false);
     // Tell USB camera handler that we only have one USB camera
@@ -212,6 +212,8 @@ static double demoDriveRatio = 0.0;
 
 public static void periodic ()
 {
+    // Hardware.errorMessage.printError("Yellow",
+    // ErrorMessage.PrintsTo.driverStationAndRoboRIO);
     // Print out any data we want from the hardware elements.
     printStatements();
     Hardware.transmission.setLeftJoystickIsReversed(true);
@@ -222,7 +224,8 @@ public static void periodic ()
 
     // Hardware.transmission.upshift(1);
     // driveRobot();
-    // speedTester.watchJoystick(Hardware.rightDriver.getY()); //@AHK REMOVE
+    // Hardware.speedTester.watchJoystick(Hardware.rightDriver.getY()); // @AHK
+    // REMOVE
     if (Hardware.overrideDemoPot.isOnCheckNow() == true)
         {
         Hardware.transmission.setSecondGearPercentage(1.0);
@@ -822,149 +825,14 @@ public static void periodic ()
         // }
         //
 
-        // If the stop testing button (BUTTON 8 ON LEFT DRIVER)
-        // is toggled on and we aren't moving or stopping,
-        // then start moving.
-
-        if (Hardware.forwardToggleButton.isOnCheckNow() == true
-                && brakingTesting == false
-                && motionToggled == false)
-            {
-            motionToggled = true;
-            }
-
-        if (motionToggled == true)
-            {
-            Hardware.transmission.controls(1.0, 1.0);
-            Hardware.transmission.setJoystickDeadbandRange(0.0);
-            }
-
-        // If the button is toggled off, then stop moving and
-        // start stopping.
-
-        if (Hardware.forwardToggleButton.isOnCheckNow() == false
-                && motionToggled == true)
-            {
-            motionToggled = false;
-            brakingTesting = true;
-            }
-
-        if (brakingTesting == true)
-            {
-            // prints
-            System.out.println(Hardware.transmission.stop().name());
-            if (Hardware.transmission
-                    .stop() != Hardware.transmission.inMotion)
-                {
-                System.out.println(Hardware.transmission.stop().name());
-                brakingTesting = false;
-                }
-            }
-
-        // If we press the brake button, robot brakes
-        /*
-         * if (Hardware.leftDriver
-         * .getRawButton(BRAKE_JOYSTICK_BUTTON_FIVE) == true)
-         * {
-         * Hardware.transmission.setJoystickDeadbandRange(0.0);
-         * Hardware.drive.driveContinuous(LEFT_MOTOR_BRAKE_SPEED,
-         * RIGHT_MOTOR_BRAKE_SPEED);
-         * }
-         * 
-         * else if (Hardware.leftDriver
-         * .getRawButton(BRAKE_JOYSTICK_BUTTON_FOUR) == true)
-         * {
-         * Hardware.transmission.setJoystickDeadbandRange(0.0);
-         * Hardware.drive.driveContinuous(LEFT_MOTOR_BRAKE_SPEED_TWO,
-         * RIGHT_MOTOR_BRAKE_SPEED_TWO);
-         * }
-         */
-
         // when brake button is pressed motor values reverse
         loopCounter++; // adds one every time teleop loops
-
-        // checks to see if the left driver button 4 is being pressed
-        // Labeled "Brake FWD"- Button 4- moves wheels slightly FORWARD
-        if (Hardware.leftDriver
-                .getRawButton(BRAKE_JOYSTICK_BUTTON_FOUR) == true)
-            {
-            // determines what number loop teleop is in, sets motors to
-            // a positive number, and sets deadband to zero
-            // if (loopCounter % BRAKING_INTERVAL < BRAKING_INTERVAL
-            // / 2)
-                {
-                Hardware.transmission
-                        .setJoystickDeadbandRange(0.0);
-                // Hardware.drive.driveContinuous(MOTOR_HOLD_SPEED,
-                // MOTOR_HOLD_SPEED);
-                Hardware.rightRearMotor.set(-.14);
-                Hardware.rightFrontMotor.set(-.14);
-                Hardware.leftRearMotor.set(-.14);
-                Hardware.leftFrontMotor.set(-.14);
-                }
-            }
-        // determines what number loop teleop is in then sets motors
-        // to a negative number
-        // else
-
-
-        // Labeled "Brake RVS"- Button 5- moves wheels BACKWARD
-        else if (Hardware.leftDriver
-                .getRawButton(BRAKE_JOYSTICK_BUTTON_FIVE) == true)
-            {
-            Hardware.transmission.setJoystickDeadbandRange(0.0);
-            // Hardware.drive.driveContinuous(-MOTOR_HOLD_SPEED,
-            // -MOTOR_HOLD_SPEED);
-            Hardware.rightRearMotor.set(.14);
-            Hardware.rightFrontMotor.set(.14);
-            Hardware.leftRearMotor.set(.14);
-            Hardware.leftFrontMotor.set(.14);
-            }
-        // }
-        // sets deadband back to 20%
-        else
-            {
-
-            Hardware.transmission.setJoystickDeadbandRange(.20);
-            }
-
-        // Left Drive Button 7 will activate transmission.stop(), a
-        // a poorly named brake function- SERIOUSLY PEOPLE BE MORE CREATIVE
-        // Part of a project working on the transmission.stop() function
-        // as well as the previous chain of if statements
-        // Worked on by Ashley Espeland and Cole Ramos
-        if (Hardware.leftDriver.getRawButton(7) == true)
-            {
-            Hardware.transmission.stop();
-            }
-
-
 
 
         // Only let the drivers drive if we're not speed testing or aligning
         // by camera
 
-        // drive the robot with the joysticks
-        // TODO uncomment this conditional
-        // TODO delete all conditionals. Fix brake
-        if (/* speedTesting == false && */ isAligningByCamera == false
-                && testingAlignByCamera == false
-                && fireRequested == false && Hardware.leftDriver
-                        .getRawButton(
-                                BRAKE_JOYSTICK_BUTTON_FIVE) == false
-                && Hardware.leftDriver.getRawButton(
-                        BRAKE_JOYSTICK_BUTTON_FOUR) == false
-                && isTurning180Degrees == false
-                && Hardware.rightOperator.getRawButton(6) == false
-                && motionToggled == false
-                && brakingTesting == false)// TODO
-        // remove
-        // last
-        // term
-            {
-            driveRobot();
-            // if we want to run a speed test, run it until we're done.
-            }
+        driveRobot();
 
         if (Hardware.leftOperator.getRawButton(9))
             {
@@ -993,14 +861,14 @@ public static void periodic ()
 
 
         }
-    if (Hardware.rightOperator.getRawButton(6) == true)
-        {
-        Hardware.transmission.controls(1.0, 1.0);
-        System.out.println("Left Distance = "
-                + Hardware.leftRearEncoder.getDistance());
-        System.out.println("Right Distance = "
-                + Hardware.rightRearEncoder.getDistance());
-        }
+    // if (Hardware.rightOperator.getRawButton(6) == true)
+    // {
+    // Hardware.transmission.controls(1.0, 1.0);
+    // System.out.println("Left Distance = "
+    // + Hardware.leftRearEncoder.getDistance());
+    // System.out.println("Right Distance = "
+    // + Hardware.rightRearEncoder.getDistance());
+    // }
     // else
     // {
     // Hardware.transmission.controls(0.0, 0.0);
@@ -1078,20 +946,25 @@ public static boolean fire (int power, boolean override)
             }
         // Fire with the number of solenoids that corresponds to the power
         // argument to this function
+
+
         switch (power)
             {
             case 1:
                 Hardware.catapultSolenoid1.set(true);
+                // System.out.println("CASE 1");
                 break;
             case 2:
                 Hardware.catapultSolenoid2.set(true);
                 Hardware.catapultSolenoid0.set(true);
+                // System.out.println("CASE 2");
                 break;
             default:
-            case 3:
+                // case 3:
                 Hardware.catapultSolenoid0.set(true);
                 Hardware.catapultSolenoid1.set(true);
                 Hardware.catapultSolenoid2.set(true);
+                // System.out.println("CASE DEFAULT");
                 break;
             }
         // }
@@ -1136,7 +1009,7 @@ public static void takePicture ()
     if (Hardware.leftOperator.getRawButton(6) == true
             && Hardware.leftOperator.getRawButton(7) == true)
         {
-        if (prepPic == false)
+        if (prepPic == true)
             {
             // Hardware.axisCamera.writeBrightness(
             // Hardware.MINIMUM_AXIS_CAMERA_BRIGHTNESS);
@@ -1230,14 +1103,15 @@ public static void printStatements ()
     // checks to see if the robot is aligning by camera
 
     // Demo Mode Information---
-    System.out.println("Demo?\t" + Hardware.inDemo.isOn());
-    System.out.println(Hardware.delayPot.get());
+    // System.out.println("Demo?\t" + Hardware.inDemo.isOn());
+    // System.out.println(Hardware.delayPot.get());
 
     // Joysticks------------
-    System.out.println("Left Joystick: " + Hardware.leftDriver.getY());
-    System.out
-            .println("Right Joystick: " + Hardware.rightDriver.getY());
-    // System.out.println("Left Operator: " + Hardware.leftOperator.getY());
+    // System.out.println("Left Joystick: " + Hardware.leftDriver.getY());
+    // System.out
+    // .println("Right Joystick: " + Hardware.rightDriver.getY());
+    // System.out
+    // .println("Left Operator: " + Hardware.leftOperator.getY());
     // System.out.println("Right Operator: " + Hardware.rightOperator.getY());
 
     // IR sensors-----------
@@ -1266,8 +1140,7 @@ public static void printStatements ()
     // prints the value of the transducer- (range in code is 50)
     // hits psi of 100 accurately
     // System.out.println("transducer = " + Hardware.transducer.get());
-    // System.out.println("Arm Pot = " + Hardware.armPot.get());
-    // System.out.println("armPot = " + Hardware.armPot.get(270));
+    // System.out.println("Arm Pot = " + Hardware.armPot.get(270));
     // Hardware.imageProcessor.processImage();
     // if (Hardware.imageProcessor.reports.length > 0)
     // System.out.println("DistanceToGoal: "
@@ -1275,11 +1148,11 @@ public static void printStatements ()
 
     // Motor controllers-----
     // prints value of the motors
-    System.out.println("RR Motor T = " + Hardware.rightRearMotor.get());
-    System.out.println("LR Motor T = " + Hardware.leftRearMotor.get());
-    System.out
-            .println("RF Motor T = " + Hardware.rightFrontMotor.get());
-    System.out.println("LF Motor T = " + Hardware.leftFrontMotor.get());
+    // System.out.println("RR Motor T = " + Hardware.rightRearMotor.get());
+    // System.out.println("LR Motor T = " + Hardware.leftRearMotor.get());
+    // System.out
+    // .println("RF Motor T = " + Hardware.rightFrontMotor.get());
+    // System.out.println("LF Motor T = " + Hardware.leftFrontMotor.get());
     // System.out.println("Arm Motor: " + Hardware.armMotor.get());
     // System.out
     // .println("Intake Motor: " + Hardware.armIntakeMotor.get());
@@ -1405,7 +1278,7 @@ private static final int TAKE_IN_BALL_BUTTON = 2;
 // right operator 5
 private static final int PUSH_OUT_BALL_BUTTON = 3;
 
-private static final double PICKUP_ARM_CONTROL_DEADZONE = 0.2;
+private static final double PICKUP_ARM_CONTROL_DEADZONE = 0.8;
 
 private final static double PERCENT_IMAGE_PROCESSING_DEADBAND = .13;
 

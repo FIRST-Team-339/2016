@@ -127,12 +127,14 @@ public static boolean runningInLab = false;
 // Talon classes
 // ------------------------------------
 
-public static TalonSRX rightRearMotor = new TalonSRX(2);
+public static TalonSRX rightRearMotor = new TalonSRX(4);
+
+// public static CANTalon rightRearMotor = new CANTalon(12);
 
 public static TalonSRX leftRearMotor = new TalonSRX(3);
 
 // Switched the bottom two ports
-public static TalonSRX rightFrontMotor = new TalonSRX(4);
+public static TalonSRX rightFrontMotor = new TalonSRX(2);
 
 public static TalonSRX leftFrontMotor = new TalonSRX(1);
 
@@ -323,7 +325,7 @@ public static VisionScript doubleGreenRingScript = new VisionScript(
 
 // public static VisionScript temp = new VisionScript();
 
-public static KilroyCamera axisCamera = new KilroyCamera(false);
+public static KilroyCamera axisCamera = new KilroyCamera(true);
 
 // public static ImageProcessing imageProcessor = new ImageProcessing(
 // axisCamera);
@@ -416,7 +418,7 @@ public static final Timer cameraInTeleopTimer = new Timer();
 public static final Timer testingTimer = new Timer();
 
 public static final ErrorMessage errorMessage = new ErrorMessage(
-        false /* append timelog */);
+        true /* append timelog */);
 
 public static final MotorSafetyHelper leftRearMotorSafety = new MotorSafetyHelper(
         leftRearMotor);

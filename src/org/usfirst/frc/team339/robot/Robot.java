@@ -370,8 +370,8 @@ public void robotInit ()
     // ---------------------------------------
     if (Hardware.runningInLab == true)
         {
-        Hardware.rightFrontMotor.setInverted(true);
-        Hardware.rightRearMotor.setInverted(true);
+        Hardware.rightFrontMotor.setInverted(false);
+        Hardware.rightRearMotor.setInverted(false);
         Hardware.leftFrontMotor.setInverted(false);
         Hardware.leftRearMotor.setInverted(false);
         Hardware.axisCamera.setHaveCamera(false);
@@ -379,7 +379,7 @@ public void robotInit ()
     else
         {
         Hardware.rightFrontMotor.setInverted(true);
-        Hardware.rightRearMotor.setInverted(true);
+        Hardware.rightRearMotor.setInverted(false);
         Hardware.leftFrontMotor.setInverted(false);
         Hardware.leftRearMotor.setInverted(false);
         }
@@ -477,7 +477,7 @@ public void robotInit ()
     // -------------------------------------
     // motor initialization
     // -------------------------------------
-    Hardware.rightRearMotor.setInverted(true);
+    Hardware.rightRearMotor.setInverted(false);
     Hardware.rightFrontMotor.setInverted(false);
     Hardware.leftFrontMotor.setInverted(false);
     Hardware.leftRearMotor.setInverted(false);
