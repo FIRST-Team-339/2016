@@ -37,7 +37,7 @@ import edu.wpi.first.wpilibj.AnalogInput;
  * @author Bob Brown
  * @written Feb 8, 2011 -------------------------------------------------------
  */
-public class RobotPotentiometer extends AnalogInput
+public class OldRobotPotentiometer extends AnalogInput
         implements Potentiometer
 {
 /**
@@ -60,7 +60,7 @@ private final static double kDEFAULT_MAX_DEGREES = 270.0;
  * @written April 18, 2011
  *          --------------------------------------------------------
  */
-private final static double kTOTAL_RAW_UNITS = 4055;
+private final static double kTOTAL_RAW_UNITS = 4055;//1000.0;
 
 /**
  * ------------------------------------------------------
@@ -84,15 +84,7 @@ private double maxDegreesForPotentiometer = kDEFAULT_MAX_DEGREES;
  */
 private boolean printToScreen = false;
 
-/**
- * ------------------------------------------------------
- *
- * @description this denotes whether or not the pot is keeping
- *              values reversed (backwards)
- * @author Bob Brown
- * @written Feb 19, 2011
- *          --------------------------------------------------------
- */
+// Whether or not the potentiometer is reversed
 private boolean isReversed = false;
 
 // -------------------------------------------------------
@@ -107,10 +99,10 @@ private boolean isReversed = false;
  * @written Feb 8, 2011
  *          -------------------------------------------------------
  */
-public RobotPotentiometer (final int channel)
+public OldRobotPotentiometer (final int channel)
 {
-    super(channel);
-    this.maxDegreesForPotentiometer = kDEFAULT_MAX_DEGREES;
+	super(channel);
+	this.maxDegreesForPotentiometer = kDEFAULT_MAX_DEGREES;
 } // end LightSensor
 
 // -------------------------------------------------------
@@ -128,12 +120,77 @@ public RobotPotentiometer (final int channel)
  * @written Feb 8, 2011
  *          -------------------------------------------------------
  */
-public RobotPotentiometer (final int channel, final double maxDegrees)
+public OldRobotPotentiometer (final int channel, final double maxDegrees)
 {
-    super(channel);
-    this.maxDegreesForPotentiometer = maxDegrees;
+	super(channel);
+	this.maxDegreesForPotentiometer = maxDegrees;
 } // end LightSensor
 
+// -------------------------------------------------------
+/**
+ * Create an instance of a LightSensor class.
+ * Creates a digital input given a channel and the module
+ * passed in.
+ *
+ * @method Potentiometer() - constructor
+ * @param channel
+ *            - the port for the digital input
+ * @param slot
+ *            - the slot where the digital board is located
+ * @author Bob Brown
+ * @written Feb 8, 2011
+ *          -------------------------------------------------------
+ */
+/*
+ * public RobotPotentiometer (
+ * final int slot,
+ * final int channel)
+ * {
+ * super(slot, channel);
+ * this.maxDegreesForPotentiometer = kDEFAULT_MAX_DEGREES;
+ * } // end RobotPotentiometer
+ */
+// -------------------------------------------------------
+/**
+ * Create an instance of a LightSensor class.
+ * Creates a digital input given a channel and the module
+ * passed in.
+ *
+ * @method Potentiometer() - constructor
+ * @param channel
+ *            - the port for the digital input
+ * @param slot
+ *            - the slot where the digital board is located
+ * @param maxDegrees
+ *            - maximum number of degrees that this potentiometer
+ *            could travel
+ * @author Bob Brown
+ * @written Feb 8, 2011
+ *          -------------------------------------------------------
+ */
+/*
+ * public RobotPotentiometer (
+ * final int slot,
+ * final int channel,
+ * final double maxDegrees)
+ * {
+ * super(slot, channel);
+ * this.maxDegreesForPotentiometer = maxDegrees;
+ * } // end RobotPotentiometer
+ */
+// -------------------------------------------------------
+/**
+ * This function takes the raw value of the potentiometer (out of the max
+ * raw units, kTOTAL_RAW_UNITS) and converts it to degrees
+ *
+ * @method get
+ * @return int - returns the potentiometer degrees
+ * @author Kevin McVey
+ * @written Feb 19, 2010
+ * @modified by Noah Golmant
+ * @modified date Jan 22 2014
+ *           -------------------------------------------------------
+ */
 
 // -------------------------------------------------------
 /**
@@ -151,46 +208,19 @@ public RobotPotentiometer (final int channel, final double maxDegrees)
 @Override
 public int get ()
 {
-    int retValue = (int) ((this.getValue() / kTOTAL_RAW_UNITS)
-            * this.maxDegreesForPotentiometer);
-    // --------------------------------
-    // if the pot is not reversed -
-    // compute the normalized degrees
-    // --------------------------------
-    if (this.isReversed == false)
-        {
-        // ---------------------------------
-        // if we requested to print out the Normalized
-        // value
-        // ---------------------------------
-        if (this.getPrintToScreen() == true)
-            System.out.println("Pot - Normalized value: " +
-                    retValue);
-        return (retValue);
-        }
-    // ---------------------------------
-    // we are reversed so compute the value
-    // for a reversed pot
-    // --------------------------------
-    retValue = (int) ((this.maxDegreesForPotentiometer
-            - (this.getValue() / kTOTAL_RAW_UNITS)
-                    * this.maxDegreesForPotentiometer));
-    // ---------------------------------
-    // if we requested to print out the Normalized
-    // value
-    // ---------------------------------
-    if (this.getPrintToScreen() == true)
-        System.out.println("Pot - Normalized value: " +
-                retValue);
-    // ---------------------------------
-    // If we are reversed, get it from the opposite direction
-    // e.g. if we're at 200/300 and are reversed we want to really send
-    // (300 - 200) / 300 = 100 / 300
-    // ---------------------------------
-    return (retValue);
+	// int temp = this.getValue();
+	if (this.isReversed == false)
+		return (int) ((this.getValue() / kTOTAL_RAW_UNITS)
+		        * this.maxDegreesForPotentiometer);
+	// If we are reversed, get it from the opposite direction
+	// e.g. if we're at 200/300 and are reversed we want to really send
+	// (300 - 200) / 300 = 100 / 300
+	return (int) (this.maxDegreesForPotentiometer
+	        - ((this.getValue() / kTOTAL_RAW_UNITS)
+	                * this.maxDegreesForPotentiometer));
 } // end get
+	// -------------------------------------------------
 
-// -------------------------------------------------
 /**
  * Gets the location within the range
  *
@@ -205,33 +235,17 @@ public int get ()
 @Override
 public double get (double range)
 {
-    // (percent off from middle) * (range of values)
-    double retVal = (((2 * this.get())
-            - this.maxDegreesForPotentiometer)
-            / this.maxDegreesForPotentiometer)
-            * (range / 2);
-    if (this.isReversed == false)
-        {
-        // ---------------------------------
-        // if we requested to print out the Normalized
-        // value
-        // ---------------------------------
-        if (this.getPrintToScreen() == true)
-            System.out.println("Pot - Normalized value: " + retVal);
-        return (retVal);
-        }
-    retVal = (retVal * -1.0);
-    // ---------------------------------
-    // if we requested to print out the Normalized
-    // value
-    // ---------------------------------
-    if (this.getPrintToScreen() == true)
-        System.out
-                .println("Pot - Normalized value: " + retVal);
-    // If the potentiometer is reversed, negate our position
-    // within the range.
-    return (retVal);
-} // end get()
+	// (percent off from middle) * (range of values)
+	final double retVal =
+	        (((2 * this.get()) - this.maxDegreesForPotentiometer)
+	                / this.maxDegreesForPotentiometer)
+	                * (range / 2);
+	if (this.isReversed == false)
+		return retVal;
+	// If the potentiometer is reversed, negate our position
+	// within the range.
+	return (retVal * -1.0);
+}
 
 // ---------------------------------------------
 /**
@@ -247,31 +261,16 @@ public double get (double range)
 @Override
 public double get (double minRange, double maxRange)
 {
-    double retVal = ((this.getValue() / kTOTAL_RAW_UNITS)
-            * (maxRange - minRange))
-            + minRange;
-    if (this.isReversed == false)
-        {
-        // ---------------------------------
-        // if we requested to print out the Normalized
-        // value
-        // ---------------------------------
-        if (this.getPrintToScreen() == true)
-            System.out.println("Pot - Normalized value: " + retVal);
-        return retVal;
-        }
-    // ---------------------------------
-    // if we requested to print out the Normalized
-    // value
-    // ---------------------------------
-    retVal = retVal * -1.0;
-    if (this.getPrintToScreen() == true)
-        System.out
-                .println("Pot - Normalized value: " + retVal);
-    // If the potentiometer is reversed, negate our position
-    // within the range.
-    return (retVal);
-} // end get()
+	final double tempRange = maxRange - minRange;
+	final double retVal =
+	        ((this.getValue() / kTOTAL_RAW_UNITS) * tempRange)
+	                + minRange;
+	if (this.isReversed == false)
+		return retVal;
+	// If the potentiometer is reversed, negate our position
+	// within the range.
+	return retVal * -1.0;
+}
 
 // -------------------------------------------------------
 /**
@@ -289,31 +288,14 @@ public double get (double minRange, double maxRange)
 @Override
 public int get (int degrees)
 {
-    int retVal = (int) ((this.getValue() / kTOTAL_RAW_UNITS) * degrees);
-    if (this.isReversed == false)
-        {
-        // ---------------------------------
-        // if we requested to print out the Normalized
-        // value
-        // ---------------------------------
-        if (this.getPrintToScreen() == true)
-            System.out.println("Pot - Normalized value: " + retVal);
-        return retVal;
-        } // if
-    retVal = (int) (this.maxDegreesForPotentiometer
-            - ((this.getValue() / kTOTAL_RAW_UNITS) * degrees));
-    // ---------------------------------
-    // if we requested to print out the Normalized
-    // value
-    // ---------------------------------
-    if (this.getPrintToScreen() == true)
-        System.out
-                .println("Pot - Normalized value: " + retVal);
-    // If we are reversed, get it from the opposite direction
-    // e.g. if we're at 200/300 and are reversed we want to really send
-    // (300 - 200) / 300 = 100 / 300
-    return (retVal);
-} // end get()
+	if (this.isReversed == false)
+		return (int) ((this.getValue() / kTOTAL_RAW_UNITS) * degrees);
+	// If we are reversed, get it from the opposite direction
+	// e.g. if we're at 200/300 and are reversed we want to really send
+	// (300 - 200) / 300 = 100 / 300
+	return (int) (this.maxDegreesForPotentiometer
+	        - ((this.getValue() / kTOTAL_RAW_UNITS) * degrees));
+}
 
 // -------------------------------------------------
 /**
@@ -328,31 +310,17 @@ public int get (int degrees)
 @Override
 public double getFromRange ()
 {
-    // (percent off from middle) * (range of values)
-    double retVal = (((2 * this.get()) - this.getMaxDegrees())
-            / this.getMaxDegrees())
-            * (this.getMaxDegrees() / 2);
-    if (this.isReversed == false)
-        {
-        // ---------------------------------
-        // if we requested to print out the Normalized
-        // value
-        // ---------------------------------
-        if (this.getPrintToScreen() == true)
-            System.out.println("Pot - Normalized value: " + retVal);
-        return retVal;
-        }
-    // ---------------------------------
-    // if we requested to print out the Normalized
-    // value
-    // ---------------------------------
-    retVal = (retVal * -1.0);
-    if (this.getPrintToScreen() == true)
-        System.out.println("Pot - Normalized value: " + retVal);
-    // If the potentiometer is reversed, negate our position
-    // within the range.
-    return (retVal);
-} // end getFromRange()
+	// (percent off from middle) * (range of values)
+	final double retVal =
+	        (((2 * this.get()) - this.getMaxDegrees())
+	                / this.getMaxDegrees())
+	                * (this.getMaxDegrees() / 2);
+	if (this.isReversed == false)
+		return retVal;
+	// If the potentiometer is reversed, negate our position
+	// within the range.
+	return retVal * -1.0;
+}
 
 // -------------------------------------------------------
 /**
@@ -367,7 +335,7 @@ public double getFromRange ()
  */
 public double getMaxDegrees ()
 {
-    return (this.maxDegreesForPotentiometer);
+	return (this.maxDegreesForPotentiometer);
 } // end getMaxDegrees
 
 // -------------------------------------------------------
@@ -383,7 +351,7 @@ public double getMaxDegrees ()
  */
 public boolean getPrintToScreen ()
 {
-    return (this.printToScreen);
+	return (this.printToScreen);
 } // end getPrintToScreen()
 
 /**
@@ -395,7 +363,7 @@ public boolean getPrintToScreen ()
  */
 public boolean isReversed ()
 {
-    return this.isReversed;
+	return this.isReversed;
 }
 
 // -------------------------------------------------------
@@ -414,7 +382,7 @@ public boolean isReversed ()
  */
 public double setMaxDegrees (final double maxDegrees)
 {
-    return (this.maxDegreesForPotentiometer = maxDegrees);
+	return (this.maxDegreesForPotentiometer = maxDegrees);
 } // end setMaxDegrees
 
 // -------------------------------------------------------
@@ -435,8 +403,8 @@ public double setMaxDegrees (final double maxDegrees)
  */
 public boolean setPrintToScreen (boolean newValue)
 {
-    this.printToScreen = newValue;
-    return (this.getPrintToScreen());
+	this.printToScreen = newValue;
+	return (this.getPrintToScreen());
 } // end setPrintToScreen()
 
 /**
@@ -448,7 +416,7 @@ public boolean setPrintToScreen (boolean newValue)
  */
 public void setReverse (boolean isReversed)
 {
-    this.isReversed = isReversed;
+	this.isReversed = isReversed;
 }
 
 } // end class RobotPotentiometer

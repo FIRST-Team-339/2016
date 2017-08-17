@@ -34,11 +34,9 @@ package org.usfirst.frc.team339.robot;
 import org.usfirst.frc.team339.Hardware.Hardware;
 import org.usfirst.frc.team339.HardwareInterfaces.transmission.Transmission_old.debugStateValues;
 import org.usfirst.frc.team339.Utils.Drive;
-import org.usfirst.frc.team339.Utils.ErrorMessage.PrintsTo;
 import org.usfirst.frc.team339.Utils.Guidance;
 import org.usfirst.frc.team339.Utils.ManipulatorArm;
 import org.usfirst.frc.team339.Utils.ManipulatorArm.ArmPosition;
-import edu.wpi.first.wpilibj.CameraServer;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.Relay;
 import edu.wpi.first.wpilibj.Relay.Value;
@@ -61,10 +59,13 @@ public class Teleop
  */
 public static void init ()
 {
+    // inverts the right side of the drivetrain
+    Hardware.rightFrontMotor.setInverted(true);
+    Hardware.rightRearMotor.setInverted(false);
     // Initial set up so the screen doesn't start green after Teleop starts
     Guidance.updateBallStatus(false);
     // Tell USB camera handler that we only have one USB camera
-    CameraServer.getInstance().setSize(1);// AHK @cameratesting
+    //// CameraServer.getInstance().setSize(1);// AHK @cameratesting
     // Make sure the camera is really dark
     Hardware.axisCamera.writeBrightness(
             Hardware.MINIMUM_AXIS_CAMERA_BRIGHTNESS);
@@ -73,18 +74,24 @@ public static void init ()
     // Set up the transmission class so it knows how to drive. Kind of
     // like driver's ed for Robots. I wish my drivers ed class was this
     // short and painless...
+
     Hardware.transmission.setGear(2);
     Hardware.transmission
             .setFirstGearPercentage(Robot.FIRST_GEAR_PERCENTAGE);
+
     if (Hardware.inDemo.isOn() == true)
+
         {
         Hardware.transmission.setSecondGearPercentage(
-                Robot.SECOND_GEAR_PERCENTAGE
-                        * (((double) Hardware.delayPot.get()
-                                - Hardware.DELAY_POT_MIN_DEGREES)
-                                / (double) (Hardware.DELAY_POT_DEGREES
-                                        - Hardware.DELAY_POT_MIN_DEGREES)));
+                Robot.SECOND_GEAR_PERCENTAGE *
+                        (Hardware.delayPot.get(0, 1)));
+        // - Hardware.DELAY_POT_MIN_DEGREES)
+        // / (double) (Hardware.DELAY_POT_DEGREES
+        // - Hardware.DELAY_POT_MIN_DEGREES)));
+        // CHECK
+        Hardware.cameraSolenoid.set(DoubleSolenoid.Value.kForward);
         }
+
     else
         {
         Hardware.transmission
@@ -124,6 +131,8 @@ public static void init ()
     Hardware.catapultSolenoid1.set(false);
     Hardware.catapultSolenoid2.set(false);
 
+    // reversing left joystick
+    Hardware.transmission.setLeftJoystickIsReversed(true);
     // Reset all timers, encoders, and stop all the motors.
     Hardware.delayTimer.reset();
     Hardware.rightRearEncoder.reset();
@@ -141,25 +150,25 @@ public static void init ()
     // second gear by maaath (the value of the delayPot adjusted out
     // of the 0-270 spectrum and into a 10-100 percentage range). If
     // we're not in demo, we're just in regular ol' second gear.
-    if (Hardware.inDemo.isOn() == true)
-        {
-        Hardware.transmission.setSecondGearPercentage(
-                (/*
-                  * Robot.SECOND_GEAR_PERCENTAGE //TODO check to make sure
-                  * this shouldn't be here @AHK
-                  */(Hardware.delayPot.get() *
-                        (Robot.SECOND_GEAR_PERCENTAGE
-                                - Hardware.MINIMUM_POT_SCALING_VALUE)
-                        /
-                        (Hardware.DELAY_POT_DEGREES))
-                        + Hardware.MINIMUM_POT_SCALING_VALUE));
-        }
-    else
-        {
-        Hardware.transmission
-                .setSecondGearPercentage(
-                        Robot.SECOND_GEAR_PERCENTAGE);
-        }
+    // if (Hardware.inDemo.isOn() == true)
+    // {
+    // Hardware.transmission.setSecondGearPercentage(
+    // (/*
+    // * Robot.SECOND_GEAR_PERCENTAGE //TODO check to make sure
+    // * this shouldn't be here @AHK
+    // */(Hardware.delayPot.get() *
+    // (Robot.SECOND_GEAR_PERCENTAGE
+    // - Hardware.MINIMUM_POT_SCALING_VALUE)
+    // /
+    // (Hardware.DELAY_POT_DEGREES))
+    // + Hardware.MINIMUM_POT_SCALING_VALUE));
+    // }
+    // else
+    // {
+    // Hardware.transmission
+    // .setSecondGearPercentage(
+    // Robot.SECOND_GEAR_PERCENTAGE);
+    // }
 } // end Init
 
 
@@ -203,57 +212,11 @@ static double demoDriveRatio = 0.0;
 
 public static void periodic ()
 {
+    // Hardware.errorMessage.printError("Yellow",
+    // ErrorMessage.PrintsTo.driverStationAndRoboRIO);
     // Print out any data we want from the hardware elements.
     printStatements();
-
-    // if (Hardware.leftDriver.getTrigger() == true)
-    // {
-    // Hardware.axisCamera.writeExposureControl(
-    // AxisCamera.ExposureControl.kHold);
-    // }//@AHK TODO remove
-
-    // if (Hardware.leftDriver.getRawButton(6) == true)
-    // {
-    // for (int i = 0; i < 5; i++)
-    // {
-    // for (int j = 0; j < 5; j++)
-    // {
-    // switch (j)
-    // {
-    // case 0:
-    // Hardware.axisCamera
-    // .saveImageWithTypeName("A");
-    // break;
-    // case 1:
-    // Hardware.axisCamera
-    // .saveImageWithTypeName("B");
-    // break;
-    // case 2:
-    // Hardware.axisCamera
-    // .saveImageWithTypeName("C");
-    // break;
-    // case 3:
-    // Hardware.axisCamera
-    // .saveImageWithTypeName("D");
-    // break;
-    // case 4:
-    // Hardware.axisCamera
-    // .saveImageWithTypeName("E");
-    // break;
-    // }
-    // try
-    // {
-    // Thread.sleep(20);
-    // }
-    // catch (InterruptedException e)
-    // {
-    // // TODO Auto-generated catch block
-    // e.printStackTrace();
-    // }
-    // }
-    // }
-    // }
-
+    Hardware.transmission.setLeftJoystickIsReversed(true);
     // val = Hardware.leftDriver.getThrottle();
     // Hardware.axisCamera.writeBrightness((int) val * 100);
     // System.out.println("Camera brightness: " + (int) val * 100);//@AHK
@@ -261,33 +224,41 @@ public static void periodic ()
 
     // Hardware.transmission.upshift(1);
     // driveRobot();
-    // speedTester.watchJoystick(Hardware.rightDriver.getY()); //@AHK REMOVE
-
-    if (Hardware.inDemo.isOn() == true)
+    // Hardware.speedTester.watchJoystick(Hardware.rightDriver.getY()); // @AHK
+    // REMOVE
+    if (Hardware.overrideDemoPot.isOnCheckNow() == true)
         {
-        if (Hardware.leftDriver.getRawButton(8))
-            {
-            demoDriveRatio = Hardware.delayPot.get() / 2;
-            }
-        else if (Hardware.leftDriver.getRawButton(9))
-            {
-            demoDriveRatio = Hardware.delayPot.get() * 2;
-            }
-        else if (Hardware.leftDriver.getRawButton(10)
-                || demoDriveRatio == 0)
-            {
-            demoDriveRatio = Hardware.delayPot.get();
-            }
-        Hardware.transmission.setSecondGearPercentage(
-                ((demoDriveRatio *
-                        (Robot.SECOND_GEAR_PERCENTAGE
-                                - Hardware.MINIMUM_POT_SCALING_VALUE)
-                        /
-                        (Hardware.DELAY_POT_DEGREES))
-                        + Hardware.MINIMUM_POT_SCALING_VALUE));
+        Hardware.transmission.setSecondGearPercentage(1.0);
         }
-
-    Hardware.errorMessage.printError("test12", PrintsTo.roboRIO);
+    else
+        {
+        Hardware.transmission.setSecondGearPercentage(
+                Robot.SECOND_GEAR_PERCENTAGE *
+                        (Hardware.delayPot.get(0, 1)));
+        }
+    // if (Hardware.inDemo.isOn() == true)
+    // {
+    // if (Hardware.leftDriver.getRawButton(8))
+    // {
+    // demoDriveRatio = Hardware.delayPot.get() / 2;
+    // }
+    // else if (Hardware.leftDriver.getRawButton(9))
+    // {
+    // demoDriveRatio = Hardware.delayPot.get() * 2;
+    // }
+    // else if (Hardware.leftDriver.getRawButton(10)
+    // || demoDriveRatio == 0)
+    // {
+    // demoDriveRatio = Hardware.delayPot.get();
+    // }
+    // // Hardware.transmission.setSecondGearPercentage(
+    // // ((demoDriveRatio *
+    // // (Robot.SECOND_GEAR_PERCENTAGE
+    // // - Hardware.MINIMUM_POT_SCALING_VALUE)
+    // // /
+    // // (Hardware.DELAY_POT_DEGREES))
+    // // + Hardware.MINIMUM_POT_SCALING_VALUE));
+    // } Hardware.errorMessage.printError("test12", PrintsTo.roboRIO);
 
     // If we're running tests in the lab, NOT at competition
     if (Hardware.runningInLab == true)
@@ -299,61 +270,6 @@ public static void periodic ()
         Hardware.transmission.setFirstGearPercentage(1.0);
         Hardware.axisCamera.setHaveCamera(false);
 
-        // System.out.println("t1: " + testMove1IsDone);
-        // System.out.println("t2: " + testMove2IsDone);
-        // System.out.println("t3: " + testMove3IsDone);
-        // if we hit the left driver trigger in the lab
-        // if (Hardware.leftDriver.getTrigger() == true)
-        // {
-        // // tell the code to start testing autonomous
-        // testAuto = true;
-        // }
-        // // Test certain aspects of autonomous
-        // if (testAuto == true)
-        // {
-        // if (!testMove1IsDone)
-        // {
-        // System.out.print("\n" + 1 + "\n");
-        // if (Hardware.drive.driveStraightByInches(12.0, true,
-        // .9, .9))
-        // {
-        // Autonomous.resetEncoders();
-        // testMove1IsDone = true;
-        // }
-        // }
-        // else if (!testMove2IsDone && (Hardware.leftIR.isOn()
-        // || Hardware.rightIR.isOn()))
-        // {
-        // System.out.println("IR Detected.");
-        // // if (Hardware.drive.turnLeftDegrees(60.0, true,
-        // // -.55, .55))
-        // // {
-        // // //Autonomous.resetEncoders();
-        // // Hardware.transmission.controls(0.0, 0.0);
-        // testMove2IsDone = true;
-        // // }
-        // }
-        // else if (!testMove3IsDone)
-        // {
-        // System.out.print("\n" + 3 + "\n");
-        // if (Hardware.drive.driveStraightByInches(12.0, true,
-        // .3, .3))
-        // {
-        // Autonomous.resetEncoders();
-        // testMove3IsDone = true;
-        // }
-        // }
-        // else if (!testCameraIsDone)
-        // {
-        // // if (Hardware.drive.driveByCamera(999.0, .2, .25,
-        // // 0.0, true));
-        // }
-        // else
-        // {
-        // // Stop
-        // Hardware.transmission.controls(0.0, 0.0);
-        // }
-        // }
         }
     // If we don't have the runningInLab flag set to true
     else
@@ -554,8 +470,17 @@ public static void periodic ()
              * &&
              */ fireRequested == true)
             {
+            if (Hardware.startingPositionDial.getPosition() == 0)
+                {
+                firingPower = 2;
+                }
+
+            else
+                {
+                firingPower = 3;
+                }
             // FIRE NO MATTER WHAT!!!!!
-            if (fire(3, true) == true)
+            if (fire(firingPower, true) == true)
                 {
                 // We've shot our ball, we don't want to fire
                 // anymore.
@@ -589,7 +514,7 @@ public static void periodic ()
                         .getRawButton(FIRE_OVERRIDE_BUTTON) != true)
             {
             // fire, if we're ready to
-            if (fire(3, false) == true)
+            if (fire(firingPower, false) == true)
                 {
                 // if we're done firing, drop the request
                 fireRequested = false;
@@ -605,20 +530,28 @@ public static void periodic ()
         /* && testingAlignByCamera == false */)
             {
             // raise the camera
-            Hardware.cameraSolenoid
-                    .set(DoubleSolenoid.Value.kForward);
+            // // Hardware.cameraSolenoid
+            // // .set(DoubleSolenoid.Value.kForward);
             // Hardware.ringLightRelay.set(Value.kOn);
             }
         // If the camera is up and we press the toggle button.
-        if (Hardware.cameraToggleButton.isOnCheckNow() == true
-                && isAligningByCamera == false
-        /* && testingAlignByCamera == false */)
-            {
-            // Drop the camera
-            Hardware.cameraSolenoid
-                    .set(DoubleSolenoid.Value.kReverse);
-            // Hardware.ringLightRelay.set(Value.kOff);
-            }
+        // CHECK
+        // if (Hardware.cameraToggleButton.isOnCheckNow() == true
+        // && isAligningByCamera == false
+        // // && Hardware.inDemo.get() == false
+        // /* && testingAlignByCamera == false */)
+        // {
+        // // Drop the camera(chaged to raise)
+        // Hardware.cameraSolenoid
+        // .set(DoubleSolenoid.Value.kForward);
+        // // Hardware.ringLightRelay.set(Value.kOff);
+        // }
+        // else
+        // {
+        // Hardware.cameraSolenoid
+        // .set(DoubleSolenoid.Value.kReverse);
+        // }
+
         // end raise/lower camera block
 
         // Block of code to align us on the goal using the camera
@@ -744,7 +677,7 @@ public static void periodic ()
                 && fireRequested == true)
             {
             // FIRE NO MATTER WHAT!!!!!
-            if (fire(3, true) == true)
+            if (fire(firingPower, true) == true)
                 {
                 // We've shot our ball, we don't want to fire
                 // anymore.
@@ -754,6 +687,7 @@ public static void periodic ()
             }
         // If the drivers decided they were being stupid and we don't want
         // to
+        //
         // fire anymore
         if (Hardware.leftOperator
                 .getRawButton(FIRE_CANCEL_BUTTON) == true)
@@ -783,7 +717,7 @@ public static void periodic ()
                 }
             else
                 {// fire, if we're ready to
-                if (fire(3, false) == true)
+                if (fire(firingPower, false) == true)
                     {
                     // if we're done firing, drop the request
                     fireRequested = false;
@@ -892,148 +826,14 @@ public static void periodic ()
         // }
         //
 
-        // If the stop testing button (BUTTON 8 ON LEFT DRIVER)
-        // is toggled on and we aren't moving or stopping,
-        // then start moving.
-
-        if (Hardware.forwardToggleButton.isOnCheckNow() == true
-                && brakingTesting == false
-                && motionToggled == false)
-            {
-            motionToggled = true;
-            }
-
-        if (motionToggled == true)
-            {
-            Hardware.transmission.controls(1.0, 1.0);
-            Hardware.transmission.setJoystickDeadbandRange(0.0);
-            }
-
-        // If the button is toggled off, then stop moving and
-        // start stopping.
-
-        if (Hardware.forwardToggleButton.isOnCheckNow() == false
-                && motionToggled == true)
-            {
-            motionToggled = false;
-            brakingTesting = true;
-            }
-
-        if (brakingTesting == true)
-            {
-            // prints
-            System.out.println(Hardware.transmission.stop().name());
-            if (Hardware.transmission
-                    .stop() != Hardware.transmission.inMotion)
-                {
-                System.out.println(Hardware.transmission.stop().name());
-                brakingTesting = false;
-                }
-            }
-
-        // If we press the brake button, robot brakes
-        /*
-         * if (Hardware.leftDriver
-         * .getRawButton(BRAKE_JOYSTICK_BUTTON_FIVE) == true)
-         * {
-         * Hardware.transmission.setJoystickDeadbandRange(0.0);
-         * Hardware.drive.driveContinuous(LEFT_MOTOR_BRAKE_SPEED,
-         * RIGHT_MOTOR_BRAKE_SPEED);
-         * }
-         * 
-         * else if (Hardware.leftDriver
-         * .getRawButton(BRAKE_JOYSTICK_BUTTON_FOUR) == true)
-         * {
-         * Hardware.transmission.setJoystickDeadbandRange(0.0);
-         * Hardware.drive.driveContinuous(LEFT_MOTOR_BRAKE_SPEED_TWO,
-         * RIGHT_MOTOR_BRAKE_SPEED_TWO);
-         * }
-         */
-
         // when brake button is pressed motor values reverse
         loopCounter++; // adds one every time teleop loops
-
-        // checks to see if the left driver button 4 is being pressed
-        // Labeled "Brake FWD"- Button 4- moves wheels slightly FORWARD
-        if (Hardware.leftDriver
-                .getRawButton(BRAKE_JOYSTICK_BUTTON_FOUR) == true)
-            {
-            // determines what number loop teleop is in, sets motors to
-            // a positive number, and sets deadband to zero
-            // if (loopCounter % BRAKING_INTERVAL < BRAKING_INTERVAL
-            // / 2)
-                {
-                Hardware.transmission
-                        .setJoystickDeadbandRange(0.0);
-                // Hardware.drive.driveContinuous(MOTOR_HOLD_SPEED,
-                // MOTOR_HOLD_SPEED);
-                Hardware.rightRearMotor.set(-.14);
-                Hardware.rightFrontMotor.set(-.14);
-                Hardware.leftRearMotor.set(-.14);
-                Hardware.leftFrontMotor.set(-.14);
-                }
-            }
-        // determines what number loop teleop is in then sets motors
-        // to a negative number
-        // else
-
-
-        // Labeled "Brake RVS"- Button 5- moves wheels BACKWARD
-        else if (Hardware.leftDriver
-                .getRawButton(BRAKE_JOYSTICK_BUTTON_FIVE) == true)
-            {
-            Hardware.transmission.setJoystickDeadbandRange(0.0);
-            // Hardware.drive.driveContinuous(-MOTOR_HOLD_SPEED,
-            // -MOTOR_HOLD_SPEED);
-            Hardware.rightRearMotor.set(.14);
-            Hardware.rightFrontMotor.set(.14);
-            Hardware.leftRearMotor.set(.14);
-            Hardware.leftFrontMotor.set(.14);
-            }
-        // }
-        // sets deadband back to 20%
-        else
-            {
-            Hardware.transmission.setJoystickDeadbandRange(.20);
-            }
-
-        // Left Drive Button 7 will activate transmission.stop(), a
-        // a poorly named brake function- SERIOUSLY PEOPLE BE MORE CREATIVE
-        // Part of a project working on the transmission.stop() function
-        // as well as the previous chain of if statements
-        // Worked on by Ashley Espeland and Cole Ramos
-        if (Hardware.leftDriver.getRawButton(7) == true)
-            {
-            Hardware.transmission.stop();
-            }
-
-
 
 
         // Only let the drivers drive if we're not speed testing or aligning
         // by camera
 
-        // drive the robot with the joysticks
-
-        // TODO delete all conditionals. Fix brake
-        if (/* speedTesting == false && */ isAligningByCamera == false
-                && testingAlignByCamera == false
-                && fireRequested == false && Hardware.leftDriver
-                        .getRawButton(
-                                BRAKE_JOYSTICK_BUTTON_FIVE) == false
-                && Hardware.leftDriver.getRawButton(
-                        BRAKE_JOYSTICK_BUTTON_FOUR) == false
-                && isTurning180Degrees == false
-                && Hardware.rightOperator.getRawButton(6) == false
-                && motionToggled == false
-                && brakingTesting == false)// TODO
-                                           // remove
-                                           // last
-                                           // term
-            {
-            driveRobot();
-            // if we want to run a speed test, run it until we're done.
-            }
+        driveRobot();
 
         if (Hardware.leftOperator.getRawButton(9))
             {
@@ -1062,14 +862,14 @@ public static void periodic ()
 
 
         }
-    if (Hardware.rightOperator.getRawButton(6) == true)
-        {
-        Hardware.transmission.controls(1.0, 1.0);
-        System.out.println("Left Distance = "
-                + Hardware.leftRearEncoder.getDistance());
-        System.out.println("Right Distance = "
-                + Hardware.rightRearEncoder.getDistance());
-        }
+    // if (Hardware.rightOperator.getRawButton(6) == true)
+    // {
+    // Hardware.transmission.controls(1.0, 1.0);
+    // System.out.println("Left Distance = "
+    // + Hardware.leftRearEncoder.getDistance());
+    // System.out.println("Right Distance = "
+    // + Hardware.rightRearEncoder.getDistance());
+    // }
     // else
     // {
     // Hardware.transmission.controls(0.0, 0.0);
@@ -1147,20 +947,25 @@ public static boolean fire (int power, boolean override)
             }
         // Fire with the number of solenoids that corresponds to the power
         // argument to this function
+
+
         switch (power)
             {
             case 1:
                 Hardware.catapultSolenoid1.set(true);
+                // System.out.println("CASE 1");
                 break;
             case 2:
                 Hardware.catapultSolenoid2.set(true);
                 Hardware.catapultSolenoid0.set(true);
+                // System.out.println("CASE 2");
                 break;
             default:
-            case 3:
+                // case 3:
                 Hardware.catapultSolenoid0.set(true);
                 Hardware.catapultSolenoid1.set(true);
                 Hardware.catapultSolenoid2.set(true);
+                // System.out.println("CASE DEFAULT");
                 break;
             }
         // }
@@ -1205,7 +1010,7 @@ public static void takePicture ()
     if (Hardware.leftOperator.getRawButton(6) == true
             && Hardware.leftOperator.getRawButton(7) == true)
         {
-        if (prepPic == false)
+        if (prepPic == true)
             {
             // Hardware.axisCamera.writeBrightness(
             // Hardware.MINIMUM_AXIS_CAMERA_BRIGHTNESS);
@@ -1306,7 +1111,8 @@ public static void printStatements ()
     // System.out.println("Left Joystick: " + Hardware.leftDriver.getY());
     // System.out
     // .println("Right Joystick: " + Hardware.rightDriver.getY());
-    // System.out.println("Left Operator: " + Hardware.leftOperator.getY());
+    // System.out
+    // .println("Left Operator: " + Hardware.leftOperator.getY());
     // System.out.println("Right Operator: " + Hardware.rightOperator.getY());
 
     // IR sensors-----------
@@ -1324,7 +1130,9 @@ public static void printStatements ()
 
     // pots-----------------
     // System.out.println(
-    // "delay pot = " + Hardware.delayPot.get());
+    // "delay pot = " + Hardware.delayPot.get(0, 1));
+    // System.out
+    // .println("Delay pot raw: " + Hardware.delayPot.getValue());
     // System.out.println(
     // "delay scaling: " + (((double) Hardware.delayPot.get()
     // - Hardware.DELAY_POT_MIN_DEGREES)
@@ -1333,11 +1141,12 @@ public static void printStatements ()
     // prints the value of the transducer- (range in code is 50)
     // hits psi of 100 accurately
     // System.out.println("transducer = " + Hardware.transducer.get());
-    // System.out.println("Arm Pot = " + Hardware.armPot.get());
+    // System.out.println("Arm Pot = " + Hardware.armPot.get(270));
     // Hardware.imageProcessor.processImage();
     // if (Hardware.imageProcessor.reports.length > 0)
     // System.out.println("DistanceToGoal: "
     // + Hardware.imageProcessor.getZDistanceToTargetFT(0));
+
     // Motor controllers-----
     // prints value of the motors
     // System.out.println("RR Motor T = " + Hardware.rightRearMotor.get());
@@ -1376,10 +1185,10 @@ public static void printStatements ()
 
 
     // Encoders-------------
-    System.out.println(
-            "RR distance = " + Hardware.rightRearEncoder.getDistance());
-    System.out.println(
-            "LR distance = " + Hardware.leftRearEncoder.getDistance());
+    // System.out.println(
+    // "RR distance = " + Hardware.rightRearEncoder.getDistance());
+    // System.out.println(
+    // "LR distance = " + Hardware.leftRearEncoder.getDistance());
     // System.out.println("Arm Motor = " + Hardware.armMotor.getDistance());
 
 
@@ -1411,6 +1220,12 @@ public static void printStatements ()
     // Ultrasonic
     // System.out.println("Ultrasonic Dist: "
     // + Hardware.ultrasonic.getRefinedDistanceValue());
+
+    // Gear
+    // System.out.println("Gear = " + Hardware.transmission.getGear());
+    // System.out.println("secondgearpercentage "
+    // + Hardware.transmission.getSecondGearPercentage());
+
 } // end printStatements
 
 /*
@@ -1419,7 +1234,7 @@ public static void printStatements ()
  * ===============================================
  */
 
-private static final double MAXIMUM_TELEOP_SPEED = .85;
+private static final double MAXIMUM_TELEOP_SPEED = .9;
 
 private static final double CAMERA_ALIGN_Y_DEADBAND = .10;
 
@@ -1459,12 +1274,12 @@ private static final int FIRE_OVERRIDE_BUTTON = 4;
 private static final int FIRE_CANCEL_BUTTON = 3;
 
 // Right operator 4
-private static final int TAKE_IN_BALL_BUTTON = 4;
+private static final int TAKE_IN_BALL_BUTTON = 2;
 
 // right operator 5
-private static final int PUSH_OUT_BALL_BUTTON = 5;
+private static final int PUSH_OUT_BALL_BUTTON = 3;
 
-private static final double PICKUP_ARM_CONTROL_DEADZONE = 0.2;
+private static final double PICKUP_ARM_CONTROL_DEADZONE = 0.8;
 
 private final static double PERCENT_IMAGE_PROCESSING_DEADBAND = .13;
 
@@ -1515,9 +1330,12 @@ private static boolean storeFiringState;
 
 private static int loopCounter = 0;
 
+private static int firingPower = 3;
+
 private static boolean brakingTesting = false;
 
 private static boolean ballFiring = false;
 
 private static boolean motionToggled = false;
+
 } // end class

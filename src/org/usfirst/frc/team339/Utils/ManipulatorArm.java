@@ -152,13 +152,13 @@ public void stopArmMotor ()
             && armPot
                     .get() < BRAKE_ARM_WITH_FORWARD_VOLTAGE_DEGREES)
         {
-        this.motor.set(0.3);// TODO magic number?
+        this.motor.set(0.15);// TODO magic number?
         }
     else if (armPot.get() <= this.MAX_SOFT_ARM_STOP
             && armPot
                     .get() >= BRAKE_ARM_WITH_FORWARD_VOLTAGE_DEGREES)
         {
-        this.motor.set(-.025);
+        this.motor.set(-0.025);
         }
     else
         {
@@ -408,26 +408,26 @@ public boolean moveToPosition (ArmPosition position)
  */
 public static enum ArmPosition
     {
-    /**
-     * All the way down, as in down-to-the-floor down.
-     */
-    FULL_DOWN,
-    /**
-     * Folded up all the way.
-     */
-    FULL_UP,
-    /**
-     * Within a rang from which we can pu the ball into the catapult.
-     */
-    DEPOSIT,
-    /**
-     * Out of the way of the catapult.
-     */
-    CLEAR_OF_FIRING_ARM,
-    /**
-     * Stay off the ground, yet out of the way,.
-     */
-    HOLD
+/**
+ * All the way down, as in down-to-the-floor down.
+ */
+FULL_DOWN,
+/**
+ * Folded up all the way.
+ */
+FULL_UP,
+/**
+ * Within a rang from which we can put the ball into the catapult.
+ */
+DEPOSIT,
+/**
+ * Out of the way of the catapult.
+ */
+CLEAR_OF_FIRING_ARM,
+/**
+ * Stay off the ground, yet out of the way,.
+ */
+HOLD
     }
 
 private SpeedController intakeMotor = null;
@@ -441,20 +441,21 @@ private IRSensor hasBallSensor = null;
 private boolean ballHasBeenPreviouslyDetected = false;
 
 // default maximum arm turn speed proportion
-private final double MAX_ARM_SPEED = -.8;
+private final double MAX_ARM_SPEED = -.6;
 
 // default slow arm turn speed proportion
-private double slowSpeed = .2;
+private double slowSpeed = .1;// .6;+++
 
-private double MAX_SOFT_ARM_STOP = 256.0;
+private double MAX_SOFT_ARM_STOP = 250.0; // 210.0 // 120.0; // 256.0; TODO
+                                          // CHECK
 
-private final static double MIN_SOFT_ARM_STOP = 110.0;
+private final static double MIN_SOFT_ARM_STOP = 100.0; // 85.0 // 2.0; // 110.0;
 
 private final double ARM_OUT_OF_WAY_DEGREES = 0.701
         * (MAX_SOFT_ARM_STOP - MIN_SOFT_ARM_STOP)
         + MIN_SOFT_ARM_STOP;// 175.0;
 
-private final double BRAKE_ARM_WITH_FORWARD_VOLTAGE_DEGREES = 0.510
+private final double BRAKE_ARM_WITH_FORWARD_VOLTAGE_DEGREES = .8// 0.510
         * (MAX_SOFT_ARM_STOP - MIN_SOFT_ARM_STOP)
         + MIN_SOFT_ARM_STOP;// 165.0;
 
@@ -464,16 +465,18 @@ private final double DEPOSIT_POSITION = .95 // 1.0
 
 private final double DEPOSIT_POSITION_THRESHOLD = 20.0;// 5
 
-private final double REASONABLE_UP_FACTOR = -.15;// -.55;
+private final double REASONABLE_UP_FACTOR = -.45;// -.15;// -.55;
 
-private final double REASONABLE_UP_AND_OVER_FACTOR = -.4;// -0.45;
+private final double REASONABLE_UP_AND_OVER_FACTOR = -.3;// -0.45;
 
-private final double REASONABLE_DOWN_FACTOR = .15; // .2, .35
+private final double REASONABLE_DOWN_FACTOR = .1;// .20; // .2, .35
 
-private final double REASONABLE_DOWN_UNDER_FACTOR = -.1;// 0.1;// .15,
-                                                        // .2
+private final double REASONABLE_DOWN_UNDER_FACTOR = .05;// 0.1;// .15,
+                                                        // .2+
+// angle of "gravity"
 
-private final double REASONABLE_DECELERATION_ANGLE = 198;// 0.75
+private final double REASONABLE_DECELERATION_ANGLE = 155.0; // 100;// 198;//
+                                                            // 0.75
 // * (MAX_SOFT_ARM_STOP - MIN_SOFT_ARM_STOP)
 // + MIN_SOFT_ARM_STOP;// 174.1;
 
@@ -485,7 +488,7 @@ private final double HOLDING_POSITION = 0.349
 
 private static final int HOLDING_POSITION_THRESHOLD = 10;
 
-private static final double HOLDING_SPEED = -.25;
+private static final double HOLDING_SPEED = -0.15; // -.15 // .25
 
 private static final double DELAY_AFTER_BALL_DETECTION = 0.12;
 

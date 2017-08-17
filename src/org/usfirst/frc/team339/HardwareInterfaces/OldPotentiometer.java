@@ -32,7 +32,7 @@ import edu.wpi.first.wpilibj.AnalogInput;
  * @written Feb 8, 2011
  *          -------------------------------------------------------
  */
-public class Potentiometer extends AnalogInput
+public class OldPotentiometer extends AnalogInput
 {
     /**
      * ------------------------------------------------------
@@ -155,7 +155,7 @@ public class Potentiometer extends AnalogInput
      * @written Feb 8, 2011
      *          -------------------------------------------------------
      */
-    public Potentiometer (final int channel)
+    public OldPotentiometer (final int channel)
         {
         super(channel);
         this.maxDegreesForPotentiometer = kDEFAULT_MAX_DEGREES;
@@ -176,7 +176,7 @@ public class Potentiometer extends AnalogInput
      * @written Feb 8, 2011
      *          -------------------------------------------------------
      */
-    public Potentiometer (final int channel, final double maxDegrees)
+    public OldPotentiometer (final int channel, final double maxDegrees)
         {
         super(channel);
         this.maxDegreesForPotentiometer = maxDegrees;

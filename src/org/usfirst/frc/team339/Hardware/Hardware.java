@@ -33,7 +33,6 @@ import org.usfirst.frc.team339.Vision.VisionScript;
 import org.usfirst.frc.team339.Vision.operators.ConvexHullOperator;
 import org.usfirst.frc.team339.Vision.operators.HSLColorThresholdOperator;
 import org.usfirst.frc.team339.Vision.operators.RemoveSmallObjectsOperator;
-import edu.wpi.first.wpilibj.CameraServer;
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -46,9 +45,6 @@ import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.TalonSRX;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.VictorSP;
-import edu.wpi.first.wpilibj.vision.AxisCamera;
-import edu.wpi.first.wpilibj.vision.AxisCamera.Resolution;
-import edu.wpi.first.wpilibj.vision.USBCamera;
 
 // -------------------------------------------------------
 /**
@@ -85,7 +81,8 @@ public static final int MINIMUM_AXIS_CAMERA_BRIGHTNESS = 6;
 
 public static final int AXIS_FPS = 15;
 
-public static final Resolution AXIS_RESOLUTION = AxisCamera.Resolution.k320x240;
+// public static final Resolution AXIS_RESOLUTION =
+// AxisCamera.Resolution.k320x240;
 
 public static final double ULTRASONIC_SCALING_FACTOR = 0.050548;
 
@@ -130,12 +127,14 @@ public static boolean runningInLab = false;
 // Talon classes
 // ------------------------------------
 
-public static TalonSRX rightRearMotor = new TalonSRX(2);
+public static TalonSRX rightRearMotor = new TalonSRX(4);
+
+// public static CANTalon rightRearMotor = new CANTalon(12);
 
 public static TalonSRX leftRearMotor = new TalonSRX(3);
 
 // Switched the bottom two ports
-public static TalonSRX rightFrontMotor = new TalonSRX(4);
+public static TalonSRX rightFrontMotor = new TalonSRX(2);
 
 public static TalonSRX leftFrontMotor = new TalonSRX(1);
 
@@ -310,9 +309,12 @@ public static UltraSonic ultrasonic = new UltraSonic(4,
 // declare the USB camera server and the
 // USB camera it serves
 // -------------------------------------
-public static CameraServer cameraServer = CameraServer.getInstance();
+// public static UsbCamera camForward = CameraServer.getInstance()
+// .startAutomaticCapture(0);
 
-public static USBCamera usbCam = new USBCamera("cam0"); // AHK @cameratesting
+// public static CameraServer cameraServer = CameraServer.getInstance();
+
+// public static USBCamera usbCam = new USBCamera("cam0"); // AHK @cameratesting
 
 
 // Declares the Axis camera
@@ -361,6 +363,9 @@ public static MomentarySwitch cameraToggleButton = new MomentarySwitch(
 
 public static MomentarySwitch forwardToggleButton = new MomentarySwitch(
         leftDriver, 8, false);
+
+public static MomentarySwitch overrideDemoPot = new MomentarySwitch(
+        leftDriver, 7, false);
 
 // **********************************************************
 // Kilroy's Ancillary classes
@@ -413,7 +418,7 @@ public static final Timer cameraInTeleopTimer = new Timer();
 public static final Timer testingTimer = new Timer();
 
 public static final ErrorMessage errorMessage = new ErrorMessage(
-        false /* append timelog */);
+        true /* append timelog */);
 
 public static final MotorSafetyHelper leftRearMotorSafety = new MotorSafetyHelper(
         leftRearMotor);
