@@ -687,6 +687,7 @@ public static void periodic ()
             }
         // If the drivers decided they were being stupid and we don't want
         // to
+        //
         // fire anymore
         if (Hardware.leftOperator
                 .getRawButton(FIRE_CANCEL_BUTTON) == true)
