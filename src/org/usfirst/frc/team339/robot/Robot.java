@@ -60,7 +60,6 @@
 package org.usfirst.frc.team339.robot;
 
 import org.usfirst.frc.team339.Hardware.Hardware;
-import org.usfirst.frc.team339.HardwareInterfaces.DoubleSolenoid;
 import org.usfirst.frc.team339.HardwareInterfaces.transmission.Transmission_old.debugStateValues;
 import edu.wpi.first.wpilibj.CameraServer;
 import edu.wpi.first.wpilibj.IterativeRobot;
@@ -312,7 +311,7 @@ public void robotInit ()
         // - Hardware.DELAY_POT_MIN_DEGREES)
         // / (double) (Hardware.DELAY_POT_DEGREES
         // - Hardware.DELAY_POT_MIN_DEGREES)));
-        Hardware.cameraSolenoid.set(DoubleSolenoid.Value.kForward);
+
         }
     else
         {

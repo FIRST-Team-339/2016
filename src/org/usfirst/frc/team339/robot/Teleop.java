@@ -85,11 +85,14 @@ public static void init ()
         Hardware.transmission.setSecondGearPercentage(
                 Robot.SECOND_GEAR_PERCENTAGE *
                         (Hardware.delayPot.get(0, 1)));
+
+
+
         // - Hardware.DELAY_POT_MIN_DEGREES)
         // / (double) (Hardware.DELAY_POT_DEGREES
         // - Hardware.DELAY_POT_MIN_DEGREES)));
         // CHECK
-        Hardware.cameraSolenoid.set(DoubleSolenoid.Value.kForward);
+
         }
 
     else
@@ -808,6 +811,23 @@ public static void periodic ()
             {
             Guidance.updateBallStatus(false);
             }
+
+        // if (Hardware.cameraSolenoidButton.isOnCheckNow() == true)
+        // {
+
+        // Hardware.cameraSolenoid.set(DoubleSolenoid.Value.kReverse);
+        //
+        // }
+        // else
+        // {
+        Hardware.cameraSolenoid.set(DoubleSolenoid.Value.kForward);
+
+
+        // }
+
+        // System.out
+        // .println("button "
+        // + Hardware.cameraSolenoidButton.isOnCheckNow());
 
 
 
