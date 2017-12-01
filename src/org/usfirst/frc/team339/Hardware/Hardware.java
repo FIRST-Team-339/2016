@@ -187,6 +187,7 @@ public static SingleThrowSwitch inDemo = new SingleThrowSwitch(8);
 public static DoubleThrowSwitch inLab = new DoubleThrowSwitch(
         inCompetition, inDemo);
 
+
 /**
  * Displays the starting position.
  * Position 0 on the switch corresponds to position 1, 1 to 2, etc.
@@ -234,6 +235,8 @@ public static IRSensor armIR = new IRSensor(2);
 // ====================================
 // I2C Classes
 // ====================================
+
+
 
 // **********************************************************
 // SOLENOID I/O CLASSES
@@ -296,9 +299,6 @@ public static RobotPotentiometer armPot = new RobotPotentiometer(3,
 // -------------------------------------
 public static UltraSonic ultrasonic = new UltraSonic(4,
         ULTRASONIC_SCALING_FACTOR);
-
-
-
 // **********************************************************
 // roboRIO CONNECTIONS CLASSES
 // **********************************************************
@@ -325,7 +325,7 @@ public static VisionScript doubleGreenRingScript = new VisionScript(
 
 // public static VisionScript temp = new VisionScript();
 
-public static KilroyCamera axisCamera = new KilroyCamera(true);
+public static KilroyCamera axisCamera = new KilroyCamera(false);
 
 // public static ImageProcessing imageProcessor = new ImageProcessing(
 // axisCamera);
@@ -401,6 +401,8 @@ public static Drive drive = new Drive(transmission, axisCamera,
 public static ManipulatorArm pickupArm = new ManipulatorArm(armMotor,
         armIntakeMotor, armPot, armIR);
 
+public static MomentarySwitch cameraSolenoidButton = new MomentarySwitch(
+        leftOperator, 2, false);
 
 // ------------------------------------
 // Utility classes
@@ -433,5 +435,6 @@ public static final MotorSafetyHelper leftFrontMotorSafety = new MotorSafetyHelp
 
 public static final MotorSafetyHelper rightFrontMotorSafety = new MotorSafetyHelper(
         rightFrontMotor);
+// ublic static final MomentarySwitch
 
 } // end class
