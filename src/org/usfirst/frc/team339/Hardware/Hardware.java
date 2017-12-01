@@ -201,10 +201,10 @@ public static SixPositionSwitch startingPositionDial = new SixPositionSwitch(
 // ------------------------------------
 // Encoders
 // ------------------------------------
-public static Encoder leftRearEncoder = new Encoder(10, 11); // @AHK ST
-                                                             // LOUIS;5,6;12,13
+public static Encoder leftRearEncoder = new Encoder(10, 11);
 
-public static Encoder rightRearEncoder = new Encoder(12, 13);// 3,4;10,11
+
+public static Encoder rightRearEncoder = new Encoder(12, 13);
 
 // -----------------------
 // Wiring diagram
@@ -333,6 +333,8 @@ public static KilroyCamera axisCamera = new KilroyCamera(true);
 public static ImageProcessor imageProcessor = new ImageProcessor(
         axisCamera, doubleGreenRingScript);
 
+// public static VisionProcessor testVision = new VisionProcessor(
+// "10.3.39.11/mjpg/1/video.mjpg");
 
 // **********************************************************
 // DRIVER STATION CLASSES

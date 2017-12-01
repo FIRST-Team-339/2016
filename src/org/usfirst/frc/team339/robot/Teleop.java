@@ -523,17 +523,21 @@ public static void periodic ()
                 }
             }
 
+
         // Begin raise/lower camera block
         // If the camera is down and we press the button.
         if (Hardware.cameraToggleButton.isOnCheckNow() == false
-                && isAligningByCamera == false
-        /* && testingAlignByCamera == false */)
+                && isAligningByCamera == false)
+        // && testingAlignByCamera == false */
             {
             // raise the camera
-            // // Hardware.cameraSolenoid
-            // // .set(DoubleSolenoid.Value.kForward);
-            // Hardware.ringLightRelay.set(Value.kOn);
+            Hardware.cameraSolenoid
+                    .set(DoubleSolenoid.Value.kForward);
+            Hardware.ringLightRelay.set(Value.kOn);
             }
+        Hardware.cameraSolenoid
+                .set(DoubleSolenoid.Value.kReverse);
+        Hardware.ringLightRelay.set(Value.kOn);
         // If the camera is up and we press the toggle button.
         // CHECK
         // if (Hardware.cameraToggleButton.isOnCheckNow() == true
