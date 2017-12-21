@@ -389,7 +389,6 @@ public static void periodic ()
             {
             Hardware.leftRearEncoder.reset();
             Hardware.rightRearEncoder.reset();
-            isTurning180Degrees = false;
             // System.out.println("Turning 180 Degrees? " +
             // isTurning180Degrees);
             // only set to true if we are actually reversing
@@ -529,37 +528,22 @@ public static void periodic ()
 
         // Begin raise/lower camera block
         // If the camera is down and we press the button.
-        if (Hardware.cameraToggleButton.isOnCheckNow() == false
-                && isAligningByCamera == false)
+        if (Hardware.cameraToggleButton.isOnCheckNow() == false)
         // && testingAlignByCamera == false */
             {
             // raise the camera
             Hardware.cameraSolenoid
                     .set(DoubleSolenoid.Value.kForward);
+            Hardware.ringLightRelay.set(Value.kOff);
+            }
+        else
+            {
+            Hardware.cameraSolenoid
+                    .set(DoubleSolenoid.Value.kReverse);
             Hardware.ringLightRelay.set(Value.kOn);
             }
-        Hardware.cameraSolenoid
-                .set(DoubleSolenoid.Value.kReverse);
-        Hardware.ringLightRelay.set(Value.kOn);
-        // If the camera is up and we press the toggle button.
-        // CHECK
-        // if (Hardware.cameraToggleButton.isOnCheckNow() == true
-        // && isAligningByCamera == false
-        // // && Hardware.inDemo.get() == false
-        // /* && testingAlignByCamera == false */)
-        // {
-        // // Drop the camera(chaged to raise)
-        // Hardware.cameraSolenoid
-        // .set(DoubleSolenoid.Value.kForward);
-        // // Hardware.ringLightRelay.set(Value.kOff);
-        // }
-        // else
-        // {
-        // Hardware.cameraSolenoid
-        // .set(DoubleSolenoid.Value.kReverse);
-        // }
 
-        // end raise/lower camera block
+
 
         // Block of code to align us on the goal using the camera
         // Will fire the boulder when done.
@@ -824,8 +808,6 @@ public static void periodic ()
         // }
         // else
         // {
-        Hardware.cameraSolenoid.set(DoubleSolenoid.Value.kForward);
-
 
         // }
 
