@@ -525,22 +525,44 @@ public static void periodic ()
                 }
             }
 
-
+        // Hardware.ringLightRelay.set(Value.kOn);
         // Begin raise/lower camera block
         // If the camera is down and we press the button.
-        if (Hardware.cameraToggleButton.isOnCheckNow() == false)
+        if (Hardware.cameraToggleButton.isOnCheckNow() == true)
         // && testingAlignByCamera == false */
             {
             // raise the camera
             Hardware.cameraSolenoid
-                    .set(DoubleSolenoid.Value.kForward);
-            Hardware.ringLightRelay.set(Value.kOff);
+                    .set(DoubleSolenoid.Value.kReverse);
+            Hardware.ringLightRelay.set(Value.kOn);
+            // Hardware.testVision.processImage();
+            // if (Hardware.testVision.hasBlobs() == true)
+            // {
+            // Hardware.testVision.getParticleReports();
+            // Hardware.testVision.getNthSizeBlob(0);
+            // }
+
+
+            // for (int i = 0; i < Hardware.testVision
+            // .getParticleReports().length; i++)
+            // {
+            // System.out.println(i + ": " + Hardware.testVision
+            // .getParticleReports()[i].center.x);
+            // }
+            // if (Hardware.testVision.hasBlobs() == true)
+            // {
+            // System.out.println("there are blobs");
+            // }
+            // else
+            // {
+            // System.out.println("there are no blobs");
+            // }
             }
         else
             {
             Hardware.cameraSolenoid
-                    .set(DoubleSolenoid.Value.kReverse);
-            Hardware.ringLightRelay.set(Value.kOn);
+                    .set(DoubleSolenoid.Value.kForward);
+            Hardware.ringLightRelay.set(Value.kOff);
             }
 
 
@@ -800,16 +822,6 @@ public static void periodic ()
             Guidance.updateBallStatus(false);
             }
 
-        // if (Hardware.cameraSolenoidButton.isOnCheckNow() == true)
-        // {
-
-        // Hardware.cameraSolenoid.set(DoubleSolenoid.Value.kReverse);
-        //
-        // }
-        // else
-        // {
-
-        // }
 
         // System.out
         // .println("button "

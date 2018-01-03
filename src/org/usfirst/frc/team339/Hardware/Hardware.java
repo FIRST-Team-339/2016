@@ -30,6 +30,8 @@ import org.usfirst.frc.team339.Utils.Guidance;
 import org.usfirst.frc.team339.Utils.ManipulatorArm;
 import org.usfirst.frc.team339.Vision.ImageProcessor;
 import org.usfirst.frc.team339.Vision.VisionScript;
+import org.usfirst.frc.team339.Vision.opencv.VisionProcessor;
+import org.usfirst.frc.team339.Vision.opencv.VisionProcessor.CameraModel;
 import org.usfirst.frc.team339.Vision.operators.ConvexHullOperator;
 import org.usfirst.frc.team339.Vision.operators.HSLColorThresholdOperator;
 import org.usfirst.frc.team339.Vision.operators.RemoveSmallObjectsOperator;
@@ -333,8 +335,8 @@ public static KilroyCamera axisCamera = new KilroyCamera(false);
 public static ImageProcessor imageProcessor = new ImageProcessor(
         axisCamera, doubleGreenRingScript);
 
-// public static VisionProcessor testVision = new VisionProcessor(
-// "10.3.39.11/mjpg/1/video.mjpg");
+public static VisionProcessor testVision = new VisionProcessor(
+        "10.3.39.11", CameraModel.AXIS_M1013);
 
 // **********************************************************
 // DRIVER STATION CLASSES
